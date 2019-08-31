@@ -1,0 +1,32 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: consumer
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: consumer
+      annotations:
+        prometheus.io/scrape: 'true'
+    spec:
+      containers:
+      - name: consumer
+        image: alepox/rpl-2.0:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "local,hello-world,consumer,development"
+        ports:
+          - containerPort: 8888
+        readinessProbe:
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          httpGet:
+            path: /health
+            port: 8888
+        resources:
+          limits:
+            memory: 256Mi
