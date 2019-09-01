@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="RplApplication Producer" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="RPL.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.rpl.RPL.RplApplication" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <envs>
+      <env name="spring.profiles.active" value="local,hello-world,producer,development" />
+      <env name="QUEUE_SERVICE_HOST" value="localhost" />
+    </envs>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
