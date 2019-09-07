@@ -1,2 +1,22 @@
+sudo: required
 language: java
 jdk: oraclejdk11
+
+services:
+  - docker
+
+env:
+  global:
+    - secure: encrypted-dockerhub-username
+    - secure: encrypted-dockerhub-password
+    - COMMIT=${TRAVIS_COMMIT::7}
+    - secure: tLIu8y++bndQ8ArC99iSr8KcSvN1bed7rZ67/29eS/BgArcy4PK6uleXm9CAcN5bE4yvUEbGnfn6l3k227qvEym60BBysnjIKSOPTRpaS6U8u06+ewiVhAQP5FvWMPyci8pGe3Pq54sot4V99oNGl7eWSPzfl8yY6HKHImgN3PDcb8dK0tSGhT6pyWJyqx3XEVIVVHPUQ3JlSEgx21YzX0aX0wrIXCk0xvGu9+oirQ61R8orZY2gk8PrqzHEgeeSFntd9yM2RDzH2/rCFdn53JWAXu5x4X7pFvCx4cCyKoz4gS+oXLR3wy2B7kG/uqmL7JLOfRC1fJPBXH2EdQb5Oiof7AOhrEg8r1hQBraEO+JScK9kDhlaZS2p4H2ipmKPpqhh0cvnMTRGBLLa0JWYOoKXI/JKtKfvqNojtw74gCn3DhtBme25hSXuHOtDj0XPlrN1GvjarUz8RvVTcYu+/dDIt+0yDxu9QvLprPTePKU054CdItoQGnvAO/ySKKWwKuIYDVOXXuAnA0yb0deDCYALXlfvLVHENGr5HrYj2XCqG1hDEqY07Z9MiPlt7DAF0h9nSwBkoNuGdXGw0A/cPe1Bf2gUGFvOOAb1UfwM/lEPATfJNdSB+/WgLJV/7iHRzYsY2PseErQpyzYTMmoZk2SC0mIlwIU2k3xYIzfK/f4=
+    - secure: evXz8m3PLKPAJu9S/n/Cr3PmQdty6z+idz8gT63W/obsvM4Uyi34TfWhJcSCtXPSbVWyc4/71+9WLCHoJAl6TzF9sp4I7klDVu4LvUgajtE/iuBXn2rr3pyY+WV0PP6o8Ciu0Vyhd/sWcSWk/Ij0XMfhduQaS7ZVkBAk/P02X6QK02LGaBUY1QLjnj5xhYitJhA9/FxvJqyZy7cJgzGhtvftY67ksVGZkqIoftpEdaEJvR/niMc4w37GrDKgM5+Z7kfSPGM89/YqgVttUrti40vK1TwN+I5PsrEEqFalBSTQwDm7sWG8eVoL7dmhG6dt/XfIabVg/F8RPPVv2b8/crXRBliK9x9neIFNcgwUNw0pK81eU+ltZZ5TNbNix60JBzbBxkudRGQU74HL1fuxrLXK8QXrljjQdDHFb+z2ovzpbVm3lbtYdN30dSSNUhdQE/YZ+83fUonSqC4lzfwY9IAAbrF3Ok7eFSMqThriLDRyeD20NvgMaxBR/kj6STOxsZWW0JKC8h32bwiJR8KPW97+g5P/N2TswJ7RQh4/SdeG7sIrgjObCFo/woJR4g9BX+Y85jalRBWw0RuY8P8e3iNfhYgQnZrVeSWpufBLHVGj3PZd7UM6OVHSnnFxoK8ry52pVhI4GiYAA2PrqHFXMySTeSGbv5sFgz6bT+DPk2U=
+
+after_success:
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+  - export IMAGE_NAME=alepox/rpl-2.0
+  - docker build -t $IMAGE_NAME:$COMMIT .
+  - docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
+  - docker push $IMAGE_NAME
