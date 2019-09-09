@@ -35,7 +35,22 @@ docker run -p 9999:15672 -p 5672:5672 deadtrickster/rabbitmq_prometheus:latest
 ### Local with minikube
 #### Configuration
 - Download and install [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
-- Download and install [kubectle](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+- Download and install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+
+Both the consumer and the producer use the `alepox/rpl-2.0:latest` Docker image (see `kubernetes/deployment/consumer.yaml` and `kubernetes/deployment/producer.yaml`). If the image was not pushed yet you should use the following commands:
+
+```shell script
+docker commit -m "First commit" -a "alepox" <CONTAINER_ID>
+docker tag rpl-backend alepox/rpl-2.0:latest
+docker push alepox/rpl-2.0:latest
+```
+
+With the following credentials:
+
+```
+user: alepox
+password: ?_@vn2w!@CZjVZh
+```
 
 #### Running the service
 - Start a kubernetes cluster in Minikube with:
