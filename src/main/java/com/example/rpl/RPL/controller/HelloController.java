@@ -45,6 +45,4 @@ public class HelloController {
         }
         return new ResponseEntity<>(status);
     }
-
-
 }
