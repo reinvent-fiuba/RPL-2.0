@@ -147,8 +147,8 @@ CREATE TABLE test_results
     id           BIGINT NOT NULL AUTO_INCREMENT,
     test_id      BIGINT,
     success      BOOLEAN,
-    stderr       VARCHAR(10000),
-    stdout       VARCHAR(10000),
+    stderr       TEXT,
+    stdout       TEXT,
     date_created DATETIME,
     last_updated DATETIME,
 
@@ -174,8 +174,8 @@ CREATE TABLE IO_tests
 (
     id           BIGINT NOT NULL AUTO_INCREMENT,
     test_id      BIGINT,
-    test_in      VARCHAR(10000),
-    test_out     VARCHAR(10000),
+    test_in      TEXT,
+    test_out     TEXT,
     date_created DATETIME,
     last_updated DATETIME,
 

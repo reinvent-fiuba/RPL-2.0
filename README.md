@@ -61,6 +61,7 @@ minikube start \
   --extra-config=controller-manager.horizontal-pod-autoscaler-downscale-delay=2m \
   --extra-config=controller-manager.horizontal-pod-autoscaler-sync-period=10s
 ```
+
 - Create the message broker deployment and service:
 ```shell script
 kubectl create -f ./kubernetes/deployment/queue.yaml
@@ -93,3 +94,50 @@ producer     NodePort    10.101.10.198   <none>        80:32000/TCP             
 queue        NodePort    10.105.128.2    <none>        15671:30000/TCP,15672:31157/TCP,5671:31353/TCP,5672:32440/TCP   27m
 ```
 - Optional: you can view the data of the broker in `http://<cluster_ip>:31157/`.
+
+
+
+## Optional 
+
+run the MySQL server as a POD
+
+[TUTORIAL](https://kubernetes.io/docs/tasks/run-application/run-single-instance-stateful-application/)
+
+Note: the db will have 10GB of storage and in case you destroy your `minikube` cluster **you will
+ also destroy the DB with all its data**. 
+
+- [Only for production tests] Create the mysql server deployment and service
+```shell script
+kubectl create -f ./kubernetes/mysql/persistent_volume_deployment.yaml.yaml
+kubectl create -f ./kubernetes/mysql/mysql_deployment.yaml.yaml
+```
+
+- [Only for production tests] Create the database rplStage (replase POD mysql-***-*** with YOUR pod)
+```shell script
+kubectl exec -it mysql-7d7fdd478f-hxcx9 -- /usr/bin/mysql -ppassword -e "create database rplStage"
+```
+
+- [Only for production tests] Run migrations getting the host and port (31111) of the mysql server 
+service in the kubernetes cluster
+```shell script
+minikube ip --> 192.168.99.100
+bash flyway/migrate.sh jdbc:mysql://192.168.99.100:31111/rplStage root password
+```
+
+- [Only for production tests] Change `SPRING_PROFILES_ACTIVE` env variable in `kubernetes/deployment/producer.yaml` to `hello-world,producer,prod`
+
+- [Only for production tests] If you already deployed the producer, run `kubectl apply -f kubernetes/service/producer.yaml`
+
+- [Only for production tests] This will create a stateful application where one POD will contain the DB. 
+Otherwise, an H2 DB will be created and provisioned when the springboot app starts  
+
+
+# Bibliography
+
+- [SpringBoot Kubernetes](https://learnk8s.io/blog/scaling-spring-boot-microservices/)
+- [MySQL in Kubernetes](https://kubernetes.io/docs/tasks/run-application/run-single-instance-stateful-application/)
+- [Push a docker image](https://karlcode.owtelse.com/blog/2017/01/25/push-a-docker-image-to-personal-repository/)
+- [CI/CD](https://sivalabs.in/2018/01/ci-cd-springboot-applications-using-travis-ci/)
+- [Kubernetes](https://kubernetes.io/docs/tasks/run-application/run-stateless-application-deployment/)
+- [Connect to DigitalOcean Kubernetes Cluster](https://www.digitalocean.com/docs/kubernetes/how-to/connect-to-cluster/)
+- 

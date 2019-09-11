@@ -2,7 +2,9 @@ plugins {
 	id 'org.springframework.boot' version '2.2.0.M5'
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 	id 'java'
-	id 'org.flywaydb.flyway' version '5.2.4'
+	id 'org.flywaydb.flyway' version '5.1.1'
+	id 'groovy'
+	id 'jacoco'
 }
 
 group = 'com.example.rpl'
@@ -43,7 +45,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
-	runtimeOnly 'mysql:mysql-connector-java'
+	runtime 'mysql:mysql-connector-java'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -60,3 +62,19 @@ dependencyManagement {
 test {
 	useJUnitPlatform()
 }
+
+jacocoTestReport {
+	reports {
+		xml.enabled false
+		html.enabled true
+	}
+	afterEvaluate {
+		classDirectories.from = files(classDirectories.files.collect {
+			fileTree(dir: it,
+					exclude: ['com/example/rpl/RPL/config/**'
+					])
+		})
+	}
+}
+
+check.dependsOn jacocoTestReport

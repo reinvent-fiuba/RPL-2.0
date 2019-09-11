@@ -5,7 +5,7 @@ metadata:
 spec:
   ports:
   - nodePort: 32000
-    port: 80
+    port: 8080
     targetPort: 8080
   selector:
     app: producer
