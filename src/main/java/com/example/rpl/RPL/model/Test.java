@@ -15,15 +15,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-/**
- *     id           BIGINT NOT NULL AUTO_INCREMENT,
- *     activity_id  BIGINT,
- *     date_created DATETIME,
- *     last_updated DATETIME,
- *
- *     PRIMARY KEY (id),
- *     FOREIGN KEY (activity_id) REFERENCES activities(id)
- */
 @Getter
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")

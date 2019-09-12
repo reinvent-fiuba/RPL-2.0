@@ -31,6 +31,9 @@ public class HelloController {
 
     @PostMapping("/submit")
     public ResponseEntity<Ticket> submit(@Valid @RequestBody final Ticket ticket) {
+        User user = new User("Ale", "levinasale@gmail.com");
+        userRepository.save(user);
+
         for (long i = 0; i < ticket.getQuantity(); i++) {
             String id = UUID.randomUUID().toString();
             producer.send(id);
@@ -41,15 +44,6 @@ public class HelloController {
 
     @RequestMapping(value = "/health")
     public ResponseEntity health() {
-        User user = new User("Ale", "levinasale@gmail.com");
-        userRepository.save(user);
-
-        HttpStatus status;
-        if (true) {
-            status = HttpStatus.OK;
-        } else {
-            status = HttpStatus.BAD_REQUEST;
-        }
-        return new ResponseEntity<>(status);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

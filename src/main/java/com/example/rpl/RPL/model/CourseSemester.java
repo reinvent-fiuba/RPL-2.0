@@ -16,18 +16,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 
-/**
- *     id           BIGINT NOT NULL AUTO_INCREMENT,
- *     course_id    bigint,
- *     description  VARCHAR(255),
- *     active       BOOLEAN,
- *     semester     VARCHAR(255),
- *     date_created DATETIME,
- *     last_updated DATETIME,
- *
- *     PRIMARY KEY (id),
- *     FOREIGN KEY (course_id) REFERENCES courses(id)
- */
 @Getter
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")

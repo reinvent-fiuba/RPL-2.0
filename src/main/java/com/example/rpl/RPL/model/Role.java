@@ -13,11 +13,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 
-/**
- id   BIGINT NOT NULL AUTO_INCREMENT,
- name VARCHAR(50),
- permissions VARCHAR(1000), # permission1,permission2,permission3,etc
- */
 @Getter
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
@@ -36,7 +31,6 @@ public class Role {
     @NonNull
     @Column(name = "name")
     private String name;
-
 
     @Column(name = "permissions")
     private String permissions;

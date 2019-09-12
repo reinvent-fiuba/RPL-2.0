@@ -3,6 +3,8 @@ CREATE TABLE roles
     id          BIGINT NOT NULL AUTO_INCREMENT,
     name        VARCHAR(50),
     permissions VARCHAR(1000), -- permission1,permission2,permission3,etc
+    date_created    DATETIME,
+    last_updated    DATETIME,
 
     PRIMARY KEY (id)
 ) ENGINE = InnoDB;
@@ -193,7 +195,7 @@ VALUES (2, 'Matias', 'Cano', 97925, 'matiasjosecc@gmail.com', false, 'Ing. en In
         now(), now());
 
 INSERT INTO roles
-VALUES (1, 'admin', 'course_create,course_edit');
+VALUES (1, 'admin', 'course_create,course_edit', now(), now());
 
 INSERT INTO permissions
 VALUES (1, 'course_create', now());

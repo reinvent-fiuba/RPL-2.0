@@ -13,13 +13,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 
-/**
- *     id                   BIGINT NOT NULL AUTO_INCREMENT,
- *     name                 VARCHAR(255),
- *     university_course_id VARCHAR(255),
- *     date_created         DATETIME,
- *     last_updated         DATETIME,
- */
 @Getter
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")

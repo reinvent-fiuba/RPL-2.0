@@ -15,20 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-/**
- *     id                 BIGINT NOT NULL AUTO_INCREMENT,
- *     course_semester_id BIGINT,
- *     user_id            BIGINT,
- *     role_id            BIGINT,
- *     accepted           BOOLEAN,
- *     date_created       DATETIME,
- *     last_updated       DATETIME,
- *
- *     PRIMARY KEY (id),
- *     FOREIGN KEY (course_semester_id) REFERENCES courses_semester(id),
- *     FOREIGN KEY (user_id) REFERENCES users(id),
- *     FOREIGN KEY (role_id) REFERENCES roles(id)
- */
+
 @Getter
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")

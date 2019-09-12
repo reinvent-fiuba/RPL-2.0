@@ -16,21 +16,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 
-/**
- *     id                 BIGINT NOT NULL AUTO_INCREMENT,
- *     course_semester_id BIGINT,
- *     name               VARCHAR(255),
- *     description        VARCHAR(255),
- *     language           VARCHAR(255),
- *     active             BOOLEAN,
- *     file_id            BIGINT,
- *     date_created       DATETIME,
- *     last_updated       DATETIME,
- *
- *     PRIMARY KEY (id),
- *     FOREIGN KEY (course_semester_id) REFERENCES courses_semester(id),
- *     FOREIGN KEY (file_id) REFERENCES files(id)
- */
+
 @Getter
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")

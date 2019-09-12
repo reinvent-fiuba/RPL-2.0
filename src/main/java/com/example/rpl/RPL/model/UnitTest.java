@@ -16,16 +16,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 
-/**
- *     id           BIGINT NOT NULL AUTO_INCREMENT,
- *     test_id      BIGINT,
- *     files_id     BIGINT,
- *     date_created DATETIME,
- *     last_updated DATETIME,
- *
- *     PRIMARY KEY (id),
- *     FOREIGN KEY (test_id) REFERENCES tests(id)
- */
 @Getter
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")

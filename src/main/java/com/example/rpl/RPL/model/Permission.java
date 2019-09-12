@@ -13,10 +13,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 
-/**
- id   BIGINT NOT NULL AUTO_INCREMENT,
- name VARCHAR(50),
- */
 @Getter
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")

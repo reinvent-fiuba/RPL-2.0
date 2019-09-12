@@ -15,19 +15,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
+import org.hibernate.annotations.Type;
 
-/**
- *     id           BIGINT NOT NULL AUTO_INCREMENT,
- *     test_id      BIGINT,
- *     success      BOOLEAN,
- *     stderr       VARCHAR(10000),
- *     stdout       VARCHAR(10000),
- *     date_created DATETIME,
- *     last_updated DATETIME,
- *
- *     PRIMARY KEY (id),
- *     FOREIGN KEY (test_id) REFERENCES tests(id)
- */
 @Getter
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
@@ -52,11 +41,13 @@ public class TestResult {
     @NonNull
     @Basic(optional = false)
     @Column(name = "stderr")
+    @Type(type="clob")
     private String stderr;
 
     @NonNull
     @Basic(optional = false)
     @Column(name = "stdout")
+    @Type(type="clob")
     private String stdout;
 
     @Column(name = "date_created")

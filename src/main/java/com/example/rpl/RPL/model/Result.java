@@ -16,18 +16,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 
-/**
- *     id                     BIGINT NOT NULL AUTO_INCREMENT,
- *     activity_submission_id BIGINT,
- *     test_id                BIGINT,
- *     score                  int,
- *     date_created           DATETIME,
- *     last_updated           DATETIME,
- *
- *     PRIMARY KEY (id),
- *     FOREIGN KEY (activity_submission_id) REFERENCES activity_submissions(id),
- *     FOREIGN KEY (test_id) REFERENCES tests(id)
- */
 @Getter
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")

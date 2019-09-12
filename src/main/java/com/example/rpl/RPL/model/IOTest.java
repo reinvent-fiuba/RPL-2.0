@@ -14,18 +14,9 @@ import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.hibernate.annotations.Type;
 
-/**
- *     id           BIGINT NOT NULL AUTO_INCREMENT,
- *     test_id      BIGINT,
- *     test_in      VARCHAR(255),
- *     test_out     VARCHAR(255),
- *     date_created DATETIME,
- *     last_updated DATETIME,
- *
- *     PRIMARY KEY (id),
- *     FOREIGN KEY (test_id) REFERENCES tests (id)
- */
+
 @Getter
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
@@ -45,9 +36,11 @@ public class IOTest {
     private Test test;
 
     @Column(name = "test_in")
+    @Type(type="clob")
     private String testIn;
 
     @Column(name = "test_out")
+    @Type(type="clob")
     private String testOut;
 
     @Column(name = "date_created")
