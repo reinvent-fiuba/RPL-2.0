@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Profile("producer")
 @RestController
-public class HelloController {
+public class ProducerController {
 
     private final Producer producer;
 
@@ -24,7 +24,7 @@ public class HelloController {
 
 
     @Autowired
-    public HelloController(Producer producer, UserRepository userRepository) {
+    public ProducerController(Producer producer, UserRepository userRepository) {
         this.producer = producer;
         this.userRepository = userRepository;
     }
@@ -39,11 +39,5 @@ public class HelloController {
             producer.send(id);
         }
         return new ResponseEntity<>(ticket, HttpStatus.CREATED);
-    }
-
-
-    @RequestMapping(value = "/health")
-    public ResponseEntity health() {
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

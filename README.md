@@ -2,9 +2,15 @@
 RPL Final Assignment FIUBA
 
 This service has three components, the producer backend, the consumer backend and the message broker.
+You can also add a MySQL server to persist data. If not, an H2 in-memory database is used (so as soon 
+as you close the JVM, all data is lost) 
 
 ## Endpoints
 
+### `/health`
+When you make a GET to `/health`, the service responds with a `"plain/text"` "pong".
+
+---------
 ### `/submit`
 When you make a POST to `/submit` with a body with the following structure:
 ```json
@@ -14,13 +20,19 @@ When you make a POST to `/submit` with a body with the following structure:
 ```
 The producer send a `"quantity"` ammount of messages to the broker, which are then received by the consumer.
 
-
+----------
 ## Bootstrapping
 
 ### Local
 #### Configuration
 - Download and install [Docker](https://docs.docker.com/install/)
 - If using IntelliJ: copy `./RplApplication_Consumer.xml` and `./RplApplication_Producer.xml` to your `./.idea/runConfigurations/` folder. This will create two running configuration, one for running the producer and other for running the consumer.
+
+#### Unit and Functional Tests
+```shell script
+./gradlew clean && ./gradlew check
+```
+
 
 #### Running the service
 - Start rabbitmq with:
