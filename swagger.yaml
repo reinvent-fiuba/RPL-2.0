@@ -11,10 +11,10 @@ info:
   termsOfService: Terms of service
   title: RPL 2.0
   version: '0.1'
-host: 'localhost:44621'
+host: 'localhost:46679'
 basePath: /
 paths:
-  /api/health:
+  /health:
     get:
       produces:
         - plain/text
@@ -70,4 +70,3 @@ tags:
     name: health-controller
   - description: Producer Controller
     name: producer-controller
-
