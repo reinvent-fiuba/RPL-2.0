@@ -15,6 +15,8 @@ You can also parse the `swagger.json` to a `swagger.yaml` by using [api-spec-con
 npm install -g api-spec-converter
 api-spec-converter --from=swagger_2 --to=swagger_2 --syntax=yaml swagger.json > swagger.yaml  
 ```
+
+Also, https://rpl2.docs.apiary.io/ should update itself every time `swagger.yaml` changes on branch `master`.
  
 
 ### `/health`
