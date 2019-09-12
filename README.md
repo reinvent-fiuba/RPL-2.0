@@ -7,6 +7,16 @@ as you close the JVM, all data is lost)
 
 ## Endpoints
 
+A `swagger.json` is generated every time functional tests are run.
+To see them in a nice UI you can copy the file to [Swagger Editor](https://editor.swagger.io/).
+
+You can also parse the `swagger.json` to a `swagger.yaml` by using [api-spec-converter](https://github.com/LucyBot-Inc/api-spec-converter)
+```shell script
+npm install -g api-spec-converter
+api-spec-converter --from=swagger_2 --to=swagger_2 --syntax=yaml swagger.json > swagger.yaml  
+```
+ 
+
 ### `/health`
 When you make a GET to `/health`, the service responds with a `"plain/text"` "pong".
 
