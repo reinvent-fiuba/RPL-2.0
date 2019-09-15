@@ -33,11 +33,10 @@ public class UserDTO {
 
     public static UserDTO fromEntity(User user) {
         return UserDTO.builder()
-            .id(user.getId())
             .name(user.getName())
             .surname(user.getSurname())
             .studentId(user.getStudentId())
-            .username(user.getUsername())
+            .username(user.getName())
             .email(user.getEmail())
             .emailValidated(user.getEmailValidated())
             .university(user.getUniversity())
