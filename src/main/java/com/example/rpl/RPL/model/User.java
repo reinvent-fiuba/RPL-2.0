@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -28,22 +29,34 @@ public class User {
 
     @NonNull
     @Basic(optional = false)
-    @Column(name = "name", length = 255)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "surname")
     private String surname;
 
     @Column(name = "student_id")
-    private String student_id;
+    private String studentId;
 
+    @NonNull
+    @Pattern(regexp = "^[a-zA-Z0-9_-]{8,20}$")
     @Basic(optional = false)
-    @Column(name = "email")
+    @Column(name = "username", unique = true)
+    private String username;
+
+    @NonNull
+    @Pattern(regexp = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
+    @Basic(optional = false)
+    @Column(name = "email", unique = true)
     private String email;
 
+    @NonNull
     @Basic(optional = false)
     @Column(name = "email_validated")
-    private Boolean email_validated;
+    private Boolean emailValidated;
+
+    @Column(name = "university")
+    private String university;
 
     @Column(name = "degree")
     private String degree;
@@ -61,12 +74,18 @@ public class User {
     private User() {
     }
 
-    public User(String name, String email) {
-        this. name = name;
+    public User(String name, String surname, String studentId, String username, String email,
+        String university, String degree) {
+        ZonedDateTime now = ZonedDateTime.now();
+        this.name = name;
+        this.surname = surname;
+        this.studentId = studentId;
+        this.username = username;
         this.email = email;
-        this.email_validated = false;
-        this.dateCreated = ZonedDateTime.now();
-        this.lastUpdated = ZonedDateTime.now();
+        this.university = university;
+        this.degree = degree;
+        this.emailValidated = false;
+        this.dateCreated = now;
+        this.lastUpdated = now;
     }
-
 }

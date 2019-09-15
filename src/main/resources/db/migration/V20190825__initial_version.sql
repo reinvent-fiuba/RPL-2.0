@@ -1,10 +1,10 @@
 CREATE TABLE roles
 (
-    id          BIGINT NOT NULL AUTO_INCREMENT,
-    name        VARCHAR(50),
-    permissions VARCHAR(1000), -- permission1,permission2,permission3,etc
-    date_created    DATETIME,
-    last_updated    DATETIME,
+    id           BIGINT NOT NULL AUTO_INCREMENT,
+    name         VARCHAR(50),
+    permissions  VARCHAR(1000), -- permission1,permission2,permission3,etc
+    date_created DATETIME,
+    last_updated DATETIME,
 
     PRIMARY KEY (id)
 ) ENGINE = InnoDB;
@@ -20,17 +20,21 @@ CREATE TABLE permissions
 
 CREATE TABLE users
 (
-    id              BIGINT NOT NULL AUTO_INCREMENT,
+    id              BIGINT       NOT NULL AUTO_INCREMENT,
     name            VARCHAR(255),
     surname         VARCHAR(255),
     student_id      VARCHAR(255),
-    email           VARCHAR(255),
-    email_validated BOOLEAN,
+    username        VARCHAR(255) NOT NULL,
+    email           VARCHAR(255) NOT NULL,
+    email_validated BOOLEAN      NOT NULL,
     degree          VARCHAR(255),
+    university      VARCHAR(255),
     date_created    DATETIME,
     last_updated    DATETIME,
 
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE (email),
+    UNIQUE (username)
 ) ENGINE = InnoDB;
 
 CREATE TABLE courses
