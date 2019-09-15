@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/logistic_centers/BRSP01"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mock/logisticcenters/BRSP01.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

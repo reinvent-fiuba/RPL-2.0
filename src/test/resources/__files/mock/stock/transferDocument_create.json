@@ -1,0 +1,14 @@
+{
+  "id": 2,
+  "warehouse_id": "BRSP01",
+  "user_id": 123456,
+  "process_name": "stock_audit",
+  "status": "closed",
+  "movements": [
+    {
+      "id": 1234,
+      "address_from": "RS-0-001-001-00-00",
+      "address_to": "RS-0-001-001-00-00"
+    }
+  ]
+}

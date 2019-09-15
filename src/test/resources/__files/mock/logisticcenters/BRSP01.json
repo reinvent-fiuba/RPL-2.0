@@ -1,0 +1,43 @@
+{
+  "id": "BRSP01",
+  "type": "warehouse",
+  "status": "active",
+  "date_created": "2018-01-04",
+  "logistic_provider": "CEVA",
+  "address": {
+    "id": null,
+    "address_line": "Wagner Luiz Bevilaqua 525",
+    "street_name": "Wagner Luiz Bevilaqua",
+    "street_number": "525",
+    "comment": null,
+    "zip_code": "13290000",
+    "city": {
+      "id": "QlItU1BMb3V2ZWlyYQ",
+      "name": "Louveira"
+    },
+    "state": {
+      "id": "BR-SP",
+      "name": "São Paulo"
+    },
+    "country": {
+      "id": "BR",
+      "name": "Brasil"
+    },
+    "neighborhood": {
+      "id": null,
+      "name": "Leitão"
+    },
+    "municipality": {
+      "id": null,
+      "name": null
+    },
+    "types": [],
+    "latitude": -23.0925566,
+    "longitude": -46.9612986,
+    "geolocation_type": "ROOFTOP",
+    "agency": null,
+    "valid_for_carrier": true,
+    "is_valid_for_carrier": true
+  },
+  "site_id": "MLB"
+}

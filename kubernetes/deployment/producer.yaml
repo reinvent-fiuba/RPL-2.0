@@ -16,7 +16,7 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: "local,hello-world,producer,development"
+          value: "local,producer,development"
         ports:
           - containerPort: 8080
         readinessProbe:

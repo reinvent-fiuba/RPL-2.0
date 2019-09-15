@@ -37,7 +37,7 @@ public class DataSourceConfiguration {
                 .username(username)
                 .password(password)
                 .type(HikariDataSource.class)
-                .driverClassName("com.mysql.jdbc.Driver")
+                .driverClassName("com.mysql.cj.jdbc.Driver")
                 .url(url)
                 .build();
         setTypeSpecificProperties(dataSource);

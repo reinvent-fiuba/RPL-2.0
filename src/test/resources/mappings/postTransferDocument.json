@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/wms/warehouses/BRSP01/transfer_documents?caller.id=12345678"
+  },
+  "response": {
+    "status": 201,
+    "bodyFileName": "mock/stock/transferDocument_create.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
