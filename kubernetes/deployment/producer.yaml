@@ -1,14 +1,20 @@
----
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: producer
 spec:
+  selector:
+    matchLabels:
+      app: producer
+      tier: backend
+      track: stable
   replicas: 1
   template:
     metadata:
       labels:
         app: producer
+        tier: backend
+        track: stable
     spec:
       containers:
       - name: producer
@@ -18,7 +24,8 @@ spec:
         - name: SPRING_PROFILES_ACTIVE
           value: "local,producer,development"
         ports:
-          - containerPort: 8080
+          - name: http
+            containerPort: 8080
         readinessProbe:
           initialDelaySeconds: 5
           periodSeconds: 5
