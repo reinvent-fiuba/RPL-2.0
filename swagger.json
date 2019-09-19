@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:55317",
+    "host": "localhost:40131",
     "basePath": "/",
     "tags": [
         {
@@ -32,7 +32,7 @@
         }
     ],
     "paths": {
-        "/api/auth/signup": {
+        "/api/signup": {
             "post": {
                 "tags": [
                     "authentication-controller"
@@ -67,7 +67,7 @@
                 "deprecated": false
             }
         },
-        "/api/health": {
+        "/health": {
             "get": {
                 "tags": [
                     "health-controller"
