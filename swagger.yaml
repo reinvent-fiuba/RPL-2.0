@@ -11,9 +11,32 @@ info:
   termsOfService: Terms of service
   title: RPL 2.0
   version: '0.1'
-host: 'localhost:46679'
+host: 'localhost:45083'
 basePath: /
 paths:
+  /api/auth/signup:
+    post:
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - description: createUserDTO
+          in: body
+          name: createUserDTO
+          required: true
+          schema:
+            $ref: '#/definitions/CreateUserDTO'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/UserDTO'
+      tags:
+        - authentication-controller
+      deprecated: false
+      operationId: createUsingPOST
+      summary: create
   /health:
     get:
       produces:
@@ -58,6 +81,26 @@ paths:
       operationId: submitUsingPOST
       summary: submit
 definitions:
+  CreateUserDTO:
+    properties:
+      degree:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      student_id:
+        type: string
+      surname:
+        type: string
+      university:
+        type: string
+      username:
+        type: string
+    title: CreateUserDTO
+    type: object
   Ticket:
     properties:
       quantity:
@@ -65,8 +108,40 @@ definitions:
         type: integer
     title: Ticket
     type: object
+  UserDTO:
+    properties:
+      date_created:
+        format: date-time
+        type: string
+      degree:
+        type: string
+      email:
+        type: string
+      email_validated:
+        type: boolean
+      id:
+        format: int64
+        type: integer
+      last_updated:
+        format: date-time
+        type: string
+      name:
+        type: string
+      student_id:
+        type: string
+      surname:
+        type: string
+      university:
+        type: string
+      username:
+        type: string
+    title: UserDTO
+    type: object
 tags:
+  - description: Authentication Controller
+    name: authentication-controller
   - description: Health Controller
     name: health-controller
   - description: Producer Controller
     name: producer-controller
+
