@@ -1,0 +1,109 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Esta es la API de RPL 2.0 para todos y todas",
+        "version": "0.1",
+        "title": "RPL 2.0",
+        "termsOfService": "Terms of service",
+        "contact": {
+            "name": "Alejandro Levinas o Mat\u00edas Cano",
+            "url": "http://example.com/support",
+            "email": "levinasale@gmail.com;matiasjosecc@gmail.com"
+        },
+        "license": {
+            "name": "License of API",
+            "url": "http://example.com/support"
+        }
+    },
+    "host": "localhost:43437",
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "health-controller",
+            "description": "Health Controller"
+        },
+        {
+            "name": "producer-controller",
+            "description": "Producer Controller"
+        }
+    ],
+    "paths": {
+        "/health": {
+            "get": {
+                "tags": [
+                    "health-controller"
+                ],
+                "summary": "ping",
+                "operationId": "pingUsingGET",
+                "produces": [
+                    "plain/text"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden!!!!!"
+                    },
+                    "500": {
+                        "description": "500 message",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/submit": {
+            "post": {
+                "tags": [
+                    "producer-controller"
+                ],
+                "summary": "submit",
+                "operationId": "submitUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "ticket",
+                        "description": "ticket",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Ticket"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Ticket"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        }
+    },
+    "definitions": {
+        "Ticket": {
+            "type": "object",
+            "properties": {
+                "quantity": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            },
+            "title": "Ticket"
+        }
+    }
+}

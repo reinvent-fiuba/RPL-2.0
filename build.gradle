@@ -24,6 +24,7 @@ configurations {
 repositories {
     mavenCentral()
     maven { url 'https://repo.spring.io/milestone' }
+	jcenter()
 }
 
 ext {
@@ -64,6 +65,10 @@ dependencies {
         exclude group: 'com.sun.xml.bind', module: 'jaxb-osgi'
     }
     testRuntime 'cglib:cglib-nodep:3.2.6'
+
+    compile "io.springfox:springfox-swagger2:2.9.2"
+    compile 'org.springframework.plugin:spring-plugin-core:1.2.0.RELEASE'
+
 }
 
 dependencyManagement {
@@ -88,3 +93,16 @@ jacocoTestReport {
 }
 
 check.dependsOn jacocoTestReport
+
+tasks.register("convertSwaggerJSONtoYAML", Exec) {
+    description = 'Produces a greeting'
+    
+    println("You must have api-spec-converter installed")
+    println("npm install -g api-spec-converter")
+    
+
+    commandLine 'api-spec-converter', '--from=swagger_2', '--to=swagger_2', '--syntax=yaml', 'swagger.json'
+
+    standardOutput = new ByteArrayOutputStream()
+    new File('swagger.yaml').write(standardOutput.toString())
+}
