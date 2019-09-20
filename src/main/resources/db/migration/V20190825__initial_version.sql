@@ -26,6 +26,7 @@ CREATE TABLE users
     student_id      VARCHAR(255),
     username        VARCHAR(255) NOT NULL,
     email           VARCHAR(255) NOT NULL,
+    password        VARCHAR(255) NOT NULL,
     email_validated BOOLEAN      NOT NULL,
     degree          VARCHAR(255),
     university      VARCHAR(255),

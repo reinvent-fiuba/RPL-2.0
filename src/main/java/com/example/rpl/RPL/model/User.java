@@ -9,14 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NonNull;
-import lombok.ToString;
 
-@Getter
-@EqualsAndHashCode(of = "id")
-@ToString(of = "id")
+@Data
 @Entity
 @Table(name = "users")
 public class User {
@@ -52,6 +48,11 @@ public class User {
 
     @NonNull
     @Basic(optional = false)
+    @Column(name = "password")
+    private String password;
+
+    @NonNull
+    @Basic(optional = false)
     @Column(name = "email_validated")
     private Boolean emailValidated;
 
@@ -75,13 +76,14 @@ public class User {
     }
 
     public User(String name, String surname, String studentId, String username, String email,
-        String university, String degree) {
+        String encodedPassword, String university, String degree) {
         ZonedDateTime now = ZonedDateTime.now();
         this.name = name;
         this.surname = surname;
         this.studentId = studentId;
         this.username = username;
         this.email = email;
+        this.password = encodedPassword;
         this.university = university;
         this.degree = degree;
         this.emailValidated = false;

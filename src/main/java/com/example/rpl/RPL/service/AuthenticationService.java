@@ -5,6 +5,7 @@ import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,23 +15,29 @@ public class AuthenticationService {
 
     private UserRepository userRepository;
 
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
-    public AuthenticationService(UserRepository userRepository) {
+    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
     @Transactional
     public User createUser(String name, String surname, String studentId, String username,
         String email, String password, String university, String degree) {
-        User user = new User(name, surname, studentId, username, email, university, degree);
+        User user = new User(name, surname, studentId, username, email,
+            passwordEncoder.encode(password), university, degree);
 
-        if (userRepository.findUserByEmail(email) != null) {
-            throw new EntityAlreadyExistsException(String.format("Email '%s' already used", email), "ERROR_EMAIL_USED");
+        if (userRepository.existsByEmail(email)) {
+            throw new EntityAlreadyExistsException(String.format("Email '%s' already used", email),
+                "ERROR_EMAIL_USED");
         }
 
-        if (userRepository.findUserByUsername(username) != null) {
-            throw new EntityAlreadyExistsException(String.format("Username '%s' already used", username), "ERROR_USERNAME_USED");
+        if (userRepository.existsByUsername(username)) {
+            throw new EntityAlreadyExistsException(
+                String.format("Username '%s' already used", username), "ERROR_USERNAME_USED");
         }
 
         return userRepository.save(user);
