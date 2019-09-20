@@ -11,7 +11,7 @@ info:
   termsOfService: Terms of service
   title: RPL 2.0
   version: '0.1'
-host: 'localhost:45083'
+host: 'localhost:41275'
 basePath: /
 paths:
   /api/auth/signup:
