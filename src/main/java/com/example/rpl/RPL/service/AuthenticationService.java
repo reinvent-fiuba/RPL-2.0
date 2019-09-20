@@ -5,7 +5,7 @@ import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,12 +15,9 @@ public class AuthenticationService {
 
     private UserRepository userRepository;
 
-    private PasswordEncoder passwordEncoder;
-
     @Autowired
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthenticationService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -33,7 +30,7 @@ public class AuthenticationService {
     public User createUser(String name, String surname, String studentId, String username,
         String email, String password, String university, String degree) {
         User user = new User(name, surname, studentId, username, email,
-            passwordEncoder.encode(password), university, degree);
+            new BCryptPasswordEncoder().encode(password), university, degree);
 
         if (userRepository.existsByEmail(email)) {
             throw new EntityAlreadyExistsException(String.format("Email '%s' already used", email),
