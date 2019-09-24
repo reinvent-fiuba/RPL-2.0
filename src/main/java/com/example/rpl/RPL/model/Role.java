@@ -1,6 +1,8 @@
 package com.example.rpl.RPL.model;
 
 import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,7 +51,7 @@ public class Role {
     public Role() {
     }
 
-    public String[] getPermissions() {
-        return this.permissions.split(PERMISSION_DELIMITER);
+    public List<String> getPermissions() {
+        return Arrays.asList(this.permissions.split(PERMISSION_DELIMITER));
     }
 }

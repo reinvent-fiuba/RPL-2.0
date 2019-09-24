@@ -42,7 +42,7 @@ public class Test {
      * @deprecated Only used by hibernate
      */
     @Deprecated
-    private Test() {
+    public Test() {
     }
 
 }

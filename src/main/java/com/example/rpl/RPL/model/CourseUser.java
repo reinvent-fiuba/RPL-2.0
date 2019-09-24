@@ -54,7 +54,7 @@ public class CourseUser {
      * @deprecated Only used by hibernate
      */
     @Deprecated
-    private CourseUser() {
+    public CourseUser() {
     }
 
 }

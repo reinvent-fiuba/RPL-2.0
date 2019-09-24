@@ -66,7 +66,7 @@ public class Activity {
      * @deprecated Only used by hibernate
      */
     @Deprecated
-    private Activity() {
+    public Activity() {
     }
 
 }

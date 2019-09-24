@@ -53,7 +53,7 @@ public class IOTest {
      * @deprecated Only used by hibernate
      */
     @Deprecated
-    private IOTest() {
+    public IOTest() {
     }
 
 }

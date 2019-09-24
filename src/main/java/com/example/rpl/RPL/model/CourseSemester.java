@@ -52,7 +52,7 @@ public class CourseSemester {
      * @deprecated Only used by hibernate
      */
     @Deprecated
-    private CourseSemester() {
+    public CourseSemester() {
     }
 
 }

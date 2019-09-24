@@ -60,7 +60,7 @@ public class TestResult {
      * @deprecated Only used by hibernate
      */
     @Deprecated
-    private TestResult() {
+    public TestResult() {
     }
 
 }
