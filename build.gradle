@@ -87,8 +87,14 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories.from = files(classDirectories.files.collect {
             fileTree(dir: it,
-                    exclude: ['com/example/rpl/RPL/config/**',
-                            'com/example/rpl/RPL/model/**'
+                    exclude: [
+                            'com/example/rpl/RPL/RplApplication',
+                            'com/example/rpl/RPL/config/**',
+                            'com/example/rpl/RPL/model/**',
+                            'com/example/rpl/RPL/security/**',
+                            'com/example/rpl/RPL/exception/**',
+                            'com/example/rpl/RPL/controller/dto/**',
+                            'com/example/rpl/RPL/queue/Consumer.java',
                     ])
         })
     }

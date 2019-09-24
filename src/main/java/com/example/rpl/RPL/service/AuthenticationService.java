@@ -23,7 +23,12 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
+    /**
+     * Creates a new User.
+     * @return a new saved User
+     * @throws EntityAlreadyExistsException if email or username exists
+     *         ValidationException declared on the User class
+     */
     @Transactional
     public User createUser(String name, String surname, String studentId, String username,
         String email, String password, String university, String degree) {
@@ -39,6 +44,8 @@ public class AuthenticationService {
             throw new EntityAlreadyExistsException(
                 String.format("Username '%s' already used", username), "ERROR_USERNAME_USED");
         }
+
+        log.info("[process:create_user][username:{}] Creating new user", username);
 
         return userRepository.save(user);
     }

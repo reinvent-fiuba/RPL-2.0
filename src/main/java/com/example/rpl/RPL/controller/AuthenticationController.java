@@ -28,8 +28,11 @@ public class AuthenticationController {
     @PostMapping(value = "/api/auth/signup")
     public ResponseEntity<UserDTO> create(@RequestBody @Valid final CreateUserDTO createUserDTO) {
 
-        User user = authenticationService.createUser(createUserDTO.getName(), createUserDTO.getSurname(), createUserDTO.getStudentId(), createUserDTO.getUsername(), createUserDTO.getEmail(), createUserDTO.getPassword(), createUserDTO.getUniversity(), createUserDTO.getDegree());
-
+        User user = authenticationService
+            .createUser(createUserDTO.getName(), createUserDTO.getSurname(),
+                createUserDTO.getStudentId(), createUserDTO.getUsername(), createUserDTO.getEmail(),
+                createUserDTO.getPassword(), createUserDTO.getUniversity(),
+                createUserDTO.getDegree());
 
         return new ResponseEntity<>(UserDTO.fromEntity(user), HttpStatus.CREATED);
     }

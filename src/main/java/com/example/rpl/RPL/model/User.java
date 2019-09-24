@@ -35,7 +35,7 @@ public class User {
     private String studentId;
 
     @NonNull
-    @Pattern(regexp = "^[a-zA-Z0-9_-]{8,20}$")
+    @Pattern(regexp = "^[a-zA-Z0-9_-]{6,12}$")
     @Basic(optional = false)
     @Column(name = "username", unique = true)
     private String username;
