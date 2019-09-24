@@ -19,7 +19,6 @@ spec:
       containers:
       - name: producer
         image: alepox/rpl-2.0:latest
-        imagePullPolicy: IfNotPresent
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "local,producer,development"
