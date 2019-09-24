@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ActiveProfiles
 import spock.lang.Unroll
 
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST
 import static javax.servlet.http.HttpServletResponse.SC_CREATED
 
 @ActiveProfiles("test-functional")
@@ -72,11 +73,11 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         then: "must return a new saved User"
             response.contentType == "application/json"
-            response.statusCode == 422 // Unprocessable entity
+            response.statusCode == SC_BAD_REQUEST
 
             Map result = getJsonResponse(response)
 
-            assert result.message == "Invalid entity."
+            assert result.message == "Invalid request"
             assert result.error == "validation_error"
 
         where:
@@ -105,11 +106,11 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         then:
             response.contentType == "application/json"
-            response.statusCode == 422 // Unprocessable entity
+            response.statusCode == SC_BAD_REQUEST
 
             Map result = getJsonResponse(response)
 
-            assert result.message == "Invalid entity."
+            assert result.message == "Invalid request"
             assert result.error == "validation_error"
 
         where:
