@@ -32,7 +32,7 @@ public class Course {
     private String name;
 
     @Column(name = "university_course_id")
-    private String university_course_id;
+    private String universityCourseId;
 
     @Column(name = "date_created")
     private ZonedDateTime dateCreated;
