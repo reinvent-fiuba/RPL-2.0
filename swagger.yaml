@@ -1,120 +1,73 @@
 swagger: '2.0'
 info:
-  version: '1.0'
-  title: "RPL2"
-  description: Polls is a simple API allowing consumers to view polls and vote in them.
+  contact:
+    email: levinasale@gmail.com;matiasjosecc@gmail.com
+    name: Alejandro Levinas o Matías Cano
+    url: 'http://example.com/support'
+  description: Esta es la API de RPL 2.0 para todos y todas
   license:
-    name: MIT
-    url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
-host: polls.apiblueprint.org
+    name: License of API
+    url: 'http://example.com/support'
+  termsOfService: Terms of service
+  title: RPL 2.0
+  version: '0.1'
+host: 'localhost:44621'
 basePath: /
-schemes:
-- http
-consumes:
-- application/json
-produces:
-- application/json
 paths:
-  /questions:
-    x-summary: Questions Collection
+  /api/health:
     get:
-      summary: List All Questions
+      produces:
+        - plain/text
       responses:
-        200:
-          description: Successful Response
+        '200':
+          description: OK
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Question'
-          examples:
-            application/json:
-              - question: Favourite programming language?
-                published_at: '2015-08-05T08:40:51.620Z'
-                choices:
-                  - choice: Swift
-                    votes: 2048
-                  - choice: Python
-                    votes: 1024
-                  - choice: Objective-C
-                    votes: 512
-                  - choice: Ruby
-                    votes: 256
+            type: string
+        '403':
+          description: Forbidden!!!!!
+        '500':
+          description: 500 message
+          schema:
+            $ref: '#/definitions/Error'
+      tags:
+        - health-controller
+      deprecated: false
+      operationId: pingUsingGET
+      summary: ping
+  /submit:
     post:
-      description: >-
-        You may create your own question using this action. It takes a JSON
-        object containing a question and a collection of answers in the
-        form of choices.
-      summary: Create a New Question
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
       parameters:
-        - name: body
+        - description: ticket
           in: body
+          name: ticket
           required: true
           schema:
-            $ref: '#/definitions/QuestionRequest'
+            $ref: '#/definitions/Ticket'
       responses:
-        201:
-          description: ''
+        '200':
+          description: OK
           schema:
-            $ref: '#/definitions/Question'
-          examples:
-            application/json:
-                question: Favourite programming language?
-                published_at: '2015-08-05T08:40:51.620Z'
-                choices:
-                  - choice: Swift
-                    votes: 0
-                  - choice: Python
-                    votes: 0
-                  - choice: Objective-C
-                    votes: 0
-                  - choice: Ruby
-                    votes: 0
+            $ref: '#/definitions/Ticket'
+      tags:
+        - producer-controller
+      deprecated: false
+      operationId: submitUsingPOST
+      summary: submit
 definitions:
-  Question:
-    title: Question
-    type: object
+  Ticket:
     properties:
-      question:
-        type: string
-      published_at:
-        type: string
-      choices:
-        type: array
-        items:
-          $ref: '#/definitions/Choice'
-    required:
-      - question
-      - published_at
-      - choices
-  Choice:
-    title: Choice
-    type: object
-    properties:
-      votes:
+      quantity:
+        format: int64
         type: integer
-        format: int32
-      choice:
-        type: string
-    required:
-      - votes
-      - choice
-  QuestionRequest:
-    title: Question Request
+    title: Ticket
     type: object
-    properties:
-      question:
-        type: string
-      choices:
-        type: array
-        items:
-          type: string
-    required:
-      - question
-      - choices
-    example:
-      question: Favourite programming language?
-      choices:
-        - Swift
-        - Python
-        - Objective-C
-        - Ruby
+tags:
+  - description: Health Controller
+    name: health-controller
+  - description: Producer Controller
+    name: producer-controller
+
