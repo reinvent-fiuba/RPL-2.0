@@ -15,12 +15,16 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:41275",
+    "host": "localhost:43857",
     "basePath": "/",
     "tags": [
         {
             "name": "authentication-controller",
             "description": "Authentication Controller"
+        },
+        {
+            "name": "courses-controller",
+            "description": "Courses Controller"
         },
         {
             "name": "health-controller",
@@ -32,13 +36,48 @@
         }
     ],
     "paths": {
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "authentication-controller"
+                ],
+                "summary": "authenticateUser",
+                "operationId": "authenticateUserUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "loginDto",
+                        "description": "loginDto",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/LoginDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/JwtResponseDTO"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
         "/api/auth/signup": {
             "post": {
                 "tags": [
                     "authentication-controller"
                 ],
-                "summary": "create",
-                "operationId": "createUsingPOST",
+                "summary": "registerUser",
+                "operationId": "registerUserUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
@@ -61,6 +100,107 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/UserDTO"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/courses/{courseId}": {
+            "get": {
+                "tags": [
+                    "courses-controller"
+                ],
+                "summary": "getCourseDetails",
+                "operationId": "getCourseDetailsUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "accountNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "accountNonLocked",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "authorities[0].authority",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "courseId",
+                        "in": "path",
+                        "description": "courseId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "credentialsNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "enabled",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/UserPrincipal"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden!!!!!"
+                    },
+                    "500": {
+                        "description": "500 message",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 },
@@ -164,6 +304,39 @@
             },
             "title": "CreateUserDTO"
         },
+        "GrantedAuthority": {
+            "type": "object",
+            "properties": {
+                "authority": {
+                    "type": "string"
+                }
+            },
+            "title": "GrantedAuthority"
+        },
+        "JwtResponseDTO": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "token_type": {
+                    "type": "string"
+                }
+            },
+            "title": "JwtResponseDTO"
+        },
+        "LoginDTO": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username_or_email": {
+                    "type": "string"
+                }
+            },
+            "title": "LoginDTO"
+        },
         "Ticket": {
             "type": "object",
             "properties": {
@@ -215,6 +388,40 @@
                 }
             },
             "title": "UserDTO"
+        },
+        "UserPrincipal": {
+            "type": "object",
+            "properties": {
+                "account_non_expired": {
+                    "type": "boolean"
+                },
+                "account_non_locked": {
+                    "type": "boolean"
+                },
+                "authorities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GrantedAuthority"
+                    }
+                },
+                "credentials_non_expired": {
+                    "type": "boolean"
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            },
+            "title": "UserPrincipal"
         }
     }
 }

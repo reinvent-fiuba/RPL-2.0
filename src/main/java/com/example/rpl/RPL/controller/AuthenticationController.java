@@ -52,7 +52,7 @@ public class AuthenticationController {
     }
 
 
-    @PostMapping("/api/auth/signin")
+    @PostMapping("/api/auth/login")
     public ResponseEntity<JwtResponseDTO> authenticateUser(@Valid @RequestBody LoginDTO loginDto) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
