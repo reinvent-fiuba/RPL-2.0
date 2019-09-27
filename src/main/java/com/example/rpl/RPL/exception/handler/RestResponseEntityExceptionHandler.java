@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -58,6 +59,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         }
         log.info("[method:exception-handler][exception:MethodArgumentNotValidException][message:{}][error:{}][status:{}][cause:[{}]]", unprocessableEntity.getMessage(), unprocessableEntity.getError(), unprocessableEntity.getStatus(), unprocessableEntity.getValidationErrorsMessage());
         return new ResponseEntity<>(unprocessableEntity, new HttpHeaders(), unprocessableEntity.getStatusObj());
+    }
+
+    @ExceptionHandler({BadCredentialsException.class})
+    public ResponseEntity<Object> handleBadCredentials(BadCredentialsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED, "bad_credentials", "".concat(ex.getMessage()), ex.getCause());
+        log.info("[method:exception-handler][exception:BadCredentialsException][message:{}][error:{}][status:{}][cause:[{}]]", ex.getMessage(), "bad_credentials", HttpStatus.UNAUTHORIZED, ex.getCause());
+        return new ResponseEntity<>(errorResponse, new HttpHeaders(), errorResponse.getStatusObj());
     }
 
     @ExceptionHandler({ConstraintViolationException.class})

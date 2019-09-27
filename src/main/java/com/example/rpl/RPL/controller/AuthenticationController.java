@@ -52,6 +52,10 @@ public class AuthenticationController {
     }
 
 
+    /**
+     * If authentication fails, throws BadCredentialsException.
+     * @return JwtResponseDTO with JWT token.
+     */
     @PostMapping("/api/auth/login")
     public ResponseEntity<JwtResponseDTO> authenticateUser(@Valid @RequestBody LoginDTO loginDto) {
         Authentication authentication = authenticationManager.authenticate(

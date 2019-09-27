@@ -30,6 +30,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.customUserDetailsService = customUserDetailsService;
     }
 
+    /**
+     * Filters every request annotated with @CurrentUser (which annotates AuthenticationPrincipal).
+     * Retrieves JWT from Header and assigns security context authentication.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {

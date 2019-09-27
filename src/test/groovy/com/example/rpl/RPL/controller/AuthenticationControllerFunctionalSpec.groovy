@@ -4,10 +4,13 @@ import com.example.rpl.RPL.repository.UserRepository
 import com.example.rpl.RPL.util.AbstractFunctionalSpec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ActiveProfiles
+import spock.lang.Shared
 import spock.lang.Unroll
 
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST
 import static javax.servlet.http.HttpServletResponse.SC_CREATED
+import static javax.servlet.http.HttpServletResponse.SC_OK
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED
 
 @ActiveProfiles("test-functional")
 class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
@@ -15,12 +18,25 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Autowired
     UserRepository userRepository
 
+    @Shared
+    String username = "alep1234"
+
+    @Shared
+    String email = "asd@asd.com"
+
+    @Shared
+    String password = "12345"
+
+    /*****************************************************************************************
+     ********** REGISTER NEW USER ************************************************************
+     *****************************************************************************************/
+
     def "Create user with correct values must save user in DB"() {
         given: "a new user"
             def body = [
-                    username  : "alep1234",
-                    email     : "asd@asd.com",
-                    password  : "12345",
+                    username  : username,
+                    email     : email,
+                    password  : password,
                     name      : "Ale",
                     surname   : "Levinas",
                     studentId : "95719",
@@ -119,6 +135,50 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
             "username more than 12 chars" | "aleeeeeeeeeee" | "asd@asddd.com"  | 1234
             "invalid email"               | "alepoxx"       | "alegmail.com"   | 1234
             "invalid password"            | "alepoxxx"      | "asd@asdddd.com" | null
+    }
+
+    /*****************************************************************************************
+     ********** LOG IN ***********************************************************************
+     *****************************************************************************************/
+
+    void "test wrong username and password should respond with Bad Credentials"() {
+        given:
+            String username = "ale"
+            String password = "1"
+
+            Map body = [usernameOrEmail: username, password: password]
+
+        when:
+            def response = post("/api/auth/login", body)
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_UNAUTHORIZED
+
+            Map result = getJsonResponse(response)
+
+            assert result.message == "Bad credentials"
+            assert result.error == "bad_credentials"
+    }
+
+    @Unroll
+    void "test login with correct username/email and password should respond with token"() {
+        given:
+            Map body = [usernameOrEmail: usernameOrEmail, password: password]
+
+        when:
+            def response = post("/api/auth/login", body)
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            Map result = getJsonResponse(response)
+            assert result.access_token != null
+            assert result.token_type == "Bearer"
+
+        where:
+            usernameOrEmail << [username, email]
     }
 }
 
