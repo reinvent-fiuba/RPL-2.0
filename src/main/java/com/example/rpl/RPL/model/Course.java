@@ -46,5 +46,4 @@ public class Course {
     @Deprecated
     public Course() {
     }
-
 }

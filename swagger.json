@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:55795",
+    "host": "localhost:55633",
     "basePath": "/",
     "tags": [
         {
@@ -100,6 +100,102 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/UserDTO"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/courses": {
+            "get": {
+                "tags": [
+                    "courses-controller"
+                ],
+                "summary": "getCourses",
+                "operationId": "getCoursesUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "accountNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "accountNonLocked",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "authorities[0].authority",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "credentialsNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "enabled",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CourseSemesterDTO"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden!!!!!"
+                    },
+                    "500": {
+                        "description": "500 message",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 },
@@ -207,7 +303,7 @@
                 "deprecated": false
             }
         },
-        "/api/health": {
+        "/health": {
             "get": {
                 "tags": [
                     "health-controller"
@@ -274,6 +370,60 @@
         }
     },
     "definitions": {
+        "CourseDTO": {
+            "type": "object",
+            "properties": {
+                "date_created": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "last_updated": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "university_course_id": {
+                    "type": "string"
+                }
+            },
+            "title": "CourseDTO"
+        },
+        "CourseSemesterDTO": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "course": {
+                    "$ref": "#/definitions/CourseDTO"
+                },
+                "date_created": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "last_updated": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "semester": {
+                    "type": "string"
+                }
+            },
+            "title": "CourseSemesterDTO"
+        },
         "CreateUserDTO": {
             "type": "object",
             "properties": {

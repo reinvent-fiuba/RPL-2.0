@@ -54,5 +54,4 @@ public class CourseSemester {
     @Deprecated
     public CourseSemester() {
     }
-
 }
