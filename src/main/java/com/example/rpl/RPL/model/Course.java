@@ -44,7 +44,7 @@ public class Course {
      * @deprecated Only used by hibernate
      */
     @Deprecated
-    private Course() {
+    public Course() {
     }
 
 }

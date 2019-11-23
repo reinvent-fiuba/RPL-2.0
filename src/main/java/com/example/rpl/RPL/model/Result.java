@@ -52,7 +52,7 @@ public class Result {
      * @deprecated Only used by hibernate
      */
     @Deprecated
-    private Result() {
+    public Result() {
     }
 
 }

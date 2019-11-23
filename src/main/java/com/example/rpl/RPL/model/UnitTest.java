@@ -48,7 +48,7 @@ public class UnitTest {
      * @deprecated Only used by hibernate
      */
     @Deprecated
-    private UnitTest() {
+    public UnitTest() {
     }
 
 }

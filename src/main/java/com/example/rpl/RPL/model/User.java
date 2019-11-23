@@ -72,7 +72,7 @@ public class User {
      * @deprecated Only used by hibernate
      */
     @Deprecated
-    private User() {
+    public User() {
     }
 
     public User(String name, String surname, String studentId, String username, String email,

@@ -16,6 +16,7 @@ env:
 after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+  - export TAG=`echo ${TAG##*/}` #Tomamos todo desde la ultima / porque sino rompe el tag
   - export IMAGE_NAME=alepox/rpl-2.0
   - docker build -t $IMAGE_NAME:$COMMIT .
   - docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG

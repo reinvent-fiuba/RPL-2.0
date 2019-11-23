@@ -56,7 +56,7 @@ public class ActivitySubmission {
      * @deprecated Only used by hibernate
      */
     @Deprecated
-    private ActivitySubmission() {
+    public ActivitySubmission() {
     }
 
 }
