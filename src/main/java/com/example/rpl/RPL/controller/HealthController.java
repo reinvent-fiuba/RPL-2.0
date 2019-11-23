@@ -12,7 +12,6 @@ public class HealthController {
 
     @GetMapping(value = "/api/health", produces = "plain/text")
     public ResponseEntity<String> ping() {
-        log.info("PING");
         return new ResponseEntity<>("pong", HttpStatus.OK);
     }
 }
