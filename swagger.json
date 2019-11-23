@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:41275",
+    "host": "localhost:55317",
     "basePath": "/",
     "tags": [
         {
@@ -67,7 +67,7 @@
                 "deprecated": false
             }
         },
-        "/health": {
+        "/api/health": {
             "get": {
                 "tags": [
                     "health-controller"
