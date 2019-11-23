@@ -15,9 +15,13 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:44621",
+    "host": "localhost:55317",
     "basePath": "/",
     "tags": [
+        {
+            "name": "authentication-controller",
+            "description": "Authentication Controller"
+        },
         {
             "name": "health-controller",
             "description": "Health Controller"
@@ -28,6 +32,41 @@
         }
     ],
     "paths": {
+        "/api/auth/signup": {
+            "post": {
+                "tags": [
+                    "authentication-controller"
+                ],
+                "summary": "create",
+                "operationId": "createUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "createUserDTO",
+                        "description": "createUserDTO",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CreateUserDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/UserDTO"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
         "/api/health": {
             "get": {
                 "tags": [
@@ -95,6 +134,36 @@
         }
     },
     "definitions": {
+        "CreateUserDTO": {
+            "type": "object",
+            "properties": {
+                "degree": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "student_id": {
+                    "type": "string"
+                },
+                "surname": {
+                    "type": "string"
+                },
+                "university": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            },
+            "title": "CreateUserDTO"
+        },
         "Ticket": {
             "type": "object",
             "properties": {
@@ -104,6 +173,48 @@
                 }
             },
             "title": "Ticket"
+        },
+        "UserDTO": {
+            "type": "object",
+            "properties": {
+                "date_created": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "degree": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "email_validated": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "last_updated": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "student_id": {
+                    "type": "string"
+                },
+                "surname": {
+                    "type": "string"
+                },
+                "university": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            },
+            "title": "UserDTO"
         }
     }
 }

@@ -8,14 +8,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import javax.validation.constraints.Pattern;
+import lombok.Data;
 import lombok.NonNull;
-import lombok.ToString;
 
-@Getter
-@EqualsAndHashCode(of = "id")
-@ToString(of = "id")
+@Data
 @Entity
 @Table(name = "users")
 public class User {
@@ -28,22 +25,39 @@ public class User {
 
     @NonNull
     @Basic(optional = false)
-    @Column(name = "name", length = 255)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "surname")
     private String surname;
 
     @Column(name = "student_id")
-    private String student_id;
+    private String studentId;
 
+    @NonNull
+    @Pattern(regexp = "^[a-zA-Z0-9_-]{6,12}$")
     @Basic(optional = false)
-    @Column(name = "email")
+    @Column(name = "username", unique = true)
+    private String username;
+
+    @NonNull
+    @Pattern(regexp = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
+    @Basic(optional = false)
+    @Column(name = "email", unique = true)
     private String email;
 
+    @NonNull
+    @Basic(optional = false)
+    @Column(name = "password")
+    private String password;
+
+    @NonNull
     @Basic(optional = false)
     @Column(name = "email_validated")
-    private Boolean email_validated;
+    private Boolean emailValidated;
+
+    @Column(name = "university")
+    private String university;
 
     @Column(name = "degree")
     private String degree;
@@ -61,12 +75,19 @@ public class User {
     private User() {
     }
 
-    public User(String name, String email) {
-        this. name = name;
+    public User(String name, String surname, String studentId, String username, String email,
+        String encodedPassword, String university, String degree) {
+        ZonedDateTime now = ZonedDateTime.now();
+        this.name = name;
+        this.surname = surname;
+        this.studentId = studentId;
+        this.username = username;
         this.email = email;
-        this.email_validated = false;
-        this.dateCreated = ZonedDateTime.now();
-        this.lastUpdated = ZonedDateTime.now();
+        this.password = encodedPassword;
+        this.university = university;
+        this.degree = degree;
+        this.emailValidated = false;
+        this.dateCreated = now;
+        this.lastUpdated = now;
     }
-
 }

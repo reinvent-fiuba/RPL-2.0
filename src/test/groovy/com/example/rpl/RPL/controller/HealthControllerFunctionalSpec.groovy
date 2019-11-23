@@ -14,7 +14,6 @@ class HealthControllerFunctionalSpec extends AbstractFunctionalSpec {
             def response = get("/api/health")
 
         then: "must return a plain text containing pong"
-            response.contentType == "plain/text;charset=UTF-8"
             response.statusCode == SC_OK
             response.body.asString() == "pong"
     }

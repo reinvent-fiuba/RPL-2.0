@@ -1,10 +1,14 @@
 INSERT INTO users
-VALUES (1, 'Alejandro', 'Levinas', 95719, 'levinasale@gmail.com', false, 'Ing. en Informatica',
-        now(), now());
+VALUES (1, 'Alejandro', 'Levinas', 95719, 'alepox', 'levinasale@gmail.com',
+        '$2a$10$ab9rVz3lVB.ANA2ss.1pOOFwg.tH5yexgXc58PSMwa6CVlBDWM2Eq', false,
+        'Ing. en Informatica',
+        'UBA', now(), now());
 
 INSERT INTO users
-VALUES (2, 'Matias', 'Cano', 97925, 'matiasjosecc@gmail.com', false, 'Ing. en Informatica',
-        now(), now());
+VALUES (2, 'Matias', 'Cano', 97925, 'tute', 'matiasjosecc@gmail.com',
+        '$2a$10$ab9rVz3lVB.ANA2ss.1pOOFwg.tH5yexgXc58PSMwa6CVlBDWM2Eq', false,
+        'Ing. en Informatica',
+        'UBA', now(), now());
 
 INSERT INTO roles
 VALUES (1, 'admin', 'course_create,course_edit', now(), now());
@@ -31,7 +35,8 @@ INSERT INTO files
 VALUES (1, 1, now(), now());
 
 INSERT INTO activities
-VALUES (1, 1, 'Imprimir Hola Mundo!!', 'Imprime Hola mundo y ganaras', 'c_std11', true, 1, now(), now());
+VALUES (1, 1, 'Imprimir Hola Mundo!!', 'Imprime Hola mundo y ganaras', 'c_std11', true, 1, now(),
+        now());
 
 INSERT INTO activity_submissions
 VALUES (1, 1, 1, 1, 'running', now(), now());

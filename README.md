@@ -1,6 +1,8 @@
 # RPL-2.0
 RPL Final Assignment FIUBA
 
+[![Build Status](https://travis-ci.com/alelevinas/RPL-2.0.svg?token=VS5PsnX3RedupKy5Yxgi&branch=master)](https://travis-ci.com/alelevinas/RPL-2.0)
+
 This service has three components, the producer backend, the consumer backend and the message broker.
 You can also add a MySQL server to persist data. If not, an H2 in-memory database is used (so as soon 
 as you close the JVM, all data is lost) 

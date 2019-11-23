@@ -37,10 +37,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.flywaydb:flyway-core:5.2.4'
 
     implementation 'com.github.ben-manes.caffeine:caffeine:2.6.2'
     implementation 'com.fasterxml.jackson.module:jackson-module-paranamer'
+    implementation 'io.jsonwebtoken:jjwt:0.9.0'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -85,8 +87,14 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories.from = files(classDirectories.files.collect {
             fileTree(dir: it,
-                    exclude: ['com/example/rpl/RPL/config/**',
-                            'com/example/rpl/RPL/model/**'
+                    exclude: [
+                            'com/example/rpl/RPL/RplApplication',
+                            'com/example/rpl/RPL/config/**',
+                            'com/example/rpl/RPL/model/**',
+                            'com/example/rpl/RPL/security/**',
+                            'com/example/rpl/RPL/exception/**',
+                            'com/example/rpl/RPL/controller/dto/**',
+                            'com/example/rpl/RPL/queue/Consumer.java',
                     ])
         })
     }
