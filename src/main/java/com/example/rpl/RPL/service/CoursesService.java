@@ -2,8 +2,10 @@ package com.example.rpl.RPL.service;
 
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
 import com.example.rpl.RPL.model.CourseSemester;
+import com.example.rpl.RPL.model.CourseUser;
 import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.repository.CourseSemesterRepository;
+import com.example.rpl.RPL.repository.CourseUserRepository;
 import com.example.rpl.RPL.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +20,12 @@ import java.util.List;
 public class CoursesService {
 
     private CourseSemesterRepository courseSemesterRepository;
+    private CourseUserRepository courseUserRepository;
 
     @Autowired
-    public CoursesService(CourseSemesterRepository courseSemesterRepository) {
+    public CoursesService(CourseSemesterRepository courseSemesterRepository, CourseUserRepository courseUserRepository) {
         this.courseSemesterRepository = courseSemesterRepository;
+        this.courseUserRepository = courseUserRepository;
     }
 
     /**
@@ -29,23 +33,7 @@ public class CoursesService {
      * @return a new saved User
      */
     @Transactional
-    public List<CourseSemester> getAllCourseSemester() {
+    public List<CourseSemester> getAllCoursesSemester() {
         return courseSemesterRepository.findAll();
-//        User user = new User(name, surname, studentId, username, email,
-//            passwordEncoder.encode(password), university, degree);
-
-//        if (userRepository.existsByEmail(email)) {
-//            throw new EntityAlreadyExistsException(String.format("Email '%s' already used", email),
-//                "ERROR_EMAIL_USED");
-//        }
-//
-//        if (userRepository.existsByUsername(username)) {
-//            throw new EntityAlreadyExistsException(
-//                String.format("Username '%s' already used", username), "ERROR_USERNAME_USED");
-//        }
-
-//        log.info("[process:create_user][username:{}] Creating new user", username);
-
-//        return userRepository.save(user);
     }
 }

@@ -2,6 +2,7 @@ package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.controller.dto.CourseSemesterDTO;
 import com.example.rpl.RPL.model.CourseSemester;
+import com.example.rpl.RPL.model.CourseUser;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.CoursesService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -33,7 +35,7 @@ public class CoursesController {
     @GetMapping(value = "/api/courses")
     public ResponseEntity<List<CourseSemesterDTO>> getCourses(@CurrentUser UserPrincipal currentUser) {
 
-        List<CourseSemester> courseSemesters = coursesService.getAllCourseSemester();
+        List<CourseSemester> courseSemesters = coursesService.getAllCoursesSemester();
 
         return new ResponseEntity<>(
                 courseSemesters.stream()
