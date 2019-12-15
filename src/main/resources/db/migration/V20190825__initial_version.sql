@@ -80,10 +80,12 @@ CREATE TABLE course_users
 
 ) ENGINE = InnoDB;
 
-CREATE TABLE files
+CREATE TABLE rpl_files
 (
     id           BIGINT NOT NULL AUTO_INCREMENT,
-    link_s3      VARCHAR(255),
+    file_name    VARCHAR(255),
+    file_type    VARCHAR(255),
+    data         BLOB,
     date_created DATETIME,
     last_updated DATETIME,
 
@@ -104,7 +106,7 @@ CREATE TABLE activities
 
     PRIMARY KEY (id),
     FOREIGN KEY (course_semester_id) REFERENCES courses_semester (id),
-    FOREIGN KEY (file_id) REFERENCES files (id)
+    FOREIGN KEY (file_id) REFERENCES rpl_files (id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE activity_submissions
@@ -120,7 +122,7 @@ CREATE TABLE activity_submissions
     PRIMARY KEY (id),
     FOREIGN KEY (activity_id) REFERENCES activities (id),
     FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (response_files_id) REFERENCES files (id)
+    FOREIGN KEY (response_files_id) REFERENCES rpl_files (id)
 
 ) ENGINE = InnoDB;
 
@@ -174,7 +176,7 @@ CREATE TABLE unit_tests
 
     PRIMARY KEY (id),
     FOREIGN KEY (test_id) REFERENCES tests (id),
-    FOREIGN KEY (test_file_id) REFERENCES files (id)
+    FOREIGN KEY (test_file_id) REFERENCES rpl_files (id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE IO_tests
