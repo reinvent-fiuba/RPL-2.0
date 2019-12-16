@@ -1,5 +1,7 @@
 package com.example.rpl.RPL.model;
 
+import static java.time.ZonedDateTime.now;
+
 import java.time.ZonedDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -59,4 +61,11 @@ public class RPLFile {
     public RPLFile() {
     }
 
+    public RPLFile(String fileName, String contentType, byte[] bytes) {
+        this.fileName = fileName;
+        this.fileType = contentType;
+        this.data = bytes;
+        this.dateCreated = now();
+        this.lastUpdated = this.dateCreated;
+    }
 }

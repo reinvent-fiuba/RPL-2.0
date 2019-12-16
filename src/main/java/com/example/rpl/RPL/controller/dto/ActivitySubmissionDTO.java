@@ -12,21 +12,38 @@ public class ActivitySubmissionDTO {
 
     private Long id;
 
-    private String fileName;
+    private String submissionFileName;
 
-    private String fileType;
+    private String submissionFileType;
 
-    private Long fileId;
+    private Long submissionFileId;
+
+    private String activityTestType;
+
+    private String activityFileName;
+
+    private String activityFileType;
+
+    private Long activityFileId;
 
     private String activityLanguage;
 
+    private String activityUnitTests;
+
+    private String activityIOTests;
+
     public static ActivitySubmissionDTO fromEntity(ActivitySubmission as) {
-        return ActivitySubmissionDTO.builder()
+        ActivitySubmissionDTO.ActivitySubmissionDTOBuilder ab = ActivitySubmissionDTO.builder()
             .id(as.getId())
-            .fileName(as.getFile().getFileName())
-            .fileType(as.getFile().getFileType())
-            .fileId(as.getFile().getId())
-            .activityLanguage(as.getActivity().getLanguage().getNameAndVersion())
-            .build();
+            .submissionFileName(as.getFile().getFileName())
+            .submissionFileType(as.getFile().getFileType())
+            .submissionFileId(as.getFile().getId())
+            .activityFileName(as.getActivity().getFile().getFileName())
+            .activityFileType(as.getActivity().getFile().getFileType())
+            .activityFileId(as.getActivity().getFile().getId())
+            .activityLanguage(as.getActivity().getLanguage().getNameAndVersion());
+
+//        if (as.getActivity().get)
+            return  ab.build();
     }
 }
