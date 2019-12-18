@@ -30,17 +30,20 @@ public class IOTest {
     @Column(name = "id")
     private Long id;
 
+//    @JoinColumn(name = "test_id", referencedColumnName = "id")
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private Test test;
 
-    @JoinColumn(name = "test_id", referencedColumnName = "id")
+    @JoinColumn(name = "activity_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Test test;
+    private Activity activity;
 
     @Column(name = "test_in")
-    @Type(type="clob")
+//    @Type(type = "clob")
     private String testIn;
 
     @Column(name = "test_out")
-    @Type(type="clob")
+//    @Type(type = "clob")
     private String testOut;
 
     @Column(name = "date_created")

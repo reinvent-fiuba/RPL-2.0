@@ -51,9 +51,9 @@ public class Activity {
     @Column(name = "active")
     private Boolean active;
 
-    @JoinColumn(name = "file_id", referencedColumnName = "id")
+    @JoinColumn(name = "supporting_file_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private RPLFile file;
+    private RPLFile supportingFile;
 
 
     @Column(name = "date_created")

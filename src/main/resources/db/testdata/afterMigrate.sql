@@ -37,23 +37,26 @@ VALUES (1, 'la_submission.tar.xz', 'text/x-c',
         now(), now());
 
 INSERT INTO activities
-VALUES (1, 1, 'Imprimir Hola Mundo!!', 'Imprime Hola mundo y ganaras', 'c_std11', true, 1, now(),
-        now());
+VALUES (1, 1, 'Pasar de segundos a horas, minutos, segundos',
+        'Dada una cantidad de segundos, devolver/imprimir la cantidad de horas', 'c_std11', true, 1,
+        now(), now());
 
 INSERT INTO activity_submissions
 VALUES (1, 1, 1, 1, 'running', now(), now());
 
-INSERT INTO tests
-VALUES (1, 1, now(), now());
+-- INSERT INTO tests
+-- VALUES (1, 1, now(), now());
 
 INSERT INTO results
-VALUES (1, 1, 1, 'passed', now(), now());
+VALUES (1, 1, 'passed', now(), now());
 
-INSERT INTO test_results
+INSERT INTO test_run
 VALUES (1, 1, true, 'todo el stderr', 'todo el stdout', now(), now());
 
 INSERT INTO unit_tests
 VALUES (1, 1, 1, now(), now());
 
 INSERT INTO IO_tests
-VALUES (1, 1, 'Hello World!', 'Hello World!', now(), now());
+VALUES (1, 1, '26164', '07:16:04.0000', now(), now());
+INSERT INTO IO_tests
+VALUES (2, 1, '26165', '07:16:05.0000', now(), now());

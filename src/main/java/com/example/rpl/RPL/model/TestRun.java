@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,8 +21,8 @@ import org.hibernate.annotations.Type;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 @Entity
-@Table(name = "test_results")
-public class TestResult {
+@Table(name = "test_run")
+public class TestRun {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,9 +31,9 @@ public class TestResult {
     private Long id;
 
 
-    @JoinColumn(name = "test_id", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Test test;
+    @JoinColumn(name = "activity_submission_id", referencedColumnName = "id")
+    @OneToOne(fetch = FetchType.LAZY)
+    private ActivitySubmission activitySubmission;
 
     @Column(name = "success")
     private Boolean success;
@@ -41,13 +41,13 @@ public class TestResult {
     @NonNull
     @Basic(optional = false)
     @Column(name = "stderr")
-    @Type(type="clob")
+    @Type(type = "clob")
     private String stderr;
 
     @NonNull
     @Basic(optional = false)
     @Column(name = "stdout")
-    @Type(type="clob")
+    @Type(type = "clob")
     private String stdout;
 
     @Column(name = "date_created")
@@ -60,7 +60,7 @@ public class TestResult {
      * @deprecated Only used by hibernate
      */
     @Deprecated
-    public TestResult() {
+    public TestRun() {
     }
 
 }

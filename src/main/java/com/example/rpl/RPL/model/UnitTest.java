@@ -30,9 +30,13 @@ public class UnitTest {
     private Long id;
 
 
-    @JoinColumn(name = "test_id", referencedColumnName = "id")
+//    @JoinColumn(name = "test_id", referencedColumnName = "id")
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private Test test;
+
+    @JoinColumn(name = "activity_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Test test;
+    private Activity activity;
 
     @JoinColumn(name = "test_file_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)

@@ -100,13 +100,13 @@ CREATE TABLE activities
     description        VARCHAR(255),
     language           VARCHAR(255),
     active             BOOLEAN,
-    file_id            BIGINT,
+    supporting_file_id BIGINT,
     date_created       DATETIME,
     last_updated       DATETIME,
 
     PRIMARY KEY (id),
     FOREIGN KEY (course_semester_id) REFERENCES courses_semester (id),
-    FOREIGN KEY (file_id) REFERENCES rpl_files (id)
+    FOREIGN KEY (supporting_file_id) REFERENCES rpl_files (id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE activity_submissions
@@ -126,68 +126,68 @@ CREATE TABLE activity_submissions
 
 ) ENGINE = InnoDB;
 
-CREATE TABLE tests
-(
-    id           BIGINT NOT NULL AUTO_INCREMENT,
-    activity_id  BIGINT,
-    date_created DATETIME,
-    last_updated DATETIME,
-
-    PRIMARY KEY (id),
-    FOREIGN KEY (activity_id) REFERENCES activities (id)
-) ENGINE = InnoDB;
+-- CREATE TABLE tests
+-- (
+--     id           BIGINT NOT NULL AUTO_INCREMENT,
+--     activity_id  BIGINT,
+--     date_created DATETIME,
+--     last_updated DATETIME,
+--
+--     PRIMARY KEY (id),
+--     FOREIGN KEY (activity_id) REFERENCES activities (id)
+-- ) ENGINE = InnoDB;
 
 CREATE TABLE results
 (
     id                     BIGINT NOT NULL AUTO_INCREMENT,
     activity_submission_id BIGINT,
-    test_id                BIGINT,
+--     test_id                BIGINT,
     score                  varchar(255),
     date_created           DATETIME,
     last_updated           DATETIME,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (activity_submission_id) REFERENCES activity_submissions (id),
-    FOREIGN KEY (test_id) REFERENCES tests (id)
+    FOREIGN KEY (activity_submission_id) REFERENCES activity_submissions (id)
+--     FOREIGN KEY (test_id) REFERENCES tests (id)
 ) ENGINE = InnoDB;
 
-CREATE TABLE test_results
+CREATE TABLE test_run
 (
-    id           BIGINT NOT NULL AUTO_INCREMENT,
-    test_id      BIGINT,
-    success      BOOLEAN,
-    stderr       TEXT,
-    stdout       TEXT,
-    date_created DATETIME,
-    last_updated DATETIME,
+    id                     BIGINT NOT NULL AUTO_INCREMENT,
+    activity_submission_id BIGINT,
+    success                BOOLEAN,
+    stderr                 TEXT,
+    stdout                 TEXT,
+    date_created           DATETIME,
+    last_updated           DATETIME,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (test_id) REFERENCES tests (id)
+    FOREIGN KEY (activity_submission_id) REFERENCES activity_submissions (id)
 )
     ENGINE = InnoDB;
 
 CREATE TABLE unit_tests
 (
     id           BIGINT NOT NULL AUTO_INCREMENT,
-    test_id      BIGINT,
+    activity_id  BIGINT,
     test_file_id BIGINT,
     date_created DATETIME,
     last_updated DATETIME,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (test_id) REFERENCES tests (id),
+    FOREIGN KEY (activity_id) REFERENCES activities (id),
     FOREIGN KEY (test_file_id) REFERENCES rpl_files (id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE IO_tests
 (
     id           BIGINT NOT NULL AUTO_INCREMENT,
-    test_id      BIGINT,
+    activity_id  BIGINT,
     test_in      TEXT,
     test_out     TEXT,
     date_created DATETIME,
     last_updated DATETIME,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (test_id) REFERENCES tests (id)
+    FOREIGN KEY (activity_id) REFERENCES activities (id)
 ) ENGINE = InnoDB;

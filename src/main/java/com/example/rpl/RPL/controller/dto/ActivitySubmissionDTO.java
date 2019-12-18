@@ -1,8 +1,11 @@
 package com.example.rpl.RPL.controller.dto;
 
 import com.example.rpl.RPL.model.ActivitySubmission;
-import com.example.rpl.RPL.model.User;
-import java.time.ZonedDateTime;
+import com.example.rpl.RPL.model.IOTest;
+import com.example.rpl.RPL.model.UnitTest;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,30 +23,35 @@ public class ActivitySubmissionDTO {
 
     private String activityTestType;
 
-    private String activityFileName;
+    private String activitySupportingFileName;
 
-    private String activityFileType;
+    private String activitySupportingFileType;
 
-    private Long activityFileId;
+    private Long activitySupportingFileId;
 
     private String activityLanguage;
 
     private String activityUnitTests;
 
-    private String activityIOTests;
+    private List<String> activityIOTests;
 
-    public static ActivitySubmissionDTO fromEntity(ActivitySubmission as) {
+    public static ActivitySubmissionDTO fromEntity(ActivitySubmission as,
+        Optional<UnitTest> unitTest,
+        List<IOTest> ioTests) {
         ActivitySubmissionDTO.ActivitySubmissionDTOBuilder ab = ActivitySubmissionDTO.builder()
             .id(as.getId())
             .submissionFileName(as.getFile().getFileName())
             .submissionFileType(as.getFile().getFileType())
             .submissionFileId(as.getFile().getId())
-            .activityFileName(as.getActivity().getFile().getFileName())
-            .activityFileType(as.getActivity().getFile().getFileType())
-            .activityFileId(as.getActivity().getFile().getId())
+            .activitySupportingFileName(as.getActivity().getSupportingFile().getFileName())
+            .activitySupportingFileType(as.getActivity().getSupportingFile().getFileType())
+            .activitySupportingFileId(as.getActivity().getSupportingFile().getId())
             .activityLanguage(as.getActivity().getLanguage().getNameAndVersion());
 
-//        if (as.getActivity().get)
-            return  ab.build();
+        unitTest.ifPresent(test -> ab.activityUnitTests = new String(test.getTestFile().getData()));
+
+        ab.activityIOTests(ioTests.stream().map(IOTest::getTestIn).collect(Collectors.toList()));
+
+        return ab.build();
     }
 }
