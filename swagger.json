@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:42367",
+    "host": "localhost:42463",
     "basePath": "/",
     "tags": [
         {
@@ -530,20 +530,23 @@
         "ActivitySubmissionDTO": {
             "type": "object",
             "properties": {
-                "activity_file_id": {
+                "activity_iotests": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "activity_language": {
+                    "type": "string"
+                },
+                "activity_supporting_file_id": {
                     "type": "integer",
                     "format": "int64"
                 },
-                "activity_file_name": {
+                "activity_supporting_file_name": {
                     "type": "string"
                 },
-                "activity_file_type": {
-                    "type": "string"
-                },
-                "activity_iotests": {
-                    "type": "string"
-                },
-                "activity_language": {
+                "activity_supporting_file_type": {
                     "type": "string"
                 },
                 "activity_test_type": {

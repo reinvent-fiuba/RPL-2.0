@@ -183,8 +183,8 @@ CREATE TABLE IO_tests
 (
     id           BIGINT NOT NULL AUTO_INCREMENT,
     activity_id  BIGINT,
-    test_in      TEXT,
-    test_out     TEXT,
+    test_in      VARCHAR(255),
+    test_out     VARCHAR(255),
     date_created DATETIME,
     last_updated DATETIME,
 
