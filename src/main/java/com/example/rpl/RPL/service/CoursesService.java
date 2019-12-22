@@ -7,6 +7,7 @@ import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.repository.CourseSemesterRepository;
 import com.example.rpl.RPL.repository.CourseUserRepository;
 import com.example.rpl.RPL.repository.UserRepository;
+import com.example.rpl.RPL.security.UserPrincipal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -36,4 +38,14 @@ public class CoursesService {
     public List<CourseSemester> getAllCoursesSemester() {
         return courseSemesterRepository.findAll();
     }
+
+    @Transactional
+    public List<CourseSemester> getAllCoursesSemesterFromUser(Long currentUserId) {
+        return courseUserRepository.findByUser_Id(currentUserId)
+            .stream()
+            .map(CourseUser::getCourseSemester)
+            .collect(Collectors.toList());
+    }
+
+
 }
