@@ -4,6 +4,7 @@ import com.example.rpl.RPL.model.CourseSemester;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.net.URI;
 import java.time.ZonedDateTime;
 
 @Getter
@@ -20,6 +21,8 @@ public class CourseSemesterDTO {
 
     private String semester;
 
+    private String imgUri;
+
     private ZonedDateTime dateCreated;
 
     private ZonedDateTime lastUpdated;
@@ -31,6 +34,7 @@ public class CourseSemesterDTO {
             .description(courseSemester.getDescription())
             .active(courseSemester.getActive())
             .semester(courseSemester.getSemester())
+            .imgUri(courseSemester.getImgUri())
             .dateCreated(courseSemester.getDateCreated())
             .lastUpdated(courseSemester.getLastUpdated())
             .build();

@@ -1,5 +1,6 @@
 package com.example.rpl.RPL.model;
 
+import java.net.URI;
 import java.time.ZonedDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -41,6 +42,9 @@ public class CourseSemester {
 
     @Column(name = "semester")
     private String semester;
+
+    @Column(name = "img_uri")
+    private String imgUri;
 
     @Column(name = "date_created")
     private ZonedDateTime dateCreated;
