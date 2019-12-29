@@ -10,12 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.ToString;
 
-@Getter
+import lombok.*;
+
+@Data
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 @Entity
