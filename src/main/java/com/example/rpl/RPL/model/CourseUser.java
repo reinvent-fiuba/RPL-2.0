@@ -59,4 +59,14 @@ public class CourseUser {
     public CourseUser() {
     }
 
+    public CourseUser(CourseSemester courseSemester, User user, Role role, Boolean accepted) {
+        ZonedDateTime now = ZonedDateTime.now();
+        this.courseSemester = courseSemester;
+        this.user = user;
+        this.role = role;
+        this.accepted = accepted;
+        this.dateCreated = now;
+        this.lastUpdated = now;
+    }
+
 }

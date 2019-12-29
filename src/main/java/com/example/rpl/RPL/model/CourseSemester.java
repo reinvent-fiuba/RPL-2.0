@@ -56,4 +56,15 @@ public class CourseSemester {
     @Deprecated
     public CourseSemester() {
     }
+
+    public CourseSemester(Course course, String description, Boolean active, String semester, String imgUri) {
+        ZonedDateTime now = ZonedDateTime.now();
+        this.course = course;
+        this.description = description;
+        this.active = active;
+        this.semester = semester;
+        this.imgUri = imgUri;
+        this.dateCreated = now;
+        this.lastUpdated = now;
+    }
 }
