@@ -1,5 +1,6 @@
 package com.example.rpl.RPL.model;
 
+import java.net.URI;
 import java.time.ZonedDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -11,12 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.ToString;
 
-@Getter
+import lombok.*;
+
+@Data
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 @Entity
@@ -42,6 +41,9 @@ public class CourseSemester {
     @Column(name = "semester")
     private String semester;
 
+    @Column(name = "img_uri")
+    private String imgUri;
+
     @Column(name = "date_created")
     private ZonedDateTime dateCreated;
 
@@ -55,4 +57,14 @@ public class CourseSemester {
     public CourseSemester() {
     }
 
+    public CourseSemester(Course course, String description, Boolean active, String semester, String imgUri) {
+        ZonedDateTime now = ZonedDateTime.now();
+        this.course = course;
+        this.description = description;
+        this.active = active;
+        this.semester = semester;
+        this.imgUri = imgUri;
+        this.dateCreated = now;
+        this.lastUpdated = now;
+    }
 }

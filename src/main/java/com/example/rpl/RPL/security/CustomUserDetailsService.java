@@ -43,6 +43,16 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Transactional
+    public UserDetails loadUserById(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+            () -> new NotFoundException(String.format("User with ID %s not found", userId),
+                "user_not_found")
+        );
+
+        return UserPrincipal.create(user);
+    }
+
+    @Transactional
     public UserDetails loadUserByIdAndCourseId(Long userId, Long courseId) {
         if (courseId != null) {
             Optional<CourseUser> courseUser = courseUserRepository

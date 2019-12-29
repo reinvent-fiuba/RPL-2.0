@@ -1,6 +1,7 @@
 package com.example.rpl.RPL.service;
 
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
+import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -48,5 +51,15 @@ public class AuthenticationService {
         log.info("[process:create_user][username:{}] Creating new user", username);
 
         return userRepository.save(user);
+    }
+
+    @Transactional
+    public User getUserById(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (!user.isPresent()) {
+            throw new NotFoundException(String.format("User with id '%d' does not exist", userId));
+        }
+
+        return user.get();
     }
 }

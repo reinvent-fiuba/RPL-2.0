@@ -11,12 +11,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 
-@Getter
+@Data
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 @Entity
@@ -55,6 +57,16 @@ public class CourseUser {
      */
     @Deprecated
     public CourseUser() {
+    }
+
+    public CourseUser(CourseSemester courseSemester, User user, Role role, Boolean accepted) {
+        ZonedDateTime now = ZonedDateTime.now();
+        this.courseSemester = courseSemester;
+        this.user = user;
+        this.role = role;
+        this.accepted = accepted;
+        this.dateCreated = now;
+        this.lastUpdated = now;
     }
 
 }

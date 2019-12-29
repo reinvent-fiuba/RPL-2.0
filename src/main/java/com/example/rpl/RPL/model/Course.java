@@ -8,12 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.ToString;
 
-@Getter
+import lombok.*;
+
+@Data
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 @Entity
@@ -47,4 +45,11 @@ public class Course {
     public Course() {
     }
 
+    public Course(String name, String universityCourseId) {
+        ZonedDateTime now = ZonedDateTime.now();
+        this.name = name;
+        this.universityCourseId = universityCourseId;
+        this.dateCreated = now;
+        this.lastUpdated = now;
+    }
 }

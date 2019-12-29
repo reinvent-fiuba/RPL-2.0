@@ -56,6 +56,7 @@ CREATE TABLE courses_semester
     description  VARCHAR(255),
     active       BOOLEAN,
     semester     VARCHAR(255),
+    img_uri      VARCHAR(255),
     date_created DATETIME,
     last_updated DATETIME,
 
