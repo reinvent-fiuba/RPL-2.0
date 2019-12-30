@@ -1,16 +1,11 @@
 package com.example.rpl.RPL.service
 
-import com.example.rpl.RPL.exception.EntityAlreadyExistsException
-import com.example.rpl.RPL.model.Course
+
 import com.example.rpl.RPL.model.CourseSemester
 import com.example.rpl.RPL.model.CourseUser
-import com.example.rpl.RPL.model.User
 import com.example.rpl.RPL.repository.CourseSemesterRepository
 import com.example.rpl.RPL.repository.CourseUserRepository
-import com.example.rpl.RPL.repository.UserRepository
-import org.springframework.security.crypto.password.PasswordEncoder
 import spock.lang.Specification
-import spock.lang.Unroll
 
 class CoursesServiceSpec extends Specification {
 

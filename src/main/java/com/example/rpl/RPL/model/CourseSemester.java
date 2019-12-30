@@ -28,9 +28,11 @@ public class CourseSemester {
     @Column(name = "id")
     private Long id;
 
-    @JoinColumn(name = "course_id", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Course course;
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "university_course_id")
+    private String universityCourseId;
 
     @Column(name = "description")
     private String description;
@@ -57,9 +59,10 @@ public class CourseSemester {
     public CourseSemester() {
     }
 
-    public CourseSemester(Course course, String description, Boolean active, String semester, String imgUri) {
+    public CourseSemester(String name, String universityCourseId, String description, Boolean active, String semester, String imgUri) {
         ZonedDateTime now = ZonedDateTime.now();
-        this.course = course;
+        this.name = name;
+        this.universityCourseId = universityCourseId;
         this.description = description;
         this.active = active;
         this.semester = semester;

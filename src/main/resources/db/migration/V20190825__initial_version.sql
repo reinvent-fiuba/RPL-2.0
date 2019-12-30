@@ -38,30 +38,19 @@ CREATE TABLE users
     UNIQUE (username)
 ) ENGINE = InnoDB;
 
-CREATE TABLE courses
+CREATE TABLE courses_semester
 (
     id                   BIGINT NOT NULL AUTO_INCREMENT,
     name                 VARCHAR(255),
     university_course_id VARCHAR(255),
+    description          VARCHAR(255),
+    active               BOOLEAN,
+    semester             VARCHAR(255),
+    img_uri              VARCHAR(255),
     date_created         DATETIME,
     last_updated         DATETIME,
 
     PRIMARY KEY (id)
-) ENGINE = InnoDB;
-
-CREATE TABLE courses_semester
-(
-    id           BIGINT NOT NULL AUTO_INCREMENT,
-    course_id    bigint,
-    description  VARCHAR(255),
-    active       BOOLEAN,
-    semester     VARCHAR(255),
-    img_uri      VARCHAR(255),
-    date_created DATETIME,
-    last_updated DATETIME,
-
-    PRIMARY KEY (id),
-    FOREIGN KEY (course_id) REFERENCES courses (id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE course_users

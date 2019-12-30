@@ -46,6 +46,4 @@ public class CoursesService {
             .map(CourseUser::getCourseSemester)
             .collect(Collectors.toList());
     }
-
-
 }

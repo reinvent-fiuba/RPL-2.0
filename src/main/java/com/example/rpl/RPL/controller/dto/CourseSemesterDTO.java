@@ -13,7 +13,9 @@ public class CourseSemesterDTO {
 
     private Long id;
 
-    private CourseDTO course;
+    private String name;
+
+    private String universityCourseId;
 
     private String description;
 
@@ -30,7 +32,8 @@ public class CourseSemesterDTO {
     public static CourseSemesterDTO fromEntity(CourseSemester courseSemester) {
         return CourseSemesterDTO.builder()
             .id(courseSemester.getId())
-            .course(CourseDTO.fromEntity(courseSemester.getCourse()))
+            .name(courseSemester.getName())
+            .universityCourseId(courseSemester.getUniversityCourseId())
             .description(courseSemester.getDescription())
             .active(courseSemester.getActive())
             .semester(courseSemester.getSemester())
