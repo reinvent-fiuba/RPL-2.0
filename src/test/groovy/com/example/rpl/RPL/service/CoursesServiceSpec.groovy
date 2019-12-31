@@ -1,77 +1,72 @@
 package com.example.rpl.RPL.service
 
-import com.example.rpl.RPL.exception.EntityAlreadyExistsException
+
 import com.example.rpl.RPL.model.Course
-import com.example.rpl.RPL.model.CourseSemester
 import com.example.rpl.RPL.model.CourseUser
-import com.example.rpl.RPL.model.User
-import com.example.rpl.RPL.repository.CourseSemesterRepository
+import com.example.rpl.RPL.repository.CourseRepository
 import com.example.rpl.RPL.repository.CourseUserRepository
-import com.example.rpl.RPL.repository.UserRepository
-import org.springframework.security.crypto.password.PasswordEncoder
 import spock.lang.Specification
-import spock.lang.Unroll
 
 class CoursesServiceSpec extends Specification {
 
     private CoursesService coursesService
     private CourseUserRepository courseUserRepository
-    private CourseSemesterRepository courseSemesterRepository
+    private CourseRepository courseRepository
 
     def setup() {
         courseUserRepository = Mock(CourseUserRepository)
-        courseSemesterRepository = Mock(CourseSemesterRepository)
-        coursesService = new CoursesService(courseSemesterRepository, courseUserRepository)
+        courseRepository = Mock(CourseRepository)
+        coursesService = new CoursesService(courseRepository, courseUserRepository)
     }
 
-    void "should return an empty list of courseSemesters when calling getAllCoursesSemester"() {
-        given: "no course semesters"
-        courseSemesterRepository.findAll() >> []
+    void "should return an empty list of courses when calling getAllCourses"() {
+        given: "no courses"
+        courseRepository.findAll() >> []
 
-        when: "retrieving all course semesters"
-            List< CourseSemester> courseSemesters = coursesService.getAllCoursesSemester()
+        when: "retrieving all courses"
+            List< Course> courses = coursesService.getAllCourses()
 
-        then: "there are no course semesters"
-            courseSemesters.isEmpty()
+        then: "there are no courses"
+            courses.isEmpty()
     }
 
-    void "should return some courseSemesters when calling getAllCoursesSemester"() {
-        given: "1 course semesters"
-        courseSemesterRepository.findAll() >> [
-                new CourseSemester()
+    void "should return some courses when calling getAllCourses"() {
+        given: "1 course"
+        courseRepository.findAll() >> [
+                new Course()
         ]
 
-        when: "retrieving all course semesters"
-        List< CourseSemester> courseSemesters = coursesService.getAllCoursesSemester()
+        when: "retrieving all course"
+        List< Course> courses = coursesService.getAllCourses()
 
-        then: "there are no course semesters"
-        courseSemesters.size() == 1
+        then: "there are no courses"
+        courses.size() == 1
     }
 
-    void "should return an empty list of courseSemesters when calling getAllCoursesSemesterFromUser"() {
+    void "should return an empty list of courses when calling getAllCoursesByUser"() {
         given: "no course users"
         courseUserRepository.findByUser_Id(1) >> []
 
-        when: "retrieving user course semesters"
-        List< CourseSemester> courseSemesters = coursesService.getAllCoursesSemesterFromUser(1)
+        when: "retrieving user courses"
+        List< Course> courses = coursesService.getAllCoursesByUser(1)
 
-        then: "there are no course semesters"
-        courseSemesters.isEmpty()
+        then: "there are no courses"
+        courses.isEmpty()
     }
 
-    void "should return some courseSemesters when calling getAllCoursesSemesterFromUser"() {
-        given: "1 course semesters"
-        CourseSemester courseSemester = Mock(CourseSemester)
+    void "should return some courses when calling getAllCoursesByUser"() {
+        given: "1 course"
+        Course course = Mock(Course)
         CourseUser courseUser = Mock(CourseUser)
-        courseUser.getCourseSemester() >> courseSemester
+        courseUser.getCourse() >> course
         courseUserRepository.findByUser_Id(1) >> [
                 courseUser
         ]
 
-        when: "retrieving all course semesters"
-        List< CourseSemester> courseSemesters = coursesService.getAllCoursesSemesterFromUser(1)
+        when: "retrieving all courses"
+        List< Course> courses = coursesService.getAllCoursesByUser(1)
 
-        then: "there are no course semesters"
-        courseSemesters.size() == 1
+        then: "there are no courses"
+        courses.size() == 1
     }
 }

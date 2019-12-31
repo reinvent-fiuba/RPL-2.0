@@ -1,12 +1,16 @@
 package com.example.rpl.RPL.model;
 
+import java.net.URI;
 import java.time.ZonedDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.*;
@@ -24,13 +28,23 @@ public class Course {
     @Column(name = "id")
     private Long id;
 
-    @NonNull
-    @Basic(optional = false)
-    @Column(name = "name", length = 255)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "university_course_id")
     private String universityCourseId;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "active")
+    private Boolean active;
+
+    @Column(name = "semester")
+    private String semester;
+
+    @Column(name = "img_uri")
+    private String imgUri;
 
     @Column(name = "date_created")
     private ZonedDateTime dateCreated;
@@ -45,10 +59,14 @@ public class Course {
     public Course() {
     }
 
-    public Course(String name, String universityCourseId) {
+    public Course(String name, String universityCourseId, String description, Boolean active, String semester, String imgUri) {
         ZonedDateTime now = ZonedDateTime.now();
         this.name = name;
         this.universityCourseId = universityCourseId;
+        this.description = description;
+        this.active = active;
+        this.semester = semester;
+        this.imgUri = imgUri;
         this.dateCreated = now;
         this.lastUpdated = now;
     }

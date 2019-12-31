@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:52199",
+    "host": "localhost:54899",
     "basePath": "/",
     "tags": [
         {
@@ -278,7 +278,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/CourseSemesterDTO"
+                                "$ref": "#/definitions/CourseDTO"
                             }
                         }
                     },
@@ -513,7 +513,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/CourseSemesterDTO"
+                                "$ref": "#/definitions/CourseDTO"
                             }
                         }
                     },
@@ -570,35 +570,8 @@
         "CourseDTO": {
             "type": "object",
             "properties": {
-                "date_created": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "id": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "last_updated": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "university_course_id": {
-                    "type": "string"
-                }
-            },
-            "title": "CourseDTO"
-        },
-        "CourseSemesterDTO": {
-            "type": "object",
-            "properties": {
                 "active": {
                     "type": "boolean"
-                },
-                "course": {
-                    "$ref": "#/definitions/CourseDTO"
                 },
                 "date_created": {
                     "type": "string",
@@ -618,11 +591,17 @@
                     "type": "string",
                     "format": "date-time"
                 },
+                "name": {
+                    "type": "string"
+                },
                 "semester": {
+                    "type": "string"
+                },
+                "university_course_id": {
                     "type": "string"
                 }
             },
-            "title": "CourseSemesterDTO"
+            "title": "CourseDTO"
         },
         "CreateUserDTO": {
             "type": "object",

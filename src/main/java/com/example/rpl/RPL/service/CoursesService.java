@@ -1,16 +1,11 @@
 package com.example.rpl.RPL.service;
 
-import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
-import com.example.rpl.RPL.model.CourseSemester;
+import com.example.rpl.RPL.model.Course;
 import com.example.rpl.RPL.model.CourseUser;
-import com.example.rpl.RPL.model.User;
-import com.example.rpl.RPL.repository.CourseSemesterRepository;
+import com.example.rpl.RPL.repository.CourseRepository;
 import com.example.rpl.RPL.repository.CourseUserRepository;
-import com.example.rpl.RPL.repository.UserRepository;
-import com.example.rpl.RPL.security.UserPrincipal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,12 +16,12 @@ import java.util.stream.Collectors;
 @Service
 public class CoursesService {
 
-    private CourseSemesterRepository courseSemesterRepository;
+    private CourseRepository courseRepository;
     private CourseUserRepository courseUserRepository;
 
     @Autowired
-    public CoursesService(CourseSemesterRepository courseSemesterRepository, CourseUserRepository courseUserRepository) {
-        this.courseSemesterRepository = courseSemesterRepository;
+    public CoursesService(CourseRepository courseRepository, CourseUserRepository courseUserRepository) {
+        this.courseRepository = courseRepository;
         this.courseUserRepository = courseUserRepository;
     }
 
@@ -35,17 +30,15 @@ public class CoursesService {
      * @return a new saved User
      */
     @Transactional
-    public List<CourseSemester> getAllCoursesSemester() {
-        return courseSemesterRepository.findAll();
+    public List<Course> getAllCourses() {
+        return courseRepository.findAll();
     }
 
     @Transactional
-    public List<CourseSemester> getAllCoursesSemesterFromUser(Long currentUserId) {
+    public List<Course> getAllCoursesByUser(Long currentUserId) {
         return courseUserRepository.findByUser_Id(currentUserId)
             .stream()
-            .map(CourseUser::getCourseSemester)
+            .map(CourseUser::getCourse)
             .collect(Collectors.toList());
     }
-
-
 }

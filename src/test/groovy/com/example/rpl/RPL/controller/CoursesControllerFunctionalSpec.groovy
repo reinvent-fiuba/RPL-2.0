@@ -1,11 +1,11 @@
 package com.example.rpl.RPL.controller
 
+
 import com.example.rpl.RPL.model.Course
-import com.example.rpl.RPL.model.CourseSemester
 import com.example.rpl.RPL.model.CourseUser
 import com.example.rpl.RPL.model.User
+
 import com.example.rpl.RPL.repository.CourseRepository
-import com.example.rpl.RPL.repository.CourseSemesterRepository
 import com.example.rpl.RPL.repository.CourseUserRepository
 import com.example.rpl.RPL.repository.UserRepository
 import com.example.rpl.RPL.util.AbstractFunctionalSpec
@@ -20,13 +20,10 @@ import static javax.servlet.http.HttpServletResponse.*
 class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
     @Autowired
-    CourseRepository courseRepository;
-
-    @Autowired
     CourseUserRepository courseUserRepository
 
     @Autowired
-    CourseSemesterRepository courseSemesterRepository
+    CourseRepository courseRepository
 
     @Autowired
     UserRepository userRepository
@@ -49,37 +46,31 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
         userRepository.save(user)
 
         User otherUser = new User(
-                'other-name',
-                'other-surname',
-                'other-student-id',
-                'otheruser',
-                'other@mail.com',
-                passwordEncoder.encode('supersecret'),
-                'other-university',
-                'other-hard-degree'
+            'other-name',
+            'other-surname',
+            'other-student-id',
+            'otheruser',
+            'other@mail.com',
+            passwordEncoder.encode('supersecret'),
+            'other-university',
+            'other-hard-degree'
         )
 
         userRepository.save(otherUser)
 
         Course course = new Course(
             "some-course",
-            "some-university-id"
-        )
-
-        courseRepository.save(course)
-
-        CourseSemester courseSemester = new CourseSemester(
-            course,
+            "some-university-id",
             "some-description",
             true,
             "2019-2c",
             "/some/uri"
         )
 
-        courseSemesterRepository.save(courseSemester);
+        courseRepository.save(course);
 
         CourseUser courseUser = new CourseUser(
-            courseSemester,
+            course,
             user,
             null,
             true
@@ -91,7 +82,6 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     def cleanup() {
         courseUserRepository.deleteAll()
         userRepository.deleteAll()
-        courseSemesterRepository.deleteAll()
         courseRepository.deleteAll()
     }
 

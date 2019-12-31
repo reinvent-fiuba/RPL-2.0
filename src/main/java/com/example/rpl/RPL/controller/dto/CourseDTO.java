@@ -1,7 +1,6 @@
 package com.example.rpl.RPL.controller.dto;
 
 import com.example.rpl.RPL.model.Course;
-import com.example.rpl.RPL.model.CourseSemester;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,6 +16,14 @@ public class CourseDTO {
 
     private String universityCourseId;
 
+    private String description;
+
+    private Boolean active;
+
+    private String semester;
+
+    private String imgUri;
+
     private ZonedDateTime dateCreated;
 
     private ZonedDateTime lastUpdated;
@@ -26,6 +33,10 @@ public class CourseDTO {
             .id(course.getId())
             .name(course.getName())
             .universityCourseId(course.getUniversityCourseId())
+            .description(course.getDescription())
+            .active(course.getActive())
+            .semester(course.getSemester())
+            .imgUri(course.getImgUri())
             .dateCreated(course.getDateCreated())
             .lastUpdated(course.getLastUpdated())
             .build();
