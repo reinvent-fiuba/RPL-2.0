@@ -1,11 +1,11 @@
 package com.example.rpl.RPL.controller
 
 
-import com.example.rpl.RPL.model.CourseSemester
+import com.example.rpl.RPL.model.Course
 import com.example.rpl.RPL.model.CourseUser
 import com.example.rpl.RPL.model.User
 
-import com.example.rpl.RPL.repository.CourseSemesterRepository
+import com.example.rpl.RPL.repository.CourseRepository
 import com.example.rpl.RPL.repository.CourseUserRepository
 import com.example.rpl.RPL.repository.UserRepository
 import com.example.rpl.RPL.util.AbstractFunctionalSpec
@@ -23,7 +23,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     CourseUserRepository courseUserRepository
 
     @Autowired
-    CourseSemesterRepository courseSemesterRepository
+    CourseRepository courseRepository
 
     @Autowired
     UserRepository userRepository
@@ -58,7 +58,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         userRepository.save(otherUser)
 
-        CourseSemester courseSemester = new CourseSemester(
+        Course course = new Course(
             "some-course",
             "some-university-id",
             "some-description",
@@ -67,10 +67,10 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
             "/some/uri"
         )
 
-        courseSemesterRepository.save(courseSemester);
+        courseRepository.save(course);
 
         CourseUser courseUser = new CourseUser(
-            courseSemester,
+            course,
             user,
             null,
             true
@@ -82,7 +82,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     def cleanup() {
         courseUserRepository.deleteAll()
         userRepository.deleteAll()
-        courseSemesterRepository.deleteAll()
+        courseRepository.deleteAll()
     }
 
     /*****************************************************************************************

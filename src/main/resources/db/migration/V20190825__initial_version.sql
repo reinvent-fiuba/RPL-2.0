@@ -38,7 +38,7 @@ CREATE TABLE users
     UNIQUE (username)
 ) ENGINE = InnoDB;
 
-CREATE TABLE courses_semester
+CREATE TABLE courses
 (
     id                   BIGINT NOT NULL AUTO_INCREMENT,
     name                 VARCHAR(255),
@@ -56,7 +56,7 @@ CREATE TABLE courses_semester
 CREATE TABLE course_users
 (
     id                 BIGINT NOT NULL AUTO_INCREMENT,
-    course_semester_id BIGINT,
+    course_id BIGINT,
     user_id            BIGINT,
     role_id            BIGINT,
     accepted           BOOLEAN,
@@ -64,7 +64,7 @@ CREATE TABLE course_users
     last_updated       DATETIME,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (course_semester_id) REFERENCES courses_semester (id),
+    FOREIGN KEY (course_id) REFERENCES courses (id),
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (role_id) REFERENCES roles (id)
 
@@ -83,7 +83,7 @@ CREATE TABLE files
 CREATE TABLE activities
 (
     id                 BIGINT NOT NULL AUTO_INCREMENT,
-    course_semester_id BIGINT,
+    course_id BIGINT,
     name               VARCHAR(255),
     description        VARCHAR(255),
     language           VARCHAR(255),
@@ -93,7 +93,7 @@ CREATE TABLE activities
     last_updated       DATETIME,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (course_semester_id) REFERENCES courses_semester (id),
+    FOREIGN KEY (course_id) REFERENCES courses (id),
     FOREIGN KEY (file_id) REFERENCES files (id)
 ) ENGINE = InnoDB;
 

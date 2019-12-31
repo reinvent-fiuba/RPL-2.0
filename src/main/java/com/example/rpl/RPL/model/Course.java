@@ -19,8 +19,8 @@ import lombok.*;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 @Entity
-@Table(name = "courses_semester")
-public class CourseSemester {
+@Table(name = "courses")
+public class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,10 +56,10 @@ public class CourseSemester {
      * @deprecated Only used by hibernate
      */
     @Deprecated
-    public CourseSemester() {
+    public Course() {
     }
 
-    public CourseSemester(String name, String universityCourseId, String description, Boolean active, String semester, String imgUri) {
+    public Course(String name, String universityCourseId, String description, Boolean active, String semester, String imgUri) {
         ZonedDateTime now = ZonedDateTime.now();
         this.name = name;
         this.universityCourseId = universityCourseId;

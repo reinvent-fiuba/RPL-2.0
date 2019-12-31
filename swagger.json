@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:61538",
+    "host": "localhost:54899",
     "basePath": "/",
     "tags": [
         {
@@ -278,7 +278,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/CourseSemesterDTO"
+                                "$ref": "#/definitions/CourseDTO"
                             }
                         }
                     },
@@ -513,7 +513,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/CourseSemesterDTO"
+                                "$ref": "#/definitions/CourseDTO"
                             }
                         }
                     },
@@ -567,7 +567,7 @@
         }
     },
     "definitions": {
-        "CourseSemesterDTO": {
+        "CourseDTO": {
             "type": "object",
             "properties": {
                 "active": {
@@ -601,7 +601,7 @@
                     "type": "string"
                 }
             },
-            "title": "CourseSemesterDTO"
+            "title": "CourseDTO"
         },
         "CreateUserDTO": {
             "type": "object",
