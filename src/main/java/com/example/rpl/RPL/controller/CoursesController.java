@@ -30,6 +30,23 @@ public class CoursesController {
         this.coursesService = coursesService;
     }
 
+    @PostMapping(value = "/api/courses")
+    public ResponseEntity<CourseResponseDTO> createCourse(@CurrentUser UserPrincipal currentUser,
+                                                                @RequestBody @Valid CreateCourseRequestDTO createCourseRequestDTO) {
+
+        Course course = coursesService.createCourse(
+            createCourseRequestDTO.getName(),
+            createCourseRequestDTO.getUniversityCourseId(),
+            createCourseRequestDTO.getDescription(),
+            true,
+            createCourseRequestDTO.getSemester(),
+            null,
+            currentUser.getId()
+        );
+
+        return new ResponseEntity<>(CourseResponseDTO.fromEntity(course), HttpStatus.CREATED);
+    }
+
     @GetMapping(value = "/api/courses")
     public ResponseEntity<List<CourseResponseDTO>> getCourses(@CurrentUser UserPrincipal currentUser) {
 

@@ -16,7 +16,7 @@ class CoursesServiceSpec extends Specification {
     def setup() {
         courseUserRepository = Mock(CourseUserRepository)
         courseRepository = Mock(CourseRepository)
-        coursesService = new CoursesService(courseRepository, courseUserRepository)
+        coursesService = new CoursesService(courseRepository, courseUserRepository, null, null)
     }
 
     void "should return an empty list of courses when calling getAllCourses"() {
