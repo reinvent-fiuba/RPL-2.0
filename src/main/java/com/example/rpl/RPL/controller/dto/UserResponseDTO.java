@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class UserDTO {
+public class UserResponseDTO {
 
     private Long id;
 
@@ -31,8 +31,8 @@ public class UserDTO {
 
     private ZonedDateTime lastUpdated;
 
-    public static UserDTO fromEntity(User user) {
-        return UserDTO.builder()
+    public static UserResponseDTO fromEntity(User user) {
+        return UserResponseDTO.builder()
             .id(user.getId())
             .name(user.getName())
             .surname(user.getSurname())

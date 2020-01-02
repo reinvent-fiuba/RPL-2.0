@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.Value;
 
 @Value
-public class LoginDTO {
+public class LoginRequestDTO {
     @NotBlank
     private String usernameOrEmail;
 

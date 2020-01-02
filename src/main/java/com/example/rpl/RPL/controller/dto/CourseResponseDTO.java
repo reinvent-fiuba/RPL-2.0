@@ -8,7 +8,7 @@ import java.time.ZonedDateTime;
 
 @Getter
 @Builder
-public class CourseDTO {
+public class CourseResponseDTO {
 
     private Long id;
 
@@ -28,8 +28,8 @@ public class CourseDTO {
 
     private ZonedDateTime lastUpdated;
 
-    public static CourseDTO fromEntity(Course course) {
-        return CourseDTO.builder()
+    public static CourseResponseDTO fromEntity(Course course) {
+        return CourseResponseDTO.builder()
             .id(course.getId())
             .name(course.getName())
             .universityCourseId(course.getUniversityCourseId())
