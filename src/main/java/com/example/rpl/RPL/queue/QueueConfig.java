@@ -32,7 +32,7 @@ public class QueueConfig {
     }
 
 
-    @Profile("producer")
+    @Profile({"producer", "test-functional", "test-unit"})
     @Bean
     public Producer producer() {
         return new Producer(template, hello());
