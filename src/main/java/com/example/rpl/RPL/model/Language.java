@@ -2,7 +2,7 @@ package com.example.rpl.RPL.model;
 
 public enum Language {
 
-    C("C", "std11"),
+    C("c", "std11"),
     PYTHON3("python", "3.7"),
     JAVA("java", "11");
 
@@ -23,9 +23,9 @@ public enum Language {
         return Language.C;
     }
 
-    public static Language getByNameAndVersion(String lang_id) {
+    public static Language getByNameAndVersion(String langId) {
         for (Language addressTaskStatus : Language.values()) {
-            if (addressTaskStatus.getNameAndVersion().equals(lang_id)) {
+            if (addressTaskStatus.getNameAndVersion().equals(langId)) {
                 return addressTaskStatus;
             }
         }

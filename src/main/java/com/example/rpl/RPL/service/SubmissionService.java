@@ -5,6 +5,7 @@ import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.RPLFile;
+import com.example.rpl.RPL.model.SubmissionStatus;
 import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.repository.ActivityRepository;
 import com.example.rpl.RPL.repository.FileRepository;
@@ -65,7 +66,8 @@ public class SubmissionService {
 
             f = fileRepository.save(f);
 
-            ActivitySubmission as = new ActivitySubmission(ac, currentUser.getId(), f, "PENDING");
+            ActivitySubmission as = new ActivitySubmission(ac, currentUser.getId(), f,
+                SubmissionStatus.PENDING);
 
             as = submissionRepository.save(as);
 

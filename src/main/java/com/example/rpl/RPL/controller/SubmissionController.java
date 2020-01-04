@@ -4,6 +4,7 @@ import com.example.rpl.RPL.controller.dto.ActivitySubmissionDTO;
 import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.IOTest;
 import com.example.rpl.RPL.model.UnitTest;
+import com.example.rpl.RPL.queue.Producer;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.SubmissionService;
@@ -14,6 +15,7 @@ import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.AmqpConnectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,12 +33,14 @@ public class SubmissionController {
 
     private SubmissionService submissionService;
     private TestService testService;
+    private final Producer activitySubmissionQueueProducer;
 
     @Autowired
     public SubmissionController(SubmissionService submissionService,
-        TestService testService) {
+        TestService testService, Producer activitySubmissionQueueProducer) {
         this.submissionService = submissionService;
         this.testService = testService;
+        this.activitySubmissionQueueProducer = activitySubmissionQueueProducer;
     }
 
     @GetMapping(value = "/api/submissions/{submissionId}")
@@ -61,15 +65,24 @@ public class SubmissionController {
     public ResponseEntity<ActivitySubmissionDTO> createSubmission(
         @CurrentUser UserPrincipal currentUser,
         @PathVariable Long courseId, @PathVariable Long activityId,
-        @RequestParam("description") String description, // Si bien ahora no se usa, puede servir para mandar metadata sobre el comprimido con los archivos
+        @RequestParam(value = "description", required = false, defaultValue = "default description") String description, // Si bien ahora no se usa, puede servir para mandar metadata sobre el comprimido con los archivos
         @RequestParam("file") MultipartFile file) {
         log.error("COURSE ID: {}", courseId);
         log.error("ACTIVITY ID: {}", activityId);
 
         ActivitySubmission as = submissionService.create(currentUser, courseId, activityId, description, file);
 
-        ActivitySubmissionDTO asDto = ActivitySubmissionDTO.fromEntity(as, Optional.empty(), List.of());
 
+        // Submit submission ID to queue
+        try {
+            this.activitySubmissionQueueProducer.send(as.getId().toString(), as.getActivity().getLanguage().getNameAndVersion());
+            as.setEnqueued();
+        } catch (AmqpConnectException e) {
+            log.error("Error sending submission ID to queue. Conection refused");
+            log.error(e.getMessage());
+        }
+
+        ActivitySubmissionDTO asDto = ActivitySubmissionDTO.fromEntity(as, Optional.empty(), List.of());
         return new ResponseEntity<>(asDto, HttpStatus.OK);
     }
 

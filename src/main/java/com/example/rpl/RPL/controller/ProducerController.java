@@ -29,7 +29,7 @@ public class ProducerController {
     public ResponseEntity<Ticket> submit(@Valid @RequestBody final Ticket ticket) {
         for (long i = 0; i < ticket.getQuantity(); i++) {
             String id = UUID.randomUUID().toString();
-            producer.send(id);
+            producer.send(id, "python");
         }
         return new ResponseEntity<>(ticket, HttpStatus.CREATED);
     }

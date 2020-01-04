@@ -6,6 +6,8 @@ import java.time.ZonedDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.ToString;
 
 
@@ -50,7 +51,8 @@ public class ActivitySubmission {
 
     @Basic(optional = false)
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private SubmissionStatus status;
 
     @Column(name = "date_created")
     private ZonedDateTime dateCreated;
@@ -65,12 +67,17 @@ public class ActivitySubmission {
     public ActivitySubmission() {
     }
 
-    public ActivitySubmission(Activity activity, Long userId, RPLFile file, String status) {
+    public ActivitySubmission(Activity activity, Long userId, RPLFile file, SubmissionStatus status) {
         this.activity = activity;
         this.userId = userId;
         this.file = file;
         this.status = status;
         this.dateCreated = now();
         this.lastUpdated = this.dateCreated;
+    }
+
+    public void setEnqueued() {
+        this.status = SubmissionStatus.ENQUEUED;
+        this.lastUpdated = now();
     }
 }
