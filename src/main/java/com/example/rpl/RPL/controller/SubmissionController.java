@@ -67,10 +67,10 @@ public class SubmissionController {
         @PathVariable Long courseId, @PathVariable Long activityId,
         @RequestParam(value = "description", required = false, defaultValue = "default description") String description, // Si bien ahora no se usa, puede servir para mandar metadata sobre el comprimido con los archivos
         @RequestParam("file") MultipartFile file) {
-        log.error("COURSE ID: {}", courseId);
-        log.error("ACTIVITY ID: {}", activityId);
+        log.info("COURSE ID: {}", courseId);
+        log.info("ACTIVITY ID: {}", activityId);
 
-        ActivitySubmission as = submissionService.create(currentUser, courseId, activityId, description, file);
+        ActivitySubmission as = submissionService.create(currentUser.getId(), courseId, activityId, description, file);
 
 
         // Submit submission ID to queue
@@ -87,40 +87,50 @@ public class SubmissionController {
     }
 
 
-    @PostMapping(value = "/api/uploadMultipleFiles")
-    public String uploadMultipleFiles(@RequestParam("description") String[] descriptions,
-        @RequestParam("file") MultipartFile[] files) {
 
-        if (files.length != descriptions.length) {
-            return "Mismatching no of files are equal to description";
-        }
 
-        String status = "";
-        File dir = new File("/home/alepox/Desktop/pruebita_upload_files");
-        for (int i = 0; i < files.length; i++) {
-            MultipartFile file = files[i];
-            String description = descriptions[i];
-            try {
-                byte[] bytes = file.getBytes();
+//     * DEJO ESTO ACA SOLO EN CASO DE QUE LO NECESITEMOS PORUQE LO PROBE Y FUNCIONA
 
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
 
-                File uploadFile = new File(dir.getAbsolutePath()
-                    + File.separator + file.getOriginalFilename());
-                BufferedOutputStream outputStream = new BufferedOutputStream(
-                    new FileOutputStream(uploadFile));
-                outputStream.write(bytes);
-                outputStream.close();
-
-                status = status + "You successfully uploaded file=" + file.getOriginalFilename();
-            } catch (Exception e) {
-                status = status + "Failed to upload " + file.getOriginalFilename() + " " + e
-                    .getMessage();
-            }
-        }
-        return status;
-    }
+//    /**
+//     * @param descriptions
+//     * @param files
+//     * @return
+//     */
+//    @PostMapping(value = "/api/uploadMultipleFiles")
+//    public String uploadMultipleFiles(@RequestParam("description") String[] descriptions,
+//        @RequestParam("file") MultipartFile[] files) {
+//
+//        if (files.length != descriptions.length) {
+//            return "Mismatching no of files are equal to description";
+//        }
+//
+//        String status = "";
+//        File dir = new File("/home/alepox/Desktop/pruebita_upload_files");
+//        for (int i = 0; i < files.length; i++) {
+//            MultipartFile file = files[i];
+//            String description = descriptions[i];
+//            try {
+//                byte[] bytes = file.getBytes();
+//
+//                if (!dir.exists()) {
+//                    dir.mkdirs();
+//                }
+//
+//                File uploadFile = new File(dir.getAbsolutePath()
+//                    + File.separator + file.getOriginalFilename());
+//                BufferedOutputStream outputStream = new BufferedOutputStream(
+//                    new FileOutputStream(uploadFile));
+//                outputStream.write(bytes);
+//                outputStream.close();
+//
+//                status = status + "You successfully uploaded file=" + file.getOriginalFilename();
+//            } catch (Exception e) {
+//                status = status + "Failed to upload " + file.getOriginalFilename() + " " + e
+//                    .getMessage();
+//            }
+//        }
+//        return status;
+//    }
 
 }

@@ -1,5 +1,7 @@
 package com.example.rpl.RPL.model;
 
+import static java.time.ZonedDateTime.now;
+
 import java.time.ZonedDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -68,5 +70,18 @@ public class Activity {
     @Deprecated
     public Activity() {
     }
+
+    public Activity(Course course, String name, String description, Language language,
+        RPLFile supportingFile) {
+        this.course = course;
+        this.name = name;
+        this.description = description;
+        this.language = language;
+        this.active = true;
+        this.supportingFile = supportingFile;
+        this.dateCreated = now();
+        this.lastUpdated = this.dateCreated;
+    }
+
 
 }

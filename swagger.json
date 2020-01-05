@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:40167",
+    "host": "localhost:45083",
     "basePath": "/",
     "tags": [
         {
