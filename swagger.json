@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:42463",
+    "host": "localhost:39551",
     "basePath": "/",
     "tags": [
         {
@@ -273,8 +273,9 @@
                         "name": "description",
                         "in": "query",
                         "description": "description",
-                        "required": true,
-                        "type": "string"
+                        "required": false,
+                        "type": "string",
+                        "default": "default description"
                     },
                     {
                         "name": "email",
