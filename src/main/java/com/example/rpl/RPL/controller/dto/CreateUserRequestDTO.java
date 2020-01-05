@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class CreateUserDTO {
+public class CreateUserRequestDTO {
 
     @NotNull
     private String username;

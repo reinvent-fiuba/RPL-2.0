@@ -1,9 +1,9 @@
 package com.example.rpl.RPL.controller;
 
-import com.example.rpl.RPL.controller.dto.CreateUserDTO;
+import com.example.rpl.RPL.controller.dto.CreateUserRequestDTO;
 import com.example.rpl.RPL.controller.dto.JwtResponseDTO;
-import com.example.rpl.RPL.controller.dto.LoginDTO;
-import com.example.rpl.RPL.controller.dto.UserDTO;
+import com.example.rpl.RPL.controller.dto.LoginRequestDTO;
+import com.example.rpl.RPL.controller.dto.UserResponseDTO;
 import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.JwtTokenProvider;
@@ -43,15 +43,15 @@ public class AuthenticationController {
     }
 
     @PostMapping(value = "/api/auth/signup")
-    public ResponseEntity<UserDTO> registerUser(@RequestBody @Valid final CreateUserDTO createUserDTO) {
+    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody @Valid final CreateUserRequestDTO createUserRequestDTO) {
 
         User user = authenticationService
-            .createUser(createUserDTO.getName(), createUserDTO.getSurname(),
-                createUserDTO.getStudentId(), createUserDTO.getUsername(), createUserDTO.getEmail(),
-                createUserDTO.getPassword(), createUserDTO.getUniversity(),
-                createUserDTO.getDegree());
+            .createUser(createUserRequestDTO.getName(), createUserRequestDTO.getSurname(),
+                createUserRequestDTO.getStudentId(), createUserRequestDTO.getUsername(), createUserRequestDTO.getEmail(),
+                createUserRequestDTO.getPassword(), createUserRequestDTO.getUniversity(),
+                createUserRequestDTO.getDegree());
 
-        return new ResponseEntity<>(UserDTO.fromEntity(user), HttpStatus.CREATED);
+        return new ResponseEntity<>(UserResponseDTO.fromEntity(user), HttpStatus.CREATED);
     }
 
 
@@ -60,11 +60,11 @@ public class AuthenticationController {
      * @return JwtResponseDTO with JWT token.
      */
     @PostMapping("/api/auth/login")
-    public ResponseEntity<JwtResponseDTO> authenticateUser(@Valid @RequestBody LoginDTO loginDto) {
+    public ResponseEntity<JwtResponseDTO> authenticateUser(@Valid @RequestBody LoginRequestDTO loginRequestDto) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                loginDto.getUsernameOrEmail(),
-                loginDto.getPassword()
+                loginRequestDto.getUsernameOrEmail(),
+                loginRequestDto.getPassword()
             )
         );
 
@@ -72,7 +72,7 @@ public class AuthenticationController {
 
         String jwt = tokenProvider.generateToken(authentication);
 
-        log.info("[process:login] User {} Logged in", loginDto.getUsernameOrEmail());
+        log.info("[process:login] User {} Logged in", loginRequestDto.getUsernameOrEmail());
         return ResponseEntity.ok(new JwtResponseDTO(jwt));
     }
 
@@ -81,10 +81,10 @@ public class AuthenticationController {
      * @return JwtResponseDTO with JWT token.
      */
     @GetMapping("/api/auth/profile")
-    public ResponseEntity<UserDTO> getUser(@CurrentUser UserPrincipal currentUser) {
+    public ResponseEntity<UserResponseDTO> getUser(@CurrentUser UserPrincipal currentUser) {
 
         User user = authenticationService.getUserById(currentUser.getId());
 
-        return new ResponseEntity<>(UserDTO.fromEntity(user), HttpStatus.OK);
+        return new ResponseEntity<>(UserResponseDTO.fromEntity(user), HttpStatus.OK);
     }
 }

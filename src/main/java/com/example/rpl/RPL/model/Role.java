@@ -49,6 +49,14 @@ public class Role {
     public Role() {
     }
 
+    public Role(String name, String permissions) {
+        ZonedDateTime now = ZonedDateTime.now();
+        this.name = name;
+        this.permissions = permissions;
+        this.dateCreated = now;
+        this.lastUpdated = now;
+    }
+
     public List<String> getPermissions() {
         return Arrays.asList(this.permissions.split(PERMISSION_DELIMITER));
     }

@@ -67,5 +67,4 @@ public class CourseUser {
         this.dateCreated = now;
         this.lastUpdated = now;
     }
-
 }
