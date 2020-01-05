@@ -1,8 +1,11 @@
 package com.example.rpl.RPL.controller
 
+import com.example.rpl.RPL.model.User
 import com.example.rpl.RPL.repository.UserRepository
+import com.example.rpl.RPL.service.AuthenticationService
 import com.example.rpl.RPL.util.AbstractFunctionalSpec
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.ActiveProfiles
 import spock.lang.Shared
 import spock.lang.Unroll
@@ -18,14 +21,26 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Autowired
     UserRepository userRepository
 
-    @Shared
-    String username = "alep1234"
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
-    @Shared
-    String email = "asd@asd.com"
+    def setup() {
+        User user = new User(
+            'some-name',
+            'some-surname',
+            'some-student-id',
+            'username',
+            'some@mail.com',
+            passwordEncoder.encode('supersecret'),
+            'some-university',
+            'some-hard-degree'
+        );
+        userRepository.save(user);
+    }
 
-    @Shared
-    String password = "12345"
+    def cleanup() {
+        userRepository.deleteAll();
+    }
 
     /*****************************************************************************************
      ********** REGISTER NEW USER ************************************************************
@@ -68,6 +83,11 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert user.last_updated == user.date_created
 
             assert userRepository.existsById(user.id as Long)
+
+        where:
+            username    | email         | password
+            "alep1234"  | "asd@asd.com" | "12345"
+
     }
 
     @Unroll
@@ -104,7 +124,7 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
     }
 
     @Unroll
-    void "should fail hubernate validation #test creating user"() {
+    void "should fail hibernate validation #test creating user"() {
         given: "a new user"
             def body = [
                     username  : username,
@@ -164,7 +184,7 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test login with correct username/email and password should respond with token"() {
         given:
-            Map body = [usernameOrEmail: usernameOrEmail, password: password]
+            Map body = [usernameOrEmail: usernameOrEmail, password: 'supersecret']
 
         when:
             def response = post("/api/auth/login", body)
@@ -178,7 +198,37 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.token_type == "Bearer"
 
         where:
-            usernameOrEmail << [username, email]
+            usernameOrEmail << ['username', 'some@mail.com']
+    }
+
+    /*****************************************************************************************
+     ********** PROFILE **********************************************************************
+     *****************************************************************************************/
+
+    @Unroll
+    void "test get current profile should retrieve user data"() {
+        given:
+        Map body = [usernameOrEmail: username, password: password]
+        def loginResponse = getJsonResponse(post("/api/auth/login", body))
+
+        when:
+        def response = get("/api/auth/profile", [
+                "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+        ])
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            Map result = getJsonResponse(response)
+            System.out.println(result)
+            assert result.username == username
+            assert result.name == name
+            assert result.student_id == studentId
+
+        where:
+            username    | password      | name          | studentId
+            "username"  | "supersecret" | "some-name"   | "some-student-id"
     }
 }
 

@@ -30,6 +30,10 @@ abstract class AbstractFunctionalSpec extends AbstractSpec {
         return api.get(url)
     }
 
+    def get(String url, Map<String, String> headers) {
+        return api.headers(headers).get(url)
+    }
+
     def post(String url, def body) {
         api.body(body)
         return api.post(url)

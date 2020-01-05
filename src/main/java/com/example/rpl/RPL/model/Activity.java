@@ -30,9 +30,9 @@ public class Activity {
     @Column(name = "id")
     private Long id;
 
-    @JoinColumn(name = "course_semester_id", referencedColumnName = "id")
+    @JoinColumn(name = "course_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private CourseSemester courseSemester;
+    private Course course;
 
     @Basic(optional = false)
     @Column(name = "name")

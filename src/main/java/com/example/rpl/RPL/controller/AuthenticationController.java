@@ -5,7 +5,9 @@ import com.example.rpl.RPL.controller.dto.JwtResponseDTO;
 import com.example.rpl.RPL.controller.dto.LoginDTO;
 import com.example.rpl.RPL.controller.dto.UserDTO;
 import com.example.rpl.RPL.model.User;
+import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.JwtTokenProvider;
+import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.AuthenticationService;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,5 +74,17 @@ public class AuthenticationController {
 
         log.info("[process:login] User {} Logged in", loginDto.getUsernameOrEmail());
         return ResponseEntity.ok(new JwtResponseDTO(jwt));
+    }
+
+    /**
+     * If authentication fails, throws BadCredentialsException.
+     * @return JwtResponseDTO with JWT token.
+     */
+    @GetMapping("/api/auth/profile")
+    public ResponseEntity<UserDTO> getUser(@CurrentUser UserPrincipal currentUser) {
+
+        User user = authenticationService.getUserById(currentUser.getId());
+
+        return new ResponseEntity<>(UserDTO.fromEntity(user), HttpStatus.OK);
     }
 }
