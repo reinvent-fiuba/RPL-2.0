@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:55795",
+    "host": "localhost:40167",
     "basePath": "/",
     "tags": [
         {
@@ -821,42 +821,6 @@
         }
     },
     "definitions": {
-        "CourseDTO": {
-            "type": "object",
-            "properties": {
-                "active": {
-                    "type": "boolean"
-                },
-                "date_created": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "img_uri": {
-                    "type": "string"
-                },
-                "last_updated": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "semester": {
-                    "type": "string"
-                },
-                "university_course_id": {
-                    "type": "string"
-                }
-            },
-            "title": "CourseDTO"
-        },
         "ActivitySubmissionDTO": {
             "type": "object",
             "properties": {
@@ -901,6 +865,42 @@
                 }
             },
             "title": "ActivitySubmissionDTO"
+        },
+        "CourseDTO": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "date_created": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "img_uri": {
+                    "type": "string"
+                },
+                "last_updated": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "semester": {
+                    "type": "string"
+                },
+                "university_course_id": {
+                    "type": "string"
+                }
+            },
+            "title": "CourseDTO"
         },
         "CreateUserDTO": {
             "type": "object",
