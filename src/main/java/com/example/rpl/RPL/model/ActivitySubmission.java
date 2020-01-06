@@ -37,13 +37,13 @@ public class ActivitySubmission {
     @ManyToOne(fetch = FetchType.LAZY)
     private Activity activity;
 
-//    @JoinColumn(name = "user_id", referencedColumnName = "id")
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private User user;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
-    @Basic(optional = false)
-    @Column(name = "user_id")
-    private Long userId;
+//    @Basic(optional = false)
+//    @Column(name = "user_id")
+//    private Long userId;
 
     @JoinColumn(name = "response_files_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -67,9 +67,9 @@ public class ActivitySubmission {
     public ActivitySubmission() {
     }
 
-    public ActivitySubmission(Activity activity, Long userId, RPLFile file, SubmissionStatus status) {
+    public ActivitySubmission(Activity activity, User user, RPLFile file, SubmissionStatus status) {
         this.activity = activity;
-        this.userId = userId;
+        this.user = user;
         this.file = file;
         this.status = status;
         this.dateCreated = now();

@@ -136,7 +136,7 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         activitySubmission = new ActivitySubmission(
                 activity,
-                user.getId(),
+                user,
                 submissionFile,
                 SubmissionStatus.PENDING
         )

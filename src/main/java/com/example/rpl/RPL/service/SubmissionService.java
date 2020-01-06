@@ -45,7 +45,7 @@ public class SubmissionService {
 
 
     @Transactional
-    public ActivitySubmission create(Long userId, Long courseId, Long activityId,
+    public ActivitySubmission create(User user, Long courseId, Long activityId,
         String description, MultipartFile file) {
 
         Activity ac = activityRepository.findById(activityId).orElseThrow(
@@ -53,12 +53,12 @@ public class SubmissionService {
                 "activity_not_found"));
 
         try {
-            RPLFile f = new RPLFile(String.format("%d_%d_%d", courseId, activityId, userId),
+            RPLFile f = new RPLFile(String.format("%d_%d_%d", courseId, activityId, user.getId()),
                 file.getContentType(), file.getBytes());
 
             f = fileRepository.save(f);
 
-            ActivitySubmission as = new ActivitySubmission(ac, userId, f,
+            ActivitySubmission as = new ActivitySubmission(ac, user, f,
                 SubmissionStatus.PENDING);
 
             as = submissionRepository.save(as);
@@ -68,7 +68,8 @@ public class SubmissionService {
         } catch (IOException e) {
             log.error("ERROR OBTENIENDO LOS BYTES DE LA SUBMISSION");
             log.error(e.getMessage());
-            throw new BadRequestException("Error obteniendo los bytes de la submission", "bad_file");
+            throw new BadRequestException("Error obteniendo los bytes de la submission",
+                "bad_file");
         }
     }
 }

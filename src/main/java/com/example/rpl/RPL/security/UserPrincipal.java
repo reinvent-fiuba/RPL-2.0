@@ -29,14 +29,18 @@ public class UserPrincipal implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(Long id, String name, String username, String email, String password,
-        Collection<? extends GrantedAuthority> authorities) {
+    @JsonIgnore
+    private User user;
+
+    private UserPrincipal(Long id, String name, String username, String email, String password,
+        Collection<? extends GrantedAuthority> authorities, User user) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+        this.user = user;
     }
 
     public static UserPrincipal create(User user) {
@@ -47,11 +51,12 @@ public class UserPrincipal implements UserDetails {
             user.getUsername(),
             user.getEmail(),
             user.getPassword(),
-            authorities
+            authorities,
+            user
         );
     }
 
-    public static UserDetails create(CourseUser courseUser) {
+    public static UserPrincipal create(CourseUser courseUser) {
         List<GrantedAuthority> authorities = courseUser.getRole().getPermissions().stream().map(
             SimpleGrantedAuthority::new
         ).collect(Collectors.toList());
@@ -62,7 +67,8 @@ public class UserPrincipal implements UserDetails {
             courseUser.getUser().getUsername(),
             courseUser.getUser().getEmail(),
             courseUser.getUser().getPassword(),
-            authorities
+            authorities,
+            courseUser.getUser()
         );
     }
 

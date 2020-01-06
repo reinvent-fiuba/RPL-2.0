@@ -70,7 +70,7 @@ public class SubmissionController {
         log.info("ACTIVITY ID: {}", activityId);
 
         ActivitySubmission as = submissionService
-            .create(currentUser.getId(), courseId, activityId, description, file);
+            .create(currentUser.getUser(), courseId, activityId, description, file);
 
         // Submit submission ID to queue
         try {

@@ -6,11 +6,13 @@ import com.example.rpl.RPL.model.Activity
 import com.example.rpl.RPL.model.ActivitySubmission
 import com.example.rpl.RPL.model.RPLFile
 import com.example.rpl.RPL.model.SubmissionStatus
+import com.example.rpl.RPL.model.User
 import com.example.rpl.RPL.repository.ActivityRepository
 import com.example.rpl.RPL.repository.FileRepository
 import com.example.rpl.RPL.repository.SubmissionRepository
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.web.multipart.MultipartFile
+import spock.lang.Shared
 import spock.lang.Specification
 
 class SubmissionServiceSpec extends Specification {
@@ -19,11 +21,25 @@ class SubmissionServiceSpec extends Specification {
     private FileRepository fileRepository
     private SubmissionService submissionService
 
+    @Shared
+    User user
+
     def setup() {
         activityRepository = Mock(ActivityRepository)
         submissionRepository = Mock(SubmissionRepository)
         fileRepository = Mock(FileRepository)
         submissionService = new SubmissionService(activityRepository, submissionRepository, fileRepository)
+
+        user =  new User(
+                'some-name',
+                'some-surname',
+                'some-student-id',
+                'username',
+                'some@mail.com',
+                'supersecret',
+                'some-university',
+                'some-hard-degree'
+        )
     }
 
     void "should throw NotFoundException when there is no submission"() {
@@ -42,7 +58,7 @@ class SubmissionServiceSpec extends Specification {
         given: "1 submission"
             RPLFile f = new RPLFile("test_file", "text", null)
 
-            ActivitySubmission activitySubmission = new ActivitySubmission(null, 123, f,
+            ActivitySubmission activitySubmission = new ActivitySubmission(null, user, f,
                     SubmissionStatus.PENDING)
 
             submissionRepository.findById(_ as Long) >> Optional.of(activitySubmission)
@@ -60,7 +76,7 @@ class SubmissionServiceSpec extends Specification {
             activityRepository.findById(_ as Long) >> Optional.of(a)
 
         when: "creating a submission"
-            ActivitySubmission aSub = submissionService.create(1, 1, 1, "bla", new MockMultipartFile("mockfile"))
+            ActivitySubmission aSub = submissionService.create(user, 1, 1, "bla", new MockMultipartFile("mockfile"))
 
         then:
             1 * fileRepository.save(_ as RPLFile) >> { RPLFile f -> return f }
@@ -68,7 +84,7 @@ class SubmissionServiceSpec extends Specification {
 
             assert aSub.getActivity() == a
             assert aSub.getStatus() == SubmissionStatus.PENDING
-            assert aSub.getUserId() == 1
+            assert aSub.getUser() == user
     }
 
     void "createSubmission should throw NotFoundException when there is no activity"() {
@@ -76,7 +92,7 @@ class SubmissionServiceSpec extends Specification {
             activityRepository.findById(_ as Long) >> Optional.empty()
 
         when: "creating a submission"
-            submissionService.create(1, 1, 1, "bla", new MockMultipartFile("mockfile"))
+            submissionService.create(user, 1, 1, "bla", new MockMultipartFile("mockfile"))
 
         then:
             NotFoundException e = thrown(NotFoundException)
@@ -94,7 +110,7 @@ class SubmissionServiceSpec extends Specification {
 
 
         when: "creating a submission"
-            submissionService.create(1, 1, 1, "bla", f)
+            submissionService.create(user, 1, 1, "bla", f)
 
         then:
             BadRequestException e = thrown(BadRequestException)

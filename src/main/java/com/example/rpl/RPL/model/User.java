@@ -1,5 +1,6 @@
 package com.example.rpl.RPL.model;
 
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -15,7 +16,9 @@ import lombok.NonNull;
 @Data
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 2405172041950251807L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

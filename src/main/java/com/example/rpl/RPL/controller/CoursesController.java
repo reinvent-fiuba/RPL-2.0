@@ -41,7 +41,7 @@ public class CoursesController {
             true,
             createCourseRequestDTO.getSemester(),
             null,
-            currentUser.getId()
+            currentUser.getUser()
         );
 
         return new ResponseEntity<>(CourseResponseDTO.fromEntity(course), HttpStatus.CREATED);
