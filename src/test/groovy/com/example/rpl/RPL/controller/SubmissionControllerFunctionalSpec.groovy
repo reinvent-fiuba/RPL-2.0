@@ -1,21 +1,7 @@
 package com.example.rpl.RPL.controller
 
-import com.example.rpl.RPL.model.Activity
-import com.example.rpl.RPL.model.ActivitySubmission
-import com.example.rpl.RPL.model.Course
-import com.example.rpl.RPL.model.CourseUser
-import com.example.rpl.RPL.model.Language
-import com.example.rpl.RPL.model.RPLFile
-import com.example.rpl.RPL.model.Role
-import com.example.rpl.RPL.model.SubmissionStatus
-import com.example.rpl.RPL.model.User
-import com.example.rpl.RPL.repository.ActivityRepository
-import com.example.rpl.RPL.repository.CourseRepository
-import com.example.rpl.RPL.repository.CourseUserRepository
-import com.example.rpl.RPL.repository.FileRepository
-import com.example.rpl.RPL.repository.RoleRepository
-import com.example.rpl.RPL.repository.SubmissionRepository
-import com.example.rpl.RPL.repository.UserRepository
+import com.example.rpl.RPL.model.*
+import com.example.rpl.RPL.repository.*
 import com.example.rpl.RPL.util.AbstractFunctionalSpec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder

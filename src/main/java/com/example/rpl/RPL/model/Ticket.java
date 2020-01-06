@@ -1,6 +1,7 @@
 package com.example.rpl.RPL.model;
 
 public class Ticket {
+
     private long quantity;
 
     public long getQuantity() {

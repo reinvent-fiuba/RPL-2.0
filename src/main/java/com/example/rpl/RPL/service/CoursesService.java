@@ -1,5 +1,6 @@
 package com.example.rpl.RPL.service;
 
+import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.Course;
 import com.example.rpl.RPL.model.CourseUser;
@@ -8,15 +9,12 @@ import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.repository.CourseRepository;
 import com.example.rpl.RPL.repository.CourseUserRepository;
 import com.example.rpl.RPL.repository.RoleRepository;
-import com.example.rpl.RPL.repository.UserRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service

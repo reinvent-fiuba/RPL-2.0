@@ -12,8 +12,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * DTO used to respond when there are validation errors (Bean Validation). This object
- * will be returned as a JSON object.
+ * DTO used to respond when there are validation errors (Bean Validation). This object will be
+ * returned as a JSON object.
  */
 public class UnprocessableEntity extends ErrorResponse {
 
@@ -30,7 +30,9 @@ public class UnprocessableEntity extends ErrorResponse {
 
     @JsonIgnore
     public String getValidationErrorsMessage() {
-        return validationErrors.stream().map(v -> "[property:" + v.property + "][message:" + v.message + "]").reduce("", String::concat);
+        return validationErrors.stream()
+            .map(v -> "[property:" + v.property + "][message:" + v.message + "]")
+            .reduce("", String::concat);
     }
 
     @JsonIgnore

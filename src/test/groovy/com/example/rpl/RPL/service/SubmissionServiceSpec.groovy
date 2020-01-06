@@ -2,11 +2,7 @@ package com.example.rpl.RPL.service
 
 import com.example.rpl.RPL.exception.BadRequestException
 import com.example.rpl.RPL.exception.NotFoundException
-import com.example.rpl.RPL.model.Activity
-import com.example.rpl.RPL.model.ActivitySubmission
-import com.example.rpl.RPL.model.RPLFile
-import com.example.rpl.RPL.model.SubmissionStatus
-import com.example.rpl.RPL.model.User
+import com.example.rpl.RPL.model.*
 import com.example.rpl.RPL.repository.ActivityRepository
 import com.example.rpl.RPL.repository.FileRepository
 import com.example.rpl.RPL.repository.SubmissionRepository
@@ -30,7 +26,7 @@ class SubmissionServiceSpec extends Specification {
         fileRepository = Mock(FileRepository)
         submissionService = new SubmissionService(activityRepository, submissionRepository, fileRepository)
 
-        user =  new User(
+        user = new User(
                 'some-name',
                 'some-surname',
                 'some-student-id',

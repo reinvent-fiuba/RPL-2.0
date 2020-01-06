@@ -1,11 +1,9 @@
 package com.example.rpl.RPL.controller
 
-
 import com.example.rpl.RPL.model.Course
 import com.example.rpl.RPL.model.CourseUser
 import com.example.rpl.RPL.model.Role
 import com.example.rpl.RPL.model.User
-
 import com.example.rpl.RPL.repository.CourseRepository
 import com.example.rpl.RPL.repository.CourseUserRepository
 import com.example.rpl.RPL.repository.RoleRepository
@@ -42,14 +40,14 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
     def setup() {
         User user = new User(
-            'some-name',
-            'some-surname',
-            'some-student-id',
-            'username',
-            'some@mail.com',
-            passwordEncoder.encode('supersecret'),
-            'some-university',
-            'some-hard-degree'
+                'some-name',
+                'some-surname',
+                'some-student-id',
+                'username',
+                'some@mail.com',
+                passwordEncoder.encode('supersecret'),
+                'some-university',
+                'some-hard-degree'
         )
 
         username = 'username'
@@ -58,34 +56,34 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
         userRepository.save(user)
 
         User otherUser = new User(
-            'other-name',
-            'other-surname',
-            'other-student-id',
-            'otheruser',
-            'other@mail.com',
-            passwordEncoder.encode('supersecret'),
-            'other-university',
-            'other-hard-degree'
+                'other-name',
+                'other-surname',
+                'other-student-id',
+                'otheruser',
+                'other@mail.com',
+                passwordEncoder.encode('supersecret'),
+                'other-university',
+                'other-hard-degree'
         )
 
         userRepository.save(otherUser)
 
         Course course = new Course(
-            "some-course",
-            "some-university-id",
-            "some-description",
-            true,
-            "2019-2c",
-            "/some/uri"
+                "some-course",
+                "some-university-id",
+                "some-description",
+                true,
+                "2019-2c",
+                "/some/uri"
         )
 
         courseRepository.save(course);
 
         CourseUser courseUser = new CourseUser(
-            course,
-            user,
-            null,
-            true
+                course,
+                user,
+                null,
+                true
         )
 
         courseUserRepository.save(courseUser)
@@ -112,11 +110,11 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
             body = [
-                    name               : 'Some new course',
-                    universityCourseId : '75.41',
-                    university         : 'UBA',
-                    description        : 'An awesome description',
-                    semester           : "2019-2c",
+                    name              : 'Some new course',
+                    universityCourseId: '75.41',
+                    university        : 'UBA',
+                    description       : 'An awesome description',
+                    semester          : "2019-2c",
             ]
 
         when: "post new course"
@@ -146,11 +144,11 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
             body = [
-                    name               : name,
-                    universityCourseId : universityCourseId,
-                    university         : 'UBA',
-                    description        : 'An awesome description',
-                    semester           : semester,
+                    name              : name,
+                    universityCourseId: universityCourseId,
+                    university        : 'UBA',
+                    description       : 'An awesome description',
+                    semester          : semester,
             ]
 
         when: "must fail with invalid request"
@@ -186,7 +184,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         when:
             def response = get("/api/courses", [
-                "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
             ])
 
         then:

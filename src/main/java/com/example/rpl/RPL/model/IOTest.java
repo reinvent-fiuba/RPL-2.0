@@ -14,7 +14,6 @@ import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
 
 
 @Getter

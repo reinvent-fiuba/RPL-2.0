@@ -3,9 +3,8 @@ package com.example.rpl.RPL.exception.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.springframework.http.HttpStatus;
-
 import java.util.Locale;
+import org.springframework.http.HttpStatus;
 
 /**
  * Base DTO used to respond when an exception happen.

@@ -1,15 +1,14 @@
 package com.example.rpl.RPL.controller
 
-import com.example.rpl.RPL.model.*
-import com.example.rpl.RPL.repository.*
+
+import com.example.rpl.RPL.model.RPLFile
+import com.example.rpl.RPL.repository.FileRepository
 import com.example.rpl.RPL.util.AbstractFunctionalSpec
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.ActiveProfiles
 import spock.lang.Shared
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND
 import static javax.servlet.http.HttpServletResponse.SC_OK
 
 @ActiveProfiles("test-functional")

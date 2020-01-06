@@ -1,6 +1,6 @@
 package com.example.rpl.RPL.service
 
-import com.example.rpl.RPL.controller.dto.CourseResponseDTO
+
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException
 import com.example.rpl.RPL.model.Course
 import com.example.rpl.RPL.model.CourseUser
@@ -30,7 +30,7 @@ class CoursesServiceSpec extends Specification {
         courseRepository = Mock(CourseRepository)
         roleRepository = Mock(RoleRepository)
         userRepository = Mock(UserRepository)
-        coursesService = new CoursesService(courseRepository, courseUserRepository, roleRepository, userRepository)
+        coursesService = new CoursesService(courseRepository, courseUserRepository, roleRepository)
 
         user = Mock(User)
         user.getId() >> 1
@@ -73,7 +73,7 @@ class CoursesServiceSpec extends Specification {
             String semester = "2c-2019"
 
         when:
-            Course newCourse = coursesService.createCourse(
+            coursesService.createCourse(
                     name,
                     universityCourseId,
                     description,

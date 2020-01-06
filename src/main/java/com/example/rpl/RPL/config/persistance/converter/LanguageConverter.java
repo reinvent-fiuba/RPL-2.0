@@ -2,7 +2,6 @@ package com.example.rpl.RPL.config.persistance.converter;
 
 
 import com.example.rpl.RPL.model.Language;
-
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 

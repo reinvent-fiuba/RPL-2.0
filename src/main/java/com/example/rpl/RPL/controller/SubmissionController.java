@@ -41,7 +41,8 @@ public class SubmissionController {
     }
 
     @GetMapping(value = "/api/submissions/{submissionId}")
-    public ResponseEntity<ActivitySubmissionResponseDTO> getSubmission(@PathVariable Long submissionId) {
+    public ResponseEntity<ActivitySubmissionResponseDTO> getSubmission(
+        @PathVariable Long submissionId) {
         log.error("SUBMISSION ID ID: {}", submissionId);
 
         ActivitySubmission as = submissionService.getActivitySubmission(submissionId);

@@ -55,13 +55,13 @@ CREATE TABLE courses
 
 CREATE TABLE course_users
 (
-    id                 BIGINT NOT NULL AUTO_INCREMENT,
-    course_id BIGINT,
-    user_id            BIGINT,
-    role_id            BIGINT,
-    accepted           BOOLEAN,
-    date_created       DATETIME,
-    last_updated       DATETIME,
+    id           BIGINT NOT NULL AUTO_INCREMENT,
+    course_id    BIGINT,
+    user_id      BIGINT,
+    role_id      BIGINT,
+    accepted     BOOLEAN,
+    date_created DATETIME,
+    last_updated DATETIME,
 
     PRIMARY KEY (id),
     FOREIGN KEY (course_id) REFERENCES courses (id),
@@ -85,7 +85,7 @@ CREATE TABLE rpl_files
 CREATE TABLE activities
 (
     id                 BIGINT NOT NULL AUTO_INCREMENT,
-    course_id BIGINT,
+    course_id          BIGINT,
     name               VARCHAR(255),
     description        VARCHAR(255),
     language           VARCHAR(255),

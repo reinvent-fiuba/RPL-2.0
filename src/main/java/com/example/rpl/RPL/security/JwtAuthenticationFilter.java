@@ -51,7 +51,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                  */
                 UserDetails userDetails;
                 if (courseId != null) {
-                    userDetails = customUserDetailsService.loadUserByIdAndCourseId(userId, courseId);
+                    userDetails = customUserDetailsService
+                        .loadUserByIdAndCourseId(userId, courseId);
                 } else {
                     userDetails = customUserDetailsService.loadUserById(userId);
                 }
