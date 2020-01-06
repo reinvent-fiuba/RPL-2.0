@@ -5,6 +5,7 @@ import lombok.Value;
 
 @Value
 public class LoginRequestDTO {
+
     @NotBlank
     private String usernameOrEmail;
 

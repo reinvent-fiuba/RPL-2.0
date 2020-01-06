@@ -8,8 +8,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 public class RplApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(RplApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(RplApplication.class, args);
+    }
 
 }

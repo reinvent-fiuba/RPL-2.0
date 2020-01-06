@@ -1,5 +1,7 @@
 package com.example.rpl.RPL.model;
 
+import static java.time.ZonedDateTime.now;
+
 import java.time.ZonedDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -7,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,7 +20,7 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 @Entity
-@Table(name = "files")
+@Table(name = "rpl_files")
 public class RPLFile {
 
     private static String PERMISSION_DELIMITER = ",";
@@ -30,8 +33,19 @@ public class RPLFile {
 
     @NonNull
     @Basic(optional = false)
-    @Column(name = "link_s3")
-    private String link_s3;
+    @Column(name = "file_name")
+    private String fileName;
+
+    @NonNull
+    @Basic(optional = false)
+    @Column(name = "file_type")
+    private String fileType;
+
+    @Lob
+    @NonNull
+    @Basic(optional = false)
+    @Column(name = "data")
+    private byte[] data;
 
     @Column(name = "date_created")
     private ZonedDateTime dateCreated;
@@ -47,4 +61,11 @@ public class RPLFile {
     public RPLFile() {
     }
 
+    public RPLFile(String fileName, String contentType, byte[] bytes) {
+        this.fileName = fileName;
+        this.fileType = contentType;
+        this.data = bytes;
+        this.dateCreated = now();
+        this.lastUpdated = this.dateCreated;
+    }
 }

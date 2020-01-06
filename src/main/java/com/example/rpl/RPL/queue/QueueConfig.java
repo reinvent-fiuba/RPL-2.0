@@ -34,7 +34,14 @@ public class QueueConfig {
 
     @Profile("producer")
     @Bean
-    public Producer producer() {
+    public IProducer producer() {
         return new Producer(template, hello());
+    }
+
+
+    @Profile({"test-functional", "test-unit"})
+    @Bean
+    public IProducer mockProducer() {
+        return new MockProducer();
     }
 }

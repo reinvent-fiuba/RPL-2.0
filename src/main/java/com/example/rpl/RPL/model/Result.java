@@ -33,10 +33,6 @@ public class Result {
     @ManyToOne(fetch = FetchType.LAZY)
     private ActivitySubmission activitySubmission;
 
-    @JoinColumn(name = "test_id", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Test test;
-
     @NonNull
     @Basic(optional = false)
     @Column(name = "score")

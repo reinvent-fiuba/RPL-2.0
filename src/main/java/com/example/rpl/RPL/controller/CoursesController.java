@@ -6,17 +6,20 @@ import com.example.rpl.RPL.model.Course;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.CoursesService;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -26,13 +29,13 @@ public class CoursesController {
 
     @Autowired
     public CoursesController(
-            CoursesService coursesService) {
+        CoursesService coursesService) {
         this.coursesService = coursesService;
     }
 
     @PostMapping(value = "/api/courses")
     public ResponseEntity<CourseResponseDTO> createCourse(@CurrentUser UserPrincipal currentUser,
-                                                                @RequestBody @Valid CreateCourseRequestDTO createCourseRequestDTO) {
+        @RequestBody @Valid CreateCourseRequestDTO createCourseRequestDTO) {
 
         Course course = coursesService.createCourse(
             createCourseRequestDTO.getName(),
@@ -41,37 +44,38 @@ public class CoursesController {
             true,
             createCourseRequestDTO.getSemester(),
             null,
-            currentUser.getId()
+            currentUser.getUser()
         );
 
         return new ResponseEntity<>(CourseResponseDTO.fromEntity(course), HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/api/courses")
-    public ResponseEntity<List<CourseResponseDTO>> getCourses(@CurrentUser UserPrincipal currentUser) {
+    public ResponseEntity<List<CourseResponseDTO>> getCourses() {
 
         List<Course> courses = coursesService.getAllCourses();
 
         return new ResponseEntity<>(
-                courses.stream()
-                        .map(courseSemester -> CourseResponseDTO.fromEntity(courseSemester))
-                        .collect(Collectors.toList()),
-                HttpStatus.OK);
+            courses.stream()
+                .map(CourseResponseDTO::fromEntity)
+                .collect(Collectors.toList()),
+            HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('course_create')")
     @GetMapping(value = "/api/courses/{courseId}")
     public ResponseEntity<UserPrincipal> getCourseDetails(@CurrentUser UserPrincipal currentUser,
-                                                          @PathVariable Long courseId) {
-        log.error("POLL ID: {}", courseId);
+        @PathVariable Long courseId) {
+        log.error("COURSE ID: {}", courseId);
 
         return new ResponseEntity<>(currentUser, HttpStatus.OK);
     }
 
-    @GetMapping(value="/api/users/{userId}/courses")
-    public ResponseEntity<List<CourseResponseDTO>> getCoursesOfUser(@CurrentUser UserPrincipal currentUser,
-                                                                    @PathVariable Long userId) {
-        if (currentUser.getId() != userId) {
+    @GetMapping(value = "/api/users/{userId}/courses")
+    public ResponseEntity<List<CourseResponseDTO>> getCoursesOfUser(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long userId) {
+        if (!currentUser.getId().equals(userId)) {
             return new ResponseEntity<>(
                 Collections.emptyList(),
                 HttpStatus.OK
@@ -82,7 +86,7 @@ public class CoursesController {
 
         return new ResponseEntity<>(
             courses.stream()
-                .map(courseSemester -> CourseResponseDTO.fromEntity(courseSemester))
+                .map(CourseResponseDTO::fromEntity)
                 .collect(Collectors.toList()),
             HttpStatus.OK);
     }

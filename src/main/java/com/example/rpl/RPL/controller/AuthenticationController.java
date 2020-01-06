@@ -43,11 +43,13 @@ public class AuthenticationController {
     }
 
     @PostMapping(value = "/api/auth/signup")
-    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody @Valid final CreateUserRequestDTO createUserRequestDTO) {
+    public ResponseEntity<UserResponseDTO> registerUser(
+        @RequestBody @Valid final CreateUserRequestDTO createUserRequestDTO) {
 
         User user = authenticationService
             .createUser(createUserRequestDTO.getName(), createUserRequestDTO.getSurname(),
-                createUserRequestDTO.getStudentId(), createUserRequestDTO.getUsername(), createUserRequestDTO.getEmail(),
+                createUserRequestDTO.getStudentId(), createUserRequestDTO.getUsername(),
+                createUserRequestDTO.getEmail(),
                 createUserRequestDTO.getPassword(), createUserRequestDTO.getUniversity(),
                 createUserRequestDTO.getDegree());
 
@@ -57,10 +59,12 @@ public class AuthenticationController {
 
     /**
      * If authentication fails, throws BadCredentialsException.
+     *
      * @return JwtResponseDTO with JWT token.
      */
     @PostMapping("/api/auth/login")
-    public ResponseEntity<JwtResponseDTO> authenticateUser(@Valid @RequestBody LoginRequestDTO loginRequestDto) {
+    public ResponseEntity<JwtResponseDTO> authenticateUser(
+        @Valid @RequestBody LoginRequestDTO loginRequestDto) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 loginRequestDto.getUsernameOrEmail(),
@@ -78,6 +82,7 @@ public class AuthenticationController {
 
     /**
      * If authentication fails, throws BadCredentialsException.
+     *
      * @return JwtResponseDTO with JWT token.
      */
     @GetMapping("/api/auth/profile")

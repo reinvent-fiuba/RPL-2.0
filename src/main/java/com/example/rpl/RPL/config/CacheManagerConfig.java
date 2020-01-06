@@ -2,16 +2,13 @@ package com.example.rpl.RPL.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Ticker;
+import java.util.concurrent.TimeUnit;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableCaching
@@ -33,9 +30,9 @@ public class CacheManagerConfig {
 
     private CaffeineCache buildCache(String name, Ticker ticker, int minutesToExpire) {
         return new CaffeineCache(name, Caffeine.newBuilder()
-                .expireAfterWrite(minutesToExpire, TimeUnit.MINUTES)
-                .maximumSize(1000)
-                .ticker(ticker)
-                .build());
+            .expireAfterWrite(minutesToExpire, TimeUnit.MINUTES)
+            .maximumSize(1000)
+            .ticker(ticker)
+            .build());
     }
 }

@@ -1,10 +1,9 @@
 package com.example.rpl.RPL.controller.dto;
 
 import com.example.rpl.RPL.model.Course;
+import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.ZonedDateTime;
 
 @Getter
 @Builder

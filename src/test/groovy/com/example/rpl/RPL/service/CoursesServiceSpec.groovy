@@ -1,6 +1,6 @@
 package com.example.rpl.RPL.service
 
-import com.example.rpl.RPL.controller.dto.CourseResponseDTO
+
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException
 import com.example.rpl.RPL.model.Course
 import com.example.rpl.RPL.model.CourseUser
@@ -10,6 +10,7 @@ import com.example.rpl.RPL.repository.CourseRepository
 import com.example.rpl.RPL.repository.CourseUserRepository
 import com.example.rpl.RPL.repository.RoleRepository
 import com.example.rpl.RPL.repository.UserRepository
+import spock.lang.Shared
 import spock.lang.Specification
 
 class CoursesServiceSpec extends Specification {
@@ -20,12 +21,19 @@ class CoursesServiceSpec extends Specification {
     private RoleRepository roleRepository
     private UserRepository userRepository
 
+    @Shared
+    private User user
+
+
     def setup() {
         courseUserRepository = Mock(CourseUserRepository)
         courseRepository = Mock(CourseRepository)
         roleRepository = Mock(RoleRepository)
         userRepository = Mock(UserRepository)
-        coursesService = new CoursesService(courseRepository, courseUserRepository, roleRepository, userRepository)
+        coursesService = new CoursesService(courseRepository, courseUserRepository, roleRepository)
+
+        user = Mock(User)
+        user.getId() >> 1
     }
 
     void "should create course successfully"() {
@@ -43,12 +51,11 @@ class CoursesServiceSpec extends Specification {
                     true,
                     semester,
                     null,
-                    1
+                    user
             )
 
         then:
             1 * courseUserRepository.existsByNameAndUniversityCourseIdAndSemesterAndAdmin(name, universityCourseId, semester, 1) >> false
-            1 * userRepository.findById(1) >> Optional.of(new User())
             1 * roleRepository.findByName("admin") >> Optional.of(new Role())
 
             1 * courseRepository.save(_ as Course) >> { Course course -> return course }
@@ -60,34 +67,34 @@ class CoursesServiceSpec extends Specification {
 
     void "should fail to create user if course exists"() {
         given:
-        String name = "Some new course"
-        String universityCourseId = "75.41"
-        String description = "Some description"
-        String semester = "2c-2019"
+            String name = "Some new course"
+            String universityCourseId = "75.41"
+            String description = "Some description"
+            String semester = "2c-2019"
 
         when:
-        Course newCourse = coursesService.createCourse(
-                name,
-                universityCourseId,
-                description,
-                true,
-                semester,
-                null,
-                1
-        )
+            coursesService.createCourse(
+                    name,
+                    universityCourseId,
+                    description,
+                    true,
+                    semester,
+                    null,
+                    user
+            )
 
         then:
-        1 * courseUserRepository.existsByNameAndUniversityCourseIdAndSemesterAndAdmin(name, universityCourseId, semester, 1) >> true
+            1 * courseUserRepository.existsByNameAndUniversityCourseIdAndSemesterAndAdmin(name, universityCourseId, semester, 1) >> true
 
-        thrown(EntityAlreadyExistsException)
+            thrown(EntityAlreadyExistsException)
     }
 
     void "should return an empty list of courses when calling getAllCourses"() {
         given: "no courses"
-        courseRepository.findAll() >> []
+            courseRepository.findAll() >> []
 
         when: "retrieving all courses"
-            List< Course> courses = coursesService.getAllCourses()
+            List<Course> courses = coursesService.getAllCourses()
 
         then: "there are no courses"
             courses.isEmpty()
@@ -100,7 +107,7 @@ class CoursesServiceSpec extends Specification {
             ]
 
         when: "retrieving all course"
-            List< Course> courses = coursesService.getAllCourses()
+            List<Course> courses = coursesService.getAllCourses()
 
         then: "there are no courses"
             courses.size() == 1
@@ -111,7 +118,7 @@ class CoursesServiceSpec extends Specification {
             courseUserRepository.findByUser_Id(1) >> []
 
         when: "retrieving user courses"
-            List< Course> courses = coursesService.getAllCoursesByUser(1)
+            List<Course> courses = coursesService.getAllCoursesByUser(1)
 
         then: "there are no courses"
             courses.isEmpty()
@@ -127,7 +134,7 @@ class CoursesServiceSpec extends Specification {
             ]
 
         when: "retrieving all courses"
-            List< Course> courses = coursesService.getAllCoursesByUser(1)
+            List<Course> courses = coursesService.getAllCoursesByUser(1)
 
         then: "there are no courses"
             courses.size() == 1

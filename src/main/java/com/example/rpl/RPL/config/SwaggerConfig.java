@@ -3,11 +3,9 @@ package com.example.rpl.RPL.config;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.Collections;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
@@ -30,16 +28,21 @@ public class SwaggerConfig {
             .build()
             .apiInfo(apiInfo())
             .useDefaultResponseMessages(false)
-            .globalResponseMessage(RequestMethod.GET, newArrayList(new ResponseMessageBuilder().code(500)
-                    .message("500 message")
-                    .responseModel(new ModelRef("Error"))
-                    .build(),
-                new ResponseMessageBuilder().code(403)
-                    .message("Forbidden!!!!!")
-                    .build()));
+            .globalResponseMessage(RequestMethod.GET,
+                newArrayList(new ResponseMessageBuilder().code(500)
+                        .message("500 message")
+                        .responseModel(new ModelRef("Error"))
+                        .build(),
+                    new ResponseMessageBuilder().code(403)
+                        .message("Forbidden!!!!!")
+                        .build()));
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfo("RPL 2.0", "Esta es la API de RPL 2.0 para todos y todas", "0.1", "Terms of service", new Contact("Alejandro Levinas o Matías Cano", "http://example.com/support", "levinasale@gmail.com;matiasjosecc@gmail.com"), "License of API", "http://example.com/support", Collections.emptyList());
+        return new ApiInfo("RPL 2.0", "Esta es la API de RPL 2.0 para todos y todas", "0.1",
+            "Terms of service",
+            new Contact("Alejandro Levinas o Matías Cano", "http://example.com/support",
+                "levinasale@gmail.com;matiasjosecc@gmail.com"), "License of API",
+            "http://example.com/support", Collections.emptyList());
     }
 }

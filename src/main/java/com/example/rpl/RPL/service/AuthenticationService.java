@@ -4,13 +4,12 @@ import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.repository.UserRepository;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -28,9 +27,10 @@ public class AuthenticationService {
 
     /**
      * Creates a new User.
+     *
      * @return a new saved User
-     * @throws EntityAlreadyExistsException if email or username exists
-     *         ValidationException declared on the User class
+     * @throws EntityAlreadyExistsException if email or username exists ValidationException declared
+     * on the User class
      */
     @Transactional
     public User createUser(String name, String surname, String studentId, String username,

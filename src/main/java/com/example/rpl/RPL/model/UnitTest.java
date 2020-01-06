@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.ToString;
 
 @Getter
@@ -29,10 +28,9 @@ public class UnitTest {
     @Column(name = "id")
     private Long id;
 
-
-    @JoinColumn(name = "test_id", referencedColumnName = "id")
+    @JoinColumn(name = "activity_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Test test;
+    private Activity activity;
 
     @JoinColumn(name = "test_file_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)

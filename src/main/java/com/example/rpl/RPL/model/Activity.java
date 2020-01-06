@@ -1,5 +1,7 @@
 package com.example.rpl.RPL.model;
 
+import static java.time.ZonedDateTime.now;
+
 import java.time.ZonedDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -51,9 +53,9 @@ public class Activity {
     @Column(name = "active")
     private Boolean active;
 
-    @JoinColumn(name = "file_id", referencedColumnName = "id")
+    @JoinColumn(name = "supporting_file_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private RPLFile file;
+    private RPLFile supportingFile;
 
 
     @Column(name = "date_created")
@@ -68,5 +70,18 @@ public class Activity {
     @Deprecated
     public Activity() {
     }
+
+    public Activity(Course course, String name, String description, Language language,
+        RPLFile supportingFile) {
+        this.course = course;
+        this.name = name;
+        this.description = description;
+        this.language = language;
+        this.active = true;
+        this.supportingFile = supportingFile;
+        this.dateCreated = now();
+        this.lastUpdated = this.dateCreated;
+    }
+
 
 }

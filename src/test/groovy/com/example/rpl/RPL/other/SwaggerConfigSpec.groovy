@@ -6,7 +6,7 @@ import org.springframework.test.context.ActiveProfiles
 
 import static javax.servlet.http.HttpServletResponse.SC_OK
 
-@ActiveProfiles(["test-functional","producer"])
+@ActiveProfiles("test-functional")
 class SwaggerConfigSpec extends AbstractFunctionalSpec {
 
     def "generateSwagger"() {

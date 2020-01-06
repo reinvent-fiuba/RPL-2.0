@@ -2,18 +2,13 @@ package com.example.rpl.RPL.controller
 
 import com.example.rpl.RPL.model.User
 import com.example.rpl.RPL.repository.UserRepository
-import com.example.rpl.RPL.service.AuthenticationService
 import com.example.rpl.RPL.util.AbstractFunctionalSpec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.ActiveProfiles
-import spock.lang.Shared
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST
-import static javax.servlet.http.HttpServletResponse.SC_CREATED
-import static javax.servlet.http.HttpServletResponse.SC_OK
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED
+import static javax.servlet.http.HttpServletResponse.*
 
 @ActiveProfiles("test-functional")
 class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
@@ -26,14 +21,14 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
 
     def setup() {
         User user = new User(
-            'some-name',
-            'some-surname',
-            'some-student-id',
-            'username',
-            'some@mail.com',
-            passwordEncoder.encode('supersecret'),
-            'some-university',
-            'some-hard-degree'
+                'some-name',
+                'some-surname',
+                'some-student-id',
+                'username',
+                'some@mail.com',
+                passwordEncoder.encode('supersecret'),
+                'some-university',
+                'some-hard-degree'
         );
         userRepository.save(user);
     }
@@ -85,8 +80,8 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert userRepository.existsById(user.id as Long)
 
         where:
-            username    | email         | password
-            "alep1234"  | "asd@asd.com" | "12345"
+            username   | email         | password
+            "alep1234" | "asd@asd.com" | "12345"
 
     }
 
@@ -227,8 +222,8 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.student_id == studentId
 
         where:
-            username    | password      | name          | studentId
-            "username"  | "supersecret" | "some-name"   | "some-student-id"
+            username   | password      | name        | studentId
+            "username" | "supersecret" | "some-name" | "some-student-id"
     }
 }
 
