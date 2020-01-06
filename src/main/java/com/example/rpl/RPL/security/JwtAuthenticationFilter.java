@@ -17,8 +17,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private static String COURSES = "courses";
-
     private JwtTokenProvider tokenProvider;
 
     private CustomUserDetailsService customUserDetailsService;
@@ -76,8 +74,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      */
     private Long getCourseIdFromRequest(HttpServletRequest request) {
         String url = request.getRequestURI();
-        if (StringUtils.hasText(url) && url.contains(COURSES) && !url.endsWith(COURSES)) {
-            String[] partsOfUri = url.substring(url.indexOf(COURSES)).split("/");
+        String courses = "courses";
+        if (StringUtils.hasText(url) && url.contains(courses) && !url.endsWith(courses)) {
+            String[] partsOfUri = url.substring(url.indexOf(courses)).split("/");
             return partsOfUri.length > 0 ? Long.parseLong(partsOfUri[1]) : null;
         }
         return null;

@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:54899",
+    "host": "localhost:32775",
     "basePath": "/",
     "tags": [
         {
@@ -212,69 +212,6 @@
                 "operationId": "getCoursesUsingGET",
                 "produces": [
                     "*/*"
-                ],
-                "parameters": [
-                    {
-                        "name": "accountNonExpired",
-                        "in": "query",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "accountNonLocked",
-                        "in": "query",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "authorities[0].authority",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "credentialsNonExpired",
-                        "in": "query",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "enabled",
-                        "in": "query",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "id",
-                        "in": "query",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "password",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "username",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    }
                 ],
                 "responses": {
                     "200": {
@@ -828,7 +765,6 @@
         }
     },
     "definitions": {
-
         "ActivitySubmissionDTO": {
             "type": "object",
             "properties": {
@@ -874,7 +810,7 @@
             },
             "title": "ActivitySubmissionDTO"
         },
-      "CourseResponseDTO": {
+        "CourseResponseDTO": {
             "type": "object",
             "properties": {
                 "active": {

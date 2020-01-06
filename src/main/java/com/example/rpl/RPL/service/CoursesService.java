@@ -1,5 +1,6 @@
 package com.example.rpl.RPL.service;
 
+import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.Course;
 import com.example.rpl.RPL.model.CourseUser;
 import com.example.rpl.RPL.model.Role;
@@ -28,9 +29,9 @@ public class CoursesService {
 
     @Autowired
     public CoursesService(CourseRepository courseRepository,
-                          CourseUserRepository courseUserRepository,
-                          RoleRepository roleRepository,
-                          UserRepository userRepository) {
+        CourseUserRepository courseUserRepository,
+        RoleRepository roleRepository,
+        UserRepository userRepository) {
         this.courseRepository = courseRepository;
         this.courseUserRepository = courseUserRepository;
         this.roleRepository = roleRepository;
@@ -39,21 +40,28 @@ public class CoursesService {
 
     /**
      * Creates a new Course.
+     *
      * @return a new saved Course
-     * @throws EntityAlreadyExistsException if course exists
-     *         ValidationException declared on the Course class
+     * @throws EntityAlreadyExistsException if course exists ValidationException declared on the
+     * Course class
      */
     @Transactional
-    public Course createCourse(String name, String universityCourseId, String description, Boolean active, String semester, String imgUri, Long userId) {
-        if (courseUserRepository.existsByNameAndUniversityCourseIdAndSemesterAndAdmin(name, universityCourseId, semester, userId)) {
+    public Course createCourse(String name, String universityCourseId, String description,
+        Boolean active, String semester, String imgUri, Long userId) {
+        if (courseUserRepository
+            .existsByNameAndUniversityCourseIdAndSemesterAndAdmin(name, universityCourseId,
+                semester, userId)) {
             throw new EntityAlreadyExistsException(
-                String.format("Course '%s' with id '%s' for '%s' semester already exists", name, universityCourseId, semester),
+                String.format("Course '%s' with id '%s' for '%s' semester already exists", name,
+                    universityCourseId, semester),
                 "ERROR_COURSE_EXISTS");
         }
 
         Course course = new Course(name, universityCourseId, description, active, semester, imgUri);
-        User user = userRepository.findById(userId).get();
-        Role adminRole = roleRepository.findByName("admin").get();
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new NotFoundException("user_not_found"));
+        Role adminRole = roleRepository.findByName("admin")
+            .orElseThrow(() -> new NotFoundException("role_not_found"));
         CourseUser courseUser = new CourseUser(course, user, adminRole, true);
 
         courseRepository.save(course);
@@ -66,6 +74,7 @@ public class CoursesService {
 
     /**
      * Get all Courses.
+     *
      * @return a new saved User
      */
     @Transactional
