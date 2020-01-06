@@ -1,5 +1,7 @@
 package com.example.rpl.RPL.model;
 
+import static java.time.ZonedDateTime.now;
+
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +49,13 @@ public class Role {
      */
     @Deprecated
     public Role() {
+    }
+
+    public Role(String name, String permissions) {
+        this.name = name;
+        this.permissions = permissions;
+        this.dateCreated = now();
+        this.lastUpdated = this.dateCreated;
     }
 
     public List<String> getPermissions() {

@@ -6,12 +6,14 @@ import com.example.rpl.RPL.model.Course
 import com.example.rpl.RPL.model.CourseUser
 import com.example.rpl.RPL.model.Language
 import com.example.rpl.RPL.model.RPLFile
+import com.example.rpl.RPL.model.Role
 import com.example.rpl.RPL.model.SubmissionStatus
 import com.example.rpl.RPL.model.User
 import com.example.rpl.RPL.repository.ActivityRepository
 import com.example.rpl.RPL.repository.CourseRepository
 import com.example.rpl.RPL.repository.CourseUserRepository
 import com.example.rpl.RPL.repository.FileRepository
+import com.example.rpl.RPL.repository.RoleRepository
 import com.example.rpl.RPL.repository.SubmissionRepository
 import com.example.rpl.RPL.repository.UserRepository
 import com.example.rpl.RPL.util.AbstractFunctionalSpec
@@ -21,6 +23,7 @@ import org.springframework.test.context.ActiveProfiles
 import spock.lang.Shared
 import spock.lang.Unroll
 
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND
 import static javax.servlet.http.HttpServletResponse.SC_OK
 
 @ActiveProfiles("test-functional")
@@ -34,6 +37,9 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
 
     @Autowired
     UserRepository userRepository
+
+    @Autowired
+    RoleRepository roleRepository
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -60,8 +66,18 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Shared
     ActivitySubmission activitySubmission
 
+    @Shared
+    Course course
+
 
     def setup() {
+
+        Role role = new Role(
+                "student",
+                "activity_submit"
+        )
+        roleRepository.save(role);
+
         user = new User(
                 'some-name',
                 'some-surname',
@@ -75,7 +91,7 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         userRepository.save(user)
 
-        Course course = new Course(
+        course = new Course(
                 "some-course",
                 "some-university-id",
                 "some-description",
@@ -89,7 +105,7 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
         CourseUser courseUser = new CourseUser(
                 course,
                 user,
-                null,
+                role,
                 true
         )
 
@@ -157,13 +173,65 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.id == 1
             assert result.submission_file_name == "submission_file"
             assert result.submission_file_type == "text"
-            assert result.submission_file_id == 2
+            assert result.submission_file_id != null
             assert result.activity_supporting_file_name == "supporting_file"
             assert result.activity_supporting_file_type == "text"
-            assert result.activity_supporting_file_id == 1
+            assert result.activity_supporting_file_id != null
             assert result.activity_language == "c_std11"
             assert result.activity_iotests.size() == 0
     }
+
+    @Unroll
+    void "test get non existent submission should respond with error"() {
+        when:
+            def response = get("/api/submissions/999")
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_NOT_FOUND
+
+            def result = getJsonResponse(response)
+            assert result.error == "activity_submission_not_found"
+    }
+
+    /*****************************************************************************************
+     ********** POST SUBMISSION **************************************************************
+     *****************************************************************************************/
+
+    @Unroll
+    void "test POST submission should persist it and enqueue task"() {
+        given: "A new submission"
+            File f = new File("./src/main/resources/db/testdata/la_submission.tar.xz")
+
+            Map loginBody = [usernameOrEmail: "username", password: "supersecret"]
+            def loginResponse = getJsonResponse(post("/api/auth/login", loginBody))
+
+        when:
+            api.headers([
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+            api.multiPart("file", f)
+            api.formParam("description", "This is my submission")
+            api.contentType("multipart/form-data")
+            def response = api.post("/api/courses/${course.getId()}/activities/${activity.getId()}/submissions")
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            def result = getJsonResponse(response)
+
+            assert result.id != null
+            assert result.submission_file_name != null
+            assert result.submission_file_type == "application/octet-stream"
+            assert result.submission_file_id != null
+            assert result.activity_supporting_file_name == "supporting_file"
+            assert result.activity_supporting_file_type == "text"
+            assert result.activity_supporting_file_id != null
+            assert result.activity_language == "c_std11"
+            assert result.activity_iotests.size() == 0
+    }
+
 }
 
 

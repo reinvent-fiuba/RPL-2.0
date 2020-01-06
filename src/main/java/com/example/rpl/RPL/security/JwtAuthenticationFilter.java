@@ -17,6 +17,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private static String COURSES = "courses";
+
     private JwtTokenProvider tokenProvider;
 
     private CustomUserDetailsService customUserDetailsService;
@@ -39,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwt = getJwtFromRequest(request);
-//            Long courseId = getCourseIdFromRequest(request);
+            Long courseId = getCourseIdFromRequest(request);
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 Long userId = tokenProvider.getUserIdFromJWT(jwt);
@@ -49,7 +51,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     and create the UserDetails object by parsing those claims from the JWT.
                     That would avoid the following database hit. It's completely up to you.
                  */
-                UserDetails userDetails = customUserDetailsService.loadUserById(userId);
+                UserDetails userDetails;
+                if (courseId != null) {
+                    userDetails = customUserDetailsService.loadUserByIdAndCourseId(userId, courseId);
+                } else {
+                    userDetails = customUserDetailsService.loadUserById(userId);
+                }
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities());
                 authentication
@@ -69,8 +76,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      */
     private Long getCourseIdFromRequest(HttpServletRequest request) {
         String url = request.getRequestURI();
-        if (StringUtils.hasText(url) && url.contains("courses")) {
-            String[] partsOfUri = url.substring(url.indexOf("courses")).split("/");
+        if (StringUtils.hasText(url) && url.contains(COURSES) && !url.endsWith(COURSES)) {
+            String[] partsOfUri = url.substring(url.indexOf(COURSES)).split("/");
             return partsOfUri.length > 0 ? Long.parseLong(partsOfUri[1]) : null;
         }
         return null;

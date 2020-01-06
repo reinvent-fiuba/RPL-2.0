@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:45083",
+    "host": "localhost:36287",
     "basePath": "/",
     "tags": [
         {
@@ -33,10 +33,6 @@
         {
             "name": "health-controller",
             "description": "Health Controller"
-        },
-        {
-            "name": "producer-controller",
-            "description": "Producer Controller"
         },
         {
             "name": "submission-controller",
@@ -632,54 +628,6 @@
                 "deprecated": false
             }
         },
-        "/api/uploadMultipleFiles": {
-            "post": {
-                "tags": [
-                    "submission-controller"
-                ],
-                "summary": "uploadMultipleFiles",
-                "operationId": "uploadMultipleFilesUsingPOST",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "*/*"
-                ],
-                "parameters": [
-                    {
-                        "name": "description",
-                        "in": "query",
-                        "description": "description",
-                        "required": true,
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "collectionFormat": "multi"
-                    },
-                    {
-                        "name": "file",
-                        "in": "formData",
-                        "description": "file",
-                        "required": true,
-                        "type": "array",
-                        "items": {
-                            "type": "file"
-                        },
-                        "collectionFormat": "multi"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "deprecated": false
-            }
-        },
         "/api/users/{userId}/courses": {
             "get": {
                 "tags": [
@@ -778,41 +726,6 @@
                         "description": "500 message",
                         "schema": {
                             "$ref": "#/definitions/Error"
-                        }
-                    }
-                },
-                "deprecated": false
-            }
-        },
-        "/submit": {
-            "post": {
-                "tags": [
-                    "producer-controller"
-                ],
-                "summary": "submit",
-                "operationId": "submitUsingPOST",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "*/*"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "ticket",
-                        "description": "ticket",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Ticket"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/Ticket"
                         }
                     }
                 },
@@ -1052,16 +965,6 @@
                 }
             },
             "title": "Resource"
-        },
-        "Ticket": {
-            "type": "object",
-            "properties": {
-                "quantity": {
-                    "type": "integer",
-                    "format": "int64"
-                }
-            },
-            "title": "Ticket"
         },
         "URI": {
             "type": "object",

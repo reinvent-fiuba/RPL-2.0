@@ -4,6 +4,7 @@ import com.example.rpl.RPL.controller.dto.ActivitySubmissionDTO;
 import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.IOTest;
 import com.example.rpl.RPL.model.UnitTest;
+import com.example.rpl.RPL.queue.IProducer;
 import com.example.rpl.RPL.queue.Producer;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
@@ -33,11 +34,11 @@ public class SubmissionController {
 
     private SubmissionService submissionService;
     private TestService testService;
-    private final Producer activitySubmissionQueueProducer;
+    private final IProducer activitySubmissionQueueProducer;
 
     @Autowired
     public SubmissionController(SubmissionService submissionService,
-        TestService testService, Producer activitySubmissionQueueProducer) {
+        TestService testService, IProducer activitySubmissionQueueProducer) {
         this.submissionService = submissionService;
         this.testService = testService;
         this.activitySubmissionQueueProducer = activitySubmissionQueueProducer;
@@ -60,7 +61,7 @@ public class SubmissionController {
         return new ResponseEntity<>(asDto, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('course_create')")
+    @PreAuthorize("hasAuthority('activity_submit')")
     @PostMapping(value = "/api/courses/{courseId}/activities/{activityId}/submissions")
     public ResponseEntity<ActivitySubmissionDTO> createSubmission(
         @CurrentUser UserPrincipal currentUser,

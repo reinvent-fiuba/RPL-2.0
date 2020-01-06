@@ -11,13 +11,19 @@ VALUES (2, 'Matias', 'Cano', 97925, 'tute', 'matiasjosecc@gmail.com',
         'UBA', now(), now());
 
 INSERT INTO roles
-VALUES (1, 'admin', 'course_create,course_edit', now(), now());
+VALUES (1, 'admin', 'course_create,course_edit,activity_submit', now(), now());
+
+INSERT INTO roles
+VALUES (2, 'student', 'activity_submit', now(), now());
 
 INSERT INTO permissions
 VALUES (1, 'course_create', now());
 
 INSERT INTO permissions
 VALUES (2, 'course_edit', now());
+
+INSERT INTO permissions
+VALUES (3, 'activity_submit', now());
 
 INSERT INTO courses
 VALUES (1, 'Algoritmos y Programación I', 'UBA', 'Hola a todos! Bienvenidos al curso....', true, '2019-2C', 'http://cholilaonline.com/wp-content/uploads/2018/01/algoritmo-amor.jpg', now(), now());
