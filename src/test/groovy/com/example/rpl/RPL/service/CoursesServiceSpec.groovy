@@ -1,10 +1,15 @@
 package com.example.rpl.RPL.service
 
-
+import com.example.rpl.RPL.controller.dto.CourseResponseDTO
+import com.example.rpl.RPL.exception.EntityAlreadyExistsException
 import com.example.rpl.RPL.model.Course
 import com.example.rpl.RPL.model.CourseUser
+import com.example.rpl.RPL.model.Role
+import com.example.rpl.RPL.model.User
 import com.example.rpl.RPL.repository.CourseRepository
 import com.example.rpl.RPL.repository.CourseUserRepository
+import com.example.rpl.RPL.repository.RoleRepository
+import com.example.rpl.RPL.repository.UserRepository
 import spock.lang.Specification
 
 class CoursesServiceSpec extends Specification {
@@ -12,11 +17,69 @@ class CoursesServiceSpec extends Specification {
     private CoursesService coursesService
     private CourseUserRepository courseUserRepository
     private CourseRepository courseRepository
+    private RoleRepository roleRepository
+    private UserRepository userRepository
 
     def setup() {
         courseUserRepository = Mock(CourseUserRepository)
         courseRepository = Mock(CourseRepository)
-        coursesService = new CoursesService(courseRepository, courseUserRepository)
+        roleRepository = Mock(RoleRepository)
+        userRepository = Mock(UserRepository)
+        coursesService = new CoursesService(courseRepository, courseUserRepository, roleRepository, userRepository)
+    }
+
+    void "should create course successfully"() {
+        given:
+            String name = "Some new course"
+            String universityCourseId = "75.41"
+            String description = "Some description"
+            String semester = "2c-2019"
+
+        when:
+            Course newCourse = coursesService.createCourse(
+                    name,
+                    universityCourseId,
+                    description,
+                    true,
+                    semester,
+                    null,
+                    1
+            )
+
+        then:
+            1 * courseUserRepository.existsByNameAndUniversityCourseIdAndSemesterAndAdmin(name, universityCourseId, semester, 1) >> false
+            1 * userRepository.findById(1) >> Optional.of(new User())
+            1 * roleRepository.findByName("admin") >> Optional.of(new Role())
+
+            1 * courseRepository.save(_ as Course) >> { Course course -> return course }
+
+            assert newCourse.name == name
+            assert newCourse.universityCourseId == universityCourseId
+            assert newCourse.semester == semester
+    }
+
+    void "should fail to create user if course exists"() {
+        given:
+        String name = "Some new course"
+        String universityCourseId = "75.41"
+        String description = "Some description"
+        String semester = "2c-2019"
+
+        when:
+        Course newCourse = coursesService.createCourse(
+                name,
+                universityCourseId,
+                description,
+                true,
+                semester,
+                null,
+                1
+        )
+
+        then:
+        1 * courseUserRepository.existsByNameAndUniversityCourseIdAndSemesterAndAdmin(name, universityCourseId, semester, 1) >> true
+
+        thrown(EntityAlreadyExistsException)
     }
 
     void "should return an empty list of courses when calling getAllCourses"() {
@@ -32,41 +95,41 @@ class CoursesServiceSpec extends Specification {
 
     void "should return some courses when calling getAllCourses"() {
         given: "1 course"
-        courseRepository.findAll() >> [
-                new Course()
-        ]
+            courseRepository.findAll() >> [
+                    new Course()
+            ]
 
         when: "retrieving all course"
-        List< Course> courses = coursesService.getAllCourses()
+            List< Course> courses = coursesService.getAllCourses()
 
         then: "there are no courses"
-        courses.size() == 1
+            courses.size() == 1
     }
 
     void "should return an empty list of courses when calling getAllCoursesByUser"() {
         given: "no course users"
-        courseUserRepository.findByUser_Id(1) >> []
+            courseUserRepository.findByUser_Id(1) >> []
 
         when: "retrieving user courses"
-        List< Course> courses = coursesService.getAllCoursesByUser(1)
+            List< Course> courses = coursesService.getAllCoursesByUser(1)
 
         then: "there are no courses"
-        courses.isEmpty()
+            courses.isEmpty()
     }
 
     void "should return some courses when calling getAllCoursesByUser"() {
         given: "1 course"
-        Course course = Mock(Course)
-        CourseUser courseUser = Mock(CourseUser)
-        courseUser.getCourse() >> course
-        courseUserRepository.findByUser_Id(1) >> [
-                courseUser
-        ]
+            Course course = Mock(Course)
+            CourseUser courseUser = Mock(CourseUser)
+            courseUser.getCourse() >> course
+            courseUserRepository.findByUser_Id(1) >> [
+                    courseUser
+            ]
 
         when: "retrieving all courses"
-        List< Course> courses = coursesService.getAllCoursesByUser(1)
+            List< Course> courses = coursesService.getAllCoursesByUser(1)
 
         then: "there are no courses"
-        courses.size() == 1
+            courses.size() == 1
     }
 }

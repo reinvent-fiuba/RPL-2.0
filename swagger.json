@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:36287",
+    "host": "localhost:54899",
     "basePath": "/",
     "tags": [
         {
@@ -56,11 +56,11 @@
                 "parameters": [
                     {
                         "in": "body",
-                        "name": "loginDto",
-                        "description": "loginDto",
+                        "name": "loginRequestDto",
+                        "description": "loginRequestDto",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/LoginDTO"
+                            "$ref": "#/definitions/LoginRequestDTO"
                         }
                     }
                 ],
@@ -152,7 +152,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/UserDTO"
+                            "$ref": "#/definitions/UserResponseDTO"
                         }
                     },
                     "403": {
@@ -184,11 +184,11 @@
                 "parameters": [
                     {
                         "in": "body",
-                        "name": "createUserDTO",
-                        "description": "createUserDTO",
+                        "name": "createUserRequestDTO",
+                        "description": "createUserRequestDTO",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/CreateUserDTO"
+                            "$ref": "#/definitions/CreateUserRequestDTO"
                         }
                     }
                 ],
@@ -196,7 +196,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/UserDTO"
+                            "$ref": "#/definitions/UserResponseDTO"
                         }
                     }
                 },
@@ -282,7 +282,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/CourseDTO"
+                                "$ref": "#/definitions/CourseResponseDTO"
                             }
                         }
                     },
@@ -293,6 +293,100 @@
                         "description": "500 message",
                         "schema": {
                             "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            },
+            "post": {
+                "tags": [
+                    "courses-controller"
+                ],
+                "summary": "createCourse",
+                "operationId": "createCourseUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "accountNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "accountNonLocked",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "authorities[0].authority",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "createCourseRequestDTO",
+                        "description": "createCourseRequestDTO",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CreateCourseRequestDTO"
+                        }
+                    },
+                    {
+                        "name": "credentialsNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "enabled",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/CourseResponseDTO"
                         }
                     }
                 },
@@ -715,7 +809,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/CourseDTO"
+                                "$ref": "#/definitions/CourseResponseDTO"
                             }
                         }
                     },
@@ -734,6 +828,7 @@
         }
     },
     "definitions": {
+
         "ActivitySubmissionDTO": {
             "type": "object",
             "properties": {
@@ -779,7 +874,7 @@
             },
             "title": "ActivitySubmissionDTO"
         },
-        "CourseDTO": {
+      "CourseResponseDTO": {
             "type": "object",
             "properties": {
                 "active": {
@@ -813,9 +908,30 @@
                     "type": "string"
                 }
             },
-            "title": "CourseDTO"
+            "title": "CourseResponseDTO"
         },
-        "CreateUserDTO": {
+        "CreateCourseRequestDTO": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "semester": {
+                    "type": "string"
+                },
+                "university": {
+                    "type": "string"
+                },
+                "university_course_id": {
+                    "type": "string"
+                }
+            },
+            "title": "CreateCourseRequestDTO"
+        },
+        "CreateUserRequestDTO": {
             "type": "object",
             "properties": {
                 "degree": {
@@ -843,7 +959,7 @@
                     "type": "string"
                 }
             },
-            "title": "CreateUserDTO"
+            "title": "CreateUserRequestDTO"
         },
         "File": {
             "type": "object",
@@ -924,7 +1040,7 @@
             },
             "title": "JwtResponseDTO"
         },
-        "LoginDTO": {
+        "LoginRequestDTO": {
             "type": "object",
             "properties": {
                 "password": {
@@ -934,7 +1050,7 @@
                     "type": "string"
                 }
             },
-            "title": "LoginDTO"
+            "title": "LoginRequestDTO"
         },
         "Resource": {
             "type": "object",
@@ -1065,7 +1181,41 @@
             },
             "title": "URL"
         },
-        "UserDTO": {
+        "UserPrincipal": {
+            "type": "object",
+            "properties": {
+                "account_non_expired": {
+                    "type": "boolean"
+                },
+                "account_non_locked": {
+                    "type": "boolean"
+                },
+                "authorities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GrantedAuthority"
+                    }
+                },
+                "credentials_non_expired": {
+                    "type": "boolean"
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            },
+            "title": "UserPrincipal"
+        },
+        "UserResponseDTO": {
             "type": "object",
             "properties": {
                 "date_created": {
@@ -1105,41 +1255,7 @@
                     "type": "string"
                 }
             },
-            "title": "UserDTO"
-        },
-        "UserPrincipal": {
-            "type": "object",
-            "properties": {
-                "account_non_expired": {
-                    "type": "boolean"
-                },
-                "account_non_locked": {
-                    "type": "boolean"
-                },
-                "authorities": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/GrantedAuthority"
-                    }
-                },
-                "credentials_non_expired": {
-                    "type": "boolean"
-                },
-                "enabled": {
-                    "type": "boolean"
-                },
-                "id": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            },
-            "title": "UserPrincipal"
+            "title": "UserResponseDTO"
         }
     }
 }

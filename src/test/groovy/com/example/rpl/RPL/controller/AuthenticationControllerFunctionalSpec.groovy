@@ -107,7 +107,7 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
         when: "post new user"
             def response = post("/api/auth/signup", body)
 
-        then: "must return a new saved User"
+        then: "must fail with invalid request"
             response.contentType == "application/json"
             response.statusCode == SC_BAD_REQUEST
 
@@ -208,13 +208,13 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test get current profile should retrieve user data"() {
         given:
-        Map body = [usernameOrEmail: username, password: password]
-        def loginResponse = getJsonResponse(post("/api/auth/login", body))
+            Map body = [usernameOrEmail: username, password: password]
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
         when:
-        def response = get("/api/auth/profile", [
-                "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
-        ])
+            def response = get("/api/auth/profile", [
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
 
         then:
             response.contentType == "application/json"
