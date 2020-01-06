@@ -41,10 +41,6 @@ public class ActivitySubmission {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-//    @Basic(optional = false)
-//    @Column(name = "user_id")
-//    private Long userId;
-
     @JoinColumn(name = "response_files_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private RPLFile file;

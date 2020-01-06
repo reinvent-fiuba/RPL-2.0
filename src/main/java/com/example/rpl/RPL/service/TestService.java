@@ -1,7 +1,5 @@
 package com.example.rpl.RPL.service;
 
-import com.example.rpl.RPL.exception.NotFoundException;
-import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.IOTest;
 import com.example.rpl.RPL.model.UnitTest;
 import com.example.rpl.RPL.repository.IOTestRepository;
@@ -33,10 +31,5 @@ public class TestService {
 
     public Optional<UnitTest> getUnitTests(Long activityId) {
         return unitTestsRepository.findByActivity_Id(activityId);
-
-
-//        return submissionRepository.findById(submissionId).orElseThrow(
-//            () -> new NotFoundException("Activity submission not found",
-//                "activity_submission_not_found"));
     }
 }

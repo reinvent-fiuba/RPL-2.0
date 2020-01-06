@@ -1,16 +1,12 @@
 package com.example.rpl.RPL.model;
 
-import java.net.URI;
 import java.time.ZonedDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.*;
@@ -59,7 +55,8 @@ public class Course {
     public Course() {
     }
 
-    public Course(String name, String universityCourseId, String description, Boolean active, String semester, String imgUri) {
+    public Course(String name, String universityCourseId, String description, Boolean active,
+        String semester, String imgUri) {
         ZonedDateTime now = ZonedDateTime.now();
         this.name = name;
         this.universityCourseId = universityCourseId;

@@ -10,8 +10,6 @@ import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.repository.ActivityRepository;
 import com.example.rpl.RPL.repository.FileRepository;
 import com.example.rpl.RPL.repository.SubmissionRepository;
-import com.example.rpl.RPL.repository.UserRepository;
-import com.example.rpl.RPL.security.UserPrincipal;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

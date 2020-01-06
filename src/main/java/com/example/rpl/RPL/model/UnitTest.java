@@ -29,11 +29,6 @@ public class UnitTest {
     @Column(name = "id")
     private Long id;
 
-
-//    @JoinColumn(name = "test_id", referencedColumnName = "id")
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Test test;
-
     @JoinColumn(name = "activity_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Activity activity;

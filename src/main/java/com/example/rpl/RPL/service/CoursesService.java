@@ -25,17 +25,14 @@ public class CoursesService {
     private CourseRepository courseRepository;
     private CourseUserRepository courseUserRepository;
     private RoleRepository roleRepository;
-    private UserRepository userRepository;
 
     @Autowired
     public CoursesService(CourseRepository courseRepository,
         CourseUserRepository courseUserRepository,
-        RoleRepository roleRepository,
-        UserRepository userRepository) {
+        RoleRepository roleRepository) {
         this.courseRepository = courseRepository;
         this.courseUserRepository = courseUserRepository;
         this.roleRepository = roleRepository;
-        this.userRepository = userRepository;
     }
 
     /**
