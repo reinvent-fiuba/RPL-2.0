@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:32775",
+    "host": "localhost:42079",
     "basePath": "/",
     "tags": [
         {
@@ -542,7 +542,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ActivitySubmissionDTO"
+                            "$ref": "#/definitions/ActivitySubmissionResponseDTO"
                         }
                     }
                 },
@@ -643,7 +643,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ActivitySubmissionDTO"
+                            "$ref": "#/definitions/ActivitySubmissionResponseDTO"
                         }
                     },
                     "403": {
@@ -765,7 +765,7 @@
         }
     },
     "definitions": {
-        "ActivitySubmissionDTO": {
+        "ActivitySubmissionResponseDTO": {
             "type": "object",
             "properties": {
                 "activity_iotests": {
@@ -808,7 +808,7 @@
                     "type": "string"
                 }
             },
-            "title": "ActivitySubmissionDTO"
+            "title": "ActivitySubmissionResponseDTO"
         },
         "CourseResponseDTO": {
             "type": "object",

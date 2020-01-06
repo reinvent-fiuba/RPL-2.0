@@ -11,7 +11,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ActivitySubmissionDTO {
+public class ActivitySubmissionResponseDTO {
 
     private Long id;
 
@@ -35,10 +35,11 @@ public class ActivitySubmissionDTO {
 
     private List<String> activityIOTests;
 
-    public static ActivitySubmissionDTO fromEntity(ActivitySubmission as,
+    public static ActivitySubmissionResponseDTO fromEntity(ActivitySubmission as,
         Optional<UnitTest> unitTest,
         List<IOTest> ioTests) {
-        ActivitySubmissionDTO.ActivitySubmissionDTOBuilder ab = ActivitySubmissionDTO.builder()
+        ActivitySubmissionResponseDTO.ActivitySubmissionResponseDTOBuilder ab = ActivitySubmissionResponseDTO
+            .builder()
             .id(as.getId())
             .submissionFileName(as.getFile().getFileName())
             .submissionFileType(as.getFile().getFileType())

@@ -1,18 +1,14 @@
 package com.example.rpl.RPL.controller;
 
-import com.example.rpl.RPL.controller.dto.ActivitySubmissionDTO;
+import com.example.rpl.RPL.controller.dto.ActivitySubmissionResponseDTO;
 import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.IOTest;
 import com.example.rpl.RPL.model.UnitTest;
 import com.example.rpl.RPL.queue.IProducer;
-import com.example.rpl.RPL.queue.Producer;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.SubmissionService;
 import com.example.rpl.RPL.service.TestService;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +41,7 @@ public class SubmissionController {
     }
 
     @GetMapping(value = "/api/submissions/{submissionId}")
-    public ResponseEntity<ActivitySubmissionDTO> getSubmission(@PathVariable Long submissionId) {
+    public ResponseEntity<ActivitySubmissionResponseDTO> getSubmission(@PathVariable Long submissionId) {
         log.error("SUBMISSION ID ID: {}", submissionId);
 
         ActivitySubmission as = submissionService.getActivitySubmission(submissionId);
@@ -56,42 +52,42 @@ public class SubmissionController {
 //        GET IO TESTSS
         List<IOTest> ioTests = testService.getAllIOTests(as.getActivity().getId());
 
-        ActivitySubmissionDTO asDto = ActivitySubmissionDTO.fromEntity(as, unitTest, ioTests);
+        ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
+            .fromEntity(as, unitTest, ioTests);
 
         return new ResponseEntity<>(asDto, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('activity_submit')")
     @PostMapping(value = "/api/courses/{courseId}/activities/{activityId}/submissions")
-    public ResponseEntity<ActivitySubmissionDTO> createSubmission(
+    public ResponseEntity<ActivitySubmissionResponseDTO> createSubmission(
         @CurrentUser UserPrincipal currentUser,
         @PathVariable Long courseId, @PathVariable Long activityId,
-        @RequestParam(value = "description", required = false, defaultValue = "default description") String description, // Si bien ahora no se usa, puede servir para mandar metadata sobre el comprimido con los archivos
+        @RequestParam(value = "description", required = false, defaultValue = "default description") String description,
+        // Si bien ahora no se usa, puede servir para mandar metadata sobre el comprimido con los archivos
         @RequestParam("file") MultipartFile file) {
         log.info("COURSE ID: {}", courseId);
         log.info("ACTIVITY ID: {}", activityId);
 
-        ActivitySubmission as = submissionService.create(currentUser.getId(), courseId, activityId, description, file);
-
+        ActivitySubmission as = submissionService
+            .create(currentUser.getId(), courseId, activityId, description, file);
 
         // Submit submission ID to queue
         try {
-            this.activitySubmissionQueueProducer.send(as.getId().toString(), as.getActivity().getLanguage().getNameAndVersion());
+            this.activitySubmissionQueueProducer
+                .send(as.getId().toString(), as.getActivity().getLanguage().getNameAndVersion());
             as.setEnqueued();
         } catch (AmqpConnectException e) {
             log.error("Error sending submission ID to queue. Conection refused");
             log.error(e.getMessage());
         }
 
-        ActivitySubmissionDTO asDto = ActivitySubmissionDTO.fromEntity(as, Optional.empty(), List.of());
+        ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
+            .fromEntity(as, Optional.empty(), List.of());
         return new ResponseEntity<>(asDto, HttpStatus.OK);
     }
 
-
-
-
 //     * DEJO ESTO ACA SOLO EN CASO DE QUE LO NECESITEMOS PORUQE LO PROBE Y FUNCIONA
-
 
 //    /**
 //     * @param descriptions
