@@ -6,10 +6,12 @@ import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.RPLFile;
 import com.example.rpl.RPL.model.SubmissionStatus;
+import com.example.rpl.RPL.model.TestRun;
 import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.repository.ActivityRepository;
 import com.example.rpl.RPL.repository.FileRepository;
 import com.example.rpl.RPL.repository.SubmissionRepository;
+import com.example.rpl.RPL.repository.TestRunRepository;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +23,24 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class SubmissionService {
 
+    private TestService testService;
+
     private ActivityRepository activityRepository;
     private SubmissionRepository submissionRepository;
     private FileRepository fileRepository;
+    private TestRunRepository testRunRepository;
 
     @Autowired
-    public SubmissionService(ActivityRepository activityRepository,
+    public SubmissionService(TestService testService,
+        ActivityRepository activityRepository,
         SubmissionRepository submissionRepository,
-        FileRepository fileRepository) {
+        FileRepository fileRepository,
+        TestRunRepository testRunRepository) {
+        this.testService = testService;
         this.activityRepository = activityRepository;
         this.submissionRepository = submissionRepository;
         this.fileRepository = fileRepository;
+        this.testRunRepository = testRunRepository;
     }
 
 
@@ -69,5 +78,34 @@ public class SubmissionService {
             throw new BadRequestException("Error obteniendo los bytes de la submission",
                 "bad_file");
         }
+    }
+
+    @Transactional
+    public TestRun createSubmissionRun(Long submissionId, String testRunResult,
+        String testRunExitMessage, String testRunStage, String testRunStderr,
+        String testRunStdout) {
+
+        ActivitySubmission activitySubmission = this.getActivitySubmission(submissionId);
+
+        TestRun testRun = new TestRun(activitySubmission, testRunResult.equals("OK"),
+            testRunExitMessage, testRunStderr, testRunStdout);
+
+        testRunRepository.save(testRun);
+
+        if ("ERROR".equals(testRunResult)) {
+            activitySubmission.setProcessedWithError(testRunStage);
+            return testRun;
+        }
+
+        // Check if tests where correct
+        if (testService
+            .checkIfTestsPassed(activitySubmission.getActivity().getId(), testRunStdout)) {
+            activitySubmission.setProcessedSuccess();
+        } else {
+            activitySubmission.setProcessedFailure();
+        }
+
+        submissionRepository.save(activitySubmission);
+        return testRun;
     }
 }

@@ -24,7 +24,7 @@ class SubmissionServiceSpec extends Specification {
         activityRepository = Mock(ActivityRepository)
         submissionRepository = Mock(SubmissionRepository)
         fileRepository = Mock(FileRepository)
-        submissionService = new SubmissionService(activityRepository, submissionRepository, fileRepository)
+        submissionService = new SubmissionService(testService, activityRepository, submissionRepository, fileRepository, testRunRepository)
 
         user = new User(
                 'some-name',
