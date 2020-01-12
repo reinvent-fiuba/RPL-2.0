@@ -40,14 +40,17 @@ public class TestRun {
 
     @NonNull
     @Basic(optional = false)
+    @Column(name = "exit_message")
+    private String exitMessage;
+
+    @NonNull
+    @Basic(optional = false)
     @Column(name = "stderr")
-    @Type(type = "clob")
     private String stderr;
 
     @NonNull
     @Basic(optional = false)
     @Column(name = "stdout")
-    @Type(type = "clob")
     private String stdout;
 
     @Column(name = "date_created")
@@ -63,4 +66,14 @@ public class TestRun {
     public TestRun() {
     }
 
+    public TestRun(ActivitySubmission submissionId, boolean success, String testRunExitMessage,
+        String testRunStderr, String testRunStdout) {
+        this.activitySubmission = submissionId;
+        this.success = success;
+        this.exitMessage = testRunExitMessage;
+        this.stderr = testRunStderr;
+        this.stdout = testRunStdout;
+        this.dateCreated = ZonedDateTime.now();
+        this.lastUpdated = this.dateCreated;
+    }
 }

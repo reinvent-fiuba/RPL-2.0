@@ -146,8 +146,9 @@ CREATE TABLE test_run
     id                     BIGINT NOT NULL AUTO_INCREMENT,
     activity_submission_id BIGINT,
     success                BOOLEAN,
-    stderr                 TEXT,
-    stdout                 TEXT,
+    exit_message           varchar(255),
+    stderr                 varchar(20000),
+    stdout                 varchar(20000),
     date_created           DATETIME,
     last_updated           DATETIME,
 

@@ -4,6 +4,7 @@ import com.example.rpl.RPL.model.IOTest;
 import com.example.rpl.RPL.model.UnitTest;
 import com.example.rpl.RPL.repository.IOTestRepository;
 import com.example.rpl.RPL.repository.UnitTestRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +27,62 @@ public class TestService {
 
 
     public List<IOTest> getAllIOTests(Long activityId) {
-        return iOTestRepository.findAllByActivity_Id(activityId);
+        return iOTestRepository.findAllByActivityId(activityId);
     }
 
     public Optional<UnitTest> getUnitTests(Long activityId) {
-        return unitTestsRepository.findByActivity_Id(activityId);
+        return unitTestsRepository.findByActivityId(activityId);
+    }
+
+
+    /**
+     * Checks if, for a given Activity and a submission's test run, all the tests passed.
+     *
+     * @param activityId Activity to grade
+     * @param testRunStdout stdout of test run WITH LOGGING
+     * @return if all the tests passed
+     */
+    boolean checkIfTestsPassed(Long activityId, String testRunStdout) {
+        List<String> results = this.parseTestRunStdout(testRunStdout);
+        List<IOTest> ioTests = this.getAllIOTests(activityId);
+
+        if (results.size() != ioTests.size()) {
+            // All the tests weren't executed...
+            return false;
+        }
+
+        for (int i = 0; i < ioTests.size(); i++) {
+            if (!ioTests.get(i).getTestOut().equals(results.get(i))) {
+                return false;
+            }
+        }
+        //TODO: think if we might want to save which tests did not passed to later show the student
+
+        //TODO: check unit tests if necessary
+        return true;
+    }
+
+
+    /**
+     * Parses the stdout of the test run to identify ONLY the student's program output. these are
+     * identified by the tags start_RUN and end_RUN.
+     *
+     * @param testRunStdout stdout of the tun INCLUDING the logging
+     * @return list of test run's output. May be various runs in case of IO testing with multiple
+     * cases.
+     */
+    private List<String> parseTestRunStdout(String testRunStdout) {
+        List<String> results = new ArrayList<>();
+        StringBuilder result = new StringBuilder();
+        for (String line : testRunStdout.split("\n")) {
+            if (line.contains("end_RUN")) {
+                results.add(result.toString().strip().replace("./main", ""));
+            } else if (line.contains("start_RUN")) {
+                result = new StringBuilder();
+            } else {
+                result.append(line);
+            }
+        }
+        return results;
     }
 }
