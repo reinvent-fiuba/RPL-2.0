@@ -51,6 +51,16 @@ public class SubmissionService {
     }
 
 
+    /**
+     * Creates a new submission by a user for a given Activity.
+     *
+     * @param user The submitter of the assignment
+     * @param courseId CourseId, for logging purposes
+     * @param activityId The activity the user wants to complete
+     * @param description File description
+     * @param file Actual MultipartFile sent by the front-end (typically a compressed tar.gz with
+     * all the submission files)
+     */
     @Transactional
     public ActivitySubmission create(User user, Long courseId, Long activityId,
         String description, MultipartFile file) {
@@ -80,8 +90,18 @@ public class SubmissionService {
         }
     }
 
+    /**
+     * Creates a new submission run. That is, the result of running all the activity tests on the
+     * submission files.
+     *
+     * @param testRunResult "OK" or "ERROR"
+     * @param testRunExitMessage Message describing why the program terminated if with "ERROR"
+     * @param testRunStage "BUILD", "RUN", "COMPLETED". Only useful if error
+     * @param testRunStderr stderr of the test run
+     * @param testRunStdout stdout of the test run (WITH LOGGING)
+     */
     @Transactional
-    public TestRun createSubmissionRun(Long submissionId, String testRunResult,
+    public void createSubmissionRun(Long submissionId, String testRunResult,
         String testRunExitMessage, String testRunStage, String testRunStderr,
         String testRunStdout) {
 
@@ -94,7 +114,7 @@ public class SubmissionService {
 
         if ("ERROR".equals(testRunResult)) {
             activitySubmission.setProcessedWithError(testRunStage);
-            return testRun;
+            return;
         }
 
         // Check if tests where correct
@@ -106,13 +126,12 @@ public class SubmissionService {
         }
 
         submissionRepository.save(activitySubmission);
-        return testRun;
     }
+
 
     public ActivitySubmission updateSubmissionStatus(Long submissionId,
         SubmissionStatus status) {
         ActivitySubmission activitySubmission = this.getActivitySubmission(submissionId);
-
         activitySubmission.setStatus(status);
 
         return submissionRepository.save(activitySubmission);

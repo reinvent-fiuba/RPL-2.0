@@ -56,7 +56,7 @@ public class AuthenticationService {
     @Transactional
     public User getUserById(Long userId) {
         Optional<User> user = userRepository.findById(userId);
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new NotFoundException(String.format("User with id '%d' does not exist", userId));
         }
 

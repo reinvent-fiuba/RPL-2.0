@@ -35,8 +35,14 @@ public class TestService {
     }
 
 
-    public boolean checkIfTestsPassed(Long activityId, String testRunStdout) {
-        //TODO: Awsome logic to check if stdout is equal to expected stdout.
+    /**
+     * Checks if, for a given Activity and a submission's test run, all the tests passed.
+     *
+     * @param activityId Activity to grade
+     * @param testRunStdout stdout of test run WITH LOGGING
+     * @return if all the tests passed
+     */
+    boolean checkIfTestsPassed(Long activityId, String testRunStdout) {
         List<String> results = this.parseTestRunStdout(testRunStdout);
         List<IOTest> ioTests = this.getAllIOTests(activityId);
 
@@ -45,50 +51,31 @@ public class TestService {
                 return false;
             }
         }
+        //TODO: think if we might want to save which tests did not passed to later show the student
         return true;
     }
 
 
     /**
-     * Devuelve una lista de todas las salidas de las corridas SIN EL LOGGING. Se identifica como
-     * salida del programa a todo el stdout entre el log start_RUN y end_RUN
+     * Parses the stdout of the test run to identify ONLY the student's program output. these are
+     * identified by the tags start_RUN and end_RUN.
      *
-     * @param testRunStdout el stdout con logging incluido
-     * @return lista de resultado por cada ejecucion (los IO Test pueden ser muchos)
+     * @param testRunStdout stdout of the tun INCLUDING the logging
+     * @return list of test run's output. May be various runs in case of IO testing with multiple
+     * cases.
      */
     private List<String> parseTestRunStdout(String testRunStdout) {
         List<String> results = new ArrayList<>();
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (String line : testRunStdout.split("\n")) {
             if (line.contains("end_RUN")) {
-                results.add(result.strip().replace("./main", ""));
+                results.add(result.toString().strip().replace("./main", ""));
             } else if (line.contains("start_RUN")) {
-                result = "";
+                result = new StringBuilder();
             } else {
-                result += line;
+                result.append(line);
             }
         }
         return results;
     }
-
-    /**
-     * def parse_stdout(log_stdout):
-     *     '''
-     *     Devuelve una lista de todas las salidas de las corridas SIN EL LOGGING.
-     *     Se identifica como salida del programa a todo el stdout entre el log start_RUN y end_RUN
-     *     '''
-     *     results = []
-     *     result = ""
-     *     for line in log_stdout.split('\n'):
-     *         if "end_RUN" in line:
-     *             results.append(result.strip("./main"))
-     *
-     *         elif "start_RUN" in line:
-     *             result = ""
-     *
-     *         else:
-     *             result += line
-     *
-     *     return results
-     */
 }
