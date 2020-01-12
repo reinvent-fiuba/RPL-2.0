@@ -82,20 +82,34 @@ CREATE TABLE rpl_files
     PRIMARY KEY (id)
 ) ENGINE = InnoDB;
 
-CREATE TABLE activities
+CREATE TABLE activity_categories
 (
     id                 BIGINT NOT NULL AUTO_INCREMENT,
-    course_id          BIGINT,
     name               VARCHAR(255),
     description        VARCHAR(255),
-    language           VARCHAR(255),
     active             BOOLEAN,
-    supporting_file_id BIGINT,
     date_created       DATETIME,
     last_updated       DATETIME,
 
     PRIMARY KEY (id),
+) ENGINE = InnoDB;
+
+CREATE TABLE activities
+(
+    id                   BIGINT NOT NULL AUTO_INCREMENT,
+    course_id            BIGINT,
+    activity_category_id BIGINT,
+    name                 VARCHAR(255),
+    description          VARCHAR(255),
+    language             VARCHAR(255),
+    active               BOOLEAN,
+    supporting_file_id   BIGINT,
+    date_created         DATETIME,
+    last_updated         DATETIME,
+
+    PRIMARY KEY (id),
     FOREIGN KEY (course_id) REFERENCES courses (id),
+    FOREIGN KEY (activity_category_id) REFERENCES activity_categories (id),
     FOREIGN KEY (supporting_file_id) REFERENCES rpl_files (id)
 ) ENGINE = InnoDB;
 

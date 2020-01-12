@@ -36,6 +36,10 @@ public class Activity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Course course;
 
+    @JoinColumn(name = "activity_category_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ActivityCategory activityCategory;
+
     @Basic(optional = false)
     @Column(name = "name")
     private String name;

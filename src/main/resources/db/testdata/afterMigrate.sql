@@ -46,8 +46,13 @@ VALUES (2, 'c_unit_test.c', 'text/x-c',
         x'23696e636c756465202267746573742f67746573742e68220a23696e636c75646520226578616d706c652e68220a0a54455354286578616d706c652c20616464290a7b0a20202020646f75626c65207265733b0a20202020726573203d206164645f6e756d6265727328312e302c20322e30293b0a202020204153534552545f4e454152287265732c20332e302c20312e30652d3131293b0a7d',
         now(), now());
 
+INSERT INTO activity_categories
+VALUES (1, 'Basicos',
+        'Ejercicios faciles para empezar', true, now(), now());
+
+
 INSERT INTO activities
-VALUES (1, 1, 'Pasar de segundos a horas, minutos, segundos',
+VALUES (1, 1, 1, 'Pasar de segundos a horas, minutos, segundos',
         'Dada una cantidad de segundos, devolver/imprimir la cantidad de horas', 'c_std11', true, 1,
         now(), now());
 
