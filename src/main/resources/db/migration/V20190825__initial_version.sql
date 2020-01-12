@@ -147,8 +147,8 @@ CREATE TABLE test_run
     activity_submission_id BIGINT,
     success                BOOLEAN,
     exit_message           varchar(255),
-    stderr                 TEXT,
-    stdout                 TEXT,
+    stderr                 varchar(20000),
+    stdout                 varchar(20000),
     date_created           DATETIME,
     last_updated           DATETIME,
 
