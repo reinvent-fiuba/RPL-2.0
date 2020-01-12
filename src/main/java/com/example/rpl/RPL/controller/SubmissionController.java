@@ -111,7 +111,8 @@ public class SubmissionController {
         @RequestBody @Valid SubmissionResultRequestDTO createSubmissionResultRequestDTO) {
 
         submissionService
-            .createSubmissionRun(submissionId, createSubmissionResultRequestDTO.getTestRunResult(),
+            .createSubmissionTestRun(submissionId,
+                createSubmissionResultRequestDTO.getTestRunResult(),
                 createSubmissionResultRequestDTO.getTestRunExitMessage(),
                 createSubmissionResultRequestDTO.getTestRunStage(),
                 createSubmissionResultRequestDTO.getTestRunStderr(),

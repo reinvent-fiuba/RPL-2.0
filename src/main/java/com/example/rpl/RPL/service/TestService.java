@@ -27,11 +27,11 @@ public class TestService {
 
 
     public List<IOTest> getAllIOTests(Long activityId) {
-        return iOTestRepository.findAllByActivity_Id(activityId);
+        return iOTestRepository.findAllByActivityId(activityId);
     }
 
     public Optional<UnitTest> getUnitTests(Long activityId) {
-        return unitTestsRepository.findByActivity_Id(activityId);
+        return unitTestsRepository.findByActivityId(activityId);
     }
 
 
@@ -46,12 +46,19 @@ public class TestService {
         List<String> results = this.parseTestRunStdout(testRunStdout);
         List<IOTest> ioTests = this.getAllIOTests(activityId);
 
+        if (results.size() != ioTests.size()) {
+            // All the tests weren't executed...
+            return false;
+        }
+
         for (int i = 0; i < ioTests.size(); i++) {
             if (!ioTests.get(i).getTestOut().equals(results.get(i))) {
                 return false;
             }
         }
         //TODO: think if we might want to save which tests did not passed to later show the student
+
+        //TODO: check unit tests if necessary
         return true;
     }
 

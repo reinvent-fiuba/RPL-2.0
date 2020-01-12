@@ -93,15 +93,15 @@ public class SubmissionService {
     /**
      * Creates a new submission run. That is, the result of running all the activity tests on the
      * submission files.
-     *
-     * @param testRunResult "OK" or "ERROR"
+     *  @param testRunResult "OK" or "ERROR"
      * @param testRunExitMessage Message describing why the program terminated if with "ERROR"
      * @param testRunStage "BUILD", "RUN", "COMPLETED". Only useful if error
      * @param testRunStderr stderr of the test run
      * @param testRunStdout stdout of the test run (WITH LOGGING)
+     * @return
      */
     @Transactional
-    public void createSubmissionRun(Long submissionId, String testRunResult,
+    public ActivitySubmission createSubmissionTestRun(Long submissionId, String testRunResult,
         String testRunExitMessage, String testRunStage, String testRunStderr,
         String testRunStdout) {
 
@@ -114,7 +114,7 @@ public class SubmissionService {
 
         if ("ERROR".equals(testRunResult)) {
             activitySubmission.setProcessedWithError(testRunStage);
-            return;
+            return submissionRepository.save(activitySubmission);
         }
 
         // Check if tests where correct
@@ -125,7 +125,7 @@ public class SubmissionService {
             activitySubmission.setProcessedFailure();
         }
 
-        submissionRepository.save(activitySubmission);
+        return submissionRepository.save(activitySubmission);
     }
 
 

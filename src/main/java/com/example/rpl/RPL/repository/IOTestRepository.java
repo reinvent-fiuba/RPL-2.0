@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IOTestRepository extends JpaRepository<IOTest, Long> {
 
-    List<IOTest> findAllByActivity_Id(Long activityId);
+    List<IOTest> findAllByActivityId(Long activityId);
 }

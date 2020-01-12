@@ -50,6 +50,8 @@ public class AuthenticationService {
 
         log.info("[process:create_user][username:{}] Creating new user", username);
 
+        //TODO: Send confirmation e-mail
+
         return userRepository.save(user);
     }
 
