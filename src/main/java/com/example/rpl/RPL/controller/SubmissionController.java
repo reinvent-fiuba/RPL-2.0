@@ -4,7 +4,6 @@ import com.example.rpl.RPL.controller.dto.ActivitySubmissionResponseDTO;
 import com.example.rpl.RPL.controller.dto.SubmissionResultRequestDTO;
 import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.IOTest;
-import com.example.rpl.RPL.model.TestRun;
 import com.example.rpl.RPL.model.UnitTest;
 import com.example.rpl.RPL.queue.IProducer;
 import com.example.rpl.RPL.security.CurrentUser;
@@ -93,18 +92,17 @@ public class SubmissionController {
     }
 
     @PostMapping(value = "/api/submissions/{submissionId}/result")
-    public ResponseEntity<SubmissionResultRequestDTO> createCourse(@PathVariable Long submissionId,
+    public ResponseEntity<SubmissionResultRequestDTO> submitResults(@PathVariable Long submissionId,
         @RequestBody @Valid SubmissionResultRequestDTO createSubmissionResultRequestDTO) {
 
-        TestRun testRun = submissionService
+        submissionService
             .createSubmissionRun(submissionId, createSubmissionResultRequestDTO.getTestRunResult(),
                 createSubmissionResultRequestDTO.getTestRunExitMessage(),
                 createSubmissionResultRequestDTO.getTestRunStage(),
                 createSubmissionResultRequestDTO.getTestRunStderr(),
                 createSubmissionResultRequestDTO.getTestRunStdout());
 
-        return new ResponseEntity<>(SubmissionResultRequestDTO.fromEntity(),
-            HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 //     * DEJO ESTO ACA SOLO EN CASO DE QUE LO NECESITEMOS PORUQE LO PROBE Y FUNCIONA
