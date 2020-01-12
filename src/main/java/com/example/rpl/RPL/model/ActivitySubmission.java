@@ -91,4 +91,9 @@ public class ActivitySubmission {
         this.status = SubmissionStatus.FAILURE;
         this.lastUpdated = now();
     }
+
+    public void setStatus(SubmissionStatus status) {
+        this.status = status;
+        this.lastUpdated = now();
+    }
 }

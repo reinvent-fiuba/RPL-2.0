@@ -108,4 +108,13 @@ public class SubmissionService {
         submissionRepository.save(activitySubmission);
         return testRun;
     }
+
+    public ActivitySubmission updateSubmissionStatus(Long submissionId,
+        SubmissionStatus status) {
+        ActivitySubmission activitySubmission = this.getActivitySubmission(submissionId);
+
+        activitySubmission.setStatus(status);
+
+        return submissionRepository.save(activitySubmission);
+    }
 }

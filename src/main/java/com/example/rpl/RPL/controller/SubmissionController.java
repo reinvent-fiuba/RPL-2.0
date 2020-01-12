@@ -2,6 +2,7 @@ package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.controller.dto.ActivitySubmissionResponseDTO;
 import com.example.rpl.RPL.controller.dto.SubmissionResultRequestDTO;
+import com.example.rpl.RPL.controller.dto.UpdateSubmissionStatusRequestDTO;
 import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.IOTest;
 import com.example.rpl.RPL.model.UnitTest;
@@ -22,6 +23,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -90,6 +92,19 @@ public class SubmissionController {
             .fromEntity(as, Optional.empty(), List.of());
         return new ResponseEntity<>(asDto, HttpStatus.OK);
     }
+
+    @PutMapping(value = "/api/submissions/{submissionId}")
+    public ResponseEntity<ActivitySubmissionResponseDTO> updateSubmissionStatus(
+        @PathVariable Long submissionId,
+        @RequestBody @Valid UpdateSubmissionStatusRequestDTO updateSubmissionStatusRequestDTO) {
+        ActivitySubmission activitySubmission = submissionService
+            .updateSubmissionStatus(submissionId, updateSubmissionStatusRequestDTO.getStatus());
+
+        ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
+            .fromEntity(activitySubmission, Optional.empty(), List.of());
+        return new ResponseEntity<>(asDto, HttpStatus.OK);
+    }
+
 
     @PostMapping(value = "/api/submissions/{submissionId}/result")
     public ResponseEntity<SubmissionResultRequestDTO> submitResults(@PathVariable Long submissionId,
