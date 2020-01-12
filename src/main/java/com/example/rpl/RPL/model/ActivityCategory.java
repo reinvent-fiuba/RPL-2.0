@@ -24,6 +24,10 @@ public class ActivityCategory {
     @Column(name = "id")
     private Long id;
 
+    @JoinColumn(name = "course_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Course course;
+
     @Column(name = "name")
     private String name;
 
@@ -46,13 +50,12 @@ public class ActivityCategory {
     public ActivityCategory() {
     }
 
-    public ActivityCategory(String name, String description, Boolean active) {
+    public ActivityCategory(Course course, String name, String description, Boolean active) {
+        this.course = course;
         this.name = name;
         this.description = description;
         this.active = active;
         this.dateCreated = now();
         this.lastUpdated = this.dateCreated;
     }
-
-
 }

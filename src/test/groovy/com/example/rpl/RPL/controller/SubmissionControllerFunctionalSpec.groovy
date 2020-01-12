@@ -108,6 +108,7 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
         fileRepository.save(supportingActivityFile)
 
         ActivityCategory activityCategory = new ActivityCategory(
+                course,
                 "Easy activities",
                 "Some easy activities",
                 true
@@ -144,6 +145,7 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
     def cleanup() {
         submissionRepository.deleteAll()
         activityRepository.deleteAll()
+        activityCategoryRepository.deleteAll()
         fileRepository.deleteAll()
         courseUserRepository.deleteAll()
         userRepository.deleteAll()

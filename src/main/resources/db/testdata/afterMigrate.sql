@@ -47,7 +47,7 @@ VALUES (2, 'c_unit_test.c', 'text/x-c',
         now(), now());
 
 INSERT INTO activity_categories
-VALUES (1, 'Basicos',
+VALUES (1, 1, 'Basicos',
         'Ejercicios faciles para empezar', true, now(), now());
 
 

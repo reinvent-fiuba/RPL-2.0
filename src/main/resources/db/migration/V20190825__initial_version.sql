@@ -85,6 +85,7 @@ CREATE TABLE rpl_files
 CREATE TABLE activity_categories
 (
     id                 BIGINT NOT NULL AUTO_INCREMENT,
+    course_id          BIGINT,
     name               VARCHAR(255),
     description        VARCHAR(255),
     active             BOOLEAN,
@@ -92,6 +93,7 @@ CREATE TABLE activity_categories
     last_updated       DATETIME,
 
     PRIMARY KEY (id),
+    FOREIGN KEY (course_id) REFERENCES courses (id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE activities
