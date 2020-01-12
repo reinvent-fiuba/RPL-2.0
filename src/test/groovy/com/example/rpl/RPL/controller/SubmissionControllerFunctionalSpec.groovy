@@ -34,6 +34,9 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
     ActivityRepository activityRepository
 
     @Autowired
+    ActivityCategoryRepository activityCategoryRepository;
+
+    @Autowired
     SubmissionRepository submissionRepository
 
     @Autowired
@@ -104,8 +107,17 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
         )
         fileRepository.save(supportingActivityFile)
 
+        ActivityCategory activityCategory = new ActivityCategory(
+                "Easy activities",
+                "Some easy activities",
+                true
+        )
+
+        activityCategoryRepository.save(activityCategory)
+
         activity = new Activity(
                 course,
+                activityCategory,
                 "Activity 1",
                 "An activity",
                 Language.C,
