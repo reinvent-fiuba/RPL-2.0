@@ -150,7 +150,6 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
         courseUserRepository.deleteAll()
         userRepository.deleteAll()
         courseRepository.deleteAll()
-
     }
 
 
@@ -168,9 +167,8 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
             response.statusCode == SC_OK
 
             def result = getJsonResponse(response)
-            assert result.id == activitySubmission.getId()
 
-            assert result.id == 1
+            assert result.id == activitySubmission.getId()
             assert result.submission_file_name == "submission_file"
             assert result.submission_file_type == "text"
             assert result.submission_file_id != null

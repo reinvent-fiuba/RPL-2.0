@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -56,16 +58,15 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(errorResponse, errorResponse.getStatusObj());
     }
 
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(
-        MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status,
+    private ResponseEntity<Object> handleExceptionWithBindings(
+        BindingResult bindingResult, HttpHeaders headers, HttpStatus status,
         WebRequest request) {
 
         UnprocessableEntity unprocessableEntity = new UnprocessableEntity();
-        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+        for (FieldError error : bindingResult.getFieldErrors()) {
             unprocessableEntity.addValidationError(error.getField(), error.getDefaultMessage());
         }
-        for (ObjectError error : ex.getBindingResult().getGlobalErrors()) {
+        for (ObjectError error : bindingResult.getGlobalErrors()) {
             unprocessableEntity
                 .addValidationError(error.getObjectName(), error.getDefaultMessage());
         }
@@ -75,6 +76,25 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
             unprocessableEntity.getStatus(), unprocessableEntity.getValidationErrorsMessage());
         return new ResponseEntity<>(unprocessableEntity, new HttpHeaders(),
             unprocessableEntity.getStatusObj());
+
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleBindException(
+        BindException ex, HttpHeaders headers, HttpStatus status,
+        WebRequest request) {
+
+        return handleExceptionWithBindings(ex.getBindingResult(), headers,
+            status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+        MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status,
+        WebRequest request) {
+
+        return handleExceptionWithBindings(ex.getBindingResult(), headers,
+            status, request);
     }
 
     @ExceptionHandler({BadCredentialsException.class})
