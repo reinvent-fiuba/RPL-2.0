@@ -1,6 +1,8 @@
 package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.controller.dto.ActivitySubmissionResponseDTO;
+import com.example.rpl.RPL.controller.dto.SubmissionResultRequestDTO;
+import com.example.rpl.RPL.controller.dto.UpdateSubmissionStatusRequestDTO;
 import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.IOTest;
 import com.example.rpl.RPL.model.UnitTest;
@@ -11,6 +13,7 @@ import com.example.rpl.RPL.service.SubmissionService;
 import com.example.rpl.RPL.service.TestService;
 import java.util.List;
 import java.util.Optional;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.AmqpConnectException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -86,6 +91,34 @@ public class SubmissionController {
         ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
             .fromEntity(as, Optional.empty(), List.of());
         return new ResponseEntity<>(asDto, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/api/submissions/{submissionId}")
+    public ResponseEntity<ActivitySubmissionResponseDTO> updateSubmissionStatus(
+        @PathVariable Long submissionId,
+        @RequestBody @Valid UpdateSubmissionStatusRequestDTO updateSubmissionStatusRequestDTO) {
+        ActivitySubmission activitySubmission = submissionService
+            .updateSubmissionStatus(submissionId, updateSubmissionStatusRequestDTO.getStatus());
+
+        ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
+            .fromEntity(activitySubmission, Optional.empty(), List.of());
+        return new ResponseEntity<>(asDto, HttpStatus.OK);
+    }
+
+
+    @PostMapping(value = "/api/submissions/{submissionId}/result")
+    public ResponseEntity<SubmissionResultRequestDTO> submitResults(@PathVariable Long submissionId,
+        @RequestBody @Valid SubmissionResultRequestDTO createSubmissionResultRequestDTO) {
+
+        submissionService
+            .createSubmissionTestRun(submissionId,
+                createSubmissionResultRequestDTO.getTestRunResult(),
+                createSubmissionResultRequestDTO.getTestRunExitMessage(),
+                createSubmissionResultRequestDTO.getTestRunStage(),
+                createSubmissionResultRequestDTO.getTestRunStderr(),
+                createSubmissionResultRequestDTO.getTestRunStdout());
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 //     * DEJO ESTO ACA SOLO EN CASO DE QUE LO NECESITEMOS PORUQE LO PROBE Y FUNCIONA

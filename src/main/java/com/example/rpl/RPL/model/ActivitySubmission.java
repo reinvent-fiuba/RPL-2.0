@@ -76,4 +76,24 @@ public class ActivitySubmission {
         this.status = SubmissionStatus.ENQUEUED;
         this.lastUpdated = now();
     }
+
+    public void setProcessedWithError(String stage) {
+        this.status = SubmissionStatus.getStatusIfError(stage);
+        this.lastUpdated = now();
+    }
+
+    public void setProcessedSuccess() {
+        this.status = SubmissionStatus.SUCCESS;
+        this.lastUpdated = now();
+    }
+
+    public void setProcessedFailure() {
+        this.status = SubmissionStatus.FAILURE;
+        this.lastUpdated = now();
+    }
+
+    public void setStatus(SubmissionStatus status) {
+        this.status = status;
+        this.lastUpdated = now();
+    }
 }

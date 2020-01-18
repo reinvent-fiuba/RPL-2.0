@@ -1,6 +1,8 @@
 package com.example.rpl.RPL.queue;
 
 
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,9 @@ public class QueueConfig {
 
     @Bean
     public Queue hello() {
-        return new Queue("hello");
+        Map<String, Object> args = new HashMap<>();
+        args.put("x-message-ttl", 3600000);
+        return new Queue("hello", true, false, false, args);
     }
 
 

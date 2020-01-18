@@ -121,6 +121,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     "/api/submissions/**"
                     )
                     .permitAll()
+            .antMatchers(HttpMethod.POST,
+                "/api/submissions/**"
+            )
+            .permitAll()
+            .antMatchers(HttpMethod.PUT,
+                "/api/submissions/**"
+            )
+            .permitAll()
                 .antMatchers(HttpMethod.POST,
                     "/api/uploadMultipleFiles/**"
                     )

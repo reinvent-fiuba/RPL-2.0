@@ -6,16 +6,20 @@ import com.example.rpl.RPL.model.*
 import com.example.rpl.RPL.repository.ActivityRepository
 import com.example.rpl.RPL.repository.FileRepository
 import com.example.rpl.RPL.repository.SubmissionRepository
+import com.example.rpl.RPL.repository.TestRunRepository
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.web.multipart.MultipartFile
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class SubmissionServiceSpec extends Specification {
     private ActivityRepository activityRepository
     private SubmissionRepository submissionRepository
     private FileRepository fileRepository
     private SubmissionService submissionService
+    private TestService testService
+    private TestRunRepository testRunRepository
 
     @Shared
     User user
@@ -24,7 +28,9 @@ class SubmissionServiceSpec extends Specification {
         activityRepository = Mock(ActivityRepository)
         submissionRepository = Mock(SubmissionRepository)
         fileRepository = Mock(FileRepository)
-        submissionService = new SubmissionService(activityRepository, submissionRepository, fileRepository)
+        testService = Mock(TestService)
+        testRunRepository = Mock(TestRunRepository)
+        submissionService = new SubmissionService(testService, activityRepository, submissionRepository, fileRepository, testRunRepository)
 
         user = new User(
                 'some-name',
@@ -113,5 +119,63 @@ class SubmissionServiceSpec extends Specification {
             assert e.getError() == "bad_file"
     }
 
+    @Unroll
+    void "createSubmissionTestRun should process and update submission"() {
+        given: "an activity"
+            Activity a = new Activity()
+            a.id = 1
+            activityRepository.findById(_ as Long) >> Optional.of(a)
+
+        and: "1 submission"
+            RPLFile f = new RPLFile("test_file", "text", null)
+
+            ActivitySubmission activitySubmission = new ActivitySubmission(a, user, f,
+                    SubmissionStatus.PENDING)
+
+            submissionRepository.findById(_ as Long) >> Optional.of(activitySubmission)
+
+        and: "tests passing is #passedTests"
+            testService.checkIfTestsPassed(_ as Long, _ as String) >> passedTests
+
+        when: "submitting the test run"
+            ActivitySubmission result = submissionService.createSubmissionTestRun(1,
+                    testRunResult,
+                    "COMPLETED ALL STAGES",
+                    testRunStage,
+                    "stderr",
+                    "stdout"
+            )
+
+        then:
+            assert result.getStatus() == expectedFinalStatus
+
+            1 * submissionRepository.save(_ as ActivitySubmission) >> { ActivitySubmission sub -> return sub }
+            1 * testRunRepository.save(_ as TestRun) >> { TestRun tr -> return tr }
+
+        where:
+            testRunResult | testRunStage | passedTests | expectedFinalStatus
+            "ERROR"       | "BUILD"      | null        | SubmissionStatus.BUILD_ERROR
+            "ERROR"       | "RUN"        | null        | SubmissionStatus.RUNTIME_ERROR
+            "OK"          | "COMPLETE"   | false       | SubmissionStatus.FAILURE
+            "OK"          | "COMPLETE"   | true        | SubmissionStatus.SUCCESS
+    }
+
+    void "test updateSubmissionStatus"() {
+        given: "1 submission"
+            RPLFile f = new RPLFile("test_file", "text", null)
+
+            ActivitySubmission activitySubmission = new ActivitySubmission(null, user, f,
+                    SubmissionStatus.PENDING)
+
+            submissionRepository.findById(_ as Long) >> Optional.of(activitySubmission)
+
+        when:
+            ActivitySubmission result = submissionService.updateSubmissionStatus(1, SubmissionStatus.PROCESSING)
+
+        then:
+            assert result.getStatus() == SubmissionStatus.PROCESSING
+
+            1 * submissionRepository.save(_ as ActivitySubmission) >> { ActivitySubmission sub -> return sub }
+    }
 
 }
