@@ -1,0 +1,63 @@
+package com.example.rpl.RPL.service
+
+
+import com.example.rpl.RPL.exception.NotFoundException
+import com.example.rpl.RPL.model.*
+import com.example.rpl.RPL.repository.ActivityCategoryRepository
+import com.example.rpl.RPL.repository.ActivityRepository
+import com.example.rpl.RPL.repository.CourseRepository
+import com.example.rpl.RPL.repository.FileRepository
+import org.springframework.mock.web.MockMultipartFile
+import org.springframework.web.multipart.MultipartFile
+import spock.lang.Shared
+import spock.lang.Specification
+
+class ActivityCategoriesServiceSpec extends Specification {
+
+    private  ActivityCategoriesService activityCategoriesService;
+    private CourseRepository courseRepository;
+    private ActivityCategoryRepository activityCategoryRepository;
+
+    @Shared
+    private User user
+
+
+    def setup() {
+        courseRepository = Mock(CourseRepository)
+        activityCategoryRepository = Mock(ActivityCategoryRepository)
+        activityCategoriesService = new ActivityCategoriesService(
+                courseRepository,
+                activityCategoryRepository
+        )
+
+        user = Mock(User)
+        user.getId() >> 1
+    }
+
+    void "should retrieve all activity categories successfully"() {
+        given:
+            Long courseId = 1
+
+        when:
+            List<ActivityCategory> activityCategories = activityCategoriesService.getActivityCategories(courseId)
+
+        then:
+            1 * courseRepository.findById(courseId) >> Optional.of(new Course())
+            1 * activityCategoryRepository.findByCourse_Id(_ as Long) >> [ new ActivityCategory() ]
+
+            activityCategories.size() == 1
+    }
+
+    void "should fail to retrieve all activity categories successfully"() {
+        given:
+            Long courseId = 1
+
+        when:
+            List<ActivityCategory> activityCategories = activityCategoriesService.getActivityCategories(courseId)
+
+        then:
+            1 * courseRepository.findById(courseId) >> Optional.empty()
+
+            thrown(NotFoundException)
+    }
+}

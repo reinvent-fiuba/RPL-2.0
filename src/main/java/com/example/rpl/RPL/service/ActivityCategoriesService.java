@@ -24,9 +24,7 @@ import static java.time.ZonedDateTime.now;
 public class ActivityCategoriesService {
 
     private CourseRepository courseRepository;
-    private ActivityRepository activityRepository;
     private ActivityCategoryRepository activityCategoryRepository;
-    private FileRepository fileRepository;
 
     @Autowired
     public ActivityCategoriesService(CourseRepository courseRepository,
