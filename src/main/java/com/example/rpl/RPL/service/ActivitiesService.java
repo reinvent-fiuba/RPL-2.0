@@ -51,8 +51,8 @@ public class ActivitiesService {
                 "course_not_found"));
 
         ActivityCategory activityCategory = activityCategoryRepository.findById(activityCategoryId).orElseThrow(
-            () -> new NotFoundException("Course not found",
-                "course_not_found"));
+            () -> new NotFoundException("Activity Category not found",
+                "activityCategory_not_found"));
 
         try {
             RPLFile file = new RPLFile(String.format("%s_%d_%s", now().toString(), courseId, name),
