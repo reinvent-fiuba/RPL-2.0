@@ -188,7 +188,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
             body = [
-                    activityCategoryId:  1,
+                    activityCategoryId:  activityCategory.getId(),
                     name:               'Some name',
                     description:        'Some description',
                     language:           'C'
