@@ -65,7 +65,7 @@ class CoursesServiceSpec extends Specification {
             assert newCourse.semester == semester
     }
 
-    void "should fail to create user if course exists"() {
+    void "should fail to create course if course exists"() {
         given:
             String name = "Some new course"
             String universityCourseId = "75.41"
@@ -109,7 +109,7 @@ class CoursesServiceSpec extends Specification {
         when: "retrieving all course"
             List<Course> courses = coursesService.getAllCourses()
 
-        then: "there are no courses"
+        then: "there is 1 course"
             courses.size() == 1
     }
 

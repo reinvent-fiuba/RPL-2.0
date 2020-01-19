@@ -36,6 +36,10 @@ public class Activity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Course course;
 
+    @JoinColumn(name = "activity_category_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ActivityCategory activityCategory;
+
     @Basic(optional = false)
     @Column(name = "name")
     private String name;
@@ -71,9 +75,10 @@ public class Activity {
     public Activity() {
     }
 
-    public Activity(Course course, String name, String description, Language language,
+    public Activity(Course course, ActivityCategory activityCategory, String name, String description, Language language,
         RPLFile supportingFile) {
         this.course = course;
+        this.activityCategory = activityCategory;
         this.name = name;
         this.description = description;
         this.language = language;
@@ -82,6 +87,4 @@ public class Activity {
         this.dateCreated = now();
         this.lastUpdated = this.dateCreated;
     }
-
-
 }

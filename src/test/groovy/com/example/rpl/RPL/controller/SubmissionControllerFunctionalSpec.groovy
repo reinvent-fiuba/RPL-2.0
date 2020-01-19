@@ -34,6 +34,9 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
     ActivityRepository activityRepository
 
     @Autowired
+    ActivityCategoryRepository activityCategoryRepository;
+
+    @Autowired
     SubmissionRepository submissionRepository
 
     @Autowired
@@ -104,8 +107,18 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
         )
         fileRepository.save(supportingActivityFile)
 
+        ActivityCategory activityCategory = new ActivityCategory(
+                course,
+                "Easy activities",
+                "Some easy activities",
+                true
+        )
+
+        activityCategoryRepository.save(activityCategory)
+
         activity = new Activity(
                 course,
+                activityCategory,
                 "Activity 1",
                 "An activity",
                 Language.C,
@@ -132,11 +145,11 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
     def cleanup() {
         submissionRepository.deleteAll()
         activityRepository.deleteAll()
+        activityCategoryRepository.deleteAll()
         fileRepository.deleteAll()
         courseUserRepository.deleteAll()
         userRepository.deleteAll()
         courseRepository.deleteAll()
-
     }
 
 
@@ -154,9 +167,8 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
             response.statusCode == SC_OK
 
             def result = getJsonResponse(response)
-            assert result.id == activitySubmission.getId()
 
-            assert result.id == 1
+            assert result.id == activitySubmission.getId()
             assert result.submission_file_name == "submission_file"
             assert result.submission_file_type == "text"
             assert result.submission_file_id != null

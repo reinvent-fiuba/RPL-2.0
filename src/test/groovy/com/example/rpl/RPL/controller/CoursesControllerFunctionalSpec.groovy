@@ -104,7 +104,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
      *****************************************************************************************/
 
     @Unroll
-    void "test create course with correct values should save user in DB"() {
+    void "test create course with correct values should save course in DB"() {
         given: "a new course"
             Map body = [usernameOrEmail: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
@@ -138,7 +138,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     }
 
     @Unroll
-    void "test create course with null values should save user in DB"() {
+    void "test create course with null values should not save course in DB"() {
         given: "a new course"
             Map body = [usernameOrEmail: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
@@ -192,7 +192,6 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
             response.statusCode == SC_OK
 
             def result = getJsonResponse(response)
-            System.out.println(result)
             result.size() == 1
     }
 
