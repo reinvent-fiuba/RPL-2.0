@@ -7,6 +7,7 @@ import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.*;
 import com.example.rpl.RPL.repository.*;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,5 +72,13 @@ public class ActivitiesService {
             throw new BadRequestException("Error obteniendo los bytes del archivo",
                 "bad_file");
         }
+    }
+
+    public List<Activity> getAllActivitiesByCourse(Long courseId) {
+        Course course = courseRepository.findById(courseId).orElseThrow(
+            () -> new NotFoundException("Course not found",
+                "course_not_found"));
+        
+        return activityRepository.findActivitiesByCourse(course);
     }
 }

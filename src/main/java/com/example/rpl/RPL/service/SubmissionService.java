@@ -13,6 +13,7 @@ import com.example.rpl.RPL.repository.FileRepository;
 import com.example.rpl.RPL.repository.SubmissionRepository;
 import com.example.rpl.RPL.repository.TestRunRepository;
 import java.io.IOException;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -135,5 +136,9 @@ public class SubmissionService {
         activitySubmission.setStatus(status);
 
         return submissionRepository.save(activitySubmission);
+    }
+
+    public List<ActivitySubmission> getAllSubmissionsByUserAndActivities(User user, List<Activity> activities) {
+        return submissionRepository.findAllByUserAndActivityIn(user, activities);
     }
 }

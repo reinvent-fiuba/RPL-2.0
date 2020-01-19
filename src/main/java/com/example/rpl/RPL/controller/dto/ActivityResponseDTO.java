@@ -2,8 +2,10 @@ package com.example.rpl.RPL.controller.dto;
 
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivityCategory;
+import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.Course;
 import com.example.rpl.RPL.model.Language;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,7 +19,9 @@ public class ActivityResponseDTO {
 
     private Long courseId;
 
-    private ActivityCategory activityCategory;
+    private String categoryName;
+
+    private String categoryDescription;
 
     private String name;
 
@@ -37,7 +41,8 @@ public class ActivityResponseDTO {
         return ActivityResponseDTO.builder()
             .id(activity.getId())
             .courseId(activity.getCourse().getId())
-            .activityCategory(activity.getActivityCategory())
+            .categoryName(activity.getActivityCategory().getName())
+            .categoryDescription(activity.getActivityCategory().getDescription())
             .name(activity.getName())
             .description(activity.getDescription())
             .language(activity.getLanguage())

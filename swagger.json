@@ -15,9 +15,17 @@
             "url": "http://example.com/support"
         }
     },
-  "host": "localhost:41245",
+    "host": "localhost:40753",
     "basePath": "/",
     "tags": [
+        {
+            "name": "activities-controller",
+            "description": "Activities Controller"
+        },
+        {
+            "name": "activity-categories-controller",
+            "description": "Activity Categories Controller"
+        },
         {
             "name": "authentication-controller",
             "description": "Authentication Controller"
@@ -315,7 +323,7 @@
                     "courses-controller"
                 ],
                 "summary": "createCourse",
-                "operationId": "createCourseUsingPOST",
+                "operationId": "createCourseUsingPOST_1",
                 "consumes": [
                     "application/json"
                 ],
@@ -656,6 +664,385 @@
                 "deprecated": false
             }
         },
+        "/api/courses/{courseId}/activities": {
+            "get": {
+                "tags": [
+                    "activities-controller"
+                ],
+                "summary": "getActivities",
+                "operationId": "getActivitiesUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "accountNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "accountNonLocked",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "authorities[0].authority",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "courseId",
+                        "in": "path",
+                        "description": "courseId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "credentialsNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "enabled",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.dateCreated",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "user.degree",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.email",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.emailValidated",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "user.id",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "user.lastUpdated",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "user.name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.password",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.studentId",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.surname",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.university",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.username",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ActivityResponseDTO"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden!!!!!"
+                    },
+                    "500": {
+                        "description": "500 message",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            },
+            "post": {
+                "tags": [
+                    "activities-controller"
+                ],
+                "summary": "createCourse",
+                "operationId": "createCourseUsingPOST",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "accountNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "accountNonLocked",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "activityCategoryId",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "authorities[0].authority",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "courseId",
+                        "in": "path",
+                        "description": "courseId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "credentialsNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "enabled",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "supportingFile",
+                        "in": "formData",
+                        "description": "supportingFile",
+                        "required": true,
+                        "type": "file"
+                    },
+                    {
+                        "name": "user.dateCreated",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "user.degree",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.email",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.emailValidated",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "user.id",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "user.lastUpdated",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "user.name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.password",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.studentId",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.surname",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.university",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.username",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ActivityResponseDTO"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
         "/api/courses/{courseId}/activities/{activityId}/submissions": {
             "post": {
                 "tags": [
@@ -849,6 +1236,185 @@
                 "deprecated": false
             }
         },
+        "/api/courses/{courseId}/activityCategories": {
+            "get": {
+                "tags": [
+                    "activity-categories-controller"
+                ],
+                "summary": "getActivityCategories",
+                "operationId": "getActivityCategoriesUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "accountNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "accountNonLocked",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "authorities[0].authority",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "courseId",
+                        "in": "path",
+                        "description": "courseId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "credentialsNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "enabled",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.dateCreated",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "user.degree",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.email",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.emailValidated",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "user.id",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "user.lastUpdated",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "user.name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.password",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.studentId",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.surname",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.university",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.username",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ActivityCategoryResponseDTO"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden!!!!!"
+                    },
+                    "500": {
+                        "description": "500 message",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
         "/api/files/{fileId}": {
             "get": {
                 "tags": [
@@ -956,90 +1522,90 @@
                         }
                     }
                 },
-              "deprecated": false
+                "deprecated": false
             },
-          "put": {
-            "tags": [
-              "submission-controller"
-            ],
-            "summary": "updateSubmissionStatus",
-            "operationId": "updateSubmissionStatusUsingPUT",
-            "consumes": [
-              "application/json"
-            ],
-            "produces": [
-              "*/*"
-            ],
-            "parameters": [
-              {
-                "name": "submissionId",
-                "in": "path",
-                "description": "submissionId",
-                "required": true,
-                "type": "integer",
-                "format": "int64"
-              },
-              {
-                "in": "body",
-                "name": "updateSubmissionStatusRequestDTO",
-                "description": "updateSubmissionStatusRequestDTO",
-                "required": true,
-                "schema": {
-                  "$ref": "#/definitions/UpdateSubmissionStatusRequestDTO"
-                }
-              }
-            ],
-            "responses": {
-              "200": {
-                "description": "OK",
-                "schema": {
-                  "$ref": "#/definitions/ActivitySubmissionResponseDTO"
-                }
-              }
-            },
-            "deprecated": false
+            "put": {
+                "tags": [
+                    "submission-controller"
+                ],
+                "summary": "updateSubmissionStatus",
+                "operationId": "updateSubmissionStatusUsingPUT",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "submissionId",
+                        "in": "path",
+                        "description": "submissionId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "body",
+                        "name": "updateSubmissionStatusRequestDTO",
+                        "description": "updateSubmissionStatusRequestDTO",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UpdateSubmissionStatusRequestDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ActivitySubmissionResponseDTO"
+                        }
+                    }
+                },
+                "deprecated": false
             }
         },
-      "/api/submissions/{submissionId}/result": {
-        "post": {
-          "tags": [
-            "submission-controller"
-          ],
-          "summary": "submitResults",
-          "operationId": "submitResultsUsingPOST",
-          "consumes": [
-            "application/json"
-          ],
-          "produces": [
-            "*/*"
-          ],
-          "parameters": [
-            {
-              "in": "body",
-              "name": "createSubmissionResultRequestDTO",
-              "description": "createSubmissionResultRequestDTO",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/SubmissionResultRequestDTO"
-              }
-            },
-            {
-              "name": "submissionId",
-              "in": "path",
-              "description": "submissionId",
-              "required": true,
-              "type": "integer",
-              "format": "int64"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "schema": {
-                "$ref": "#/definitions/SubmissionResultRequestDTO"
-              }
-            }
-          },
+        "/api/submissions/{submissionId}/result": {
+            "post": {
+                "tags": [
+                    "submission-controller"
+                ],
+                "summary": "submitResults",
+                "operationId": "submitResultsUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "createSubmissionResultRequestDTO",
+                        "description": "createSubmissionResultRequestDTO",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/SubmissionResultRequestDTO"
+                        }
+                    },
+                    {
+                        "name": "submissionId",
+                        "in": "path",
+                        "description": "submissionId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/SubmissionResultRequestDTO"
+                        }
+                    }
+                },
                 "deprecated": false
             }
         },
@@ -1224,6 +1790,90 @@
         }
     },
     "definitions": {
+        "ActivityCategoryResponseDTO": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "course_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "date_created": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "file_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "last_updated": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "title": "ActivityCategoryResponseDTO"
+        },
+        "ActivityResponseDTO": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "category_description": {
+                    "type": "string"
+                },
+                "category_name": {
+                    "type": "string"
+                },
+                "course_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "date_created": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "file_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "language": {
+                    "type": "string",
+                    "enum": [
+                        "C",
+                        "PYTHON3",
+                        "JAVA"
+                    ]
+                },
+                "last_updated": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "title": "ActivityResponseDTO"
+        },
         "ActivitySubmissionResponseDTO": {
             "type": "object",
             "properties": {
@@ -1477,34 +2127,34 @@
             },
             "title": "Resource"
         },
-      "SubmissionResultRequestDTO": {
-        "type": "object",
-        "required": [
-          "test_run_exit_message",
-          "test_run_result",
-          "test_run_stage",
-          "test_run_stderr",
-          "test_run_stdout"
-        ],
-        "properties": {
-          "test_run_exit_message": {
-            "type": "string"
-          },
-          "test_run_result": {
-            "type": "string"
-          },
-          "test_run_stage": {
-            "type": "string"
-          },
-          "test_run_stderr": {
-            "type": "string"
-          },
-          "test_run_stdout": {
-            "type": "string"
-          }
+        "SubmissionResultRequestDTO": {
+            "type": "object",
+            "required": [
+                "test_run_exit_message",
+                "test_run_result",
+                "test_run_stage",
+                "test_run_stderr",
+                "test_run_stdout"
+            ],
+            "properties": {
+                "test_run_exit_message": {
+                    "type": "string"
+                },
+                "test_run_result": {
+                    "type": "string"
+                },
+                "test_run_stage": {
+                    "type": "string"
+                },
+                "test_run_stderr": {
+                    "type": "string"
+                },
+                "test_run_stdout": {
+                    "type": "string"
+                }
+            },
+            "title": "SubmissionResultRequestDTO"
         },
-        "title": "SubmissionResultRequestDTO"
-      },
         "URI": {
             "type": "object",
             "properties": {
@@ -1604,18 +2254,18 @@
             },
             "title": "URL"
         },
-      "UpdateSubmissionStatusRequestDTO": {
-        "type": "object",
-        "required": [
-          "status"
-        ],
-        "properties": {
-          "status": {
-            "type": "string"
-          }
+        "UpdateSubmissionStatusRequestDTO": {
+            "type": "object",
+            "required": [
+                "status"
+            ],
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            },
+            "title": "UpdateSubmissionStatusRequestDTO"
         },
-        "title": "UpdateSubmissionStatusRequestDTO"
-      },
         "UserPrincipal": {
             "type": "object",
             "properties": {
