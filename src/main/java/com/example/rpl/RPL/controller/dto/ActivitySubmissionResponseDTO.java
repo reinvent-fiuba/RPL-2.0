@@ -47,7 +47,8 @@ public class ActivitySubmissionResponseDTO {
             .activitySupportingFileName(as.getActivity().getSupportingFile().getFileName())
             .activitySupportingFileType(as.getActivity().getSupportingFile().getFileType())
             .activitySupportingFileId(as.getActivity().getSupportingFile().getId())
-            .activityLanguage(as.getActivity().getLanguage().getNameAndVersion());
+            .activityLanguage(as.getActivity().getLanguage().getNameAndVersion())
+            .activityUnitTests("");
 
         unitTest.ifPresent(test -> ab.activityUnitTests = new String(test.getTestFile().getData()));
 
