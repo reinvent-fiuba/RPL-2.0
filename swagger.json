@@ -1345,6 +1345,90 @@
                         }
                     }
                 },
+              "deprecated": false
+            },
+          "put": {
+            "tags": [
+              "submission-controller"
+            ],
+            "summary": "updateSubmissionStatus",
+            "operationId": "updateSubmissionStatusUsingPUT",
+            "consumes": [
+              "application/json"
+            ],
+            "produces": [
+              "*/*"
+            ],
+            "parameters": [
+              {
+                "name": "submissionId",
+                "in": "path",
+                "description": "submissionId",
+                "required": true,
+                "type": "integer",
+                "format": "int64"
+              },
+              {
+                "in": "body",
+                "name": "updateSubmissionStatusRequestDTO",
+                "description": "updateSubmissionStatusRequestDTO",
+                "required": true,
+                "schema": {
+                  "$ref": "#/definitions/UpdateSubmissionStatusRequestDTO"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/definitions/ActivitySubmissionResponseDTO"
+                }
+              }
+            },
+            "deprecated": false
+            }
+        },
+      "/api/submissions/{submissionId}/result": {
+        "post": {
+          "tags": [
+            "submission-controller"
+          ],
+          "summary": "submitResults",
+          "operationId": "submitResultsUsingPOST",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "*/*"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "createSubmissionResultRequestDTO",
+              "description": "createSubmissionResultRequestDTO",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/SubmissionResultRequestDTO"
+              }
+            },
+            {
+              "name": "submissionId",
+              "in": "path",
+              "description": "submissionId",
+              "required": true,
+              "type": "integer",
+              "format": "int64"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/SubmissionResultRequestDTO"
+              }
+            }
+          },
                 "deprecated": false
             }
         },
@@ -1929,6 +2013,34 @@
             },
             "title": "Resource"
         },
+      "SubmissionResultRequestDTO": {
+        "type": "object",
+        "required": [
+          "test_run_exit_message",
+          "test_run_result",
+          "test_run_stage",
+          "test_run_stderr",
+          "test_run_stdout"
+        ],
+        "properties": {
+          "test_run_exit_message": {
+            "type": "string"
+          },
+          "test_run_result": {
+            "type": "string"
+          },
+          "test_run_stage": {
+            "type": "string"
+          },
+          "test_run_stderr": {
+            "type": "string"
+          },
+          "test_run_stdout": {
+            "type": "string"
+          }
+        },
+        "title": "SubmissionResultRequestDTO"
+      },
         "URI": {
             "type": "object",
             "properties": {
@@ -2028,6 +2140,18 @@
             },
             "title": "URL"
         },
+      "UpdateSubmissionStatusRequestDTO": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        },
+        "title": "UpdateSubmissionStatusRequestDTO"
+      },
         "UserPrincipal": {
             "type": "object",
             "properties": {

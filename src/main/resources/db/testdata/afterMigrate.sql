@@ -66,7 +66,7 @@ INSERT INTO results
 VALUES (1, 1, 'passed', now(), now());
 
 INSERT INTO test_run
-VALUES (1, 1, true, 'todo el stderr', 'todo el stdout', now(), now());
+VALUES (1, 1, true, 'salio todo bien', 'todo el stderr', 'todo el stdout', now(), now());
 
 INSERT INTO unit_tests
 VALUES (1, 1, 2, now(), now());
