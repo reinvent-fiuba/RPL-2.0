@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:40753",
+    "host": "localhost:42177",
     "basePath": "/",
     "tags": [
         {
@@ -826,7 +826,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/ActivityResponseDTO"
+                                "$ref": "#/definitions/UserActivityResponseDTO"
                             }
                         }
                     },
@@ -2265,6 +2265,62 @@
                 }
             },
             "title": "UpdateSubmissionStatusRequestDTO"
+        },
+        "UserActivityResponseDTO": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "category_description": {
+                    "type": "string"
+                },
+                "category_name": {
+                    "type": "string"
+                },
+                "course_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "date_created": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "file_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "language": {
+                    "type": "string",
+                    "enum": [
+                        "C",
+                        "PYTHON3",
+                        "JAVA"
+                    ]
+                },
+                "last_submission_date": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "last_updated": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "submission_status": {
+                    "type": "string"
+                }
+            },
+            "title": "UserActivityResponseDTO"
         },
         "UserPrincipal": {
             "type": "object",

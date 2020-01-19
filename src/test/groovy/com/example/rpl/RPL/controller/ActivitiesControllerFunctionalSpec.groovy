@@ -72,6 +72,9 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Shared
     Course course
 
+    @Shared
+    ActivityCategory activityCategory
+
     String username;
 
     String password;
@@ -126,14 +129,14 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
         )
         fileRepository.save(supportingActivityFile)
 
-        ActivityCategory activityCategory = new ActivityCategory(
+        activityCategory = new ActivityCategory(
                 course,
                 "Easy activities",
                 "Some easy activities",
                 true
         )
 
-        activityCategoryRepository.save(activityCategory)
+        activityCategory = activityCategoryRepository.save(activityCategory)
 
         activity = new Activity(
                 course,
@@ -179,13 +182,13 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test create activity with correct values should save activity in DB"() {
         given: "a new activity"
-            Long courseId = 1;
+            Long courseId = course.getId()
             Map body = [usernameOrEmail: username, password: password]
             File f = new File("./src/main/resources/db/testdata/unit_test.c")
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
             body = [
-                    activityCategoryId:  1,
+                    activityCategoryId:  activityCategory.getId(),
                     name:               'Some name',
                     description:        'Some description',
                     language:           'C'
@@ -215,8 +218,8 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     }
 
     @Unroll
-    void "test create course with null values should not save course in DB"() {
-        given: "a new course"
+    void "test create activity with null values should not save activity in DB"() {
+        given: "a new activity"
             Long courseId = 1;
             Map body = [usernameOrEmail: username, password: password]
             File f = new File("./src/main/resources/db/testdata/unit_test.c")
@@ -238,7 +241,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             api.contentType("multipart/form-data")
             def response = api.post(String.format("/api/courses/%d/activities", courseId))
 
-        then: "must return a new saved Course"
+        then: "must fail with Bad Request error"
             response.contentType == "application/json"
             response.statusCode == SC_BAD_REQUEST
 
@@ -252,10 +255,71 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             null               | "Some name" | 'C'
             1                  | null        | 'C'
             1                  | "Some name" | null
-
     }
 
+    @Unroll
+    void "test create activity with wrong courseId should not save activity in DB"() {
+        given: "a new activity"
+            Map body = [usernameOrEmail: username, password: password]
+            File f = new File("./src/main/resources/db/testdata/unit_test.c")
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
+            body = [
+                    activityCategoryId: activityCategory.getId(),
+                    name:               'Some name',
+                    description:        'Some description',
+                    language:           'C'
+            ].findAll{ it.value!=null }
+
+        when: "post new activity"
+            api.headers([
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+            api.multiPart("supportingFile", f)
+            api.formParams(body)
+            api.contentType("multipart/form-data")
+            def response = api.post(String.format("/api/courses/%d/activities", course.getId() + 1))
+
+        then: "must fail with Not Found Error"
+            response.contentType == "application/json"
+            response.statusCode == SC_NOT_FOUND
+
+            Map result = getJsonResponse(response)
+            assert result.message == "Course not found"
+            assert result.error == "course_not_found"
+    }
+
+    @Unroll
+    void "test create activity with wrong activityCategoryId should not save activity in DB"() {
+        given: "a new activity"
+            Map body = [usernameOrEmail: username, password: password]
+            File f = new File("./src/main/resources/db/testdata/unit_test.c")
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+
+            body = [
+                    activityCategoryId: activityCategory.getId() + 1,
+                    name:               'Some name',
+                    description:        'Some description',
+                    language:           'C'
+            ].findAll{ it.value!=null }
+
+        when: "post new activity"
+            api.headers([
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+            api.multiPart("supportingFile", f)
+            api.formParams(body)
+            api.contentType("multipart/form-data")
+            def response = api.post(String.format("/api/courses/%d/activities", course.getId()))
+
+        then: "must fail with Not Found Error"
+            response.contentType == "application/json"
+            response.statusCode == SC_NOT_FOUND
+
+            Map result = getJsonResponse(response)
+            assert result.message == "Activity Category not found"
+            assert result.error == "activityCategory_not_found"
+    }
 }
 
 

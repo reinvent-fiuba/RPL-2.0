@@ -1,15 +1,10 @@
 package com.example.rpl.RPL.controller.dto;
 
 import com.example.rpl.RPL.model.Activity;
-import com.example.rpl.RPL.model.ActivityCategory;
-import com.example.rpl.RPL.model.ActivitySubmission;
-import com.example.rpl.RPL.model.Course;
 import com.example.rpl.RPL.model.Language;
-import java.util.List;
+import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.ZonedDateTime;
 
 @Getter
 @Builder

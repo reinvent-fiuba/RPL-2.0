@@ -77,7 +77,8 @@ public class ActivitiesController {
 
         return new ResponseEntity<>(
             activities.stream()
-                .map(activity -> UserActivityResponseDTO.fromEntityWithStatus(activity, submissionsByActivity))
+                .map(activity -> UserActivityResponseDTO
+                    .fromEntityWithStatus(activity, submissionsByActivity))
                 .collect(Collectors.toList()),
             HttpStatus.OK);
     }

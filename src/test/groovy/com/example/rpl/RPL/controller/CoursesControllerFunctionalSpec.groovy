@@ -192,7 +192,6 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
             response.statusCode == SC_OK
 
             def result = getJsonResponse(response)
-            System.out.println(result)
             result.size() == 1
     }
 
