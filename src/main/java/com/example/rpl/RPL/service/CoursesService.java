@@ -11,6 +11,8 @@ import com.example.rpl.RPL.repository.CourseUserRepository;
 import com.example.rpl.RPL.repository.RoleRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.example.rpl.RPL.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,14 +25,17 @@ public class CoursesService {
     private CourseRepository courseRepository;
     private CourseUserRepository courseUserRepository;
     private RoleRepository roleRepository;
+    private UserRepository userRepository;
 
     @Autowired
     public CoursesService(CourseRepository courseRepository,
-        CourseUserRepository courseUserRepository,
-        RoleRepository roleRepository) {
+                          CourseUserRepository courseUserRepository,
+                          RoleRepository roleRepository,
+                          UserRepository userRepository) {
         this.courseRepository = courseRepository;
         this.courseUserRepository = courseUserRepository;
         this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -82,5 +87,35 @@ public class CoursesService {
             .stream()
             .map(CourseUser::getCourse)
             .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public CourseUser enrollInCourse(Long currentUserId, Long courseId) {
+        Course course = courseRepository.findById(courseId).orElseThrow(
+            () -> new NotFoundException("Course not found",
+                "course_not_found"));
+
+        User user = userRepository.findById(currentUserId).orElseThrow(
+            () -> new NotFoundException("User not found",
+                "user_not_found"));
+
+        Role studentRole = roleRepository.findByName("student").orElseThrow(
+            () -> new NotFoundException("Role not found",
+                "role_not_fond"));
+
+        if (courseUserRepository.findByCourse_IdAndUser_Id(courseId, currentUserId).isPresent()) {
+            throw new EntityAlreadyExistsException("User is already registered in the course");
+        }
+
+        CourseUser courseUser = new CourseUser(
+            course,
+            user,
+            studentRole,
+            true
+        );
+
+        courseUser = courseUserRepository.save(courseUser);
+
+        return courseUser;
     }
 }
