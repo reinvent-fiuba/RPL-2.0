@@ -26,6 +26,8 @@ public class ActivityResponseDTO {
 
     private Boolean active;
 
+    private String initialCode;
+
     private Long fileId;
 
     private ZonedDateTime dateCreated;
@@ -42,6 +44,7 @@ public class ActivityResponseDTO {
             .description(activity.getDescription())
             .language(activity.getLanguage())
             .active(activity.getActive())
+            .initialCode(activity.getInitialCode())
             .fileId(activity.getSupportingFile().getId())
             .dateCreated(activity.getDateCreated())
             .lastUpdated(activity.getLastUpdated())

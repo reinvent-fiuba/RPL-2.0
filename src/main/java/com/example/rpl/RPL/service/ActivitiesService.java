@@ -52,7 +52,7 @@ public class ActivitiesService {
     @Transactional
     public Activity createActivity(Long courseId, Long activityCategoryId, String name,
         String description, String language,
-        Boolean active, MultipartFile supportingFile) {
+        Boolean active, String initialCode, MultipartFile supportingFile) {
 
         Course course = courseRepository.findById(courseId).orElseThrow(
             () -> new NotFoundException("Course not found",
@@ -60,8 +60,8 @@ public class ActivitiesService {
 
         ActivityCategory activityCategory = activityCategoryRepository.findById(activityCategoryId)
             .orElseThrow(
-                () -> new NotFoundException("Activity Category not found",
-                    "activityCategory_not_found"));
+                () -> new NotFoundException("Category not found",
+                    "category_not_found"));
 
         try {
             RPLFile file = new RPLFile(String.format("%s_%d_%s", now().toString(), courseId, name),
@@ -70,7 +70,7 @@ public class ActivitiesService {
             fileRepository.save(file);
 
             Activity activity = new Activity(course, activityCategory, name, description,
-                Language.getByName(language), file);
+                Language.getByName(language), initialCode, file);
 
             activityRepository.save(activity);
 
@@ -89,5 +89,11 @@ public class ActivitiesService {
                 "course_not_found"));
 
         return activityRepository.findActivitiesByCourse(course);
+    }
+
+    public Activity getActivity(Long activityId) {
+        return activityRepository.findById(activityId)
+            .orElseThrow(() -> new NotFoundException("Activity not found",
+                "activity_not_found"));
     }
 }

@@ -53,27 +53,27 @@ VALUES (1, 1, 'Conceptos Basicos',
 
 INSERT INTO activities
 VALUES (1, 1, 1, 'Pasar de segundos a horas, minutos, segundos',
-        'Dada una cantidad de segundos, devolver/imprimir la cantidad de horas', 'c_std11', true, 1,
+        'Dada una cantidad de segundos, devolver/imprimir la cantidad de horas', 'c_std11', true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (2, 1, 1, 'El ejericio 2',
-        'La descripción del ejericio 2', 'c_std11', true, 1,
+        'La descripción del ejericio 2', 'c_std11', true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (3, 1, 1, 'El ejericio 3',
-        'La descripción del ejericio 3', 'c_std11', true, 1,
+        'La descripción del ejericio 3', 'c_std11', true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (4, 1, 1, 'El ejericio 4',
-        'La descripción del ejericio 4', 'c_std11', true, 1,
+        'La descripción del ejericio 4', 'c_std11', true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (5, 1, 1, 'El ejericio 5',
-        'La descripción del ejericio 5', 'c_std11', true, 1,
+        'La descripción del ejericio 5', 'c_std11', true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activity_categories
@@ -83,27 +83,27 @@ VALUES (2, 1, 'Conceptos no tan Basicos',
 
 INSERT INTO activities
 VALUES (6, 1, 2, 'Pasar de segundos a horas, minutos, segundos',
-        'Dada una cantidad de segundos, devolver/imprimir la cantidad de horas', 'c_std11', true, 1,
+        'Dada una cantidad de segundos, devolver/imprimir la cantidad de horas', 'c_std11', true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (7, 1, 2, 'El ejericio 2',
-        'La descripción del ejericio 2', 'c_std11', true, 1,
+        'La descripción del ejericio 2', 'c_std11', true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (8, 1, 2, 'El ejericio 3',
-        'La descripción del ejericio 3', 'c_std11', true, 1,
+        'La descripción del ejericio 3', 'c_std11', true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (9, 1, 2, 'El ejericio 4',
-        'La descripción del ejericio 4', 'c_std11', true, 1,
+        'La descripción del ejericio 4', 'c_std11', true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (10, 1, 2, 'El ejericio 5',
-        'La descripción del ejericio 5', 'c_std11', true, 1,
+        'La descripción del ejericio 5', 'c_std11', true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activity_submissions

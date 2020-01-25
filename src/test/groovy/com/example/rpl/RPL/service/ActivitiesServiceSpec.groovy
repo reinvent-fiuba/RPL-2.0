@@ -1,23 +1,17 @@
 package com.example.rpl.RPL.service
 
 
-import com.example.rpl.RPL.exception.EntityAlreadyExistsException
 import com.example.rpl.RPL.exception.NotFoundException
 import com.example.rpl.RPL.model.Activity
 import com.example.rpl.RPL.model.ActivityCategory
 import com.example.rpl.RPL.model.Course
-import com.example.rpl.RPL.model.CourseUser
 import com.example.rpl.RPL.model.Language
 import com.example.rpl.RPL.model.RPLFile
-import com.example.rpl.RPL.model.Role
 import com.example.rpl.RPL.model.User
 import com.example.rpl.RPL.repository.ActivityCategoryRepository
 import com.example.rpl.RPL.repository.ActivityRepository
 import com.example.rpl.RPL.repository.CourseRepository
-import com.example.rpl.RPL.repository.CourseUserRepository
 import com.example.rpl.RPL.repository.FileRepository
-import com.example.rpl.RPL.repository.RoleRepository
-import com.example.rpl.RPL.repository.UserRepository
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.web.multipart.MultipartFile
 import spock.lang.Shared
@@ -67,7 +61,7 @@ class ActivitiesServiceSpec extends Specification {
                     name,
                     description,
                     language,
-                    true,
+                    true, createActivityRequestDTO.getInitialCode(),
                     supportingFile
             )
 
@@ -98,7 +92,7 @@ class ActivitiesServiceSpec extends Specification {
                     name,
                     description,
                     language,
-                    true,
+                    true, createActivityRequestDTO.getInitialCode(),
                     supportingFile
             )
 
@@ -124,7 +118,7 @@ class ActivitiesServiceSpec extends Specification {
                     name,
                     description,
                     language,
-                    true,
+                    true, createActivityRequestDTO.getInitialCode(),
                     supportingFile
             )
 

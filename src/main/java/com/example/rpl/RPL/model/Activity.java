@@ -57,6 +57,11 @@ public class Activity {
     @Column(name = "active")
     private Boolean active;
 
+    @NonNull
+    @Basic(optional = true)
+    @Column(name = "initial_code")
+    private String initialCode;
+
     @JoinColumn(name = "supporting_file_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private RPLFile supportingFile;
@@ -75,7 +80,8 @@ public class Activity {
     public Activity() {
     }
 
-    public Activity(Course course, ActivityCategory activityCategory, String name, String description, Language language,
+    public Activity(Course course, ActivityCategory activityCategory, String name,
+        String description, Language language, String initialCode,
         RPLFile supportingFile) {
         this.course = course;
         this.activityCategory = activityCategory;
@@ -84,6 +90,7 @@ public class Activity {
         this.language = language;
         this.active = true;
         this.supportingFile = supportingFile;
+        this.initialCode = initialCode;
         this.dateCreated = now();
         this.lastUpdated = this.dateCreated;
     }

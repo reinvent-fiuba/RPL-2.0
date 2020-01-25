@@ -42,7 +42,8 @@ public class ActivitiesController {
     }
 
     @PostMapping(value = "/api/courses/{courseId}/activities")
-    public ResponseEntity<ActivityResponseDTO> createCourse(@CurrentUser UserPrincipal currentUser,
+    public ResponseEntity<ActivityResponseDTO> createActivity(
+        @CurrentUser UserPrincipal currentUser,
         @PathVariable Long courseId,
         @Valid CreateActivityRequestDTO createActivityRequestDTO,
         @RequestParam(value = "supportingFile") MultipartFile supportingFile) {
@@ -54,6 +55,7 @@ public class ActivitiesController {
             createActivityRequestDTO.getDescription(),
             createActivityRequestDTO.getLanguage(),
             true,
+            createActivityRequestDTO.getInitialCode(),
             supportingFile);
 
         return new ResponseEntity<>(ActivityResponseDTO.fromEntity(activity), HttpStatus.CREATED);
@@ -65,7 +67,7 @@ public class ActivitiesController {
     public ResponseEntity<List<UserActivityResponseDTO>> getActivities(
         @CurrentUser UserPrincipal currentUser,
         @PathVariable Long courseId) {
-        log.error("COURSE ID: {}", courseId);
+        log.debug("COURSE ID: {}", courseId);
 
         List<Activity> activities = activitiesService.getAllActivitiesByCourse(courseId);
 
@@ -81,5 +83,17 @@ public class ActivitiesController {
                     .fromEntityWithStatus(activity, submissionsByActivity))
                 .collect(Collectors.toList()),
             HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('course_create')")
+    @GetMapping(value = "/api/courses/{courseId}/activities/{activityId}")
+    public ResponseEntity<ActivityResponseDTO> getActivity(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId, @PathVariable Long activityId) {
+        log.debug("COURSE ID: {}", courseId);
+
+        Activity activity = activitiesService.getActivity(activityId);
+
+        return new ResponseEntity<>(ActivityResponseDTO.fromEntity(activity), HttpStatus.OK);
     }
 }

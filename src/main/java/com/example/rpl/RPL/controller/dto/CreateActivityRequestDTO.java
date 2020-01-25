@@ -15,8 +15,11 @@ public class CreateActivityRequestDTO {
     @NotNull
     private String name;
 
+    private String description;
+
     @NotNull
     private String language;
 
-    private String description;
+    @NotNull
+    private String initialCode;
 }

@@ -74,7 +74,7 @@ class SubmissionServiceSpec extends Specification {
 
     void "should create a submission"() {
         given: "an activity"
-            Activity a = new Activity()
+            Activity a = new Activity(course, activityCategory, name, description, com.example.rpl.RPL.model.Language.getByName(language), initialCode, file)
             activityRepository.findById(_ as Long) >> Optional.of(a)
 
         when: "creating a submission"
@@ -103,7 +103,7 @@ class SubmissionServiceSpec extends Specification {
 
     void "createSubmission should throw BadRequestException when MultipartFile is corrupted"() {
         given: "an activity"
-            Activity a = new Activity()
+            Activity a = new Activity(course, activityCategory, name, description, com.example.rpl.RPL.model.Language.getByName(language), initialCode, file)
             activityRepository.findById(_ as Long) >> Optional.of(a)
 
         and: "a corrupted MultiPartFile"
@@ -122,7 +122,7 @@ class SubmissionServiceSpec extends Specification {
     @Unroll
     void "createSubmissionTestRun should process and update submission"() {
         given: "an activity"
-            Activity a = new Activity()
+            Activity a = new Activity(course, activityCategory, name, description, com.example.rpl.RPL.model.Language.getByName(language), initialCode, file)
             a.id = 1
             activityRepository.findById(_ as Long) >> Optional.of(a)
 
