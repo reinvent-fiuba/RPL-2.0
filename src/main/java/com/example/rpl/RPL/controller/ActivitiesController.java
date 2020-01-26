@@ -9,6 +9,7 @@ import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.ActivitiesService;
 import com.example.rpl.RPL.service.SubmissionService;
+import com.example.rpl.RPL.utils.TarUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,7 +47,9 @@ public class ActivitiesController {
         @CurrentUser UserPrincipal currentUser,
         @PathVariable Long courseId,
         @Valid CreateActivityRequestDTO createActivityRequestDTO,
-        @RequestParam(value = "supportingFile") MultipartFile supportingFile) {
+        @RequestParam(value = "supportingFile") MultipartFile[] supportingFiles) {
+
+        byte[] compressedSupportingFilesBytes = TarUtils.compressToTarGz(supportingFiles);
 
         Activity activity = activitiesService.createActivity(
             courseId,
@@ -56,7 +59,7 @@ public class ActivitiesController {
             createActivityRequestDTO.getLanguage(),
             true,
             createActivityRequestDTO.getInitialCode(),
-            supportingFile);
+            compressedSupportingFilesBytes);
 
         return new ResponseEntity<>(ActivityResponseDTO.fromEntity(activity), HttpStatus.CREATED);
     }

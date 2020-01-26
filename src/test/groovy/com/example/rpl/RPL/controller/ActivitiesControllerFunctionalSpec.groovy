@@ -1,23 +1,7 @@
 package com.example.rpl.RPL.controller
 
-import com.example.rpl.RPL.model.Activity
-import com.example.rpl.RPL.model.ActivityCategory
-import com.example.rpl.RPL.model.ActivitySubmission
-import com.example.rpl.RPL.model.Course
-import com.example.rpl.RPL.model.CourseUser
-import com.example.rpl.RPL.model.Language
-import com.example.rpl.RPL.model.RPLFile
-import com.example.rpl.RPL.model.Role
-import com.example.rpl.RPL.model.SubmissionStatus
-import com.example.rpl.RPL.model.User
-import com.example.rpl.RPL.repository.ActivityCategoryRepository
-import com.example.rpl.RPL.repository.ActivityRepository
-import com.example.rpl.RPL.repository.CourseRepository
-import com.example.rpl.RPL.repository.CourseUserRepository
-import com.example.rpl.RPL.repository.FileRepository
-import com.example.rpl.RPL.repository.RoleRepository
-import com.example.rpl.RPL.repository.SubmissionRepository
-import com.example.rpl.RPL.repository.UserRepository
+import com.example.rpl.RPL.model.*
+import com.example.rpl.RPL.repository.*
 import com.example.rpl.RPL.util.AbstractFunctionalSpec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -144,6 +128,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
                 "Activity 1",
                 "An activity",
                 Language.C,
+                "initialCode",
                 supportingActivityFile
         )
         activityRepository.save(activity)
@@ -188,10 +173,11 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
             body = [
-                    activityCategoryId:  activityCategory.getId(),
-                    name:               'Some name',
-                    description:        'Some description',
-                    language:           'C'
+                    activityCategoryId: activityCategory.getId(),
+                    name                : 'Some name',
+                    description         : 'Some description',
+                    language            : 'C',
+                    initialCode        : '//initial code'
             ]
 
         when: "post new activity"
@@ -227,10 +213,11 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
             body = [
                     activityCategoryId: activityCategoryId,
-                    name:               name,
-                    description:        'Some description',
-                    language:           language
-            ].findAll{ it.value!=null }
+                    name              : name,
+                    description       : 'Some description',
+                    language          : language,
+                    initialCode        : '//initial code'
+            ].findAll { it.value != null }
 
         when: "post new activity"
             api.headers([
@@ -266,10 +253,11 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
             body = [
                     activityCategoryId: activityCategory.getId(),
-                    name:               'Some name',
-                    description:        'Some description',
-                    language:           'C'
-            ].findAll{ it.value!=null }
+                    name              : 'Some name',
+                    description       : 'Some description',
+                    language          : 'C',
+                    initialCode        : '//initial code'
+            ].findAll { it.value != null }
 
         when: "post new activity"
             api.headers([
@@ -298,10 +286,11 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
             body = [
                     activityCategoryId: activityCategory.getId() + 1,
-                    name:               'Some name',
-                    description:        'Some description',
-                    language:           'C'
-            ].findAll{ it.value!=null }
+                    name              : 'Some name',
+                    description       : 'Some description',
+                    language          : 'C',
+                    initialCode        : '//initial code'
+            ].findAll { it.value != null }
 
         when: "post new activity"
             api.headers([
@@ -317,8 +306,8 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             response.statusCode == SC_NOT_FOUND
 
             Map result = getJsonResponse(response)
-            assert result.message == "Activity Category not found"
-            assert result.error == "activityCategory_not_found"
+            assert result.message == "Category not found"
+            assert result.error == "category_not_found"
     }
 }
 

@@ -92,7 +92,7 @@ public class TarUtils {
 
 
     // Based on https://stackoverflow.com/questions/27866976/how-do-i-create-a-tar-or-tar-gz-archive-entirely-from-objects-in-memory-no-file
-    public static byte[] compressToTarGz(String name, MultipartFile[] files) {
+    public static byte[] compressToTarGz(MultipartFile[] files) {
 
 //        try (TarArchiveOutputStream gzOut = new TarArchiveOutputStream(
 //            new GZIPOutputStream(
