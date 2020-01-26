@@ -1,6 +1,7 @@
 package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.controller.dto.ActivitySubmissionResponseDTO;
+import com.example.rpl.RPL.controller.dto.CreateSubmissionRequestDTO;
 import com.example.rpl.RPL.controller.dto.SubmissionResultRequestDTO;
 import com.example.rpl.RPL.controller.dto.UpdateSubmissionStatusRequestDTO;
 import com.example.rpl.RPL.model.ActivitySubmission;
@@ -11,6 +12,10 @@ import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.SubmissionService;
 import com.example.rpl.RPL.service.TestService;
+import com.example.rpl.RPL.utils.TarUtils;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -93,6 +98,36 @@ public class SubmissionController {
         return new ResponseEntity<>(asDto, HttpStatus.OK);
     }
 
+//    @PreAuthorize("hasAuthority('activity_submit')")
+//    @PostMapping(value = "/api/courses/{courseId}/activities/{activityId}/submissions")
+//    public ResponseEntity<ActivitySubmissionResponseDTO> createSubmission2(
+//        @CurrentUser UserPrincipal currentUser,
+//        @PathVariable Long courseId, @PathVariable Long activityId,
+//        @RequestBody @Valid CreateSubmissionRequestDTO createSubmissionRequestDTO) {
+//        log.info("COURSE ID: {}", courseId);
+//        log.info("ACTIVITY ID: {}", activityId);
+//
+//        // crear gzip con los files
+//
+//
+//        ActivitySubmission as = submissionService
+//            .create(currentUser.getUser(), courseId, activityId, description, file);
+//
+//        // Submit submission ID to queue
+//        try {
+//            this.activitySubmissionQueueProducer
+//                .send(as.getId().toString(), as.getActivity().getLanguage().getNameAndVersion());
+//            as.setEnqueued();
+//        } catch (AmqpConnectException e) {
+//            log.error("Error sending submission ID to queue. Conection refused");
+//            log.error(e.getMessage());
+//        }
+//
+//        ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
+//            .fromEntity(as, Optional.empty(), List.of());
+//        return new ResponseEntity<>(asDto, HttpStatus.OK);
+//    }
+
     @PutMapping(value = "/api/submissions/{submissionId}")
     public ResponseEntity<ActivitySubmissionResponseDTO> updateSubmissionStatus(
         @PathVariable Long submissionId,
@@ -123,21 +158,28 @@ public class SubmissionController {
 
 //     * DEJO ESTO ACA SOLO EN CASO DE QUE LO NECESITEMOS PORUQE LO PROBE Y FUNCIONA
 
-//    /**
-//     * @param descriptions
-//     * @param files
-//     * @return
-//     */
-//    @PostMapping(value = "/api/uploadMultipleFiles")
-//    public String uploadMultipleFiles(@RequestParam("description") String[] descriptions,
-//        @RequestParam("file") MultipartFile[] files) {
-//
+    /**
+     * @param descriptions
+     * @param files
+     * @return
+     */
+    @PostMapping(value = "/api/uploadMultipleFiles")
+    public String uploadMultipleFiles(@RequestParam("description") String[] descriptions,
+        @RequestParam("file") MultipartFile[] files) {
+
 //        if (files.length != descriptions.length) {
 //            return "Mismatching no of files are equal to description";
 //        }
-//
-//        String status = "";
+
+        String status = "";
 //        File dir = new File("/home/alepox/Desktop/pruebita_upload_files");
+
+//        TarUtils.compress("Una pruebita.tar", files);
+
+        byte[] compressedFilesBytes = TarUtils.compressToTarGz("Una pruebita.tar.gz", files);
+
+        log.error(encodeHexString(compressedFilesBytes));
+
 //        for (int i = 0; i < files.length; i++) {
 //            MultipartFile file = files[i];
 //            String description = descriptions[i];
@@ -161,7 +203,28 @@ public class SubmissionController {
 //                    .getMessage();
 //            }
 //        }
-//        return status;
-//    }
+        return status;
+    }
 
+    public static String byteArrayToHex(byte[] a) {
+        StringBuilder sb = new StringBuilder(a.length * 2);
+        for(byte b: a)
+            sb.append(String.format("%02x", b));
+        return sb.toString();
+    }
+
+    public String byteToHex(byte num) {
+        char[] hexDigits = new char[2];
+        hexDigits[0] = Character.forDigit((num >> 4) & 0xF, 16);
+        hexDigits[1] = Character.forDigit((num & 0xF), 16);
+        return new String(hexDigits);
+    }
+
+    public String encodeHexString(byte[] byteArray) {
+        StringBuffer hexStringBuffer = new StringBuffer();
+        for (int i = 0; i < byteArray.length; i++) {
+            hexStringBuffer.append(byteToHex(byteArray[i]));
+        }
+        return hexStringBuffer.toString();
+    }
 }
