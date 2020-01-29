@@ -1,12 +1,19 @@
 package com.example.rpl.RPL.controller;
 
+import static com.example.rpl.RPL.model.SubmissionStatus.ENQUEUED;
+import static com.example.rpl.RPL.model.SubmissionStatus.PENDING;
+import static com.example.rpl.RPL.model.SubmissionStatus.PROCESSING;
+
 import com.example.rpl.RPL.controller.dto.ActivitySubmissionResponseDTO;
+import com.example.rpl.RPL.controller.dto.ActivitySubmissionResultResponseDTO;
 import com.example.rpl.RPL.controller.dto.SubmissionResultRequestDTO;
 import com.example.rpl.RPL.controller.dto.UpdateSubmissionStatusRequestDTO;
 import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.IOTest;
+import com.example.rpl.RPL.model.TestRun;
 import com.example.rpl.RPL.model.UnitTest;
 import com.example.rpl.RPL.queue.IProducer;
+import com.example.rpl.RPL.repository.TestRunRepository;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.SubmissionService;
@@ -38,12 +45,17 @@ public class SubmissionController {
     private TestService testService;
     private final IProducer activitySubmissionQueueProducer;
 
+    private TestRunRepository testRunRepository;
+
+
     @Autowired
     public SubmissionController(SubmissionService submissionService,
-        TestService testService, IProducer activitySubmissionQueueProducer) {
+        TestService testService, IProducer activitySubmissionQueueProducer,
+        TestRunRepository testRunRepository) {
         this.submissionService = submissionService;
         this.testService = testService;
         this.activitySubmissionQueueProducer = activitySubmissionQueueProducer;
+        this.testRunRepository = testRunRepository;
     }
 
     @GetMapping(value = "/api/submissions/{submissionId}")
@@ -94,7 +106,7 @@ public class SubmissionController {
 
         ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
             .fromEntity(as, Optional.empty(), List.of());
-        return new ResponseEntity<>(asDto, HttpStatus.OK);
+        return new ResponseEntity<>(asDto, HttpStatus.CREATED);
     }
 
 
@@ -125,4 +137,30 @@ public class SubmissionController {
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @GetMapping(value = "/api/submissions/{submissionId}/result")
+    public ResponseEntity<ActivitySubmissionResultResponseDTO> getSubmissionResult(
+        @PathVariable Long submissionId) {
+        log.error("SUBMISSION ID ID: {}", submissionId);
+
+        ActivitySubmission as = submissionService.getActivitySubmission(submissionId);
+
+        if (List.of(PENDING, ENQUEUED, PROCESSING).contains(as.getStatus())) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        TestRun run = testRunRepository.findByActivitySubmission_Id(submissionId);
+
+//        GET UNIT TESTS
+        Optional<UnitTest> unitTest = testService.getUnitTests(as.getActivity().getId());
+
+//        GET IO TESTSS
+        List<IOTest> ioTests = testService.getAllIOTests(as.getActivity().getId());
+
+        ActivitySubmissionResultResponseDTO asDto = ActivitySubmissionResultResponseDTO
+            .fromEntity(as, unitTest, ioTests, run);
+
+        return new ResponseEntity<>(asDto, HttpStatus.OK);
+    }
+
 }

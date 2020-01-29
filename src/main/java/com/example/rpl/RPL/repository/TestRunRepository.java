@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TestRunRepository extends JpaRepository<TestRun, Long> {
 
+    TestRun findByActivitySubmission_Id(Long activitySubmissionId);
 }
