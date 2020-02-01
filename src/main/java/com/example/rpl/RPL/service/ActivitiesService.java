@@ -2,7 +2,6 @@ package com.example.rpl.RPL.service;
 
 import static java.time.ZonedDateTime.now;
 
-import com.example.rpl.RPL.exception.BadRequestException;
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.Activity;
@@ -14,13 +13,11 @@ import com.example.rpl.RPL.repository.ActivityCategoryRepository;
 import com.example.rpl.RPL.repository.ActivityRepository;
 import com.example.rpl.RPL.repository.CourseRepository;
 import com.example.rpl.RPL.repository.FileRepository;
-import java.io.IOException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -52,7 +49,7 @@ public class ActivitiesService {
     @Transactional
     public Activity createActivity(Long courseId, Long activityCategoryId, String name,
         String description, String language,
-        Boolean active, MultipartFile supportingFile) {
+        Boolean active, String initialCode, byte[] supportingFilesBytes) {
 
         Course course = courseRepository.findById(courseId).orElseThrow(
             () -> new NotFoundException("Course not found",
@@ -60,27 +57,22 @@ public class ActivitiesService {
 
         ActivityCategory activityCategory = activityCategoryRepository.findById(activityCategoryId)
             .orElseThrow(
-                () -> new NotFoundException("Activity Category not found",
-                    "activityCategory_not_found"));
+                () -> new NotFoundException("Category not found",
+                    "category_not_found"));
 
-        try {
-            RPLFile file = new RPLFile(String.format("%s_%d_%s", now().toString(), courseId, name),
-                supportingFile.getContentType(), supportingFile.getBytes());
+        RPLFile file = new RPLFile(
+            String.format("%s_%d_%s.tar.gz", now().toString(), courseId, name),
+            "application/gzip", supportingFilesBytes);
 
-            fileRepository.save(file);
+        fileRepository.save(file);
 
-            Activity activity = new Activity(course, activityCategory, name, description,
-                Language.getByName(language), file);
+        Activity activity = new Activity(course, activityCategory, name, description,
+            Language.getByName(language), initialCode, file);
 
-            activityRepository.save(activity);
+        activityRepository.save(activity);
 
-            return activity;
-        } catch (IOException e) {
-            log.error("ERROR OBTENIENDO LOS BYTES DEL archivo");
-            log.error(e.getMessage());
-            throw new BadRequestException("Error obteniendo los bytes del archivo",
-                "bad_file");
-        }
+        return activity;
+
     }
 
     public List<Activity> getAllActivitiesByCourse(Long courseId) {
@@ -89,5 +81,11 @@ public class ActivitiesService {
                 "course_not_found"));
 
         return activityRepository.findActivitiesByCourse(course);
+    }
+
+    public Activity getActivity(Long activityId) {
+        return activityRepository.findById(activityId)
+            .orElseThrow(() -> new NotFoundException("Activity not found",
+                "activity_not_found"));
     }
 }

@@ -1,16 +1,24 @@
 package com.example.rpl.RPL.controller;
 
+import static com.example.rpl.RPL.model.SubmissionStatus.ENQUEUED;
+import static com.example.rpl.RPL.model.SubmissionStatus.PENDING;
+import static com.example.rpl.RPL.model.SubmissionStatus.PROCESSING;
+
 import com.example.rpl.RPL.controller.dto.ActivitySubmissionResponseDTO;
+import com.example.rpl.RPL.controller.dto.ActivitySubmissionResultResponseDTO;
 import com.example.rpl.RPL.controller.dto.SubmissionResultRequestDTO;
 import com.example.rpl.RPL.controller.dto.UpdateSubmissionStatusRequestDTO;
 import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.IOTest;
+import com.example.rpl.RPL.model.TestRun;
 import com.example.rpl.RPL.model.UnitTest;
 import com.example.rpl.RPL.queue.IProducer;
+import com.example.rpl.RPL.repository.TestRunRepository;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.SubmissionService;
 import com.example.rpl.RPL.service.TestService;
+import com.example.rpl.RPL.utils.TarUtils;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -37,12 +45,17 @@ public class SubmissionController {
     private TestService testService;
     private final IProducer activitySubmissionQueueProducer;
 
+    private TestRunRepository testRunRepository;
+
+
     @Autowired
     public SubmissionController(SubmissionService submissionService,
-        TestService testService, IProducer activitySubmissionQueueProducer) {
+        TestService testService, IProducer activitySubmissionQueueProducer,
+        TestRunRepository testRunRepository) {
         this.submissionService = submissionService;
         this.testService = testService;
         this.activitySubmissionQueueProducer = activitySubmissionQueueProducer;
+        this.testRunRepository = testRunRepository;
     }
 
     @GetMapping(value = "/api/submissions/{submissionId}")
@@ -71,12 +84,15 @@ public class SubmissionController {
         @PathVariable Long courseId, @PathVariable Long activityId,
         @RequestParam(value = "description", required = false, defaultValue = "default description") String description,
         // Si bien ahora no se usa, puede servir para mandar metadata sobre el comprimido con los archivos
-        @RequestParam("file") MultipartFile file) {
+        @RequestParam("file") MultipartFile[] files) {
         log.info("COURSE ID: {}", courseId);
         log.info("ACTIVITY ID: {}", activityId);
 
+        byte[] compressedFilesBytes = TarUtils.compressToTarGz(files);
+
         ActivitySubmission as = submissionService
-            .create(currentUser.getUser(), courseId, activityId, description, file);
+            .createSubmission(currentUser.getUser(), courseId, activityId, description,
+                compressedFilesBytes);
 
         // Submit submission ID to queue
         try {
@@ -90,8 +106,9 @@ public class SubmissionController {
 
         ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
             .fromEntity(as, Optional.empty(), List.of());
-        return new ResponseEntity<>(asDto, HttpStatus.OK);
+        return new ResponseEntity<>(asDto, HttpStatus.CREATED);
     }
+
 
     @PutMapping(value = "/api/submissions/{submissionId}")
     public ResponseEntity<ActivitySubmissionResponseDTO> updateSubmissionStatus(
@@ -121,47 +138,30 @@ public class SubmissionController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-//     * DEJO ESTO ACA SOLO EN CASO DE QUE LO NECESITEMOS PORUQE LO PROBE Y FUNCIONA
+    @GetMapping(value = "/api/submissions/{submissionId}/result")
+    public ResponseEntity<ActivitySubmissionResultResponseDTO> getSubmissionResult(
+        @PathVariable Long submissionId) {
+        log.error("SUBMISSION ID ID: {}", submissionId);
 
-//    /**
-//     * @param descriptions
-//     * @param files
-//     * @return
-//     */
-//    @PostMapping(value = "/api/uploadMultipleFiles")
-//    public String uploadMultipleFiles(@RequestParam("description") String[] descriptions,
-//        @RequestParam("file") MultipartFile[] files) {
-//
-//        if (files.length != descriptions.length) {
-//            return "Mismatching no of files are equal to description";
-//        }
-//
-//        String status = "";
-//        File dir = new File("/home/alepox/Desktop/pruebita_upload_files");
-//        for (int i = 0; i < files.length; i++) {
-//            MultipartFile file = files[i];
-//            String description = descriptions[i];
-//            try {
-//                byte[] bytes = file.getBytes();
-//
-//                if (!dir.exists()) {
-//                    dir.mkdirs();
-//                }
-//
-//                File uploadFile = new File(dir.getAbsolutePath()
-//                    + File.separator + file.getOriginalFilename());
-//                BufferedOutputStream outputStream = new BufferedOutputStream(
-//                    new FileOutputStream(uploadFile));
-//                outputStream.write(bytes);
-//                outputStream.close();
-//
-//                status = status + "You successfully uploaded file=" + file.getOriginalFilename();
-//            } catch (Exception e) {
-//                status = status + "Failed to upload " + file.getOriginalFilename() + " " + e
-//                    .getMessage();
-//            }
-//        }
-//        return status;
-//    }
+        ActivitySubmission as = submissionService.getActivitySubmission(submissionId);
+
+        if (List.of(PENDING, ENQUEUED, PROCESSING).contains(as.getStatus())) {
+            return new ResponseEntity<>(ActivitySubmissionResultResponseDTO.builder()
+                .submissionStatus(as.getStatus().name()).build(), HttpStatus.NOT_FOUND);
+        }
+
+        TestRun run = testRunRepository.findByActivitySubmission_Id(submissionId);
+
+//        GET UNIT TESTS
+        Optional<UnitTest> unitTest = testService.getUnitTests(as.getActivity().getId());
+
+//        GET IO TESTSS
+        List<IOTest> ioTests = testService.getAllIOTests(as.getActivity().getId());
+
+        ActivitySubmissionResultResponseDTO asDto = ActivitySubmissionResultResponseDTO
+            .fromEntity(as, unitTest, ioTests, run);
+
+        return new ResponseEntity<>(asDto, HttpStatus.OK);
+    }
 
 }

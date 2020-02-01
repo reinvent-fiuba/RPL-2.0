@@ -105,6 +105,7 @@ CREATE TABLE activities
     description          VARCHAR(255),
     language             VARCHAR(255),
     active               BOOLEAN,
+    initial_code         varchar(20000),
     supporting_file_id   BIGINT,
     date_created         DATETIME,
     last_updated         DATETIME,

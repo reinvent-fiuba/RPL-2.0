@@ -78,7 +78,7 @@ class SubmissionServiceSpec extends Specification {
             activityRepository.findById(_ as Long) >> Optional.of(a)
 
         when: "creating a submission"
-            ActivitySubmission aSub = submissionService.create(user, 1, 1, "bla", new MockMultipartFile("mockfile"))
+            ActivitySubmission aSub = submissionService.createSubmission(user, 1, 1, "bla", new MockMultipartFile("mockfile").getBytes())
 
         then:
             1 * fileRepository.save(_ as RPLFile) >> { RPLFile f -> return f }
@@ -94,29 +94,11 @@ class SubmissionServiceSpec extends Specification {
             activityRepository.findById(_ as Long) >> Optional.empty()
 
         when: "creating a submission"
-            submissionService.create(user, 1, 1, "bla", new MockMultipartFile("mockfile"))
+            submissionService.createSubmission(user, 1, 1, "bla", new MockMultipartFile("mockfile").getBytes())
 
         then:
             NotFoundException e = thrown(NotFoundException)
             assert e.getError() == "activity_not_found"
-    }
-
-    void "createSubmission should throw BadRequestException when MultipartFile is corrupted"() {
-        given: "an activity"
-            Activity a = new Activity()
-            activityRepository.findById(_ as Long) >> Optional.of(a)
-
-        and: "a corrupted MultiPartFile"
-            MultipartFile f = Mock(MultipartFile)
-            f.getBytes() >> { throw new IOException() }
-
-
-        when: "creating a submission"
-            submissionService.create(user, 1, 1, "bla", f)
-
-        then:
-            BadRequestException e = thrown(BadRequestException)
-            assert e.getError() == "bad_file"
     }
 
     @Unroll

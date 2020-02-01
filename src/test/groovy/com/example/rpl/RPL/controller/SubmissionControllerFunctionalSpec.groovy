@@ -9,8 +9,7 @@ import org.springframework.test.context.ActiveProfiles
 import spock.lang.Shared
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND
-import static javax.servlet.http.HttpServletResponse.SC_OK
+import static javax.servlet.http.HttpServletResponse.*
 
 @ActiveProfiles("test-functional")
 class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
@@ -122,6 +121,7 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
                 "Activity 1",
                 "An activity",
                 Language.C,
+                "//initial code",
                 supportingActivityFile
         )
         activityRepository.save(activity)
@@ -215,13 +215,13 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         then:
             response.contentType == "application/json"
-            response.statusCode == SC_OK
+            response.statusCode == SC_CREATED
 
             def result = getJsonResponse(response)
 
             assert result.id != null
             assert result.submission_file_name != null
-            assert result.submission_file_type == "application/octet-stream"
+            assert result.submission_file_type == "application/gzip"
             assert result.submission_file_id != null
             assert result.activity_supporting_file_name == "supporting_file"
             assert result.activity_supporting_file_type == "text"
