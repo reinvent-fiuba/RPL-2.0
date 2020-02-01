@@ -146,7 +146,8 @@ public class SubmissionController {
         ActivitySubmission as = submissionService.getActivitySubmission(submissionId);
 
         if (List.of(PENDING, ENQUEUED, PROCESSING).contains(as.getStatus())) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ActivitySubmissionResultResponseDTO.builder()
+                .submissionStatus(as.getStatus().name()).build(), HttpStatus.NOT_FOUND);
         }
 
         TestRun run = testRunRepository.findByActivitySubmission_Id(submissionId);
