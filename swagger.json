@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:38633",
+    "host": "localhost:45469",
     "basePath": "/",
     "tags": [
         {
@@ -1765,6 +1765,44 @@
             }
         },
         "/api/submissions/{submissionId}/result": {
+            "get": {
+                "tags": [
+                    "submission-controller"
+                ],
+                "summary": "getSubmissionResult",
+                "operationId": "getSubmissionResultUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "submissionId",
+                        "in": "path",
+                        "description": "submissionId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ActivitySubmissionResultResponseDTO"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden!!!!!"
+                    },
+                    "500": {
+                        "description": "500 message",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            },
             "post": {
                 "tags": [
                     "submission-controller"
@@ -2119,6 +2157,63 @@
                 }
             },
             "title": "ActivitySubmissionResponseDTO"
+        },
+        "ActivitySubmissionResultResponseDTO": {
+            "type": "object",
+            "properties": {
+                "activity_iotests": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "activity_language": {
+                    "type": "string"
+                },
+                "activity_supporting_file_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "activity_supporting_file_name": {
+                    "type": "string"
+                },
+                "activity_supporting_file_type": {
+                    "type": "string"
+                },
+                "activity_test_type": {
+                    "type": "string"
+                },
+                "activity_unit_tests": {
+                    "type": "string"
+                },
+                "exit_message": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "stderr": {
+                    "type": "string"
+                },
+                "stdout": {
+                    "type": "string"
+                },
+                "submission_file_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "submission_file_name": {
+                    "type": "string"
+                },
+                "submission_file_type": {
+                    "type": "string"
+                },
+                "submission_status": {
+                    "type": "string"
+                }
+            },
+            "title": "ActivitySubmissionResultResponseDTO"
         },
         "CourseResponseDTO": {
             "type": "object",

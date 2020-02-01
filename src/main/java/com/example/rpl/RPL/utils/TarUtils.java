@@ -1,16 +1,10 @@
 package com.example.rpl.RPL.utils;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 public class TarUtils {
@@ -19,87 +13,9 @@ public class TarUtils {
 
     }
 
-    public static void compress(String name, File[] files) throws IOException {
-        try (TarArchiveOutputStream out = getTarArchiveOutputStream(name)) {
-            for (File file : files) {
-                addToArchiveCompression(out, file, ".");
-            }
-        }
-    }
-
-    public static void decompress(String in, File out) throws IOException {
-        try (TarArchiveInputStream fin = new TarArchiveInputStream(new FileInputStream(in))) {
-            TarArchiveEntry entry;
-            while ((entry = fin.getNextTarEntry()) != null) {
-                if (entry.isDirectory()) {
-                    continue;
-                }
-                File curfile = new File(out, entry.getName());
-                File parent = curfile.getParentFile();
-                if (!parent.exists()) {
-                    parent.mkdirs();
-                }
-                IOUtils.copy(fin, new FileOutputStream(curfile));
-            }
-        }
-    }
-
-    private static TarArchiveOutputStream getTarArchiveOutputStream(String name)
-        throws IOException {
-        TarArchiveOutputStream taos = new TarArchiveOutputStream(new FileOutputStream(name));
-        // TAR has an 8 gig file limit by default, this gets around that
-        taos.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_STAR);
-        // TAR originally didn't support long file names, so enable the support for it
-        taos.setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU);
-        taos.setAddPaxHeadersForNonAsciiNames(true);
-        return taos;
-    }
-
-    private static void addToArchiveCompression(TarArchiveOutputStream out, File file, String dir)
-        throws IOException {
-        String entry = dir + File.separator + file.getName();
-        if (file.isFile()) {
-            out.putArchiveEntry(new TarArchiveEntry(file, entry));
-            try (FileInputStream in = new FileInputStream(file)) {
-                IOUtils.copy(in, out);
-            }
-            out.closeArchiveEntry();
-        } else if (file.isDirectory()) {
-            File[] children = file.listFiles();
-            if (children != null) {
-                for (File child : children) {
-                    addToArchiveCompression(out, child, entry);
-                }
-            }
-        } else {
-            System.err.println(file.getName() + " is not supported");
-        }
-    }
-
-    private static byte[] gzipCompress(byte[] uncompressedData) {
-        byte[] result = new byte[]{};
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream(uncompressedData.length);
-            GZIPOutputStream gzipOS = new GZIPOutputStream(bos)) {
-            gzipOS.write(uncompressedData);
-            // You need to close it before using bos
-            gzipOS.close();
-            result = bos.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
 
     // Based on https://stackoverflow.com/questions/27866976/how-do-i-create-a-tar-or-tar-gz-archive-entirely-from-objects-in-memory-no-file
     public static byte[] compressToTarGz(MultipartFile[] files) {
-
-//        try (TarArchiveOutputStream gzOut = new TarArchiveOutputStream(
-//            new GZIPOutputStream(
-//                new BufferedOutputStream(
-//                    new FileOutputStream("/tmp/mytest.tar.gz")
-//                )))) {
-
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         TarArchiveOutputStream gzOut = null;
         try {
@@ -114,7 +30,7 @@ public class TarUtils {
             gzOut = new TarArchiveOutputStream(
                 new GZIPOutputStream(
 //                    new BufferedOutputStream(
-                        bos
+                    bos
 //                    )
                 ));
 

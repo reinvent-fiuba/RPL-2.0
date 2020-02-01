@@ -9,8 +9,7 @@ import org.springframework.test.context.ActiveProfiles
 import spock.lang.Shared
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND
-import static javax.servlet.http.HttpServletResponse.SC_OK
+import static javax.servlet.http.HttpServletResponse.*
 
 @ActiveProfiles("test-functional")
 class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
@@ -216,7 +215,7 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         then:
             response.contentType == "application/json"
-            response.statusCode == SC_OK
+            response.statusCode == SC_CREATED
 
             def result = getJsonResponse(response)
 
