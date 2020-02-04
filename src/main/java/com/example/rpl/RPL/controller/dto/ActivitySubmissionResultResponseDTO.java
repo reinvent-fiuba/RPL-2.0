@@ -5,7 +5,6 @@ import com.example.rpl.RPL.model.IOTest;
 import com.example.rpl.RPL.model.TestRun;
 import com.example.rpl.RPL.model.UnitTest;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,7 +46,7 @@ public class ActivitySubmissionResultResponseDTO {
     private String stdout;
 
     public static ActivitySubmissionResultResponseDTO fromEntity(ActivitySubmission as,
-        Optional<UnitTest> unitTest,
+        UnitTest unitTest,
         List<IOTest> ioTests, TestRun run) {
         ActivitySubmissionResultResponseDTO.ActivitySubmissionResultResponseDTOBuilder ab = ActivitySubmissionResultResponseDTO
             .builder()
@@ -61,8 +60,9 @@ public class ActivitySubmissionResultResponseDTO {
             .activityLanguage(as.getActivity().getLanguage().getNameAndVersion())
             .activityUnitTests("");
 
-        unitTest.ifPresent(test -> ab.activityUnitTests = new String(test.getTestFile().getData()));
-
+        if (unitTest != null) {
+            ab.activityUnitTests(new String(unitTest.getTestFile().getData()));
+        }
         ab.activityIOTests(ioTests.stream().map(IOTest::getTestIn).collect(Collectors.toList()));
 
         ab.submissionStatus(as.getStatus().name())

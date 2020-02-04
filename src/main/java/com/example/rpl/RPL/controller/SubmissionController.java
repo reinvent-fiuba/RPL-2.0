@@ -20,7 +20,6 @@ import com.example.rpl.RPL.service.SubmissionService;
 import com.example.rpl.RPL.service.TestService;
 import com.example.rpl.RPL.utils.TarUtils;
 import java.util.List;
-import java.util.Optional;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.AmqpConnectException;
@@ -66,7 +65,7 @@ public class SubmissionController {
         ActivitySubmission as = submissionService.getActivitySubmission(submissionId);
 
 //        GET UNIT TESTS
-        Optional<UnitTest> unitTest = testService.getUnitTests(as.getActivity().getId());
+        UnitTest unitTest = testService.getUnitTests(as.getActivity().getId());
 
 //        GET IO TESTSS
         List<IOTest> ioTests = testService.getAllIOTests(as.getActivity().getId());
@@ -105,7 +104,7 @@ public class SubmissionController {
         }
 
         ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
-            .fromEntity(as, Optional.empty(), List.of());
+            .fromEntity(as, null, List.of());
         return new ResponseEntity<>(asDto, HttpStatus.CREATED);
     }
 
@@ -118,7 +117,7 @@ public class SubmissionController {
             .updateSubmissionStatus(submissionId, updateSubmissionStatusRequestDTO.getStatus());
 
         ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
-            .fromEntity(activitySubmission, Optional.empty(), List.of());
+            .fromEntity(activitySubmission, null, List.of());
         return new ResponseEntity<>(asDto, HttpStatus.OK);
     }
 
@@ -153,7 +152,7 @@ public class SubmissionController {
         TestRun run = testRunRepository.findByActivitySubmission_Id(submissionId);
 
 //        GET UNIT TESTS
-        Optional<UnitTest> unitTest = testService.getUnitTests(as.getActivity().getId());
+        UnitTest unitTest = testService.getUnitTests(as.getActivity().getId());
 
 //        GET IO TESTSS
         List<IOTest> ioTests = testService.getAllIOTests(as.getActivity().getId());

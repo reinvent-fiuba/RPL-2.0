@@ -59,4 +59,10 @@ public class IOTest {
         this.dateCreated = ZonedDateTime.now();
         this.lastUpdated = this.dateCreated;
     }
+
+    public void update(String in, String out) {
+        this.testIn = in;
+        this.testOut = out;
+        this.lastUpdated = ZonedDateTime.now();
+    }
 }

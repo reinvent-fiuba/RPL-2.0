@@ -1,15 +1,16 @@
 package com.example.rpl.RPL.service;
 
+import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.IOTest;
 import com.example.rpl.RPL.model.UnitTest;
 import com.example.rpl.RPL.repository.IOTestRepository;
 import com.example.rpl.RPL.repository.UnitTestRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -30,8 +31,8 @@ public class TestService {
         return iOTestRepository.findAllByActivityId(activityId);
     }
 
-    public Optional<UnitTest> getUnitTests(Long activityId) {
-        return unitTestsRepository.findByActivityId(activityId);
+    public UnitTest getUnitTests(Long activityId) {
+        return unitTestsRepository.findByActivityId(activityId).orElse(null);
     }
 
 
@@ -84,5 +85,28 @@ public class TestService {
             }
         }
         return results;
+    }
+
+    @Transactional
+    public IOTest createUnitTest(Long activityId, String in, String out) {
+        IOTest ioTest = new IOTest(activityId, in, out);
+
+        return iOTestRepository.save(ioTest);
+    }
+
+    @Transactional
+    public IOTest updateUnitTest(Long ioTestId, String in, String out) {
+        IOTest ioTest = iOTestRepository.findById(ioTestId)
+            .orElseThrow(() -> new NotFoundException("IO test not found",
+                "iotest_not_found"));
+
+        ioTest.update(in, out);
+
+        return iOTestRepository.save(ioTest);
+    }
+
+    @Transactional
+    public void deleteUnitTest(Long ioTestId) {
+        iOTestRepository.deleteById(ioTestId);
     }
 }
