@@ -20,6 +20,7 @@ import com.example.rpl.RPL.service.SubmissionService;
 import com.example.rpl.RPL.service.TestService;
 import com.example.rpl.RPL.utils.TarUtils;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.AmqpConnectException;
@@ -161,6 +162,34 @@ public class SubmissionController {
             .fromEntity(as, unitTest, ioTests, run);
 
         return new ResponseEntity<>(asDto, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/api/courses/{courseId}/activities/{activityId}/submissions")
+    public ResponseEntity<List<ActivitySubmissionResultResponseDTO>> getAllSubmissionResults(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId, @PathVariable Long activityId) {
+        log.error("COURSE ID: {}", courseId);
+        log.error("ACTIVITY ID: {}", activityId);
+
+        List<ActivitySubmission> submissions = submissionService
+            .getAllSubmissionsByUserAndActivityId(currentUser.getUser(), activityId);
+
+        List<ActivitySubmissionResultResponseDTO> response = submissions.stream()
+            .map(as -> {
+                TestRun run = testRunRepository.findByActivitySubmission_Id(as.getId());
+
+//        GET UNIT TESTS
+                UnitTest unitTest = testService.getUnitTests(as.getActivity().getId());
+
+//        GET IO TESTSS
+                List<IOTest> ioTests = testService.getAllIOTests(as.getActivity().getId());
+
+                return ActivitySubmissionResultResponseDTO
+                    .fromEntity(as, unitTest, ioTests, run);
+
+            }).collect(Collectors.toList());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

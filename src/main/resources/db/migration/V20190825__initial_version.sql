@@ -84,13 +84,13 @@ CREATE TABLE rpl_files
 
 CREATE TABLE activity_categories
 (
-    id                 BIGINT NOT NULL AUTO_INCREMENT,
-    course_id          BIGINT,
-    name               VARCHAR(255),
-    description        VARCHAR(255),
-    active             BOOLEAN,
-    date_created       DATETIME,
-    last_updated       DATETIME,
+    id           BIGINT NOT NULL AUTO_INCREMENT,
+    course_id    BIGINT,
+    name         VARCHAR(255),
+    description  VARCHAR(255),
+    active       BOOLEAN,
+    date_created DATETIME,
+    last_updated DATETIME,
 
     PRIMARY KEY (id),
     FOREIGN KEY (course_id) REFERENCES courses (id)
@@ -191,11 +191,26 @@ CREATE TABLE IO_tests
 (
     id           BIGINT NOT NULL AUTO_INCREMENT,
     activity_id  BIGINT,
-    test_in      VARCHAR(255),
-    test_out     VARCHAR(255),
+    test_in      VARCHAR(5000),
+    test_out     VARCHAR(5000),
     date_created DATETIME,
     last_updated DATETIME,
 
     PRIMARY KEY (id),
     FOREIGN KEY (activity_id) REFERENCES activities (id)
 ) ENGINE = InnoDB;
+
+CREATE TABLE io_test_run
+(
+    id              BIGINT NOT NULL AUTO_INCREMENT,
+    test_run_id     BIGINT,
+    test_in         VARCHAR(5000),
+    expected_output VARCHAR(5000),
+    run_output      VARCHAR(5000),
+    date_created    DATETIME,
+    last_updated    DATETIME,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (test_run_id) REFERENCES test_run (id)
+) ENGINE = InnoDB;
+

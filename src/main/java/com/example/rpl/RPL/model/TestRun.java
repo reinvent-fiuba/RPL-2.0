@@ -1,6 +1,7 @@
 package com.example.rpl.RPL.model;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
@@ -52,6 +54,9 @@ public class TestRun {
     @Basic(optional = false)
     @Column(name = "stdout")
     private String stdout;
+
+    @OneToMany(mappedBy = "testRun", fetch = FetchType.LAZY)
+    private List<IOTestRun> ioTestRunList;
 
     @Column(name = "date_created")
     private ZonedDateTime dateCreated;

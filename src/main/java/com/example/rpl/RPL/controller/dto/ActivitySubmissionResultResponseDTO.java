@@ -6,6 +6,7 @@ import com.example.rpl.RPL.model.TestRun;
 import com.example.rpl.RPL.model.UnitTest;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -35,15 +36,15 @@ public class ActivitySubmissionResultResponseDTO {
 
     private List<String> activityIOTests;
 
-
     private String submissionStatus;
-
 
     private String exitMessage;
 
     private String stderr;
 
     private String stdout;
+
+    private List<IOTestRunResultDTO> ioTestRunResults;
 
     public static ActivitySubmissionResultResponseDTO fromEntity(ActivitySubmission as,
         UnitTest unitTest,
@@ -70,6 +71,21 @@ public class ActivitySubmissionResultResponseDTO {
             .stderr(run.getStderr())
             .stdout(run.getStdout());
 
+        ab.ioTestRunResults(run.getIoTestRunList().stream().map(
+            r -> new IOTestRunResultDTO(r.getId(), r.getTestIn(), r.getExpectedOutput(),
+                r.getRunOutput())).collect(
+            Collectors.toList()));
+
         return ab.build();
+    }
+
+    @Getter
+    @AllArgsConstructor
+    private static class IOTestRunResultDTO {
+
+        private String id;
+        private String testIn;
+        private String expectedOutput;
+        private String runOutput;
     }
 }

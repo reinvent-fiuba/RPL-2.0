@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface SubmissionRepository extends JpaRepository<ActivitySubmission, Long> {
 
     List<ActivitySubmission> findAllByUserAndActivityIn(User user, List<Activity> activities);
+
+    List<ActivitySubmission> findAllByUserAndActivity_Id(User user, Long activityId);
 }
