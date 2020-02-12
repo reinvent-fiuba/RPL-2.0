@@ -4,6 +4,7 @@ import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.IOTest;
 import com.example.rpl.RPL.model.TestRun;
 import com.example.rpl.RPL.model.UnitTest;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -46,6 +47,8 @@ public class ActivitySubmissionResultResponseDTO {
 
     private List<IOTestRunResultDTO> ioTestRunResults;
 
+    private ZonedDateTime submissionDate;
+
     public static ActivitySubmissionResultResponseDTO fromEntity(ActivitySubmission as,
         UnitTest unitTest,
         List<IOTest> ioTests, TestRun run) {
@@ -59,7 +62,8 @@ public class ActivitySubmissionResultResponseDTO {
             .activitySupportingFileType(as.getActivity().getSupportingFile().getFileType())
             .activitySupportingFileId(as.getActivity().getSupportingFile().getId())
             .activityLanguage(as.getActivity().getLanguage().getNameAndVersion())
-            .activityUnitTests("");
+            .activityUnitTests("")
+            .submissionDate(as.getDateCreated());
 
         if (unitTest != null) {
             ab.activityUnitTests(new String(unitTest.getTestFile().getData()));
