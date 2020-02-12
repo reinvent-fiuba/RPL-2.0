@@ -63,6 +63,7 @@ public class ActivitySubmissionResultResponseDTO {
             .activitySupportingFileId(as.getActivity().getSupportingFile().getId())
             .activityLanguage(as.getActivity().getLanguage().getNameAndVersion())
             .activityUnitTests("")
+            .submissionStatus(as.getStatus().name())
             .submissionDate(as.getDateCreated());
 
         if (unitTest != null) {
@@ -70,16 +71,17 @@ public class ActivitySubmissionResultResponseDTO {
         }
         ab.activityIOTests(ioTests.stream().map(IOTest::getTestIn).collect(Collectors.toList()));
 
-        ab.submissionStatus(as.getStatus().name())
-            .exitMessage(run.getExitMessage())
-            .stderr(run.getStderr())
-            .stdout(run.getStdout());
+        if (run != null) {
+            ab.exitMessage(run.getExitMessage())
+                .stderr(run.getStderr())
+                .stdout(run.getStdout());
+
 
         ab.ioTestRunResults(run.getIoTestRunList().stream().map(
             r -> new IOTestRunResultDTO(r.getId(), r.getTestIn(), r.getExpectedOutput(),
                 r.getRunOutput())).collect(
             Collectors.toList()));
-
+        }
         return ab.build();
     }
 
