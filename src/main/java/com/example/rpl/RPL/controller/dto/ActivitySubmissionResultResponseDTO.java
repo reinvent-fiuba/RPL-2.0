@@ -89,7 +89,7 @@ public class ActivitySubmissionResultResponseDTO {
     @AllArgsConstructor
     private static class IOTestRunResultDTO {
 
-        private String id;
+        private Long id;
         private String testIn;
         private String expectedOutput;
         private String runOutput;

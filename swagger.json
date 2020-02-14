@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:45469",
+  "host": "localhost:33917",
     "basePath": "/",
     "tags": [
         {
@@ -1234,10 +1234,758 @@
                         }
                     }
                 },
+              "deprecated": false
+            }
+        },
+      "/api/courses/{courseId}/activities/{activityId}/iotests": {
+        "post": {
+          "tags": [
+            "activities-controller"
+          ],
+          "summary": "createIOTestCase",
+          "operationId": "createIOTestCaseUsingPOST",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "*/*"
+          ],
+          "parameters": [
+            {
+              "name": "accountNonExpired",
+              "in": "query",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "accountNonLocked",
+              "in": "query",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "activityId",
+              "in": "path",
+              "description": "activityId",
+              "required": true,
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "name": "authorities[0].authority",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "courseId",
+              "in": "path",
+              "description": "courseId",
+              "required": true,
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "in": "body",
+              "name": "createIOTestRequestDTO",
+              "description": "createIOTestRequestDTO",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/CreateIOTestRequestDTO"
+              }
+            },
+            {
+              "name": "credentialsNonExpired",
+              "in": "query",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "email",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "enabled",
+              "in": "query",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "id",
+              "in": "query",
+              "required": false,
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "name": "name",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "password",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.dateCreated",
+              "in": "query",
+              "required": false,
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "name": "user.degree",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.email",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.emailValidated",
+              "in": "query",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "user.id",
+              "in": "query",
+              "required": false,
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "name": "user.lastUpdated",
+              "in": "query",
+              "required": false,
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "name": "user.name",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.password",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.studentId",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.surname",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.university",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.username",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "username",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/IOTestResponseDTO"
+              }
+            }
+          },
+          "deprecated": false
+        }
+      },
+      "/api/courses/{courseId}/activities/{activityId}/iotests/{ioTestId}": {
+        "put": {
+          "tags": [
+            "activities-controller"
+          ],
+          "summary": "updateIOTestCase",
+          "operationId": "updateIOTestCaseUsingPUT",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "*/*"
+          ],
+          "parameters": [
+            {
+              "name": "accountNonExpired",
+              "in": "query",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "accountNonLocked",
+              "in": "query",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "activityId",
+              "in": "path",
+              "description": "activityId",
+              "required": true,
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "name": "authorities[0].authority",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "courseId",
+              "in": "path",
+              "description": "courseId",
+              "required": true,
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "in": "body",
+              "name": "createIOTestRequestDTO",
+              "description": "createIOTestRequestDTO",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/CreateIOTestRequestDTO"
+              }
+            },
+            {
+              "name": "credentialsNonExpired",
+              "in": "query",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "email",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "enabled",
+              "in": "query",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "id",
+              "in": "query",
+              "required": false,
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "name": "ioTestId",
+              "in": "path",
+              "description": "ioTestId",
+              "required": true,
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "name": "name",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "password",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.dateCreated",
+              "in": "query",
+              "required": false,
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "name": "user.degree",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.email",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.emailValidated",
+              "in": "query",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "user.id",
+              "in": "query",
+              "required": false,
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "name": "user.lastUpdated",
+              "in": "query",
+              "required": false,
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "name": "user.name",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.password",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.studentId",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.surname",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.university",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.username",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "username",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/IOTestResponseDTO"
+              }
+            }
+          },
+          "deprecated": false
+        },
+        "delete": {
+          "tags": [
+            "activities-controller"
+          ],
+          "summary": "deleteIOTestCase",
+          "operationId": "deleteIOTestCaseUsingDELETE",
+          "produces": [
+            "*/*"
+          ],
+          "parameters": [
+            {
+              "name": "accountNonExpired",
+              "in": "query",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "accountNonLocked",
+              "in": "query",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "activityId",
+              "in": "path",
+              "description": "activityId",
+              "required": true,
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "name": "authorities[0].authority",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "courseId",
+              "in": "path",
+              "description": "courseId",
+              "required": true,
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "name": "credentialsNonExpired",
+              "in": "query",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "email",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "enabled",
+              "in": "query",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "id",
+              "in": "query",
+              "required": false,
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "name": "ioTestId",
+              "in": "path",
+              "description": "ioTestId",
+              "required": true,
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "name": "name",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "password",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.dateCreated",
+              "in": "query",
+              "required": false,
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "name": "user.degree",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.email",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.emailValidated",
+              "in": "query",
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "name": "user.id",
+              "in": "query",
+              "required": false,
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "name": "user.lastUpdated",
+              "in": "query",
+              "required": false,
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "name": "user.name",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.password",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.studentId",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.surname",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.university",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "user.username",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "username",
+              "in": "query",
+              "required": false,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/ActivityResponseDTO"
+              }
+            }
+          },
                 "deprecated": false
             }
         },
         "/api/courses/{courseId}/activities/{activityId}/submissions": {
+          "get": {
+            "tags": [
+              "submission-controller"
+            ],
+            "summary": "getAllSubmissionResults",
+            "operationId": "getAllSubmissionResultsUsingGET",
+            "produces": [
+              "*/*"
+            ],
+            "parameters": [
+              {
+                "name": "accountNonExpired",
+                "in": "query",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "name": "accountNonLocked",
+                "in": "query",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "name": "activityId",
+                "in": "path",
+                "description": "activityId",
+                "required": true,
+                "type": "integer",
+                "format": "int64"
+              },
+              {
+                "name": "authorities[0].authority",
+                "in": "query",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "courseId",
+                "in": "path",
+                "description": "courseId",
+                "required": true,
+                "type": "integer",
+                "format": "int64"
+              },
+              {
+                "name": "credentialsNonExpired",
+                "in": "query",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "name": "email",
+                "in": "query",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "enabled",
+                "in": "query",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "name": "id",
+                "in": "query",
+                "required": false,
+                "type": "integer",
+                "format": "int64"
+              },
+              {
+                "name": "name",
+                "in": "query",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "password",
+                "in": "query",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "user.dateCreated",
+                "in": "query",
+                "required": false,
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "name": "user.degree",
+                "in": "query",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "user.email",
+                "in": "query",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "user.emailValidated",
+                "in": "query",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "name": "user.id",
+                "in": "query",
+                "required": false,
+                "type": "integer",
+                "format": "int64"
+              },
+              {
+                "name": "user.lastUpdated",
+                "in": "query",
+                "required": false,
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "name": "user.name",
+                "in": "query",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "user.password",
+                "in": "query",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "user.studentId",
+                "in": "query",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "user.surname",
+                "in": "query",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "user.university",
+                "in": "query",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "user.username",
+                "in": "query",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "username",
+                "in": "query",
+                "required": false,
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/ActivitySubmissionResultResponseDTO"
+                  }
+                }
+              },
+              "403": {
+                "description": "Forbidden!!!!!"
+              },
+              "500": {
+                "description": "500 message",
+                "schema": {
+                  "$ref": "#/definitions/Error"
+                }
+              }
+            },
+            "deprecated": false
+          },
             "post": {
                 "tags": [
                     "submission-controller"
@@ -2067,6 +2815,15 @@
                 "active": {
                     "type": "boolean"
                 },
+              "activity_iotests": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/IOTestResponseDTO"
+                }
+              },
+              "activity_unit_tests": {
+                "type": "string"
+              },
                 "category_description": {
                     "type": "string"
                 },
@@ -2193,12 +2950,22 @@
                     "type": "integer",
                     "format": "int64"
                 },
+              "io_test_run_results": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/IOTestRunResultDTO"
+                }
+              },
                 "stderr": {
                     "type": "string"
                 },
                 "stdout": {
                     "type": "string"
                 },
+              "submission_date": {
+                "type": "string",
+                "format": "date-time"
+              },
                 "submission_file_id": {
                     "type": "integer",
                     "format": "int64"
@@ -2272,6 +3039,22 @@
             },
             "title": "CreateCourseRequestDTO"
         },
+      "CreateIOTestRequestDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "text_in": {
+            "type": "string"
+          },
+          "text_out": {
+            "type": "string"
+          }
+        },
+        "title": "CreateIOTestRequestDTO"
+      },
         "CreateUserRequestDTO": {
             "type": "object",
             "properties": {
@@ -2365,6 +3148,41 @@
             },
             "title": "GrantedAuthority"
         },
+      "IOTestResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "in": {
+            "type": "string"
+          },
+          "out": {
+            "type": "string"
+          }
+        },
+        "title": "IOTestResponseDTO"
+      },
+      "IOTestRunResultDTO": {
+        "type": "object",
+        "properties": {
+          "expected_output": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "run_output": {
+            "type": "string"
+          },
+          "test_in": {
+            "type": "string"
+          }
+        },
+        "title": "IOTestRunResultDTO"
+      },
         "InputStream": {
             "type": "object",
             "title": "InputStream"
