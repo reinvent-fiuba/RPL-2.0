@@ -12,6 +12,8 @@ public interface CourseUserRepository extends JpaRepository<CourseUser, Long> {
 
     Optional<CourseUser> findByCourse_IdAndUser_Id(Long courseId, Long userId);
 
+    Long deleteByCourse_IdAndUser_Id(Long courseId, Long userId);
+
     List<CourseUser> findByUser_Id(Long userId);
 
     @Query("select case when count(cu)>0 then 'true' else 'false' end " +

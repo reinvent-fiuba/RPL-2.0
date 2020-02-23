@@ -79,11 +79,20 @@ public class CoursesController {
 
         CourseUser courseUser = coursesService.enrollInCourse(currentUser.getId(), courseId);
 
-
         return new ResponseEntity<>(
             RoleResponseDTO.fromEntity(courseUser.getRole()),
             HttpStatus.OK);
     }
+
+    @PostMapping(value = "/api/courses/{courseId}/unenroll")
+    public ResponseEntity<Void> unenrollInCourse(@CurrentUser UserPrincipal currentUser,
+                                                          @PathVariable Long courseId) {
+
+        coursesService.unenrollInCourse(currentUser.getId(), courseId);
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
 
     @GetMapping(value = "/api/users/{userId}/courses")
     public ResponseEntity<List<CourseResponseDTO>> getCoursesOfUser(

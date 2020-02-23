@@ -118,4 +118,23 @@ public class CoursesService {
 
         return courseUser;
     }
+
+    @Transactional
+    public void unenrollInCourse(Long currentUserId, Long courseId) {
+        Course course = courseRepository.findById(courseId).orElseThrow(
+            () -> new NotFoundException("Course not found",
+                "course_not_found"));
+
+        User user = userRepository.findById(currentUserId).orElseThrow(
+            () -> new NotFoundException("User not found",
+                "user_not_found"));
+
+        Role studentRole = roleRepository.findByName("student").orElseThrow(
+            () -> new NotFoundException("Role not found",
+                "role_not_fond"));
+
+        if (courseUserRepository.deleteByCourse_IdAndUser_Id(courseId, currentUserId) == 0) {
+            throw new NotFoundException("User not found in course");
+        }
+    }
 }
