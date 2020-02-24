@@ -2,6 +2,7 @@ package com.example.rpl.RPL.service;
 
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.ActivityCategory;
+import com.example.rpl.RPL.model.Course;
 import com.example.rpl.RPL.repository.ActivityCategoryRepository;
 import com.example.rpl.RPL.repository.CourseRepository;
 import java.util.List;
@@ -32,5 +33,19 @@ public class ActivityCategoriesService {
                 "course_not_found"));
 
         return activityCategoryRepository.findByCourse_Id(courseId);
+    }
+
+    @Transactional
+    public ActivityCategory createActivityCategory(Long courseId, String name, String description) {
+
+        Course course = courseRepository.findById(courseId).orElseThrow(
+            () -> new NotFoundException("Course not found",
+                "course_not_found"));
+
+        ActivityCategory activityCategory = new ActivityCategory(course, name, description, true);
+
+        activityCategoryRepository.save(activityCategory);
+
+        return activityCategory;
     }
 }

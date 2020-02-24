@@ -2,6 +2,7 @@ package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.controller.dto.ActivityCategoryResponseDTO;
 import com.example.rpl.RPL.controller.dto.ActivityResponseDTO;
+import com.example.rpl.RPL.controller.dto.CreateActivityCategoryRequestDTO;
 import com.example.rpl.RPL.controller.dto.CreateActivityRequestDTO;
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivityCategory;
@@ -44,5 +45,18 @@ public class ActivityCategoriesController {
                 .map(ActivityCategoryResponseDTO::fromEntity)
                 .collect(Collectors.toList())
             , HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/api/courses/{courseId}/activityCategories")
+    public ResponseEntity<ActivityCategoryResponseDTO> getActivityCategories(@CurrentUser UserPrincipal currentUser,
+                                                                                   @RequestBody @Valid CreateActivityCategoryRequestDTO createActivityCategoryRequestDTO,
+                                                                                   @PathVariable Long courseId) {
+
+
+        ActivityCategory activityCategory = activityCategoriesService.createActivityCategory(courseId, createActivityCategoryRequestDTO.getName(), createActivityCategoryRequestDTO.getDescription());
+
+        return new ResponseEntity<>(
+            ActivityCategoryResponseDTO.fromEntity(activityCategory),
+            HttpStatus.OK);
     }
 }
