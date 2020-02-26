@@ -10,6 +10,7 @@ import com.example.rpl.RPL.repository.CourseRepository;
 import com.example.rpl.RPL.repository.CourseUserRepository;
 import com.example.rpl.RPL.repository.RoleRepository;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.example.rpl.RPL.repository.UserRepository;
@@ -136,5 +137,18 @@ public class CoursesService {
         if (courseUserRepository.deleteByCourse_IdAndUser_Id(courseId, currentUserId) == 0) {
             throw new NotFoundException("User not found in course");
         }
+    }
+
+    @Transactional
+    public List<CourseUser> getAllUsers(Long courseId, String roleName) {
+        courseRepository.findById(courseId).orElseThrow(
+            () -> new NotFoundException("Course not found",
+                "course_not_found"));
+
+        Optional<Role> role = roleRepository.findByName(roleName);
+
+        return role.isPresent() ?
+            courseUserRepository.findByCourse_IdAndRole_Id(courseId, role.get().getId()) :
+            courseUserRepository.findByCourse_Id(courseId);
     }
 }
