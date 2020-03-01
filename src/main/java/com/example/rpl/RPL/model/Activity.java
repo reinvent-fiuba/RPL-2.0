@@ -94,4 +94,14 @@ public class Activity {
         this.dateCreated = now();
         this.lastUpdated = this.dateCreated;
     }
+
+    public void updateActivity(ActivityCategory activityCategory, String name,
+        String description, Language language, String initialCode) {
+        this.activityCategory = activityCategory;
+        this.name = name;
+        this.description = description;
+        this.language = language;
+        this.initialCode = initialCode;
+        this.lastUpdated = now();
+    }
 }

@@ -333,7 +333,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.category_description == activityCategory.getDescription()
             assert result.name == activity.name
             assert result.description == activity.description
-            assert result.language == activity.language.name()
+            assert result.language == activity.language.getName()
             assert result.active == activity.active
             assert result.initial_code == activity.initialCode
             assert result.file_id == activity.supportingFile.getId()
@@ -359,7 +359,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.category_description == activityCategory.getDescription()
             assert result.name == activity.name
             assert result.description == activity.description
-            assert result.language == activity.language.name()
+            assert result.language == activity.language.getName()
             assert result.active == activity.active
             assert result.initial_code == activity.initialCode
             assert result.file_id == activity.supportingFile.getId()
@@ -479,7 +479,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.category_description == activityCategory.getDescription()
             assert result.name == activity.name
             assert result.description == activity.description
-            assert result.language == activity.language.name()
+            assert result.language == activity.language.getName()
             assert result.active == activity.active
             assert result.initial_code == activity.initialCode
             assert result.file_id == activity.supportingFile.getId()

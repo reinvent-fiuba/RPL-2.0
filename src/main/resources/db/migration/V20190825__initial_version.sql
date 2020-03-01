@@ -2,7 +2,7 @@ CREATE TABLE roles
 (
     id           BIGINT NOT NULL AUTO_INCREMENT,
     name         VARCHAR(50),
-    permissions  VARCHAR(1000), -- permission1,permission2,permission3,etc
+    permissions  VARCHAR(1000), -- permissionName1,permissionName2,permissionName3,etc
     date_created DATETIME,
     last_updated DATETIME,
 
@@ -101,8 +101,8 @@ CREATE TABLE activities
     id                   BIGINT NOT NULL AUTO_INCREMENT,
     course_id            BIGINT,
     activity_category_id BIGINT,
-    name                 VARCHAR(255),
-    description          VARCHAR(255),
+    name                 VARCHAR(500),
+    description          VARCHAR(20000),
     language             VARCHAR(255),
     active               BOOLEAN,
     initial_code         varchar(20000),
@@ -133,29 +133,16 @@ CREATE TABLE activity_submissions
 
 ) ENGINE = InnoDB;
 
--- CREATE TABLE tests
--- (
---     id           BIGINT NOT NULL AUTO_INCREMENT,
---     activity_id  BIGINT,
---     date_created DATETIME,
---     last_updated DATETIME,
---
---     PRIMARY KEY (id),
---     FOREIGN KEY (activity_id) REFERENCES activities (id)
--- ) ENGINE = InnoDB;
-
 CREATE TABLE results
 (
     id                     BIGINT NOT NULL AUTO_INCREMENT,
     activity_submission_id BIGINT,
---     test_id                BIGINT,
     score                  varchar(255),
     date_created           DATETIME,
     last_updated           DATETIME,
 
     PRIMARY KEY (id),
     FOREIGN KEY (activity_submission_id) REFERENCES activity_submissions (id)
---     FOREIGN KEY (test_id) REFERENCES tests (id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE test_run

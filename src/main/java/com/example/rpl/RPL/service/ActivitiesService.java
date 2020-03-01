@@ -72,7 +72,24 @@ public class ActivitiesService {
         activityRepository.save(activity);
 
         return activity;
+    }
 
+    @Transactional
+    public Activity updateActivity(Activity activity, Long activityCategoryId, String name,
+        String description, String language,
+        Boolean active, String initialCode, byte[] supportingFilesBytes) {
+
+        ActivityCategory activityCategory = activityCategoryRepository.findById(activityCategoryId)
+            .orElseThrow(
+                () -> new NotFoundException("Category not found",
+                    "category_not_found"));
+
+        activity.updateActivity(activityCategory, name, description, Language.getByName(language),
+            initialCode);
+
+        activityRepository.save(activity);
+
+        return activity;
     }
 
     public List<Activity> getAllActivitiesByCourse(Long courseId) {
