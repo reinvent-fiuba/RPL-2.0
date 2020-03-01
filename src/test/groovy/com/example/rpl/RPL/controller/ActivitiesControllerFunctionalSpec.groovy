@@ -41,11 +41,17 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Autowired
     FileRepository fileRepository
 
+    @Autowired
+    IOTestRepository iOTestRepository;
+
     @Shared
     Activity activity
 
     @Shared
     User user
+
+    @Shared
+    RPLFile supportingActivityFile
 
     @Shared
     RPLFile submissionFile
@@ -66,7 +72,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     def setup() {
         Role role = new Role(
                 "student",
-                "activity_submit"
+                "activity_submit,course_create"
         )
         roleRepository.save(role);
 
@@ -106,7 +112,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         courseUserRepository.save(courseUser);
 
-        RPLFile supportingActivityFile = new RPLFile(
+        supportingActivityFile = new RPLFile(
                 "supporting_file",
                 "text",
                 null
@@ -151,6 +157,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     }
 
     def cleanup() {
+        iOTestRepository.deleteAll()
         submissionRepository.deleteAll()
         activityRepository.deleteAll()
         activityCategoryRepository.deleteAll()
@@ -174,10 +181,10 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
             body = [
                     activityCategoryId: activityCategory.getId(),
-                    name                : 'Some name',
-                    description         : 'Some description',
-                    language            : 'C',
-                    initialCode        : '//initial code'
+                    name              : 'Some name',
+                    description       : 'Some description',
+                    language          : 'C',
+                    initialCode       : '//initial code'
             ]
 
         when: "post new activity"
@@ -216,7 +223,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
                     name              : name,
                     description       : 'Some description',
                     language          : language,
-                    initialCode        : '//initial code'
+                    initialCode       : '//initial code'
             ].findAll { it.value != null }
 
         when: "post new activity"
@@ -256,7 +263,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
                     name              : 'Some name',
                     description       : 'Some description',
                     language          : 'C',
-                    initialCode        : '//initial code'
+                    initialCode       : '//initial code'
             ].findAll { it.value != null }
 
         when: "post new activity"
@@ -289,7 +296,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
                     name              : 'Some name',
                     description       : 'Some description',
                     language          : 'C',
-                    initialCode        : '//initial code'
+                    initialCode       : '//initial code'
             ].findAll { it.value != null }
 
         when: "post new activity"
@@ -309,6 +316,178 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.message == "Category not found"
             assert result.error == "category_not_found"
     }
+
+    /*****************************************************************************************
+     ********** GET ACTIVITIES ***************************************************************
+     *****************************************************************************************/
+
+    void "test get activity should return the activity"() {
+        when:
+            def response = get("/api/courses/${course.getId()}/activities/${activity.getId()}", username, password)
+
+        then:
+            Map result = getJsonResponse(response)
+            assert result.id == activity.id
+            assert result.course_id == course.getId()
+            assert result.category_name == activityCategory.getName()
+            assert result.category_description == activityCategory.getDescription()
+            assert result.name == activity.name
+            assert result.description == activity.description
+            assert result.language == activity.language.name()
+            assert result.active == activity.active
+            assert result.initial_code == activity.initialCode
+            assert result.file_id == activity.supportingFile.getId()
+            assert result.activity_unit_tests == null
+            assert result.activity_iotests == []
+            assert result.date_created != null
+            assert result.last_updated != null
+    }
+
+    void "test get activity should return the activity with tests"() {
+        given: "Two unit tests added to the activity"
+            IOTest ioTest1 = iOTestRepository.save(new IOTest(activity.getId(), "1", "1"))
+            IOTest ioTest2 = iOTestRepository.save(new IOTest(activity.getId(), "2", "2"))
+
+        when:
+            def response = get("/api/courses/${course.getId()}/activities/${activity.getId()}", username, password)
+
+        then:
+            Map result = getJsonResponse(response)
+            assert result.id == activity.id
+            assert result.course_id == course.getId()
+            assert result.category_name == activityCategory.getName()
+            assert result.category_description == activityCategory.getDescription()
+            assert result.name == activity.name
+            assert result.description == activity.description
+            assert result.language == activity.language.name()
+            assert result.active == activity.active
+            assert result.initial_code == activity.initialCode
+            assert result.file_id == activity.supportingFile.getId()
+            assert result.activity_unit_tests == null
+            assert result.activity_iotests == [[id: ioTest1.getId(), in: "1", out: "1"], [id: ioTest2.getId(), in: "2", out: "2"]]
+            assert result.date_created != null
+            assert result.last_updated != null
+    }
+
+    void "test get activities should return all the user's activities with submission results"() {
+        given: "another activity without submissions"
+            Activity activity2 = new Activity(
+                    course,
+                    activityCategory,
+                    "Activity 2",
+                    "Another activity",
+                    Language.PYTHON3,
+                    "def hola():",
+                    supportingActivityFile
+            )
+            activityRepository.save(activity2)
+
+        when:
+            def response = get("/api/courses/${course.getId()}/activities", username, password)
+
+        then:
+            List result = getJsonResponse(response)
+            assert result.size() == 2
+
+            Map resultActivity1 = result[0]
+            assert resultActivity1.id == activity.id
+            assert resultActivity1.course_id == course.getId()
+            assert resultActivity1.category_name == activityCategory.getName()
+            assert resultActivity1.category_description == activityCategory.getDescription()
+            assert resultActivity1.name == activity.name
+            assert resultActivity1.description == activity.description
+            assert resultActivity1.language == activity.language.name()
+            assert resultActivity1.active == activity.active
+            assert resultActivity1.file_id == activity.supportingFile.getId()
+            assert resultActivity1.submission_status == "PENDING"
+            assert resultActivity1.last_submission_date != null
+            assert resultActivity1.date_created != null
+            assert resultActivity1.last_updated != null
+
+            Map resultActivity2 = result[1]
+            assert resultActivity2.id == activity2.id
+            assert resultActivity2.course_id == course.getId()
+            assert resultActivity2.category_name == activityCategory.getName()
+            assert resultActivity2.category_description == activityCategory.getDescription()
+            assert resultActivity2.name == activity2.name
+            assert resultActivity2.description == activity2.description
+            assert resultActivity2.language == activity2.language.name()
+            assert resultActivity2.active == activity2.active
+            assert resultActivity2.file_id == activity2.supportingFile.getId()
+            assert resultActivity2.submission_status == ""
+            assert resultActivity2.last_submission_date == null
+            assert resultActivity2.date_created != null
+            assert resultActivity2.last_updated != null
+    }
+
+    /*****************************************************************************************
+     ********** CREATE IO TEST ***************************************************************
+     *****************************************************************************************/
+
+    void "test create IO test for activity"() {
+        given: "a new IO Test"
+            Map body = [text_in: "1", text_out: "2"]
+
+        when:
+            def response = post("/api/courses/${course.getId()}/activities/${activity.getId()}/iotests", body, username, password)
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_CREATED
+
+            Map ioTest = getJsonResponse(response)
+            assert ioTest.in == "1"
+            assert ioTest.out == "2"
+    }
+
+    void "test update IO test for activity"() {
+        given: "Two unit tests added to the activity"
+            IOTest ioTest1 = iOTestRepository.save(new IOTest(activity.getId(), "1", "1"))
+            IOTest ioTest2 = iOTestRepository.save(new IOTest(activity.getId(), "2", "2"))
+
+        and: "a change"
+            Map body = [text_in: "1000", text_out: "2000"]
+
+        when:
+            def response = put("/api/courses/${course.getId()}/activities/${activity.getId()}/iotests/${ioTest1.getId()}", body, username, password)
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            Map ioTest = getJsonResponse(response)
+            assert ioTest.in == "1000"
+            assert ioTest.out == "2000"
+    }
+
+    void "test delete IO test for activity"() {
+        given: "Two unit tests added to the activity"
+            IOTest ioTest1 = iOTestRepository.save(new IOTest(activity.getId(), "1", "1"))
+            IOTest ioTest2 = iOTestRepository.save(new IOTest(activity.getId(), "2", "2"))
+
+        when: "deleting one of those"
+            def response = delete("/api/courses/${course.getId()}/activities/${activity.getId()}/iotests/${ioTest1.getId()}", username, password)
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            Map result = getJsonResponse(response)
+            assert result.id == activity.id
+            assert result.course_id == course.getId()
+            assert result.category_name == activityCategory.getName()
+            assert result.category_description == activityCategory.getDescription()
+            assert result.name == activity.name
+            assert result.description == activity.description
+            assert result.language == activity.language.name()
+            assert result.active == activity.active
+            assert result.initial_code == activity.initialCode
+            assert result.file_id == activity.supportingFile.getId()
+            assert result.activity_unit_tests == null
+            assert result.activity_iotests == [[id: ioTest2.getId(), in: "2", out: "2"]]
+            assert result.date_created != null
+            assert result.last_updated != null
+
+    }
+
 }
-
-

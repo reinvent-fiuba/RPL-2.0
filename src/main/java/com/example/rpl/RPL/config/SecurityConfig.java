@@ -97,10 +97,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .headers()
-                .frameOptions().sameOrigin()
+            .frameOptions().sameOrigin()
             .and()
             .authorizeRequests()
-                .antMatchers("/",
+            .antMatchers("/",
                 "/favicon.ico",
                 "/**/*.png",
                 "/**/*.gif",
@@ -109,18 +109,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/**/*.html",
                 "/**/*.css",
                 "/**/*.js")
-                    .permitAll()
-                .antMatchers("/api/auth/**")
-                    .permitAll()
-                .antMatchers("/h2-console/**", "/v2/api-docs", "/api/health", "/ping")
-                    .permitAll()
-                .antMatchers(HttpMethod.GET, "/api/polls/**", "/api/users/**")
-                    .permitAll()
-                .antMatchers(HttpMethod.GET,
-                    "/api/files/**",
-                    "/api/submissions/**"
-                    )
-                    .permitAll()
+            .permitAll()
+            .antMatchers("/api/auth/**")
+            .permitAll()
+            .antMatchers("/h2-console/**", "/v2/api-docs", "/api/health", "/ping")
+            .permitAll()
+            .antMatchers(HttpMethod.GET, "/api/polls/**", "/api/users/**")
+            .permitAll()
+            .antMatchers(HttpMethod.GET,
+                "/api/files/**",
+                "/api/submissions/**"
+            )
+            .permitAll()
             .antMatchers(HttpMethod.POST,
                 "/api/submissions/**"
             )
@@ -129,12 +129,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/api/submissions/**"
             )
             .permitAll()
-                .antMatchers(HttpMethod.POST,
-                    "/api/uploadMultipleFiles/**"
-                    )
-                    .permitAll()
-                .anyRequest()
-                    .authenticated();
+            .antMatchers(HttpMethod.POST,
+                "/api/uploadMultipleFiles/**"
+            )
+            .permitAll()
+            .anyRequest()
+            .authenticated();
 
         // Add our custom JWT security filter
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -144,7 +144,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        CorsConfiguration cc = new CorsConfiguration().applyPermitDefaultValues();
+        cc.addAllowedMethod(HttpMethod.DELETE);
+        cc.addAllowedMethod(HttpMethod.PUT);
+        source.registerCorsConfiguration("/**", cc);
         return source;
     }
 

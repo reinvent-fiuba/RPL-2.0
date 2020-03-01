@@ -4,7 +4,6 @@ import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.IOTest;
 import com.example.rpl.RPL.model.UnitTest;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,7 +35,7 @@ public class ActivitySubmissionResponseDTO {
     private List<String> activityIOTests;
 
     public static ActivitySubmissionResponseDTO fromEntity(ActivitySubmission as,
-        Optional<UnitTest> unitTest,
+        UnitTest unitTest,
         List<IOTest> ioTests) {
         ActivitySubmissionResponseDTO.ActivitySubmissionResponseDTOBuilder ab = ActivitySubmissionResponseDTO
             .builder()
@@ -50,8 +49,9 @@ public class ActivitySubmissionResponseDTO {
             .activityLanguage(as.getActivity().getLanguage().getNameAndVersion())
             .activityUnitTests("");
 
-        unitTest.ifPresent(test -> ab.activityUnitTests = new String(test.getTestFile().getData()));
-
+        if (unitTest != null) {
+            ab.activityUnitTests(new String(unitTest.getTestFile().getData()));
+        }
         ab.activityIOTests(ioTests.stream().map(IOTest::getTestIn).collect(Collectors.toList()));
 
         return ab.build();

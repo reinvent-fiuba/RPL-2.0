@@ -1,15 +1,19 @@
 package com.example.rpl.RPL.service;
 
+import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.IOTest;
+import com.example.rpl.RPL.model.IOTestRun;
+import com.example.rpl.RPL.model.TestRun;
 import com.example.rpl.RPL.model.UnitTest;
 import com.example.rpl.RPL.repository.IOTestRepository;
+import com.example.rpl.RPL.repository.IOTestRunRepository;
 import com.example.rpl.RPL.repository.UnitTestRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -17,12 +21,15 @@ public class TestService {
 
     private IOTestRepository iOTestRepository;
     private UnitTestRepository unitTestsRepository;
+    private IOTestRunRepository iOTestRunRepository;
 
     @Autowired
     public TestService(IOTestRepository iOTestRepository,
-        UnitTestRepository unitTestsRepository) {
+        UnitTestRepository unitTestsRepository,
+        IOTestRunRepository iOTestRunRepository) {
         this.iOTestRepository = iOTestRepository;
         this.unitTestsRepository = unitTestsRepository;
+        this.iOTestRunRepository = iOTestRunRepository;
     }
 
 
@@ -30,35 +37,51 @@ public class TestService {
         return iOTestRepository.findAllByActivityId(activityId);
     }
 
-    public Optional<UnitTest> getUnitTests(Long activityId) {
-        return unitTestsRepository.findByActivityId(activityId);
+    public UnitTest getUnitTests(Long activityId) {
+        return unitTestsRepository.findByActivityId(activityId).orElse(null);
     }
 
-
     /**
-     * Checks if, for a given Activity and a submission's test run, all the tests passed.
+     * *
      *
      * @param activityId Activity to grade
-     * @param testRunStdout stdout of test run WITH LOGGING
-     * @return if all the tests passed
+     * @param testRun the run with the stdout of test run WITH LOGGING
+     * @return list of IOTestRun entities
      */
-    boolean checkIfTestsPassed(Long activityId, String testRunStdout) {
-        List<String> results = this.parseTestRunStdout(testRunStdout);
+    @Transactional
+    public List<IOTestRun> parseAndSaveStdout(Long activityId, TestRun testRun) {
+        List<String> results = this.parseTestRunStdout(testRun.getStdout());
         List<IOTest> ioTests = this.getAllIOTests(activityId);
 
-        if (results.size() != ioTests.size()) {
-            // All the tests weren't executed...
-            return false;
+        List<IOTestRun> ioTestRuns = new ArrayList<>();
+        for (int i = 0; i < results.size(); i++) {
+            IOTestRun ioTestRun = new IOTestRun(testRun, ioTests.get(i).getTestIn(),
+                ioTests.get(i).getTestOut(), results.get(i));
+            ioTestRuns.add(ioTestRun);
         }
 
-        for (int i = 0; i < ioTests.size(); i++) {
-            if (!ioTests.get(i).getTestOut().equals(results.get(i))) {
+        return iOTestRunRepository.saveAll(ioTestRuns);
+    }
+
+    /**
+     * Checks if all the tests passed.
+     *
+     * @return if all the tests passed
+     */
+    boolean checkIfTestsPassed(Long activityId, List<IOTestRun> ioTestRuns) {
+        List<IOTest> ioTests = this.getAllIOTests(activityId);
+
+        // Not all tests were run
+        if (ioTestRuns.size() != ioTests.size()) {
+            return false;
+        }
+        for (IOTestRun ioTestRun : ioTestRuns) {
+            if (!ioTestRun.getExpectedOutput().equals(ioTestRun.getRunOutput())) {
+                log.error("EXPECTED: {}\n RUN: {}", ioTestRun.getExpectedOutput(),
+                    ioTestRun.getRunOutput());
                 return false;
             }
         }
-        //TODO: think if we might want to save which tests did not passed to later show the student
-
-        //TODO: check unit tests if necessary
         return true;
     }
 
@@ -76,13 +99,39 @@ public class TestService {
         StringBuilder result = new StringBuilder();
         for (String line : testRunStdout.split("\n")) {
             if (line.contains("end_RUN")) {
-                results.add(result.toString().strip().replace("./main", ""));
+                results.add(result.toString().substring(0, result.length() - 1 )); // removing last /n as it was an EOF originally
             } else if (line.contains("start_RUN")) {
                 result = new StringBuilder();
+            } else if (line.contains("assignment_main.py") || line.contains("./main")) {
             } else {
-                result.append(line);
+                result.append(line).append("\n");
             }
         }
         return results;
     }
+
+    @Transactional
+    public IOTest createUnitTest(Long activityId, String in, String out) {
+        IOTest ioTest = new IOTest(activityId, in, out);
+
+        return iOTestRepository.save(ioTest);
+    }
+
+    @Transactional
+    public IOTest updateUnitTest(Long ioTestId, String in, String out) {
+        IOTest ioTest = iOTestRepository.findById(ioTestId)
+            .orElseThrow(() -> new NotFoundException("IO test not found",
+                "iotest_not_found"));
+
+        ioTest.update(in, out);
+
+        return iOTestRepository.save(ioTest);
+    }
+
+    @Transactional
+    public void deleteUnitTest(Long ioTestId) {
+        iOTestRepository.deleteById(ioTestId);
+    }
+
+
 }

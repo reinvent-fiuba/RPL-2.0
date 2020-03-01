@@ -3,6 +3,7 @@ package com.example.rpl.RPL.service;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivitySubmission;
+import com.example.rpl.RPL.model.IOTestRun;
 import com.example.rpl.RPL.model.RPLFile;
 import com.example.rpl.RPL.model.SubmissionStatus;
 import com.example.rpl.RPL.model.TestRun;
@@ -107,9 +108,12 @@ public class SubmissionService {
             return submissionRepository.save(activitySubmission);
         }
 
+        List<IOTestRun> ioTestRuns = testService
+            .parseAndSaveStdout(activitySubmission.getActivity().getId(), testRun);
+
         // Check if tests where correct
         if (testService
-            .checkIfTestsPassed(activitySubmission.getActivity().getId(), testRunStdout)) {
+            .checkIfTestsPassed(activitySubmission.getActivity().getId(), ioTestRuns)) {
             activitySubmission.setProcessedSuccess();
         } else {
             activitySubmission.setProcessedFailure();
@@ -130,5 +134,11 @@ public class SubmissionService {
     public List<ActivitySubmission> getAllSubmissionsByUserAndActivities(User user,
         List<Activity> activities) {
         return submissionRepository.findAllByUserAndActivityIn(user, activities);
+    }
+
+    public List<ActivitySubmission> getAllSubmissionsByUserAndActivityId(User user,
+        Long activityId) {
+        return submissionRepository.findAllByUserAndActivity_Id(user, activityId);
+
     }
 }

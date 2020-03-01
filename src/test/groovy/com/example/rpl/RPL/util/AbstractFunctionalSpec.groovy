@@ -26,7 +26,18 @@ abstract class AbstractFunctionalSpec extends AbstractSpec {
         api = RestAssured.given().contentType(ContentType.JSON)
     }
 
-    def get(String url) {
+    def authenticate(String username = null, String password = null) {
+        if (username != null && password != null) {
+            Map body = [usernameOrEmail: username, password: password]
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+            api.headers([
+                    "Authorization": "${loginResponse.token_type} ${loginResponse.access_token}"
+            ])
+        }
+    }
+
+    def get(String url, String username = null, String password = null) {
+        authenticate(username, password)
         return api.get(url)
     }
 
@@ -34,7 +45,8 @@ abstract class AbstractFunctionalSpec extends AbstractSpec {
         return api.headers(headers).get(url)
     }
 
-    def post(String url, def body) {
+    def post(String url, def body, String username = null, String password = null) {
+        authenticate(username, password)
         api.body(body)
         return api.post(url)
     }
@@ -44,14 +56,16 @@ abstract class AbstractFunctionalSpec extends AbstractSpec {
         return api.headers(headers).post(url)
     }
 
-    def put(String url, def body) {
+    def put(String url, def body, String username = null, String password = null) {
+        authenticate(username, password)
         if (body != null)
             api.body(body)
 
         return api.put(url)
     }
 
-    def delete(String url) {
+    def delete(String url, String username = null, String password = null) {
+        authenticate(username, password)
         return api.delete(url)
     }
 
