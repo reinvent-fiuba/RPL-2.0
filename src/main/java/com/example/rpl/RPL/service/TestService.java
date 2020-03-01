@@ -68,7 +68,13 @@ public class TestService {
      *
      * @return if all the tests passed
      */
-    boolean checkIfTestsPassed(List<IOTestRun> ioTestRuns) {
+    boolean checkIfTestsPassed(Long activityId, List<IOTestRun> ioTestRuns) {
+        List<IOTest> ioTests = this.getAllIOTests(activityId);
+
+        // Not all tests were run
+        if (ioTestRuns.size() != ioTests.size()) {
+            return false;
+        }
         for (IOTestRun ioTestRun : ioTestRuns) {
             if (!ioTestRun.getExpectedOutput().equals(ioTestRun.getRunOutput())) {
                 log.error("EXPECTED: {}\n RUN: {}", ioTestRun.getExpectedOutput(),

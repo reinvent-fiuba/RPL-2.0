@@ -76,7 +76,6 @@ public class ActivitiesController {
     }
 
 
-    @PreAuthorize("hasAuthority('course_create')")
     @GetMapping(value = "/api/courses/{courseId}/activities")
     public ResponseEntity<List<UserActivityResponseDTO>> getActivities(
         @CurrentUser UserPrincipal currentUser,
@@ -99,7 +98,6 @@ public class ActivitiesController {
             HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('course_create')")
     @GetMapping(value = "/api/courses/{courseId}/activities/{activityId}")
     public ResponseEntity<ActivityResponseDTO> getActivity(
         @CurrentUser UserPrincipal currentUser,

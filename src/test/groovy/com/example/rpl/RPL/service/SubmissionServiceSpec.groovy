@@ -116,7 +116,7 @@ class SubmissionServiceSpec extends Specification {
             submissionRepository.findById(_ as Long) >> Optional.of(activitySubmission)
 
         and: "tests passing is #passedTests"
-            testService.checkIfTestsPassed(_ as List<IOTestRun>) >> passedTests
+            testService.checkIfTestsPassed(1, _ as List<IOTestRun>) >> passedTests
 
         when: "submitting the test run"
             ActivitySubmission result = submissionService.createSubmissionTestRun(1,

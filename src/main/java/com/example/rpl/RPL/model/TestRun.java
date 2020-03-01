@@ -17,7 +17,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
 
 @Getter
 @EqualsAndHashCode(of = "id")
@@ -71,9 +70,9 @@ public class TestRun {
     public TestRun() {
     }
 
-    public TestRun(ActivitySubmission submissionId, boolean success, String testRunExitMessage,
+    public TestRun(ActivitySubmission submission, boolean success, String testRunExitMessage,
         String testRunStderr, String testRunStdout) {
-        this.activitySubmission = submissionId;
+        this.activitySubmission = submission;
         this.success = success;
         this.exitMessage = testRunExitMessage;
         this.stderr = testRunStderr;

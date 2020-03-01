@@ -113,7 +113,7 @@ public class SubmissionService {
 
         // Check if tests where correct
         if (testService
-            .checkIfTestsPassed(ioTestRuns)) {
+            .checkIfTestsPassed(activitySubmission.getActivity().getId(), ioTestRuns)) {
             activitySubmission.setProcessedSuccess();
         } else {
             activitySubmission.setProcessedFailure();

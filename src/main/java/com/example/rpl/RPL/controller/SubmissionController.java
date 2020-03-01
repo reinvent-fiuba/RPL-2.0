@@ -100,7 +100,7 @@ public class SubmissionController {
                 .send(as.getId().toString(), as.getActivity().getLanguage().getNameAndVersion());
             as.setEnqueued();
         } catch (AmqpConnectException e) {
-            log.error("Error sending submission ID to queue. Conection refused");
+            log.error("Error sending submission ID to queue. Connection refused");
             log.error(e.getMessage());
         }
 
