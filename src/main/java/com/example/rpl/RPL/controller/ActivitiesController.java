@@ -75,6 +75,32 @@ public class ActivitiesController {
             ActivityResponseDTO.fromEntity(activity, null, new ArrayList<>()), HttpStatus.CREATED);
     }
 
+    @PutMapping(value = "/api/courses/{courseId}/activities/{activityId}")
+    public ResponseEntity<ActivityResponseDTO> updateActivity(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId,
+        @PathVariable Long activityId,
+        @Valid CreateActivityRequestDTO createActivityRequestDTO,
+        @RequestParam(value = "supportingFile") MultipartFile[] supportingFiles) {
+
+        Activity activity = activitiesService.getActivity(activityId);
+
+        byte[] compressedSupportingFilesBytes = TarUtils.compressToTarGz(supportingFiles);
+
+        activitiesService.updateActivity(
+            activity,
+            createActivityRequestDTO.getActivityCategoryId(),
+            createActivityRequestDTO.getName(),
+            createActivityRequestDTO.getDescription(),
+            createActivityRequestDTO.getLanguage(),
+            true,
+            createActivityRequestDTO.getInitialCode(),
+            compressedSupportingFilesBytes);
+
+        return new ResponseEntity<>(
+            ActivityResponseDTO.fromEntity(activity, null, new ArrayList<>()), HttpStatus.OK);
+    }
+
 
     @GetMapping(value = "/api/courses/{courseId}/activities")
     public ResponseEntity<List<UserActivityResponseDTO>> getActivities(

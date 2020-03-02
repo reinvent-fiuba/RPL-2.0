@@ -2,7 +2,6 @@ package com.example.rpl.RPL.controller.dto;
 
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.IOTest;
-import com.example.rpl.RPL.model.Language;
 import com.example.rpl.RPL.model.UnitTest;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -19,6 +18,8 @@ public class ActivityResponseDTO {
 
     private Long courseId;
 
+    private Long categoryId;
+
     private String categoryName;
 
     private String categoryDescription;
@@ -27,7 +28,7 @@ public class ActivityResponseDTO {
 
     private String description;
 
-    private Language language;
+    private String language;
 
     private Boolean active;
 
@@ -48,11 +49,12 @@ public class ActivityResponseDTO {
         ActivityResponseDTOBuilder ab = ActivityResponseDTO.builder()
             .id(activity.getId())
             .courseId(activity.getCourse().getId())
+            .categoryId(activity.getActivityCategory().getId())
             .categoryName(activity.getActivityCategory().getName())
             .categoryDescription(activity.getActivityCategory().getDescription())
             .name(activity.getName())
             .description(activity.getDescription())
-            .language(activity.getLanguage())
+            .language(activity.getLanguage().getName())
             .active(activity.getActive())
             .initialCode(activity.getInitialCode())
             .fileId(activity.getSupportingFile().getId())

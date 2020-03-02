@@ -318,6 +318,51 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     }
 
     /*****************************************************************************************
+     ********** UPDATE ACTIVITY **************************************************************
+     *****************************************************************************************/
+
+    @Unroll
+    void "test update activity with correct values should update activity in DB"() {
+        given: "a new activity"
+            Long courseId = course.getId()
+            Long activityId = activity.getId()
+            Map body = [usernameOrEmail: username, password: password]
+            File f = new File("./src/main/resources/db/testdata/unit_test.c")
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+
+            body = [
+                    activityCategoryId: activityCategory.getId(),
+                    name              : 'Some NEW name',
+                    description       : 'Some NEWWWWWW description',
+                    language          : activity.getLanguage().getName(),
+                    initialCode       : '//another initial code'
+            ].findAll { it.value != null }
+
+        when: "put modified activity"
+            api.headers([
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+            api.multiPart("supportingFile", f)
+            api.formParams(body)
+            api.contentType("multipart/form-data")
+            def response = put("/api/courses/${courseId}/activities/${activityId}", null)
+
+        then: "must return a modified saved Activity"
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            Map modifiedActivity = getJsonResponse(response)
+
+            assert modifiedActivity.id == activity.getId()
+            assert modifiedActivity.name == "Some NEW name"
+            assert modifiedActivity.description == "Some NEWWWWWW description"
+            assert modifiedActivity.initial_code == "//another initial code"
+
+            assert activityRepository.existsById(modifiedActivity.id as Long)
+            assert fileRepository.existsById(modifiedActivity.file_id as Long)
+    }
+
+    /*****************************************************************************************
      ********** GET ACTIVITIES ***************************************************************
      *****************************************************************************************/
 
@@ -333,7 +378,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.category_description == activityCategory.getDescription()
             assert result.name == activity.name
             assert result.description == activity.description
-            assert result.language == activity.language.name()
+            assert result.language == activity.language.getName()
             assert result.active == activity.active
             assert result.initial_code == activity.initialCode
             assert result.file_id == activity.supportingFile.getId()
@@ -359,7 +404,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.category_description == activityCategory.getDescription()
             assert result.name == activity.name
             assert result.description == activity.description
-            assert result.language == activity.language.name()
+            assert result.language == activity.language.getName()
             assert result.active == activity.active
             assert result.initial_code == activity.initialCode
             assert result.file_id == activity.supportingFile.getId()
@@ -479,7 +524,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.category_description == activityCategory.getDescription()
             assert result.name == activity.name
             assert result.description == activity.description
-            assert result.language == activity.language.name()
+            assert result.language == activity.language.getName()
             assert result.active == activity.active
             assert result.initial_code == activity.initialCode
             assert result.file_id == activity.supportingFile.getId()

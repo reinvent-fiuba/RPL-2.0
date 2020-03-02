@@ -1,5 +1,8 @@
 package com.example.rpl.RPL.model;
 
+import lombok.Getter;
+
+@Getter
 public enum Language {
 
     C("c", "std11"),
