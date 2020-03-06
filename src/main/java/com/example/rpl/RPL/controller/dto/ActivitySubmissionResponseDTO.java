@@ -30,7 +30,7 @@ public class ActivitySubmissionResponseDTO {
 
     private String activityLanguage;
 
-    private String activityUnitTests;
+    private String activityUnitTestsContent;
 
     private List<String> activityIOTests;
 
@@ -47,10 +47,10 @@ public class ActivitySubmissionResponseDTO {
             .activitySupportingFileType(as.getActivity().getSupportingFile().getFileType())
             .activitySupportingFileId(as.getActivity().getSupportingFile().getId())
             .activityLanguage(as.getActivity().getLanguage().getNameAndVersion())
-            .activityUnitTests("");
+            .activityUnitTestsContent("");
 
         if (unitTest != null) {
-            ab.activityUnitTests(new String(unitTest.getTestFile().getData()));
+            ab.activityUnitTestsContent(new String(unitTest.getTestFile().getData()));
         }
         ab.activityIOTests(ioTests.stream().map(IOTest::getTestIn).collect(Collectors.toList()));
 
