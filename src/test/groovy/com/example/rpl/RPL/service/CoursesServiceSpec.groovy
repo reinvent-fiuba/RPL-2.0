@@ -14,6 +14,8 @@ import com.example.rpl.RPL.repository.UserRepository
 import spock.lang.Shared
 import spock.lang.Specification
 
+import javax.swing.text.html.Option
+
 class CoursesServiceSpec extends Specification {
 
     private CoursesService coursesService
@@ -301,6 +303,54 @@ class CoursesServiceSpec extends Specification {
             1 * roleRepository.findByName("student") >> Optional.of(new Role())
 
             1 * courseUserRepository.deleteByCourse_IdAndUser_Id(courseId, userId) >> 0
+
+            thrown(NotFoundException)
+    }
+
+    void "should get all users"() {
+        given:
+            Long courseId = 1
+
+        when:
+            List<CourseUser> courseUsers = coursesService.getAllUsers(courseId, null)
+
+        then:
+            1 * courseRepository.findById(courseId) >> Optional.of(new Course())
+            1 * roleRepository.findByName(null) >> Optional.empty()
+
+            1 * courseUserRepository.findByCourse_Id(courseId) >> [ new CourseUser() ]
+
+            courseUsers.size() == 1
+    }
+
+    void "should get all students"() {
+        given:
+            Long courseId = 1
+            String roleName = "student"
+            Role studentRole = new Role();
+            studentRole.id = 22;
+
+        when:
+            List<CourseUser> courseUsers = coursesService.getAllUsers(courseId, roleName)
+
+        then:
+            1 * courseRepository.findById(courseId) >> Optional.of(new Course())
+            1 * roleRepository.findByName(roleName) >> Optional.of(studentRole)
+
+            1 * courseUserRepository.findByCourse_IdAndRole_Id(courseId, studentRole.id) >> [ new CourseUser() ]
+
+            courseUsers.size() == 1
+    }
+
+    void "should throw error for wrong course"() {
+        given:
+            Long courseId = 1
+
+        when:
+            List<CourseUser> courseUsers = coursesService.getAllUsers(courseId, null)
+
+        then:
+            1 * courseRepository.findById(courseId) >> Optional.empty()
 
             thrown(NotFoundException)
     }

@@ -1,6 +1,7 @@
 package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.controller.dto.CourseResponseDTO;
+import com.example.rpl.RPL.controller.dto.CourseUserResponseDTO;
 import com.example.rpl.RPL.controller.dto.CreateCourseRequestDTO;
 import com.example.rpl.RPL.controller.dto.RoleResponseDTO;
 import com.example.rpl.RPL.model.Course;
@@ -17,11 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -71,6 +68,21 @@ public class CoursesController {
         log.error("COURSE ID: {}", courseId);
 
         return new ResponseEntity<>(currentUser, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('course_create')")
+    @GetMapping(value = "/api/courses/{courseId}/users")
+    public ResponseEntity<List<CourseUserResponseDTO>> getCourseUsers(@CurrentUser UserPrincipal currentUser,
+                                                                          @PathVariable Long courseId,
+                                                                          @RequestParam(required = false) String roleName) {
+
+        List<CourseUser> courseUsers = coursesService.getAllUsers(courseId, roleName);
+
+        return new ResponseEntity<>(
+            courseUsers.stream()
+                .map(CourseUserResponseDTO::fromEntity)
+                .collect(Collectors.toList()),
+            HttpStatus.OK);
     }
 
     @PostMapping(value = "/api/courses/{courseId}/enroll")
