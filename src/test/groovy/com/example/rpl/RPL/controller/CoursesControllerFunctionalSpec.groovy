@@ -90,7 +90,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         courseId = course.getId()
 
-        Role adminRole = new Role('admin', 'course_admin')
+        Role adminRole = new Role('admin', 'course_admin,course_create')
 
         roleRepository.save(adminRole);
 
@@ -101,7 +101,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
         CourseUser courseUser = new CourseUser(
                 course,
                 user,
-                studentRole,
+                adminRole,
                 true
         )
 
@@ -359,6 +359,50 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
             def result = getJsonResponse(response)
 
             result.message == 'Course not found'
+    }
+
+    /*****************************************************************************************
+     ********** GET ALL COURSE USERS *********************************************************
+     *****************************************************************************************/
+
+    @Unroll
+    void "test get users from course"() {
+        given:
+            Map body = [usernameOrEmail: username, password: password]
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+
+        when:
+            def response = get(String.format("/api/courses/%s/users", courseId), [
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            def result = getJsonResponse(response)
+
+            result.size() == 1
+    }
+
+    @Unroll
+    void "test get students from course"() {
+        given:
+            Map body = [usernameOrEmail: username, password: password]
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+
+        when:
+        def response = get(String.format("/api/courses/%s/users?roleName=student", courseId), [
+                "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+        ])
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            def result = getJsonResponse(response)
+
+            result.size() == 0
     }
 }
 
