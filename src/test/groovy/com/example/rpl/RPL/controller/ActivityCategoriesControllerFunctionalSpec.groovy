@@ -107,7 +107,7 @@ class ActivityCategoriesControllerFunctionalSpec extends AbstractFunctionalSpec 
      *****************************************************************************************/
 
     @Unroll
-    void "test get activity activity categories should get all the categories"() {
+    void "test get activity categories should get all the categories"() {
         given:
             Long courseId = course.getId();
             Map body = [usernameOrEmail: username, password: password]
@@ -125,6 +125,56 @@ class ActivityCategoriesControllerFunctionalSpec extends AbstractFunctionalSpec 
 
             def result = getJsonResponse(response)
             result.size() == 1
+    }
+
+    @Unroll
+    void "test post activity category should create a category"() {
+        given:
+            Long courseId = course.getId();
+            Map body = [usernameOrEmail: username, password: password]
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+            body = [
+                    name: 'some-name',
+                    description: 'some-description'
+            ]
+
+        when: "get activity categories"
+            def response = post(String.format("/api/courses/%d/activityCategories", courseId), body, [
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+
+        then: "must return a new saved Activity"
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            def result = getJsonResponse(response)
+
+            result.name == 'some-name'
+            result.description == 'some-description'
+    }
+
+    @Unroll
+    void "test post activity category in wrong course should fail"() {
+        given:
+            Map body = [usernameOrEmail: username, password: password]
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+            body = [
+                    name: 'some-name',
+                    description: 'some-description'
+        ]
+
+        when: "get activity categories"
+            def response = post(String.format("/api/courses/%d/activityCategories", 22), body, [
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+
+        then: "must return a new saved Activity"
+            response.contentType == "application/json"
+            response.statusCode == SC_NOT_FOUND
+
+            def result = getJsonResponse(response)
+
+            result.message == 'Course not found'
     }
 }
 

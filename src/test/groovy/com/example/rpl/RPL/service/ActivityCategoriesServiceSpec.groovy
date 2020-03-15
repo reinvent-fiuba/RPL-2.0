@@ -60,4 +60,36 @@ class ActivityCategoriesServiceSpec extends Specification {
 
             thrown(NotFoundException)
     }
+
+    void "should create activity category successfully" () {
+        given:
+            Long courseId = 1
+            String name = "Some category"
+            String description = "Some description"
+
+        when:
+            ActivityCategory newActivityCategory = activityCategoriesService.createActivityCategory(courseId, name, description)
+
+        then:
+            1 * courseRepository.findById(courseId) >> Optional.of(new Course())
+            1 * activityCategoryRepository.save(_ as ActivityCategory) >> { ActivityCategory activityCategory -> return activityCategory }
+
+        assert newActivityCategory.name == name
+        assert newActivityCategory.description == description
+    }
+
+    void "should fail to create activity category if course not exist" () {
+        given:
+            Long courseId = 1
+            String name = "Some category"
+            String description = "Some description"
+
+        when:
+            ActivityCategory newActivityCategory = activityCategoriesService.createActivityCategory(courseId, name, description)
+
+        then:
+            1 * courseRepository.findById(courseId) >> Optional.empty()
+
+            thrown(NotFoundException)
+    }
 }
