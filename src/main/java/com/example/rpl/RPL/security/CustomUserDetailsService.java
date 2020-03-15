@@ -56,7 +56,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByIdAndCourseId(Long userId, Long courseId) {
         if (courseId != null) {
             Optional<CourseUser> courseUser = courseUserRepository
-                .findByIdAndUser_Id(courseId, userId);
+                .findByCourse_IdAndUser_Id(courseId, userId);
             if (courseUser.isPresent()) {
                 log.info("Getting UserDetails for UserID:{} and CourseID:{}", userId, courseId);
                 return UserPrincipal.create(courseUser.get());

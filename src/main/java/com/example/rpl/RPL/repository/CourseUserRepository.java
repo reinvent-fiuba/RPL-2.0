@@ -10,7 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CourseUserRepository extends JpaRepository<CourseUser, Long> {
 
-    Optional<CourseUser> findByIdAndUser_Id(Long courseId, Long userId);
+    Optional<CourseUser> findByCourse_IdAndUser_Id(Long courseId, Long userId);
+
+    Long deleteByCourse_IdAndUser_Id(Long courseId, Long userId);
 
     List<CourseUser> findByUser_Id(Long userId);
 

@@ -38,6 +38,12 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
     String password;
 
+    String otherUsername;
+
+    String otherPassword;
+
+    Long courseId;
+
     def setup() {
         User user = new User(
                 'some-name',
@@ -66,6 +72,9 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
                 'other-hard-degree'
         )
 
+        otherUsername = 'otheruser'
+        otherPassword = 'supersecret'
+
         userRepository.save(otherUser)
 
         Course course = new Course(
@@ -77,26 +86,33 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
                 "/some/uri"
         )
 
-        courseRepository.save(course);
+        course = courseRepository.save(course);
+
+        courseId = course.getId()
+
+        Role adminRole = new Role('admin', 'course_admin')
+
+        roleRepository.save(adminRole);
+
+        Role studentRole = new Role('student', 'submit_activity')
+
+        roleRepository.save(studentRole);
 
         CourseUser courseUser = new CourseUser(
                 course,
                 user,
-                null,
+                studentRole,
                 true
         )
 
         courseUserRepository.save(courseUser)
-
-        Role role = new Role('admin', 'course_admin')
-
-        roleRepository.save(role);
     }
 
     def cleanup() {
         courseUserRepository.deleteAll()
         userRepository.deleteAll()
         courseRepository.deleteAll()
+        roleRepository.deleteAll()
     }
 
     /*****************************************************************************************
@@ -260,6 +276,89 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
             def result = getJsonResponse(response)
             result.size() == 0
+    }
+
+    /*****************************************************************************************
+     ********** ENROLLL USER IN COURSE *******************************************************
+     *****************************************************************************************/
+
+    @Unroll
+    void "test enroll user in courses"() {
+        given:
+            Map body = [usernameOrEmail: otherUsername, password: otherPassword]
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+
+        when:
+            def response = post(String.format("/api/courses/%s/enroll", courseId), [], [
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            def result = getJsonResponse(response)
+
+            result.name == 'student'
+    }
+
+    @Unroll
+    void "test enroll user in wrong courses should fail with not found course"() {
+        given:
+            Map body = [usernameOrEmail: otherUsername, password: otherPassword]
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+
+        when:
+            def response = post(String.format("/api/courses/%s/enroll", 22), [], [
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_NOT_FOUND
+
+            def result = getJsonResponse(response)
+
+            result.message == 'Course not found'
+    }
+
+    /*****************************************************************************************
+     ********** UNENROLLL USER FROM COURSE ***************************************************
+     *****************************************************************************************/
+
+    @Unroll
+    void "test unenroll user from courses"() {
+        given:
+            Map body = [usernameOrEmail: username, password: password]
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+
+        when:
+            def response = post(String.format("/api/courses/%s/unenroll", courseId), [], [
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+
+        then:
+            response.statusCode == SC_NO_CONTENT
+    }
+
+    @Unroll
+    void "test unenroll user in wrong courses should fail with not found course"() {
+        given:
+            Map body = [usernameOrEmail: username, password: password]
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+
+        when:
+            def response = post(String.format("/api/courses/%s/unenroll", 22), [], [
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_NOT_FOUND
+
+            def result = getJsonResponse(response)
+
+            result.message == 'Course not found'
     }
 }
 

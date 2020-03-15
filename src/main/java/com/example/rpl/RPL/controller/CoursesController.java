@@ -2,7 +2,9 @@ package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.controller.dto.CourseResponseDTO;
 import com.example.rpl.RPL.controller.dto.CreateCourseRequestDTO;
+import com.example.rpl.RPL.controller.dto.RoleResponseDTO;
 import com.example.rpl.RPL.model.Course;
+import com.example.rpl.RPL.model.CourseUser;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.CoursesService;
@@ -70,6 +72,27 @@ public class CoursesController {
 
         return new ResponseEntity<>(currentUser, HttpStatus.OK);
     }
+
+    @PostMapping(value = "/api/courses/{courseId}/enroll")
+    public ResponseEntity<RoleResponseDTO> enrollInCourse(@CurrentUser UserPrincipal currentUser,
+                                                        @PathVariable Long courseId) {
+
+        CourseUser courseUser = coursesService.enrollInCourse(currentUser.getId(), courseId);
+
+        return new ResponseEntity<>(
+            RoleResponseDTO.fromEntity(courseUser.getRole()),
+            HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/api/courses/{courseId}/unenroll")
+    public ResponseEntity<Void> unenrollInCourse(@CurrentUser UserPrincipal currentUser,
+                                                          @PathVariable Long courseId) {
+
+        coursesService.unenrollInCourse(currentUser.getId(), courseId);
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
 
     @GetMapping(value = "/api/users/{userId}/courses")
     public ResponseEntity<List<CourseResponseDTO>> getCoursesOfUser(
