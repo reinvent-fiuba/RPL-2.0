@@ -121,7 +121,7 @@ public class CoursesService {
     }
 
     @Transactional
-    public void unenrollInCourse(Long currentUserId, Long courseId) {
+    public void deleteCourseUser(Long currentUserId, Long courseId) {
         Course course = courseRepository.findById(courseId).orElseThrow(
             () -> new NotFoundException("Course not found",
                 "course_not_found"));
@@ -129,10 +129,6 @@ public class CoursesService {
         User user = userRepository.findById(currentUserId).orElseThrow(
             () -> new NotFoundException("User not found",
                 "user_not_found"));
-
-        Role studentRole = roleRepository.findByName("student").orElseThrow(
-            () -> new NotFoundException("Role not found",
-                "role_not_fond"));
 
         if (courseUserRepository.deleteByCourse_IdAndUser_Id(courseId, currentUserId) == 0) {
             throw new NotFoundException("User not found in course");
@@ -150,5 +146,25 @@ public class CoursesService {
         return role.isPresent() ?
             courseUserRepository.findByCourse_IdAndRole_Id(courseId, role.get().getId()) :
             courseUserRepository.findByCourse_Id(courseId);
+    }
+
+    @Transactional
+    public CourseUser updateCourseUser(Long courseId, Long userId, Boolean accepted, String roleName) {
+        CourseUser courseUser = courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId).orElseThrow(
+            () -> new NotFoundException("Enrolled User not found in this Course",
+                    "course_user_not_found")
+        );
+
+        if (accepted) {
+            courseUser.setAccepted(accepted);
+        }
+        Optional<Role> role;
+        if (roleName != null && (role = roleRepository.findByName(roleName)).isPresent()) {
+            courseUser.setRole(role.get());
+        }
+
+        courseUserRepository.save(courseUser);
+
+        return courseUser;
     }
 }

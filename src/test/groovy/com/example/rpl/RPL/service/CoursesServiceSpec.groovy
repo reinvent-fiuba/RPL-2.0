@@ -14,8 +14,6 @@ import com.example.rpl.RPL.repository.UserRepository
 import spock.lang.Shared
 import spock.lang.Specification
 
-import javax.swing.text.html.Option
-
 class CoursesServiceSpec extends Specification {
 
     private CoursesService coursesService
@@ -235,7 +233,7 @@ class CoursesServiceSpec extends Specification {
             Long userId = 1
 
         when:
-            coursesService.unenrollInCourse(userId, courseId)
+            coursesService.deleteCourseUser(userId, courseId)
 
         then:
             1 * courseRepository.findById(courseId) >> Optional.of(new Course())
@@ -251,7 +249,7 @@ class CoursesServiceSpec extends Specification {
             Long userId = 1
 
         when:
-            coursesService.unenrollInCourse(userId, courseId)
+            coursesService.deleteCourseUser(userId, courseId)
 
         then:
             1 * courseRepository.findById(courseId) >> Optional.empty()
@@ -264,7 +262,7 @@ class CoursesServiceSpec extends Specification {
             Long userId = 1
 
         when:
-            coursesService.unenrollInCourse(userId, courseId)
+            coursesService.deleteCourseUser(userId, courseId)
 
         then:
             1 * courseRepository.findById(courseId) >> Optional.of(new Course())
@@ -279,7 +277,7 @@ class CoursesServiceSpec extends Specification {
             Long userId = 1
 
         when:
-            coursesService.unenrollInCourse(userId, courseId)
+            coursesService.deleteCourseUser(userId, courseId)
 
         then:
             1 * courseRepository.findById(courseId) >> Optional.of(new Course())
@@ -295,7 +293,7 @@ class CoursesServiceSpec extends Specification {
             Long userId = 1
 
         when:
-            coursesService.unenrollInCourse(userId, courseId)
+            coursesService.deleteCourseUser(userId, courseId)
 
         then:
             1 * courseRepository.findById(courseId) >> Optional.of(new Course())

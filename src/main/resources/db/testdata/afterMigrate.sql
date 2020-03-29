@@ -10,6 +10,18 @@ VALUES (2, 'Matias', 'Cano', 97925, 'tute', 'matiasjosecc@gmail.com',
         'Ing. en Informatica',
         'UBA', now(), now());
 
+INSERT INTO users
+VALUES (3, 'Student', 'Accepted', 00001, 'student_accepted', 'accepted_student@gmail.com',
+        '$2a$10$ab9rVz3lVB.ANA2ss.1pOOFwg.tH5yexgXc58PSMwa6CVlBDWM2Eq', false,
+        'Ing. en Informatica',
+        'UBA', now(), now());
+
+INSERT INTO users
+VALUES (4, 'Student', 'NotAccepted', 00001, 'student_not_accepted', 'not_accepted_student@gmail.com',
+        '$2a$10$ab9rVz3lVB.ANA2ss.1pOOFwg.tH5yexgXc58PSMwa6CVlBDWM2Eq', false,
+        'Ing. en Informatica',
+        'UBA', now(), now());
+
 INSERT INTO roles
 VALUES (1, 'admin', 'course_create,course_edit,activity_submit', now(), now());
 
@@ -36,6 +48,11 @@ VALUES (1, 1, 1, 1, true, now(), now());
 INSERT INTO course_users
 VALUES (2, 1, 2, 1, true, now(), now());
 
+INSERT INTO course_users
+VALUES (3, 1, 3, 2, false, now(), now());
+
+INSERT INTO course_users
+VALUES (4, 1, 4, 2, true, now(), now());
 
 INSERT INTO rpl_files
 VALUES (1, 'activity_1_supporting_files.tar.gz', 'text/x-c',
