@@ -394,7 +394,7 @@ class CoursesServiceSpec extends Specification {
             thrown(NotFoundException)
     }
 
-    void "should not update the role if not present" () {
+    void "should not update the role if not present"() {
         given:
             Long courseId = 1
             Long userId = 1
@@ -408,5 +408,64 @@ class CoursesServiceSpec extends Specification {
         1 * courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId) >> Optional.of(tempCourseUser)
         1 * roleRepository.findByName(roleName) >> Optional.empty()
         0 * tempCourseUser.setRole(_ as Role)
+    }
+
+    void "should delete course user"() {
+        given:
+            Long userId = 1
+            Long courseId = 1
+
+        when:
+            coursesService.deleteCourseUser(userId, courseId)
+
+        then:
+            1 * courseRepository.findById(courseId) >> Optional.of(new Course())
+            1 * userRepository.findById(userId) >> Optional.of(new User())
+            1 * courseUserRepository.deleteByCourse_IdAndUser_Id(courseId, userId) >> 1
+    }
+
+    void "should throw not found course while deleting course user"() {
+        given:
+            Long userId = 1
+            Long courseId = 1
+
+        when:
+            coursesService.deleteCourseUser(userId, courseId)
+
+        then:
+            1 * courseRepository.findById(courseId) >> Optional.empty()
+
+            thrown(NotFoundException)
+    }
+
+    void "should throw not found user while deleting course user"() {
+        given:
+            Long userId = 1
+            Long courseId = 1
+
+        when:
+            coursesService.deleteCourseUser(userId, courseId)
+
+        then:
+            1 * courseRepository.findById(courseId) >> Optional.of(new Course())
+            1 * userRepository.findById(userId) >> Optional.empty()
+
+            thrown(NotFoundException)
+    }
+
+    void "should throw not found course user while deleting course user"() {
+        given:
+            Long userId = 1
+            Long courseId = 1
+
+        when:
+            coursesService.deleteCourseUser(userId, courseId)
+
+        then:
+            1 * courseRepository.findById(courseId) >> Optional.of(new Course())
+            1 * userRepository.findById(userId) >> Optional.of(new User())
+            1 * courseUserRepository.deleteByCourse_IdAndUser_Id(courseId, userId) >> 0
+
+            thrown(NotFoundException)
     }
 }

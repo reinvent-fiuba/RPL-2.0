@@ -121,16 +121,16 @@ public class CoursesService {
     }
 
     @Transactional
-    public void deleteCourseUser(Long currentUserId, Long courseId) {
+    public void deleteCourseUser(Long userId, Long courseId) {
         Course course = courseRepository.findById(courseId).orElseThrow(
             () -> new NotFoundException("Course not found",
                 "course_not_found"));
 
-        User user = userRepository.findById(currentUserId).orElseThrow(
+        User user = userRepository.findById(userId).orElseThrow(
             () -> new NotFoundException("User not found",
                 "user_not_found"));
 
-        if (courseUserRepository.deleteByCourse_IdAndUser_Id(courseId, currentUserId) == 0) {
+        if (courseUserRepository.deleteByCourse_IdAndUser_Id(courseId, userId) == 0) {
             throw new NotFoundException("User not found in course");
         }
     }
