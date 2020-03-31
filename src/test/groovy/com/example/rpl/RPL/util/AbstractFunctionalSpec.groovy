@@ -64,6 +64,14 @@ abstract class AbstractFunctionalSpec extends AbstractSpec {
         return api.put(url)
     }
 
+    def patch(String url, def body, String username = null, String password = null) {
+        authenticate(username, password)
+        if (body != null)
+            api.body(body)
+
+        return api.patch(url)
+    }
+
     def delete(String url, String username = null, String password = null) {
         authenticate(username, password)
         return api.delete(url)

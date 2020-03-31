@@ -122,6 +122,7 @@ public class CoursesService {
 
     @Transactional
     public void deleteCourseUser(Long userId, Long courseId) {
+        // TODO: Review if this checks are needed
         Course course = courseRepository.findById(courseId).orElseThrow(
             () -> new NotFoundException("Course not found",
                 "course_not_found"));
