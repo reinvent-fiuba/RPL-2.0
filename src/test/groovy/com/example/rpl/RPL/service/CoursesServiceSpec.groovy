@@ -340,7 +340,7 @@ class CoursesServiceSpec extends Specification {
             courseUsers.size() == 1
     }
 
-    void "should throw error for wrong course"() {
+    void "should throw error for wrong course while retrieving users"() {
         given:
             Long courseId = 1
 
@@ -351,5 +351,62 @@ class CoursesServiceSpec extends Specification {
             1 * courseRepository.findById(courseId) >> Optional.empty()
 
             thrown(NotFoundException)
+    }
+
+    void "should update user correctly"() {
+        given:
+            Long courseId = 1
+            Long userId = 1
+            CourseUser tempCourseUser = Mock(CourseUser);
+            Role tempRole = Mock(Role);
+
+        when:
+            coursesService.updateCourseUser(courseId, userId, accepted, roleName);
+
+        then:
+            1 * courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId) >> Optional.of(tempCourseUser)
+            if (shouldUpdateAccepted) 1 * tempCourseUser.setAccepted(accepted)
+            if (shouldUpdateRole) {
+                1 * roleRepository.findByName(roleName) >> Optional.of(new Role())
+                1 * tempCourseUser.setRole(_ as Role)
+            }
+            1 * courseUserRepository.save(_ as CourseUser)
+
+        where:
+            accepted | roleName | shouldUpdateAccepted | shouldUpdateRole
+            true | null | true | false
+            false | null | true | false
+            null | "student" | false | true
+            true | "student" | true | true
+    }
+
+    void "should throw error for missing course user while updating"() {
+        given:
+            Long courseId = 1
+            Long userId = 1
+
+        when:
+            coursesService.updateCourseUser(courseId, userId, true, "student");
+
+        then:
+            1 * courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId) >> Optional.empty()
+
+            thrown(NotFoundException)
+    }
+
+    void "should not update the role if not present" () {
+        given:
+            Long courseId = 1
+            Long userId = 1
+            String roleName = "some-rolename"
+            CourseUser tempCourseUser = Mock(CourseUser);
+
+        when:
+            coursesService.updateCourseUser(courseId, userId, true, roleName);
+
+        then:
+        1 * courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId) >> Optional.of(tempCourseUser)
+        1 * roleRepository.findByName(roleName) >> Optional.empty()
+        0 * tempCourseUser.setRole(_ as Role)
     }
 }

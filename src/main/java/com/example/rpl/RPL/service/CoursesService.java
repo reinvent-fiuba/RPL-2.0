@@ -150,14 +150,16 @@ public class CoursesService {
 
     @Transactional
     public CourseUser updateCourseUser(Long courseId, Long userId, Boolean accepted, String roleName) {
+        // TODO: Update courseUser all at once without using a SELECT at first
         CourseUser courseUser = courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId).orElseThrow(
             () -> new NotFoundException("Enrolled User not found in this Course",
                     "course_user_not_found")
         );
 
-        if (accepted) {
+        if (accepted != null) {
             courseUser.setAccepted(accepted);
         }
+
         Optional<Role> role;
         if (roleName != null && (role = roleRepository.findByName(roleName)).isPresent()) {
             courseUser.setRole(role.get());
