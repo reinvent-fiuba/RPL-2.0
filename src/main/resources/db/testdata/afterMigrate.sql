@@ -49,10 +49,10 @@ INSERT INTO course_users
 VALUES (2, 1, 2, 1, true, now(), now());
 
 INSERT INTO course_users
-VALUES (3, 1, 3, 2, false, now(), now());
+VALUES (3, 1, 3, 2, true, now(), now());
 
 INSERT INTO course_users
-VALUES (4, 1, 4, 2, true, now(), now());
+VALUES (4, 1, 4, 2, false, now(), now());
 
 INSERT INTO rpl_files
 VALUES (1, 'activity_1_supporting_files.tar.gz', 'text/x-c',
