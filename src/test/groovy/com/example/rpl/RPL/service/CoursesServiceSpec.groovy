@@ -14,8 +14,6 @@ import com.example.rpl.RPL.repository.UserRepository
 import spock.lang.Shared
 import spock.lang.Specification
 
-import javax.swing.text.html.Option
-
 class CoursesServiceSpec extends Specification {
 
     private CoursesService coursesService
@@ -229,84 +227,6 @@ class CoursesServiceSpec extends Specification {
             thrown(EntityAlreadyExistsException)
     }
 
-    void "should unenroll user from course successfully"() {
-        given:
-            Long courseId = 1
-            Long userId = 1
-
-        when:
-            coursesService.unenrollInCourse(userId, courseId)
-
-        then:
-            1 * courseRepository.findById(courseId) >> Optional.of(new Course())
-            1 * userRepository.findById(userId) >> Optional.of(new User())
-            1 * roleRepository.findByName("student") >> Optional.of(new Role())
-
-            1 * courseUserRepository.deleteByCourse_IdAndUser_Id(courseId, userId) >> 1
-    }
-
-    void "should throw not found while unenrolling if course not exist"() {
-        given:
-            Long courseId = 1
-            Long userId = 1
-
-        when:
-            coursesService.unenrollInCourse(userId, courseId)
-
-        then:
-            1 * courseRepository.findById(courseId) >> Optional.empty()
-            thrown(NotFoundException)
-    }
-
-    void "should throw not found while unenrolling if user not exist"() {
-        given:
-            Long courseId = 1
-            Long userId = 1
-
-        when:
-            coursesService.unenrollInCourse(userId, courseId)
-
-        then:
-            1 * courseRepository.findById(courseId) >> Optional.of(new Course())
-            1 * userRepository.findById(userId) >> Optional.empty()
-
-            thrown(NotFoundException)
-    }
-
-    void "should throw not found while unenrolling if role not exist"() {
-        given:
-            Long courseId = 1
-            Long userId = 1
-
-        when:
-            coursesService.unenrollInCourse(userId, courseId)
-
-        then:
-            1 * courseRepository.findById(courseId) >> Optional.of(new Course())
-            1 * userRepository.findById(userId) >> Optional.of(new User())
-            1 * roleRepository.findByName("student") >> Optional.empty()
-
-            thrown(NotFoundException)
-    }
-
-    void "should throw not found while unenrolling if there is no user enrolled"() {
-        given:
-            Long courseId = 1
-            Long userId = 1
-
-        when:
-            coursesService.unenrollInCourse(userId, courseId)
-
-        then:
-            1 * courseRepository.findById(courseId) >> Optional.of(new Course())
-            1 * userRepository.findById(userId) >> Optional.of(new User())
-            1 * roleRepository.findByName("student") >> Optional.of(new Role())
-
-            1 * courseUserRepository.deleteByCourse_IdAndUser_Id(courseId, userId) >> 0
-
-            thrown(NotFoundException)
-    }
-
     void "should get all users"() {
         given:
             Long courseId = 1
@@ -342,7 +262,7 @@ class CoursesServiceSpec extends Specification {
             courseUsers.size() == 1
     }
 
-    void "should throw error for wrong course"() {
+    void "should throw error for wrong course while retrieving users"() {
         given:
             Long courseId = 1
 
@@ -351,6 +271,121 @@ class CoursesServiceSpec extends Specification {
 
         then:
             1 * courseRepository.findById(courseId) >> Optional.empty()
+
+            thrown(NotFoundException)
+    }
+
+    void "should update user correctly"() {
+        given:
+            Long courseId = 1
+            Long userId = 1
+            CourseUser tempCourseUser = Mock(CourseUser);
+            Role tempRole = Mock(Role);
+
+        when:
+            coursesService.updateCourseUser(courseId, userId, accepted, roleName);
+
+        then:
+            1 * courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId) >> Optional.of(tempCourseUser)
+            if (shouldUpdateAccepted) 1 * tempCourseUser.setAccepted(accepted)
+            if (shouldUpdateRole) {
+                1 * roleRepository.findByName(roleName) >> Optional.of(new Role())
+                1 * tempCourseUser.setRole(_ as Role)
+            }
+            1 * courseUserRepository.save(_ as CourseUser)
+
+        where:
+            accepted | roleName | shouldUpdateAccepted | shouldUpdateRole
+            true | null | true | false
+            false | null | true | false
+            null | "student" | false | true
+            true | "student" | true | true
+    }
+
+    void "should throw error for missing course user while updating"() {
+        given:
+            Long courseId = 1
+            Long userId = 1
+
+        when:
+            coursesService.updateCourseUser(courseId, userId, true, "student");
+
+        then:
+            1 * courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId) >> Optional.empty()
+
+            thrown(NotFoundException)
+    }
+
+    void "should not update the role if not present"() {
+        given:
+            Long courseId = 1
+            Long userId = 1
+            String roleName = "some-rolename"
+            CourseUser tempCourseUser = Mock(CourseUser);
+
+        when:
+            coursesService.updateCourseUser(courseId, userId, true, roleName);
+
+        then:
+        1 * courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId) >> Optional.of(tempCourseUser)
+        1 * roleRepository.findByName(roleName) >> Optional.empty()
+        0 * tempCourseUser.setRole(_ as Role)
+    }
+
+    void "should delete course from user succesfully"() {
+        given:
+            Long userId = 1
+            Long courseId = 1
+
+        when:
+            coursesService.deleteCourseUser(userId, courseId)
+
+        then:
+            1 * courseRepository.findById(courseId) >> Optional.of(new Course())
+            1 * userRepository.findById(userId) >> Optional.of(new User())
+            1 * courseUserRepository.deleteByCourse_IdAndUser_Id(courseId, userId) >> 1
+    }
+
+    void "should throw not found course while deleting course user if course not exist"() {
+        given:
+            Long userId = 1
+            Long courseId = 1
+
+        when:
+            coursesService.deleteCourseUser(userId, courseId)
+
+        then:
+            1 * courseRepository.findById(courseId) >> Optional.empty()
+            thrown(NotFoundException)
+    }
+
+    void "should throw not found user while deleting course user if user not exist"() {
+        given:
+            Long userId = 1
+            Long courseId = 1
+
+        when:
+            coursesService.deleteCourseUser(userId, courseId)
+
+        then:
+            1 * courseRepository.findById(courseId) >> Optional.of(new Course())
+            1 * userRepository.findById(userId) >> Optional.empty()
+
+            thrown(NotFoundException)
+    }
+
+    void "should throw not found course user while deleting course user if user not enrrolled"() {
+        given:
+            Long userId = 1
+            Long courseId = 1
+
+        when:
+            coursesService.deleteCourseUser(userId, courseId)
+
+        then:
+            1 * courseRepository.findById(courseId) >> Optional.of(new Course())
+            1 * userRepository.findById(userId) >> Optional.of(new User())
+            1 * courseUserRepository.deleteByCourse_IdAndUser_Id(courseId, userId) >> 0
 
             thrown(NotFoundException)
     }

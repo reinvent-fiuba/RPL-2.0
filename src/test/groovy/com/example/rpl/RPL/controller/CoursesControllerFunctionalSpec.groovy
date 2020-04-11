@@ -44,6 +44,8 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
     Long courseId;
 
+    User otherUser;
+
     def setup() {
         User user = new User(
                 'some-name',
@@ -61,7 +63,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         userRepository.save(user)
 
-        User otherUser = new User(
+        otherUser = new User(
                 'other-name',
                 'other-surname',
                 'other-student-id',
@@ -404,6 +406,132 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
             result.size() == 0
     }
+
+    /*****************************************************************************************
+     ********** UPDATE COURSE USER ***********************************************************
+     *****************************************************************************************/
+
+    @Unroll
+    void "test update user from course"() {
+        given:
+            post(String.format("/api/courses/%s/enroll", courseId), [], otherUsername, otherPassword);
+
+        when:
+            def response = patch(String.format("/api/courses/%s/users/%s", courseId, otherUser.getId()), [
+                accepted: accepted,
+                role: role
+            ], username, password)
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            def result = getJsonResponse(response)
+
+            if (accepted) result.accepted == accepted
+            if (role) result.role == role
+
+        where:
+            accepted | role
+            true | null
+            false | null
+            null | "student"
+            null | "admin"
+            true | "student"
+            true | "admin"
+    }
+
+    @Unroll
+    void "test update user from course with wrong role should not update"() {
+        given:
+            post(String.format("/api/courses/%s/enroll", courseId), [], otherUsername, otherPassword);
+
+        when:
+            def response = patch(String.format("/api/courses/%s/users/%s", courseId, otherUser.getId()), [
+                    role: "wrong-role"
+            ], username, password)
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            def result = getJsonResponse(response)
+
+            result.role != "wrong-role"
+    }
+
+    @Unroll
+    void "test update wrong user from course should fail with not found user"() {
+
+        when:
+            def response = patch(String.format("/api/courses/%s/users/%s", courseId, 22), [
+                    role: "wrong-role"
+            ], username, password)
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_NOT_FOUND
+
+            def result = getJsonResponse(response)
+
+            result.message == 'Enrolled User not found in this Course'
+    }
+
+    /*****************************************************************************************
+     ********** DELETE COURSE USER ***********************************************************
+     *****************************************************************************************/
+
+    @Unroll
+    void "test delete user from course"() {
+        given:
+            post(String.format("/api/courses/%s/enroll", courseId), [], otherUsername, otherPassword);
+
+        when:
+            def response = delete(String.format("/api/courses/%s/users/%s", courseId, otherUser.getId()), username, password)
+
+        then:
+            response.statusCode == SC_NO_CONTENT
+    }
+
+    @Unroll
+    void "test delete user in wrong courses should fail with not found course"() {
+        when:
+            def response = delete(String.format("/api/courses/%s/users/%s", 22, 1), username, password)
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_NOT_FOUND
+
+            def result = getJsonResponse(response)
+
+            result.message == 'Course not found'
+    }
+
+    @Unroll
+    void "test delete missing user should fail with not found user"() {
+        when:
+            def response = delete(String.format("/api/courses/%s/users/%s", courseId, 22), username, password)
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_NOT_FOUND
+
+            def result = getJsonResponse(response)
+
+            result.message == 'User not found'
+    }
+
+    @Unroll
+    void "test delete missing user in course should fail with not found user"() {
+        when:
+        def response = delete(String.format("/api/courses/%s/users/%s", courseId, otherUser.getId()), username, password)
+
+        then:
+        response.contentType == "application/json"
+        response.statusCode == SC_NOT_FOUND
+
+        def result = getJsonResponse(response)
+
+        result.message == 'User not found in course'
+    }
 }
-
-

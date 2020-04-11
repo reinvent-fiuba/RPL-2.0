@@ -121,20 +121,17 @@ public class CoursesService {
     }
 
     @Transactional
-    public void unenrollInCourse(Long currentUserId, Long courseId) {
+    public void deleteCourseUser(Long userId, Long courseId) {
+        // TODO: Review if this checks are needed
         Course course = courseRepository.findById(courseId).orElseThrow(
             () -> new NotFoundException("Course not found",
                 "course_not_found"));
 
-        User user = userRepository.findById(currentUserId).orElseThrow(
+        User user = userRepository.findById(userId).orElseThrow(
             () -> new NotFoundException("User not found",
                 "user_not_found"));
 
-        Role studentRole = roleRepository.findByName("student").orElseThrow(
-            () -> new NotFoundException("Role not found",
-                "role_not_fond"));
-
-        if (courseUserRepository.deleteByCourse_IdAndUser_Id(courseId, currentUserId) == 0) {
+        if (courseUserRepository.deleteByCourse_IdAndUser_Id(courseId, userId) == 0) {
             throw new NotFoundException("User not found in course");
         }
     }
@@ -150,5 +147,27 @@ public class CoursesService {
         return role.isPresent() ?
             courseUserRepository.findByCourse_IdAndRole_Id(courseId, role.get().getId()) :
             courseUserRepository.findByCourse_Id(courseId);
+    }
+
+    @Transactional
+    public CourseUser updateCourseUser(Long courseId, Long userId, Boolean accepted, String roleName) {
+        // TODO: Update courseUser all at once without using a SELECT at first
+        CourseUser courseUser = courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId).orElseThrow(
+            () -> new NotFoundException("Enrolled User not found in this Course",
+                    "course_user_not_found")
+        );
+
+        if (accepted != null) {
+            courseUser.setAccepted(accepted);
+        }
+
+        Optional<Role> role;
+        if (roleName != null && (role = roleRepository.findByName(roleName)).isPresent()) {
+            courseUser.setRole(role.get());
+        }
+
+        courseUserRepository.save(courseUser);
+
+        return courseUser;
     }
 }
