@@ -58,7 +58,7 @@ public class CoursesController {
             HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('course_create')")
+    @PreAuthorize("hasAuthority('course_view')")
     @GetMapping(value = "/api/courses/{courseId}")
     public ResponseEntity<UserPrincipal> getCourseDetails(@CurrentUser UserPrincipal currentUser,
         @PathVariable Long courseId) {
@@ -67,7 +67,17 @@ public class CoursesController {
         return new ResponseEntity<>(currentUser, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('course_create')")
+    @PreAuthorize("hasAuthority('course_view')")
+    @GetMapping(value = "/api/courses/{courseId}/permissions")
+    public ResponseEntity<List<String>> getCourseUsers(@CurrentUser UserPrincipal currentUser,
+                                                                      @PathVariable Long courseId) {
+
+        List<String> permissions = coursesService.getPermissions(courseId, currentUser.getId());
+
+        return new ResponseEntity<>(permissions, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('user_view')")
     @GetMapping(value = "/api/courses/{courseId}/users")
     public ResponseEntity<List<CourseUserResponseDTO>> getCourseUsers(@CurrentUser UserPrincipal currentUser,
                                                                           @PathVariable Long courseId,
@@ -82,6 +92,7 @@ public class CoursesController {
             HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('user_manage')")
     @PatchMapping(value = "/api/courses/{courseId}/users/{userId}")
     public ResponseEntity<CourseUserResponseDTO> updateCourseUser(@CurrentUser UserPrincipal currentUser,
                                                                       @PathVariable Long courseId,
@@ -100,6 +111,7 @@ public class CoursesController {
                 HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('user_manage')")
     @DeleteMapping(value = "/api/courses/{courseId}/users/{userId}")
     public ResponseEntity<Void> deleteCourseUser(@CurrentUser UserPrincipal currentUser,
                                                                   @PathVariable Long courseId,

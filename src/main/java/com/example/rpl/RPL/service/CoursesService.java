@@ -170,4 +170,14 @@ public class CoursesService {
 
         return courseUser;
     }
+
+    @Transactional
+    public List<String> getPermissions(Long courseId, Long userId) {
+        CourseUser courseUser = courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId).orElseThrow(
+                () -> new NotFoundException("Enrolled User not found in this Course",
+                        "course_user_not_found")
+        );
+
+        return courseUser.getRole().getPermissions();
+    }
 }
