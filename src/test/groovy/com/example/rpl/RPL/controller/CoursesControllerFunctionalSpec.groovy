@@ -92,11 +92,14 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         courseId = course.getId()
 
-        Role adminRole = new Role('admin', 'course_admin,course_create')
+        Role adminRole = new Role(
+                "admin",
+                "course_delete,course_view,course_edit,activity_view,activity_manage,activity_submit,user_view,user_manage"
+        )
 
         roleRepository.save(adminRole);
 
-        Role studentRole = new Role('student', 'submit_activity')
+        Role studentRole = new Role('student', 'course_view,activity_view,activity_submit,user_view')
 
         roleRepository.save(studentRole);
 

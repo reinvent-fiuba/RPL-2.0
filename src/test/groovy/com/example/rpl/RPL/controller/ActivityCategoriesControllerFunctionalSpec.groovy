@@ -43,8 +43,8 @@ class ActivityCategoriesControllerFunctionalSpec extends AbstractFunctionalSpec 
 
     def setup() {
         Role role = new Role(
-                "student",
-                "activity_submit"
+                "admin",
+                "course_delete,course_view,course_edit,activity_view,activity_manage,activity_submit,user_view,user_manage"
         )
         roleRepository.save(role);
 
@@ -154,7 +154,7 @@ class ActivityCategoriesControllerFunctionalSpec extends AbstractFunctionalSpec 
     }
 
     @Unroll
-    void "test post activity category in wrong course should fail"() {
+    void "test post activity category in other course should fail"() {
         given:
             Map body = [usernameOrEmail: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
@@ -170,11 +170,11 @@ class ActivityCategoriesControllerFunctionalSpec extends AbstractFunctionalSpec 
 
         then: "must return a new saved Activity"
             response.contentType == "application/json"
-            response.statusCode == SC_NOT_FOUND
+            response.statusCode == SC_FORBIDDEN
 
             def result = getJsonResponse(response)
 
-            result.message == 'Course not found'
+            result.message == 'Forbidden'
     }
 }
 
