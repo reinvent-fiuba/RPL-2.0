@@ -2,6 +2,7 @@ package com.example.rpl.RPL.util
 
 import groovy.json.JsonSlurper
 import io.restassured.RestAssured
+import io.restassured.config.HeaderConfig
 import io.restassured.http.ContentType
 import io.restassured.response.Response
 import io.restassured.specification.RequestSpecification
@@ -23,16 +24,17 @@ abstract class AbstractFunctionalSpec extends AbstractSpec {
     def setup() {
         RestAssured.port = randomServerPort
         RestAssured.baseURI = "http://localhost"
-        api = RestAssured.given().contentType(ContentType.JSON)
+        api = RestAssured.given().config(RestAssured.config().headerConfig(
+                // Override Authorization header for multiple users in same test
+                HeaderConfig.headerConfig().overwriteHeadersWithName("Authorization")
+            )).contentType(ContentType.JSON)
     }
 
     def authenticate(String username = null, String password = null) {
         if (username != null && password != null) {
             Map body = [usernameOrEmail: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
-            api.headers([
-                    "Authorization": "${loginResponse.token_type} ${loginResponse.access_token}"
-            ])
+            api.header("Authorization", "${loginResponse.token_type} ${loginResponse.access_token}")
         }
     }
 

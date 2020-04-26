@@ -497,17 +497,17 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     }
 
     @Unroll
-    void "test delete user in wrong courses should fail with not found course"() {
+    void "test delete user in other course should fail with not found course"() {
         when:
             def response = delete(String.format("/api/courses/%s/users/%s", 22, 1), username, password)
 
         then:
             response.contentType == "application/json"
-            response.statusCode == SC_NOT_FOUND
+            response.statusCode == SC_FORBIDDEN
 
             def result = getJsonResponse(response)
 
-            result.message == 'Course not found'
+            result.message == 'Forbidden'
     }
 
     @Unroll

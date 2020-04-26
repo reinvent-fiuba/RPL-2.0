@@ -58,7 +58,6 @@ public class SubmissionController {
         this.testRunRepository = testRunRepository;
     }
 
-    @PreAuthorize("hasAuthority('activity_manage')")
     @GetMapping(value = "/api/submissions/{submissionId}")
     public ResponseEntity<ActivitySubmissionResponseDTO> getSubmission(
         @PathVariable Long submissionId) {
@@ -138,7 +137,6 @@ public class SubmissionController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAuthority('activity_manage')")
     @GetMapping(value = "/api/submissions/{submissionId}/result")
     public ResponseEntity<ActivitySubmissionResultResponseDTO> getSubmissionResult(
         @PathVariable Long submissionId) {

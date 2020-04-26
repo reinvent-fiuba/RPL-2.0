@@ -165,6 +165,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
         courseUserRepository.deleteAll()
         userRepository.deleteAll()
         courseRepository.deleteAll()
+        roleRepository.deleteAll()
     }
 
     /*****************************************************************************************

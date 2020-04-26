@@ -41,12 +41,15 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Autowired
     FileRepository fileRepository
 
-
     @Shared
     Activity activity
 
     @Shared
     User user
+
+    String username
+
+    String password
 
     @Shared
     RPLFile submissionFile
@@ -61,8 +64,8 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
     def setup() {
 
         Role role = new Role(
-                "student",
-                "activity_submit"
+                "admin",
+                "course_delete,course_view,course_edit,activity_view,activity_manage,activity_submit,user_view,user_manage"
         )
         roleRepository.save(role);
 
@@ -77,6 +80,10 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
                 'some-hard-degree'
         )
 
+        username = 'username'
+
+        password = 'supersecret'
+
         userRepository.save(user)
 
         course = new Course(
@@ -85,7 +92,7 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
                 "some-description",
                 true,
                 "2019-2c",
-                "/some/uri"
+                "/somåe/uri"
         )
 
         courseRepository.save(course);
@@ -160,7 +167,7 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test get submission should retrieve it"() {
         when:
-            def response = get(String.format("/api/submissions/%s", activitySubmission.getId()))
+            def response = get(String.format("/api/submissions/%s", activitySubmission.getId()), username, password)
 
         then:
             response.contentType == "application/json"
