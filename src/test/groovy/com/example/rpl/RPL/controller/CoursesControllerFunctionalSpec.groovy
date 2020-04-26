@@ -9,6 +9,7 @@ import com.example.rpl.RPL.repository.CourseUserRepository
 import com.example.rpl.RPL.repository.RoleRepository
 import com.example.rpl.RPL.repository.UserRepository
 import com.example.rpl.RPL.util.AbstractFunctionalSpec
+import com.sun.security.auth.UnixNumericGroupPrincipal
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.ActiveProfiles
@@ -45,6 +46,8 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     Long courseId;
 
     User otherUser;
+
+    Role adminRole;
 
     def setup() {
         User user = new User(
@@ -92,7 +95,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         courseId = course.getId()
 
-        Role adminRole = new Role(
+        adminRole = new Role(
                 "admin",
                 "course_delete,course_view,course_edit,activity_view,activity_manage,activity_submit,user_view,user_manage"
         )
@@ -537,4 +540,23 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         result.message == 'User not found in course'
     }
+
+    /*****************************************************************************************
+     ********** GET COURSE USER PERMISSIONS **************************************************
+     *****************************************************************************************/
+
+    @Unroll
+    void "test get user course permissions"() {
+        when:
+            def response = get(String.format("/api/courses/%s/permissions", courseId), username, password);
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            def result = getJsonResponse(response)
+
+            result == adminRole.getPermissions()
+    }
+
 }
