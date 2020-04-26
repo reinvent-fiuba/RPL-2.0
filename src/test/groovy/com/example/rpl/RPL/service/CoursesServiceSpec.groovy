@@ -389,4 +389,37 @@ class CoursesServiceSpec extends Specification {
 
             thrown(NotFoundException)
     }
+
+    void "should get user permissions"() {
+        given:
+            Long courseId = 1
+            Long userId = 1
+            CourseUser courseUser = Mock(CourseUser)
+            Role userRole = Mock(Role)
+            def expectedPermisions = ['some', 'permissions']
+
+        when:
+            List<String> permissions = coursesService.getPermissions(courseId, userId)
+
+        then:
+            1 * courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId) >> Optional.of(courseUser)
+            1 * courseUser.getRole() >> userRole
+            1 * userRole.getPermissions() >> expectedPermisions
+
+            permissions == expectedPermisions
+    }
+
+    void "should throw not found course user while getting permissions if user not enerrolled"() {
+        given:
+        Long courseId = 1
+        Long userId = 1
+
+        when:
+        List<String> permissions = coursesService.getPermissions(courseId, userId)
+
+        then:
+        1 * courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId) >> Optional.empty()
+
+        thrown(NotFoundException)
+    }
 }

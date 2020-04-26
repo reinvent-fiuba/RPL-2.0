@@ -9,6 +9,7 @@ import com.example.rpl.RPL.repository.CourseUserRepository
 import com.example.rpl.RPL.repository.RoleRepository
 import com.example.rpl.RPL.repository.UserRepository
 import com.example.rpl.RPL.util.AbstractFunctionalSpec
+import com.sun.security.auth.UnixNumericGroupPrincipal
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.ActiveProfiles
@@ -45,6 +46,8 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     Long courseId;
 
     User otherUser;
+
+    Role adminRole;
 
     def setup() {
         User user = new User(
@@ -92,11 +95,14 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         courseId = course.getId()
 
-        Role adminRole = new Role('admin', 'course_admin,course_create')
+        adminRole = new Role(
+                "admin",
+                "course_delete,course_view,course_edit,activity_view,activity_manage,activity_submit,user_view,user_manage"
+        )
 
         roleRepository.save(adminRole);
 
-        Role studentRole = new Role('student', 'submit_activity')
+        Role studentRole = new Role('student', 'course_view,activity_view,activity_submit,user_view')
 
         roleRepository.save(studentRole);
 
@@ -494,17 +500,17 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     }
 
     @Unroll
-    void "test delete user in wrong courses should fail with not found course"() {
+    void "test delete user in other course should fail with not found course"() {
         when:
             def response = delete(String.format("/api/courses/%s/users/%s", 22, 1), username, password)
 
         then:
             response.contentType == "application/json"
-            response.statusCode == SC_NOT_FOUND
+            response.statusCode == SC_FORBIDDEN
 
             def result = getJsonResponse(response)
 
-            result.message == 'Course not found'
+            result.message == 'Forbidden'
     }
 
     @Unroll
@@ -534,4 +540,23 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         result.message == 'User not found in course'
     }
+
+    /*****************************************************************************************
+     ********** GET COURSE USER PERMISSIONS **************************************************
+     *****************************************************************************************/
+
+    @Unroll
+    void "test get user course permissions"() {
+        when:
+            def response = get(String.format("/api/courses/%s/permissions", courseId), username, password);
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            def result = getJsonResponse(response)
+
+            result == adminRole.getPermissions()
+    }
+
 }

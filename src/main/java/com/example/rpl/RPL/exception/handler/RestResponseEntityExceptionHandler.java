@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -104,6 +105,17 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         log.info(
             "[method:exception-handler][exception:BadCredentialsException][message:{}][error:{}][status:{}][cause:[{}]]",
             ex.getMessage(), "bad_credentials", HttpStatus.UNAUTHORIZED, ex.getCause());
+        return new ResponseEntity<>(errorResponse, new HttpHeaders(), errorResponse.getStatusObj());
+    }
+
+    @ExceptionHandler({AccessDeniedException.class})
+    public ResponseEntity<Object> handleAccessDeniedException(
+            AccessDeniedException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.FORBIDDEN,
+                "forbidden", "Forbidden");
+        log.info(
+                "[method:exception-handler][exception:BaseAPIException][message:{}][error:{}][status:{}]",
+                ex.getMessage(), "forbidden", HttpStatus.FORBIDDEN);
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), errorResponse.getStatusObj());
     }
 

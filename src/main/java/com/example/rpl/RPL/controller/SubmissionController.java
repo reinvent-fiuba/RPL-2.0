@@ -122,7 +122,6 @@ public class SubmissionController {
         return new ResponseEntity<>(asDto, HttpStatus.OK);
     }
 
-
     @PostMapping(value = "/api/submissions/{submissionId}/result")
     public ResponseEntity<SubmissionResultRequestDTO> submitResults(@PathVariable Long submissionId,
         @RequestBody @Valid SubmissionResultRequestDTO createSubmissionResultRequestDTO) {
@@ -164,6 +163,7 @@ public class SubmissionController {
         return new ResponseEntity<>(asDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('activity_submit')")
     @GetMapping(value = "/api/courses/{courseId}/activities/{activityId}/submissions")
     public ResponseEntity<List<ActivitySubmissionResultResponseDTO>> getAllSubmissionResults(
         @CurrentUser UserPrincipal currentUser,

@@ -71,8 +71,8 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
     def setup() {
         Role role = new Role(
-                "student",
-                "activity_submit,course_create"
+                "admin",
+                "course_delete,course_view,course_edit,activity_view,activity_manage,activity_submit,user_view,user_manage"
         )
         roleRepository.save(role);
 
@@ -165,6 +165,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
         courseUserRepository.deleteAll()
         userRepository.deleteAll()
         courseRepository.deleteAll()
+        roleRepository.deleteAll()
     }
 
     /*****************************************************************************************
@@ -252,7 +253,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     }
 
     @Unroll
-    void "test create activity with wrong courseId should not save activity in DB"() {
+    void "test create activity in other course should not save activity in DB"() {
         given: "a new activity"
             Map body = [usernameOrEmail: username, password: password]
             File f = new File("./src/main/resources/db/testdata/unit_test.c")
@@ -275,13 +276,13 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             api.contentType("multipart/form-data")
             def response = api.post(String.format("/api/courses/%d/activities", course.getId() + 1))
 
-        then: "must fail with Not Found Error"
+        then: "must fail with Forbidden Error"
             response.contentType == "application/json"
-            response.statusCode == SC_NOT_FOUND
+            response.statusCode == SC_FORBIDDEN
 
             Map result = getJsonResponse(response)
-            assert result.message == "Course not found"
-            assert result.error == "course_not_found"
+            assert result.message == "Forbidden"
+            assert result.error == "forbidden"
     }
 
     @Unroll

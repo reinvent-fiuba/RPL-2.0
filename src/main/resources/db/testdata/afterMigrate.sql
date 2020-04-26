@@ -23,10 +23,10 @@ VALUES (4, 'Student', 'NotAccepted', 00001, 'student_not_accepted', 'not_accepte
         'UBA', now(), now());
 
 INSERT INTO roles
-VALUES (1, 'admin', 'course_create,course_edit,activity_submit', now(), now());
+VALUES (1, 'admin', 'course_delete,course_view,course_edit,activity_view,activity_manage,activity_submit,user_view,user_manage', now(), now());
 
 INSERT INTO roles
-VALUES (2, 'student', 'activity_submit', now(), now());
+VALUES (2, 'student', 'course_view,activity_view,activity_submit,user_view', now(), now());
 
 INSERT INTO permissions
 VALUES (1, 'course_create', now());

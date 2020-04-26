@@ -52,6 +52,7 @@ public class ActivitiesController {
         this.testService = testService;
     }
 
+    @PreAuthorize("hasAuthority('activity_manage')")
     @PostMapping(value = "/api/courses/{courseId}/activities")
     public ResponseEntity<ActivityResponseDTO> createActivity(
         @CurrentUser UserPrincipal currentUser,
@@ -75,6 +76,7 @@ public class ActivitiesController {
             ActivityResponseDTO.fromEntity(activity, null, new ArrayList<>()), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('activity_manage')")
     @PutMapping(value = "/api/courses/{courseId}/activities/{activityId}")
     public ResponseEntity<ActivityResponseDTO> updateActivity(
         @CurrentUser UserPrincipal currentUser,
@@ -101,7 +103,7 @@ public class ActivitiesController {
             ActivityResponseDTO.fromEntity(activity, null, new ArrayList<>()), HttpStatus.OK);
     }
 
-
+    @PreAuthorize("hasAuthority('activity_view')")
     @GetMapping(value = "/api/courses/{courseId}/activities")
     public ResponseEntity<List<UserActivityResponseDTO>> getActivities(
         @CurrentUser UserPrincipal currentUser,
@@ -124,6 +126,7 @@ public class ActivitiesController {
             HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('activity_view')")
     @GetMapping(value = "/api/courses/{courseId}/activities/{activityId}")
     public ResponseEntity<ActivityResponseDTO> getActivity(
         @CurrentUser UserPrincipal currentUser,
@@ -143,7 +146,7 @@ public class ActivitiesController {
     }
 
 
-    @PreAuthorize("hasAuthority('course_create')")
+    @PreAuthorize("hasAuthority('activity_manage')")
     @PostMapping(value = "/api/courses/{courseId}/activities/{activityId}/iotests")
     public ResponseEntity<IOTestResponseDTO> createIOTestCase(
         @CurrentUser UserPrincipal currentUser,
@@ -161,6 +164,7 @@ public class ActivitiesController {
             HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('activity_manage')")
     @PutMapping(value = "/api/courses/{courseId}/activities/{activityId}/iotests/{ioTestId}")
     public ResponseEntity<IOTestResponseDTO> updateIOTestCase(
         @CurrentUser UserPrincipal currentUser,
@@ -179,6 +183,7 @@ public class ActivitiesController {
             HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('activity_manage')")
     @DeleteMapping(value = "/api/courses/{courseId}/activities/{activityId}/iotests/{ioTestId}")
     public ResponseEntity<ActivityResponseDTO> deleteIOTestCase(
         @CurrentUser UserPrincipal currentUser,
