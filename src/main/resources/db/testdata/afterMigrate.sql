@@ -66,12 +66,12 @@ VALUES (2, 'la_submission.tar.xz', 'text/x-c',
 
 INSERT INTO rpl_files
 VALUES (3, 'la_submission_unit_test.tar.xz', 'text/x-c',
-        x'fd377a585a000004e6d6b4460200210116000000742fe5a3e00bff01915d00309cecd2685724bcae385acc81d022c228fc8542d451fd62279b02c1354277cb3b379047f96fd7171227ab74bedf9da4e615e7366ec3dafd3eb5f492f4ae88fdf186739c9936dd18ff2f4e91c89ca4771a9d7d32061aa6b15e6a9829dd4c17ef8e65482a92f8ff828853d8748f7e494fdd6454c67fe8bb0cc94bff577bcdc573f9052b2a977e6a4f01ab353a4201f762f8ea244c060e4fd3cac3e13086716942b07f7b3f884d28bfddb2360d72012b8aa7e7cfd3c5a2bb94d7843b57a92c32a91b3cae66f1e25b56e7318a3bdc841594eab48c2910e8e1c1682dd198497f36fa2de156ffceab4d4536b9ec87dcb5651e52accb6509f7768d1350453a7aedeadf048cb6f072ae2eafcffd8d986ee128a425373f4105d89ee795f03891d642af858ad17e94df80e18b1b0ccb3655a4f191da3e129d70d172adc6c24b758d7b753a72bcefdd563f994d41edbacb7a83c0bef4fd7b1c60c7fa2637715a853580465c6005809b91e522742f44a8516329096ce757017dea111069417fd502b1fa22714d9d8152793a0b130f04e45138d012e80000000000413a7a0dbf2d70fa0001ad0380180000cee81bdeb1c467fb020000000004595a',
+        x'fd377a585a000004e6d6b4460200210116000000742fe5a3e00bff01a85d00309cecd2685724bcae385acc81d022c228fc8542d451fd62279b02c1354277cb3b379047fdc217302bfc7ff2e54c92810a8751c5e0856d69383c7df29e2ac6cf3d78fa63a4246a9df1aba0553fd352aded30665b8ed16109c55f45f3a0734747519162eda31c29b388d92ff35b86f0063a5209930ef3c3434bfb80f426d2468fea4f01e30538ce7af06cdc3bf77fb605506daa068d2fb8c19ff923934cf72cc140260ee23ad3a84e6005c4c3b1801de64f3d7f983d4eee01a59cdd7c5e1da317702c3ea4edbdfd0a93487e1df1d25fc77a8c4b10752f03b95011e0eba543d4f9e8a45fd6995e11578e35dac16e5f261a8bc9b6484525b7b4752aba62f28514f610cb615d27012e23a1305c0de7d0d59e9d21dcf64a6a13e9734e572d7407800fca028472732baeed434fe4f7921844c4093339aa48b6c015ee7fe9a8eb933f70fcaf318fdbbd9828af6c6c25ab27d5dc1b9b2a9ab00813ddb15b7aaf352e97540fb0b8768475493b32cbf1f7724c38c5ea7e4dafff1b2edab54c31ec1a6385c5e44570aa20043bdfa88d82f4e97733adbafe0646e73af1e61b68e528294efdd9cde4db02f538cd0000dee298736358de780001c403801800005cb6e0f1b1c467fb020000000004595a',
         now(), now());
 
 INSERT INTO rpl_files
 VALUES (4, 'c_unit_test.c', 'text/x-c',
-        x'23696e636c756465203c637269746572696f6e2f637269746572696f6e2e683e0a23696e636c75646520226d61696e2e63220a0a54657374286d6973632c206661696c696e6729207b0a2020202063725f61737365727428666f6f4e6f526570657469646f2829203d3d2031293b0a7d0a0a54657374286d6973632c2070617373696e6729207b0a2020202063725f617373657274286261724e6f526570657469646f2829203d3d2032293b0a7d',
+        x'23696e636c756465203c637269746572696f6e2f637269746572696f6e2e683e0a23696e636c75646520226d61696e2e63220a0a54657374286d6973632c20746573744e616d653129207b0a2020202063725f61737365727428666f6f4e6f526570657469646f2829203d3d2031293b0a7d0a0a54657374286d6973632c20746573744e616d653229207b0a2020202063725f617373657274286261724e6f526570657469646f2829203d3d2032293b0a7d',
         now(), now());
 
 INSERT INTO activity_categories
@@ -82,26 +82,27 @@ VALUES (1, 1, 'Conceptos Basicos',
 INSERT INTO activities
 VALUES (1, 1, 1, 'Pasar de segundos a horas, minutos, segundos',
         'Dada una cantidad de segundos, devolver/imprimir la cantidad de horas', 'c_std11', true,
+        true,
         '//El codigo inicial', 1, now(), now());
 
 INSERT INTO activities
 VALUES (2, 1, 1, 'El ejericio 2',
-        'La descripción del ejericio 2', 'c_std11', true, '//El codigo inicial', 1,
+        'La descripción del ejericio 2', 'c_std11', false, true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (3, 1, 1, 'El ejericio 3',
-        'La descripción del ejericio 3', 'c_std11', true, '//El codigo inicial', 1,
+        'La descripción del ejericio 3', 'c_std11', true, true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (4, 1, 1, 'El ejericio 4',
-        'La descripción del ejericio 4', 'c_std11', true, '//El codigo inicial', 1,
+        'La descripción del ejericio 4', 'c_std11', true, true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (5, 1, 1, 'El ejericio 5',
-        'La descripción del ejericio 5', 'c_std11', true, '//El codigo inicial', 1,
+        'La descripción del ejericio 5', 'c_std11', true, true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activity_categories
@@ -112,27 +113,28 @@ VALUES (2, 1, 'Conceptos no tan Basicos',
 INSERT INTO activities
 VALUES (6, 1, 2, 'Pasar de segundos a horas, minutos, segundos',
         'Dada una cantidad de segundos, devolver/imprimir la cantidad de horas', 'c_std11', true,
+        true,
         '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (7, 1, 2, 'El ejericio 2',
-        'La descripción del ejericio 2', 'c_std11', true, '//El codigo inicial', 1,
+        'La descripción del ejericio 2', 'c_std11', true, true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (8, 1, 2, 'El ejericio 3',
-        'La descripción del ejericio 3', 'c_std11', true, '//El codigo inicial', 1,
+        'La descripción del ejericio 3', 'c_std11', true, true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (9, 1, 2, 'El ejericio 4',
-        'La descripción del ejericio 4', 'c_std11', true, '//El codigo inicial', 1,
+        'La descripción del ejericio 4', 'c_std11', true, true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (10, 1, 2, 'El ejericio 5',
-        'La descripción del ejericio 5', 'c_std11', true, '//El codigo inicial', 1,
+        'La descripción del ejericio 5', 'c_std11', true, true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activity_submissions

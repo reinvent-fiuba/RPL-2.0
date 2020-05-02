@@ -138,7 +138,7 @@ public class ActivitiesController {
         //        GET UNIT TESTS
         UnitTest unitTest = testService.getUnitTests(activity.getId());
 
-//        GET IO TESTSS
+        //        GET IO TESTS
         List<IOTest> ioTests = testService.getAllIOTests(activity.getId());
 
         return new ResponseEntity<>(ActivityResponseDTO.fromEntity(activity, unitTest, ioTests),
@@ -155,10 +155,12 @@ public class ActivitiesController {
         @RequestBody @Valid CreateIOTestRequestDTO createIOTestRequestDTO) {
 
 //        check the activity exists
-        activitiesService.getActivity(activityId);
+        Activity activity = activitiesService.getActivity(activityId);
 
-        IOTest test = testService.createUnitTest(activityId, createIOTestRequestDTO.getTextIn(),
+        IOTest test = testService.createIOTest(activityId, createIOTestRequestDTO.getTextIn(),
             createIOTestRequestDTO.getTextOut());
+
+        activity.setIsIOTested(true);
         return new ResponseEntity<>(
             new IOTestResponseDTO(test.getId(), test.getTestIn(), test.getTestOut()),
             HttpStatus.CREATED);

@@ -108,12 +108,21 @@ public class SubmissionService {
             return submissionRepository.save(activitySubmission);
         }
 
-        List<IOTestRun> ioTestRuns = testService
-            .parseAndSaveStdout(activitySubmission.getActivity().getId(), testRun);
+        boolean passedTests;
 
-        // Check if tests where correct
-        if (testService
-            .checkIfTestsPassed(activitySubmission.getActivity().getId(), ioTestRuns)) {
+        // Check if IO tests where correct
+        if (activitySubmission.getActivity().getIsIOTested()) {
+            List<IOTestRun> ioTestRuns = testService
+                .parseAndSaveStdout(activitySubmission.getActivity().getId(), testRun);
+
+            passedTests = testService
+                .checkIfTestsPassed(activitySubmission.getActivity().getId(), ioTestRuns);
+        } else {
+            // Check if Unit tests passed
+            passedTests = true;
+        }
+
+        if (passedTests) {
             activitySubmission.setProcessedSuccess();
         } else {
             activitySubmission.setProcessedFailure();

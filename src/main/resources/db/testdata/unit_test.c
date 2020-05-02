@@ -1,10 +1,10 @@
 #include <criterion/criterion.h>
 #include "main.c"
 
-Test(misc, failing) {
+Test(misc, testName1) {
     cr_assert(fooNoRepetido() == 1);
 }
 
-Test(misc, passing) {
+Test(misc, testName2) {
     cr_assert(barNoRepetido() == 2);
 }

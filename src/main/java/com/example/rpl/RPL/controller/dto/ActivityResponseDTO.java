@@ -30,6 +30,8 @@ public class ActivityResponseDTO {
 
     private String language;
 
+    private Boolean isIOTested;
+
     private Boolean active;
 
     private String initialCode;
@@ -54,6 +56,7 @@ public class ActivityResponseDTO {
             .categoryDescription(activity.getActivityCategory().getDescription())
             .name(activity.getName())
             .description(activity.getDescription())
+            .isIOTested(activity.getIsIOTested())
             .language(activity.getLanguage().getName())
             .active(activity.getActive())
             .initialCode(activity.getInitialCode())

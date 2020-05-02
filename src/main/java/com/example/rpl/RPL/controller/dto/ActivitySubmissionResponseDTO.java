@@ -30,6 +30,8 @@ public class ActivitySubmissionResponseDTO {
 
     private String activityLanguage;
 
+    private Boolean isIOTested;
+
     private String activityUnitTestsContent;
 
     private List<String> activityIOTests;
@@ -47,6 +49,7 @@ public class ActivitySubmissionResponseDTO {
             .activitySupportingFileType(as.getActivity().getSupportingFile().getFileType())
             .activitySupportingFileId(as.getActivity().getSupportingFile().getId())
             .activityLanguage(as.getActivity().getLanguage().getNameAndVersion())
+            .isIOTested(as.getActivity().getIsIOTested())
             .activityUnitTestsContent("");
 
         if (unitTest != null) {

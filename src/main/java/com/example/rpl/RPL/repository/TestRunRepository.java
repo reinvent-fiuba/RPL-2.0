@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface TestRunRepository extends JpaRepository<TestRun, Long> {
 
     TestRun findByActivitySubmission_Id(Long activitySubmissionId);
+
+    TestRun findTopByActivitySubmission_IdOrderByLastUpdatedDesc(Long activitySubmissionId);
 }

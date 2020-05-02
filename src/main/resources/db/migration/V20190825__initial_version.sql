@@ -104,6 +104,7 @@ CREATE TABLE activities
     name                 VARCHAR(500),
     description          VARCHAR(20000),
     language             VARCHAR(255),
+    is_io_tested         BOOLEAN,
     active               BOOLEAN,
     initial_code         varchar(20000),
     supporting_file_id   BIGINT,

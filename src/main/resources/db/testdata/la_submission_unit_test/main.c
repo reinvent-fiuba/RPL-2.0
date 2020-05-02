@@ -3,6 +3,7 @@
 
 
 int fooNoRepetido() {
+    int variableNoUsada;
     printf("Soy foo");
     return 1;
 }

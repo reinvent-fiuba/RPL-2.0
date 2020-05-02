@@ -111,7 +111,7 @@ public class TestService {
     }
 
     @Transactional
-    public IOTest createUnitTest(Long activityId, String in, String out) {
+    public IOTest createIOTest(Long activityId, String in, String out) {
         IOTest ioTest = new IOTest(activityId, in, out);
 
         return iOTestRepository.save(ioTest);

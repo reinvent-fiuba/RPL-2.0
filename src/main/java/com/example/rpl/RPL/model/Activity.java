@@ -54,6 +54,9 @@ public class Activity {
     @Column(name = "language")
     private Language language;
 
+    @Column(name = "is_io_tested")
+    private Boolean isIOTested;
+
     @Column(name = "active")
     private Boolean active;
 
@@ -102,6 +105,11 @@ public class Activity {
         this.description = description;
         this.language = language;
         this.initialCode = initialCode;
+        this.lastUpdated = now();
+    }
+
+    public void setIsIOTested(boolean isIOTested) {
+        this.isIOTested = isIOTested;
         this.lastUpdated = now();
     }
 }

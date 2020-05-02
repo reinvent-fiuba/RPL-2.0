@@ -25,6 +25,8 @@ public class ActivitySubmissionResultResponseDTO {
 
     private String activityTestType;
 
+    private Boolean isIOTested;
+
     private String activitySupportingFileName;
 
     private String activitySupportingFileType;
@@ -58,6 +60,7 @@ public class ActivitySubmissionResultResponseDTO {
             .submissionFileName(as.getFile().getFileName())
             .submissionFileType(as.getFile().getFileType())
             .submissionFileId(as.getFile().getId())
+            .isIOTested(as.getActivity().getIsIOTested())
             .activitySupportingFileName(as.getActivity().getSupportingFile().getFileName())
             .activitySupportingFileType(as.getActivity().getSupportingFile().getFileType())
             .activitySupportingFileId(as.getActivity().getSupportingFile().getId())

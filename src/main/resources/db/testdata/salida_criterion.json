@@ -1,0 +1,15 @@
+{
+  "tests": [
+    {
+      "name": "testName2",
+      "success": true,
+      "description": "passed"
+    },
+    {
+      "name": "testName1",
+      "success": true,
+      "description": "passed"
+    }
+  ],
+  "success": true
+}
