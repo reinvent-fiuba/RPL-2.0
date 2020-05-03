@@ -22,6 +22,12 @@ VALUES (4, 'Student', 'NotAccepted', 00001, 'student_not_accepted', 'not_accepte
         'Ing. en Informatica',
         'UBA', now(), now());
 
+INSERT INTO users
+VALUES (5, 'Student5', 'student5', 00001, 'student5', 'student5@gmail.com',
+        '$2a$10$ab9rVz3lVB.ANA2ss.1pOOFwg.tH5yexgXc58PSMwa6CVlBDWM2Eq', false,
+        'Ing. en Informatica',
+        'UBA', now(), now());
+
 INSERT INTO roles
 VALUES (1, 'admin', 'course_delete,course_view,course_edit,activity_view,activity_manage,activity_submit,user_view,user_manage', now(), now());
 

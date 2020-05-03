@@ -6,7 +6,7 @@ import assignment_main
 class TestMethods(unittest.TestCase):
 
   def test_1(self):
-    self.assertEqual(assignment_main.fooNoRepetido(), 1)
+    self.assertTrue(assignment_main.fooNoRepetido())
 
   def test_2(self):
-    self.assertEqual(assignment_main.barNoRepetido(), 2)
+    self.assertTrue(assignment_main.barNoRepetido())
