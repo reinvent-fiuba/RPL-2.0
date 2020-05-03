@@ -105,6 +105,7 @@ class SubmissionServiceSpec extends Specification {
         given: "an activity"
             Activity a = new Activity()
             a.id = 1
+            a.isIOTested = true
             activityRepository.findById(_ as Long) >> Optional.of(a)
 
         and: "1 submission"
@@ -124,7 +125,8 @@ class SubmissionServiceSpec extends Specification {
                     "COMPLETED ALL STAGES",
                     testRunStage,
                     "stderr",
-                    "stdout"
+                    "stdout",
+                    null
             )
 
         then:
