@@ -49,9 +49,6 @@ public class UnitTestResultDTO {
         @JsonProperty("name")
         String name;
 
-        @JsonProperty("assertions")
-        Integer assertions;
-
         @JsonProperty("status")
         String status;
 
@@ -61,11 +58,9 @@ public class UnitTestResultDTO {
         @JsonCreator
         public TestSuitDTO(
             @JsonProperty(value = "name", required = true) String name,
-            @JsonProperty(value = "assertions", required = true) Integer assertions,
             @JsonProperty(value = "status", required = true) String status,
             @JsonProperty(value = "messages") String messages) {
             this.name = name;
-            this.assertions = assertions;
             this.status = status;
             this.messages = messages;
         }

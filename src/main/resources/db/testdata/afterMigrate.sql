@@ -65,7 +65,7 @@ VALUES (2, 'la_submission.tar.xz', 'text/x-c',
         now(), now());
 
 INSERT INTO rpl_files
-VALUES (3, 'la_submission_unit_test.tar.xz', 'text/x-c',
+VALUES (3, 'la_submission_unit_test_c.tar.xz', 'text/x-c',
         x'fd377a585a000004e6d6b4460200210116000000742fe5a3e00bff01a85d00309cecd2685724bcae385acc81d022c228fc8542d451fd62279b02c1354277cb3b379047fdc217302bfc7ff2e54c92810a8751c5e0856d69383c7df29e2ac6cf3d78fa63a4246a9df1aba0553fd352aded30665b8ed16109c55f45f3a0734747519162eda31c29b388d92ff35b86f0063a5209930ef3c3434bfb80f426d2468fea4f01e30538ce7af06cdc3bf77fb605506daa068d2fb8c19ff923934cf72cc140260ee23ad3a84e6005c4c3b1801de64f3d7f983d4eee01a59cdd7c5e1da317702c3ea4edbdfd0a93487e1df1d25fc77a8c4b10752f03b95011e0eba543d4f9e8a45fd6995e11578e35dac16e5f261a8bc9b6484525b7b4752aba62f28514f610cb615d27012e23a1305c0de7d0d59e9d21dcf64a6a13e9734e572d7407800fca028472732baeed434fe4f7921844c4093339aa48b6c015ee7fe9a8eb933f70fcaf318fdbbd9828af6c6c25ab27d5dc1b9b2a9ab00813ddb15b7aaf352e97540fb0b8768475493b32cbf1f7724c38c5ea7e4dafff1b2edab54c31ec1a6385c5e44570aa20043bdfa88d82f4e97733adbafe0646e73af1e61b68e528294efdd9cde4db02f538cd0000dee298736358de780001c403801800005cb6e0f1b1c467fb020000000004595a',
         now(), now());
 
@@ -74,25 +74,35 @@ VALUES (4, 'c_unit_test.c', 'text/x-c',
         x'23696e636c756465203c637269746572696f6e2f637269746572696f6e2e683e0a23696e636c75646520226d61696e2e63220a0a54657374286d6973632c20746573744e616d653129207b0a2020202063725f61737365727428666f6f4e6f526570657469646f2829203d3d2031293b0a7d0a0a54657374286d6973632c20746573744e616d653229207b0a2020202063725f617373657274286261724e6f526570657469646f2829203d3d2032293b0a7d',
         now(), now());
 
+INSERT INTO rpl_files
+VALUES (5, 'unit_test.py', 'text/x-c',
+        x'696d706f727420756e6974746573740a696d706f72742061737369676e6d656e745f6d61696e0a0a636c61737320546573744d6574686f647328756e6974746573742e5465737443617365293a0a0a202064656620746573745f312873656c66293a0a2020202073656c662e617373657274547275652861737369676e6d656e745f6d61696e2e666f6f4e6f526570657469646f2829290a0a202064656620746573745f322873656c66293a0a2020202073656c662e617373657274547275652861737369676e6d656e745f6d61696e2e6261724e6f526570657469646f2829290a',
+        now(), now());
+
+INSERT INTO rpl_files
+VALUES (6, 'la_submission_unit_test_python.tar.xz', 'text/x-c',
+        x'fd377a585a000004e6d6b4460200210116000000742fe5a3e007ff013d5d00309cecd2685724bcae385acc81d022c228fc8542d451fd62279b02c1354277cb3b379047fdcb18ebffc2baf4895bf9ce8e52c11db7231052f6f024de9881b6620db9bed2fce29878d5c0d759c9c6e4853b4e712bb9f2c42b243c174b7d5df56d4328fc552eebdaa8dc59c137e76ce01191fcb3361cfd805e9ed5a9c19f4071d256c910152a1274591005748a827ce930a7e0488bb9638539373cb107b33b739f3f6dd042fa954ffd2176947f6af52d1b7c8586fa90bcad59e93f29fd32f5d604de44bbea65d4515f4903a8edf8d4e4c7b93413dd697ec6ea02cffaa4df5e483e00be69479ca5079f1c57008ef24c168199f2dab32357698632030f07f781525dde6b9f124d9628a0748f137cdefdd459e173b372b418a381c95405db2613a8133bf6fa489fbb64d2e57ec67e269f506b773bd185780046d37bff2c2f000000000049b256dd9240d1a60001d9028010000011dfdb7db1c467fb020000000004595a',
+        now(), now());
+
 INSERT INTO activity_categories
 VALUES (1, 1, 'Conceptos Basicos',
         'Ejercicios faciles para empezar', true, now(), now());
 
 
 INSERT INTO activities
-VALUES (1, 1, 1, 'Pasar de segundos a horas, minutos, segundos',
+VALUES (1, 1, 1, 'Pasar de segundos a horas, minutos, segundos IO Test',
         'Dada una cantidad de segundos, devolver/imprimir la cantidad de horas', 'c_std11', true,
         true,
         '//El codigo inicial', 1, now(), now());
 
 INSERT INTO activities
-VALUES (2, 1, 1, 'El ejericio 2',
+VALUES (2, 1, 1, 'Ej2 Unit Test C',
         'La descripción del ejericio 2', 'c_std11', false, true, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
-VALUES (3, 1, 1, 'El ejericio 3',
-        'La descripción del ejericio 3', 'c_std11', true, true, '//El codigo inicial', 1,
+VALUES (3, 1, 1, 'Ej 3 Unit Test Python',
+        'La descripción del ejericio 3', 'python_3.7', false, true, '#El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
@@ -143,6 +153,9 @@ VALUES (1, 1, 1, 2, 'PENDING', now(), now());
 INSERT INTO activity_submissions
 VALUES (2, 2, 1, 3, 'PENDING', now(), now());
 
+INSERT INTO activity_submissions
+VALUES (3, 3, 1, 6, 'PENDING', now(), now());
+
 -- INSERT INTO tests
 -- VALUES (1, 1, now(), now());
 
@@ -154,6 +167,9 @@ VALUES (1, 1, true, 'salio todo bien', 'todo el stderr', 'todo el stdout', now()
 
 INSERT INTO unit_tests
 VALUES (1, 2, 4, now(), now());
+
+INSERT INTO unit_tests
+VALUES (2, 3, 5, now(), now());
 
 INSERT INTO IO_tests
 VALUES (1, 1, '26164', '07:16:04.0000', now(), now());

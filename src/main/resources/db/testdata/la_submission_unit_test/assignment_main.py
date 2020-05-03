@@ -13,11 +13,11 @@ def main():
                                                         segundos=seg))
 
 
-def foo():
+def fooNoRepetido():
   print("hola soy foo")
   return 1
 
 
-def bar():
+def barNoRepetido():
   print("hola soy bar")
-  return 2
+  return 20
