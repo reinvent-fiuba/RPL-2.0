@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-  "host": "localhost:38497",
+  "host": "localhost:46473",
     "basePath": "/",
     "tags": [
         {
@@ -4935,10 +4935,6 @@
       "TestSuitDTO": {
         "type": "object",
         "properties": {
-          "assertions": {
-            "type": "integer",
-            "format": "int32"
-          },
           "messages": {
             "type": "string"
           },
