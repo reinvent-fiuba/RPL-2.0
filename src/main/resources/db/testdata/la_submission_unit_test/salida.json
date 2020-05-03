@@ -1,0 +1,31 @@
+{
+  "id": "Criterion v2.3.3",
+  "passed": 1,
+  "failed": 1,
+  "errored": 0,
+  "skipped": 0,
+  "test_suites": [
+    {
+      "name": "misc",
+      "passed": 1,
+      "failed": 1,
+      "errored": 0,
+      "skipped": 0,
+      "tests": [
+        {
+          "name": "testName2",
+          "assertions": 1,
+          "status": "PASSED"
+        },
+        {
+          "name": "testName1",
+          "assertions": 1,
+          "status": "FAILED",
+          "messages": [
+            "unit_test.c:5: The expression fooNoRepetido() == 1 is false."
+          ]
+        }
+      ]
+    }
+  ]
+}

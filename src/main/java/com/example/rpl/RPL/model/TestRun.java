@@ -57,6 +57,9 @@ public class TestRun {
     @OneToMany(mappedBy = "testRun", fetch = FetchType.LAZY)
     private List<IOTestRun> ioTestRunList;
 
+    @OneToMany(mappedBy = "testRun", fetch = FetchType.LAZY)
+    private List<UnitTestRun> unitTestRunList;
+
     @Column(name = "date_created")
     private ZonedDateTime dateCreated;
 

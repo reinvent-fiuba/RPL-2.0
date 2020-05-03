@@ -9,7 +9,8 @@ import org.springframework.test.context.ActiveProfiles
 import spock.lang.Shared
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.*
+import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN
+import static javax.servlet.http.HttpServletResponse.SC_OK
 
 @ActiveProfiles("test-functional")
 class ActivityCategoriesControllerFunctionalSpec extends AbstractFunctionalSpec {
@@ -112,7 +113,7 @@ class ActivityCategoriesControllerFunctionalSpec extends AbstractFunctionalSpec 
         given:
             Long courseId = course.getId();
             Map body = [usernameOrEmail: username, password: password]
-            File f = new File("./src/main/resources/db/testdata/unit_test.c")
+            File f = new File("./src/main/resources/db/testdata/unit_test_google.c")
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
         when: "get activity categories"

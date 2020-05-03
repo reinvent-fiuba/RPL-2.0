@@ -132,7 +132,8 @@ public class SubmissionController {
                 createSubmissionResultRequestDTO.getTestRunExitMessage(),
                 createSubmissionResultRequestDTO.getTestRunStage(),
                 createSubmissionResultRequestDTO.getTestRunStderr(),
-                createSubmissionResultRequestDTO.getTestRunStdout());
+                createSubmissionResultRequestDTO.getTestRunStdout(),
+                createSubmissionResultRequestDTO.getTestRunUnitTestResult());
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -149,7 +150,8 @@ public class SubmissionController {
                 .submissionStatus(as.getStatus().name()).build(), HttpStatus.NOT_FOUND);
         }
 
-        TestRun run = testRunRepository.findByActivitySubmission_Id(submissionId);
+        TestRun run = testRunRepository
+            .findTopByActivitySubmission_IdOrderByLastUpdatedDesc(submissionId);
 
 //        GET UNIT TESTS
         UnitTest unitTest = testService.getUnitTests(as.getActivity().getId());
@@ -176,7 +178,8 @@ public class SubmissionController {
 
         List<ActivitySubmissionResultResponseDTO> response = submissions.stream()
             .map(as -> {
-                TestRun run = testRunRepository.findByActivitySubmission_Id(as.getId());
+                TestRun run = testRunRepository
+                    .findTopByActivitySubmission_IdOrderByLastUpdatedDesc(as.getId());
 
 //        GET UNIT TESTS
                 UnitTest unitTest = testService.getUnitTests(as.getActivity().getId());

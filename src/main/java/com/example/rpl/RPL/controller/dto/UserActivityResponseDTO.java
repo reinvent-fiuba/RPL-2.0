@@ -32,6 +32,8 @@ public class UserActivityResponseDTO {
 
     private Language language;
 
+    private Boolean isIOTested;
+
     private Boolean active;
 
     private Long fileId;
@@ -54,6 +56,7 @@ public class UserActivityResponseDTO {
             .name(activity.getName())
             .description(activity.getDescription())
             .language(activity.getLanguage())
+            .isIOTested(activity.getIsIOTested())
             .active(activity.getActive())
             .fileId(activity.getSupportingFile().getId())
             .dateCreated(activity.getDateCreated())

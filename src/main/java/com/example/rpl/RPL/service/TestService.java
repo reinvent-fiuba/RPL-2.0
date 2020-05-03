@@ -1,15 +1,19 @@
 package com.example.rpl.RPL.service;
 
+import com.example.rpl.RPL.controller.dto.UnitTestResultDTO;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.IOTest;
 import com.example.rpl.RPL.model.IOTestRun;
 import com.example.rpl.RPL.model.TestRun;
 import com.example.rpl.RPL.model.UnitTest;
+import com.example.rpl.RPL.model.UnitTestRun;
 import com.example.rpl.RPL.repository.IOTestRepository;
 import com.example.rpl.RPL.repository.IOTestRunRepository;
 import com.example.rpl.RPL.repository.UnitTestRepository;
+import com.example.rpl.RPL.repository.UnitTestRunRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,14 +26,17 @@ public class TestService {
     private IOTestRepository iOTestRepository;
     private UnitTestRepository unitTestsRepository;
     private IOTestRunRepository iOTestRunRepository;
+    private UnitTestRunRepository unitTestRunRepository;
 
     @Autowired
     public TestService(IOTestRepository iOTestRepository,
         UnitTestRepository unitTestsRepository,
-        IOTestRunRepository iOTestRunRepository) {
+        IOTestRunRepository iOTestRunRepository,
+        UnitTestRunRepository unitTestRunRepository) {
         this.iOTestRepository = iOTestRepository;
         this.unitTestsRepository = unitTestsRepository;
         this.iOTestRunRepository = iOTestRunRepository;
+        this.unitTestRunRepository = unitTestRunRepository;
     }
 
 
@@ -99,7 +106,8 @@ public class TestService {
         StringBuilder result = new StringBuilder();
         for (String line : testRunStdout.split("\n")) {
             if (line.contains("end_RUN")) {
-                results.add(result.toString().substring(0, result.length() - 1 )); // removing last /n as it was an EOF originally
+                results.add(result.toString().substring(0,
+                    result.length() - 1)); // removing last /n as it was an EOF originally
             } else if (line.contains("start_RUN")) {
                 result = new StringBuilder();
             } else if (line.contains("assignment_main.py") || line.contains("./main")) {
@@ -111,7 +119,7 @@ public class TestService {
     }
 
     @Transactional
-    public IOTest createUnitTest(Long activityId, String in, String out) {
+    public IOTest createIOTest(Long activityId, String in, String out) {
         IOTest ioTest = new IOTest(activityId, in, out);
 
         return iOTestRepository.save(ioTest);
@@ -133,5 +141,15 @@ public class TestService {
         iOTestRepository.deleteById(ioTestId);
     }
 
+    @Transactional
+    public List<UnitTestRun> saveUnitTestRuns(TestRun testRun,
+        UnitTestResultDTO testRunUnitTestResult) {
+        List<UnitTestRun> unitTestRuns = testRunUnitTestResult.getTests().stream().map(
+            testSuitDTO -> new UnitTestRun(testRun, testSuitDTO.getName(),
+                testSuitDTO.getStatus().compareTo("PASSED") == 0,
+                testSuitDTO.getMessages())).collect(Collectors.toList());
 
+        return unitTestRunRepository.saveAll(unitTestRuns);
+
+    }
 }

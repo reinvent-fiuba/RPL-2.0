@@ -19,8 +19,8 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 @Entity
-@Table(name = "io_test_run")
-public class IOTestRun {
+@Table(name = "unit_test_run")
+public class UnitTestRun {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,14 +32,14 @@ public class IOTestRun {
     @ManyToOne(fetch = FetchType.LAZY)
     private TestRun testRun;
 
-    @Column(name = "test_in")
-    private String testIn;
+    @Column(name = "name")
+    String name;
 
-    @Column(name = "expected_output")
-    private String expectedOutput;
+    @Column(name = "passed")
+    Boolean passed;
 
-    @Column(name = "run_output")
-    private String runOutput;
+    @Column(name = "error_messages")
+    String errorMessages;
 
     @Column(name = "date_created")
     private ZonedDateTime dateCreated;
@@ -48,14 +48,14 @@ public class IOTestRun {
      * @deprecated Only used by hibernate
      */
     @Deprecated
-    public IOTestRun() {
+    public UnitTestRun() {
     }
 
-    public IOTestRun(TestRun testRun, String testIn, String expectedOutput, String runOutput) {
+    public UnitTestRun(TestRun testRun, String name, Boolean passed, String errorMessages) {
         this.testRun = testRun;
-        this.testIn = testIn;
-        this.expectedOutput = expectedOutput;
-        this.runOutput = runOutput;
+        this.name = name;
+        this.passed = passed;
+        this.errorMessages = errorMessages;
         this.dateCreated = ZonedDateTime.now();
     }
 }

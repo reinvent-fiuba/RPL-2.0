@@ -4,10 +4,7 @@ import com.example.rpl.RPL.model.IOTest
 import com.example.rpl.RPL.model.IOTestRun
 import com.example.rpl.RPL.model.TestRun
 import com.example.rpl.RPL.model.User
-import com.example.rpl.RPL.repository.FileRepository
-import com.example.rpl.RPL.repository.IOTestRepository
-import com.example.rpl.RPL.repository.IOTestRunRepository
-import com.example.rpl.RPL.repository.UnitTestRepository
+import com.example.rpl.RPL.repository.*
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -17,6 +14,7 @@ class TestServiceSpec extends Specification {
     private IOTestRepository iOTestRepository;
     private IOTestRunRepository iOTestRunRepository;
     private UnitTestRepository unitTestsRepository;
+    private UnitTestRunRepository unitTestRunRepository;
 
     private TestService testService
 
@@ -27,8 +25,9 @@ class TestServiceSpec extends Specification {
         iOTestRepository = Mock(IOTestRepository)
         fileRepository = Mock(FileRepository)
         iOTestRunRepository = Mock(IOTestRunRepository)
+        unitTestRunRepository = Mock(UnitTestRunRepository)
 
-        testService = new TestService(iOTestRepository, unitTestsRepository, iOTestRunRepository)
+        testService = new TestService(iOTestRepository, unitTestsRepository, iOTestRunRepository, unitTestRunRepository)
 
         user = new User(
                 'some-name',
