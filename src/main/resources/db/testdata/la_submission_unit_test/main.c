@@ -5,7 +5,7 @@
 int fooNoRepetido() {
     int variableNoUsada;
     printf("Soy foo");
-    return 1;
+    return 10;
 }
 
 int barNoRepetido() {

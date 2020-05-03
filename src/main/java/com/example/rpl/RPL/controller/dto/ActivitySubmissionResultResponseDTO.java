@@ -49,6 +49,8 @@ public class ActivitySubmissionResultResponseDTO {
 
     private List<IOTestRunResultDTO> ioTestRunResults;
 
+    private List<UnitTestRunResultDTO> unitTestRunResults;
+
     private ZonedDateTime submissionDate;
 
     public static ActivitySubmissionResultResponseDTO fromEntity(ActivitySubmission as,
@@ -79,11 +81,15 @@ public class ActivitySubmissionResultResponseDTO {
                 .stderr(run.getStderr())
                 .stdout(run.getStdout());
 
+            ab.ioTestRunResults(run.getIoTestRunList().stream().map(
+                r -> new IOTestRunResultDTO(r.getId(), r.getTestIn(), r.getExpectedOutput(),
+                    r.getRunOutput())).collect(
+                Collectors.toList()));
 
-        ab.ioTestRunResults(run.getIoTestRunList().stream().map(
-            r -> new IOTestRunResultDTO(r.getId(), r.getTestIn(), r.getExpectedOutput(),
-                r.getRunOutput())).collect(
-            Collectors.toList()));
+            ab.unitTestRunResults(run.getUnitTestRunList().stream().map(
+                r -> new UnitTestRunResultDTO(r.getId(), r.getName(), r.getPassed(),
+                    r.getErrorMessages())).collect(
+                Collectors.toList()));
         }
         return ab.build();
     }
@@ -96,5 +102,15 @@ public class ActivitySubmissionResultResponseDTO {
         private String testIn;
         private String expectedOutput;
         private String runOutput;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    private static class UnitTestRunResultDTO {
+
+        private Long id;
+        private String testName;
+        private Boolean passed;
+        private String errorMessages;
     }
 }

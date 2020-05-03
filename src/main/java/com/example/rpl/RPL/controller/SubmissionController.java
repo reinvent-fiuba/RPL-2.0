@@ -132,7 +132,8 @@ public class SubmissionController {
                 createSubmissionResultRequestDTO.getTestRunExitMessage(),
                 createSubmissionResultRequestDTO.getTestRunStage(),
                 createSubmissionResultRequestDTO.getTestRunStderr(),
-                createSubmissionResultRequestDTO.getTestRunStdout());
+                createSubmissionResultRequestDTO.getTestRunStdout(),
+                createSubmissionResultRequestDTO.getTestRunUnitTestResult());
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

@@ -196,7 +196,19 @@ CREATE TABLE io_test_run
     expected_output VARCHAR(5000),
     run_output      VARCHAR(5000),
     date_created    DATETIME,
-    last_updated    DATETIME,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (test_run_id) REFERENCES test_run (id)
+) ENGINE = InnoDB;
+
+CREATE TABLE unit_test_run
+(
+    id             BIGINT NOT NULL AUTO_INCREMENT,
+    test_run_id    BIGINT,
+    name           VARCHAR(255),
+    passed         boolean,
+    error_messages VARCHAR(5000),
+    date_created   DATETIME,
 
     PRIMARY KEY (id),
     FOREIGN KEY (test_run_id) REFERENCES test_run (id)

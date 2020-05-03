@@ -1,5 +1,6 @@
 package com.example.rpl.RPL.service;
 
+import com.example.rpl.RPL.controller.dto.UnitTestResultDTO;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivitySubmission;
@@ -90,11 +91,13 @@ public class SubmissionService {
      * @param testRunStage "BUILD", "RUN", "COMPLETED". Only useful if error
      * @param testRunStderr stderr of the test run
      * @param testRunStdout stdout of the test run (WITH LOGGING)
+     * @param testRunUnitTestResult results of the unit tests provided by unit test library
      */
     @Transactional
     public ActivitySubmission createSubmissionTestRun(Long submissionId, String testRunResult,
         String testRunExitMessage, String testRunStage, String testRunStderr,
-        String testRunStdout) {
+        String testRunStdout,
+        UnitTestResultDTO testRunUnitTestResult) {
 
         ActivitySubmission activitySubmission = this.getActivitySubmission(submissionId);
 
@@ -119,7 +122,9 @@ public class SubmissionService {
                 .checkIfTestsPassed(activitySubmission.getActivity().getId(), ioTestRuns);
         } else {
             // Check if Unit tests passed
-            passedTests = true;
+            testService.saveUnitTestRuns(testRun, testRunUnitTestResult);
+            passedTests =
+                testRunUnitTestResult.getErrored() == 0 && testRunUnitTestResult.getFailed() == 0;
         }
 
         if (passedTests) {
