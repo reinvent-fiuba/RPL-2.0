@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class CreateSubmissionRequestDTO {
+class CreateSubmissionRequestDTO {
 
     @Valid
     private List<Map<String, String>> files;

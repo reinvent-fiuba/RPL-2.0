@@ -9,11 +9,10 @@ import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.repository.CourseRepository;
 import com.example.rpl.RPL.repository.CourseUserRepository;
 import com.example.rpl.RPL.repository.RoleRepository;
+import com.example.rpl.RPL.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import com.example.rpl.RPL.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,10 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CoursesService {
 
-    private CourseRepository courseRepository;
-    private CourseUserRepository courseUserRepository;
-    private RoleRepository roleRepository;
-    private UserRepository userRepository;
+    private final CourseRepository courseRepository;
+    private final CourseUserRepository courseUserRepository;
+    private final RoleRepository roleRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public CoursesService(CourseRepository courseRepository,

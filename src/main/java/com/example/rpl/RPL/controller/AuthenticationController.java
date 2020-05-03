@@ -27,9 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthenticationController {
 
-    private AuthenticationService authenticationService;
-    private AuthenticationManager authenticationManager;
-    private JwtTokenProvider tokenProvider;
+    private final AuthenticationService authenticationService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider tokenProvider;
 
 
     @Autowired

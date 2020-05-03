@@ -33,9 +33,9 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 )
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private CustomUserDetailsService customUserDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    private JwtAuthenticationEntryPoint unauthorizedHandler;
+    private final JwtAuthenticationEntryPoint unauthorizedHandler;
 
     private JwtTokenProvider tokenProvider;
 

@@ -41,11 +41,11 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class SubmissionController {
 
-    private SubmissionService submissionService;
-    private TestService testService;
+    private final SubmissionService submissionService;
+    private final TestService testService;
     private final IProducer activitySubmissionQueueProducer;
 
-    private TestRunRepository testRunRepository;
+    private final TestRunRepository testRunRepository;
 
 
     @Autowired

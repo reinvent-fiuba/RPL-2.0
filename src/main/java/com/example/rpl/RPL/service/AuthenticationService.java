@@ -15,9 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthenticationService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder) {

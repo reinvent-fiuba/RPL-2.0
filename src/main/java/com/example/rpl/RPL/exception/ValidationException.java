@@ -3,7 +3,7 @@ package com.example.rpl.RPL.exception;
 /**
  * Validation Request exception.
  */
-public class ValidationException extends BadRequestException {
+class ValidationException extends BadRequestException {
 
     public ValidationException(String message) {
         super(message);

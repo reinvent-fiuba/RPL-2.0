@@ -1,6 +1,10 @@
 package com.example.rpl.RPL.controller;
 
-import com.example.rpl.RPL.controller.dto.*;
+import com.example.rpl.RPL.controller.dto.CourseResponseDTO;
+import com.example.rpl.RPL.controller.dto.CourseUserResponseDTO;
+import com.example.rpl.RPL.controller.dto.CreateCourseRequestDTO;
+import com.example.rpl.RPL.controller.dto.PatchCourseUserRequestDTO;
+import com.example.rpl.RPL.controller.dto.RoleResponseDTO;
 import com.example.rpl.RPL.model.Course;
 import com.example.rpl.RPL.model.CourseUser;
 import com.example.rpl.RPL.security.CurrentUser;
@@ -15,13 +19,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
 public class CoursesController {
 
-    private CoursesService coursesService;
+    private final CoursesService coursesService;
 
     @Autowired
     public CoursesController(
@@ -113,7 +124,7 @@ public class CoursesController {
 
     @PreAuthorize("hasAuthority('user_manage')")
     @DeleteMapping(value = "/api/courses/{courseId}/users/{userId}")
-    public ResponseEntity<Void> deleteCourseUser(@CurrentUser UserPrincipal currentUser,
+    public ResponseEntity deleteCourseUser(@CurrentUser UserPrincipal currentUser,
                                                                   @PathVariable Long courseId,
                                                                   @PathVariable Long userId) {
 
@@ -135,7 +146,7 @@ public class CoursesController {
     }
 
     @PostMapping(value = "/api/courses/{courseId}/unenroll")
-    public ResponseEntity<Void> unenrollInCourse(@CurrentUser UserPrincipal currentUser,
+    public ResponseEntity unenrollInCourse(@CurrentUser UserPrincipal currentUser,
                                                           @PathVariable Long courseId) {
 
         coursesService.deleteCourseUser(currentUser.getId(), courseId);

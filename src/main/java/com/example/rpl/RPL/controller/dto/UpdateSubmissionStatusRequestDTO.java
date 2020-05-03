@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class UpdateSubmissionStatusRequestDTO {
 
-    private SubmissionStatus status;
+    private final SubmissionStatus status;
 
     @JsonCreator
     public UpdateSubmissionStatusRequestDTO(

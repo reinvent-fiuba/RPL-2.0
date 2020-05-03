@@ -46,7 +46,7 @@ public class UserActivityResponseDTO {
 
     private ZonedDateTime lastUpdated;
 
-    public static UserActivityResponseDTO fromEntity(Activity activity,
+    private static UserActivityResponseDTO fromEntity(Activity activity,
         String submissionStatus, ZonedDateTime lastSubmissionDate) {
         return UserActivityResponseDTO.builder()
             .id(activity.getId())

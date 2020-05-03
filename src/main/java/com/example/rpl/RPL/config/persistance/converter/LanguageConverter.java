@@ -6,7 +6,7 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter(autoApply = true)
-public class LanguageConverter implements AttributeConverter<Language, String> {
+class LanguageConverter implements AttributeConverter<Language, String> {
 
     @Override
     public String convertToDatabaseColumn(Language language) {

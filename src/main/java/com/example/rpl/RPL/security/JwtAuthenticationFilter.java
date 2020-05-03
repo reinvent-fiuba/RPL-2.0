@@ -17,9 +17,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private JwtTokenProvider tokenProvider;
+    private final JwtTokenProvider tokenProvider;
 
-    private CustomUserDetailsService customUserDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
 
 
     @Autowired

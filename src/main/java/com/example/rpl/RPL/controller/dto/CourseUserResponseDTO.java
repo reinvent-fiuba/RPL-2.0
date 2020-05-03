@@ -1,13 +1,11 @@
 package com.example.rpl.RPL.controller.dto;
 
-import com.example.rpl.RPL.model.Course;
 import com.example.rpl.RPL.model.CourseUser;
 import com.example.rpl.RPL.model.Role;
 import com.example.rpl.RPL.model.User;
+import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.ZonedDateTime;
 
 @Getter
 @Builder

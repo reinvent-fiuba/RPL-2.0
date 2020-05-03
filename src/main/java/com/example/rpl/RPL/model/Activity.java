@@ -61,7 +61,7 @@ public class Activity {
     private Boolean active;
 
     @NonNull
-    @Basic(optional = true)
+    @Basic()
     @Column(name = "initial_code")
     private String initialCode;
 

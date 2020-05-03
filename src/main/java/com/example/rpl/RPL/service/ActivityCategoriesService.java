@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ActivityCategoriesService {
 
-    private CourseRepository courseRepository;
-    private ActivityCategoryRepository activityCategoryRepository;
+    private final CourseRepository courseRepository;
+    private final ActivityCategoryRepository activityCategoryRepository;
 
     @Autowired
     public ActivityCategoriesService(CourseRepository courseRepository,

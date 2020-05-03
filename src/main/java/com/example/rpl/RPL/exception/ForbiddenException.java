@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 /**
  * Forbidden exception.
  */
-public class ForbiddenException extends BaseAPIException {
+class ForbiddenException extends BaseAPIException {
 
     public ForbiddenException(String message) {
         super(message, HttpStatus.FORBIDDEN);

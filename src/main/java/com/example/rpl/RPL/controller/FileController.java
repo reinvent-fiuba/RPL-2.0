@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class FileController {
 
-    private FileRepository fileRepository;
+    private final FileRepository fileRepository;
 
     @Autowired
     public FileController(FileRepository fileRepository) {

@@ -70,7 +70,7 @@ public class ErrorResponse {
     }
 
     @JsonProperty
-    public String getCause() {
+    String getCause() {
         if (cause != null) {
             return cause.getLocalizedMessage();
         } else {

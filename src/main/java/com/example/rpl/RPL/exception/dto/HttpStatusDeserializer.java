@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import org.springframework.http.HttpStatus;
 
-public class HttpStatusDeserializer extends JsonDeserializer<HttpStatus> {
+class HttpStatusDeserializer extends JsonDeserializer<HttpStatus> {
 
     @Override
     public HttpStatus deserialize(JsonParser jsonParser,

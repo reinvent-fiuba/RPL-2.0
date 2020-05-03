@@ -5,13 +5,13 @@ import org.springframework.http.HttpStatus;
 /**
  * Bad Request exception.
  */
-public class BadRequestException extends BaseAPIException {
+class BadRequestException extends BaseAPIException {
 
-    public BadRequestException(String message) {
+    BadRequestException(String message) {
         super(message, HttpStatus.BAD_REQUEST);
     }
 
-    public BadRequestException(String message, String error) {
+    BadRequestException(String message, String error) {
         super(message, HttpStatus.BAD_REQUEST, error);
     }
 

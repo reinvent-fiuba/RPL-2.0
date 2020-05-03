@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 /**
  * Conflict exception.
  */
-public class ConflictException extends BaseAPIException {
+class ConflictException extends BaseAPIException {
 
     public ConflictException(String message) {
         super(message, HttpStatus.CONFLICT);

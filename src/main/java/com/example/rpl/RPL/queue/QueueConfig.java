@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class QueueConfig {
 
-    private RabbitTemplate template;
+    private final RabbitTemplate template;
 
     @Autowired
     public QueueConfig(RabbitTemplate template) {

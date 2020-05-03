@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 /**
  * Unauthorized exception.
  */
-public class UnauthorizedException extends BaseAPIException {
+class UnauthorizedException extends BaseAPIException {
 
     public UnauthorizedException(String message) {
         super(message, HttpStatus.UNAUTHORIZED);

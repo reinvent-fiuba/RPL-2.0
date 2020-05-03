@@ -9,8 +9,8 @@ public enum Language {
     PYTHON3("python", "3.7"),
     JAVA("java", "11");
 
-    private String name;
-    private String version;
+    private final String name;
+    private final String version;
 
     Language(final String name, final String version) {
         this.name = name;

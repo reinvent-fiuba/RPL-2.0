@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public class Producer implements IProducer {
 
-    private RabbitTemplate template;
+    private final RabbitTemplate template;
 
-    private Queue queue;
+    private final Queue queue;
 
     @Autowired
     public Producer(RabbitTemplate template, Queue queue) {

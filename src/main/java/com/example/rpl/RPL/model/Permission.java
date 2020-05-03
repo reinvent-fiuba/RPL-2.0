@@ -18,7 +18,7 @@ import lombok.ToString;
 @ToString(of = "id")
 @Entity
 @Table(name = "permissions")
-public class Permission {
+class Permission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

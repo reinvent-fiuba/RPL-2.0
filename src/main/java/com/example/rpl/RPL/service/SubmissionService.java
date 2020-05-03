@@ -23,12 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SubmissionService {
 
-    private TestService testService;
+    private final TestService testService;
 
-    private ActivityRepository activityRepository;
-    private SubmissionRepository submissionRepository;
-    private FileRepository fileRepository;
-    private TestRunRepository testRunRepository;
+    private final ActivityRepository activityRepository;
+    private final SubmissionRepository submissionRepository;
+    private final FileRepository fileRepository;
+    private final TestRunRepository testRunRepository;
 
     @Autowired
     public SubmissionService(TestService testService,

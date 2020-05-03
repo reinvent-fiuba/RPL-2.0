@@ -39,9 +39,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class ActivitiesController {
 
-    private ActivitiesService activitiesService;
-    private SubmissionService submissionService;
-    private TestService testService;
+    private final ActivitiesService activitiesService;
+    private final SubmissionService submissionService;
+    private final TestService testService;
 
     @Autowired
     public ActivitiesController(

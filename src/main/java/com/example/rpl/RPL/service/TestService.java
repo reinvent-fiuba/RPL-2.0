@@ -23,10 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TestService {
 
-    private IOTestRepository iOTestRepository;
-    private UnitTestRepository unitTestsRepository;
-    private IOTestRunRepository iOTestRunRepository;
-    private UnitTestRunRepository unitTestRunRepository;
+    private final IOTestRepository iOTestRepository;
+    private final UnitTestRepository unitTestsRepository;
+    private final IOTestRunRepository iOTestRunRepository;
+    private final UnitTestRunRepository unitTestRunRepository;
 
     @Autowired
     public TestService(IOTestRepository iOTestRepository,
