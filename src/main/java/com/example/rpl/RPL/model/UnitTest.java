@@ -28,9 +28,12 @@ public class UnitTest {
     @Column(name = "id")
     private Long id;
 
-    @JoinColumn(name = "activity_id", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Activity activity;
+//    @JoinColumn(name = "activity_id", referencedColumnName = "id")
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private Activity activity;
+
+    @Column(name = "activity_id")
+    private Long activityId;
 
     @JoinColumn(name = "test_file_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -49,4 +52,10 @@ public class UnitTest {
     public UnitTest() {
     }
 
+    public UnitTest(Long activityId, RPLFile testFile) {
+        this.activityId = activityId;
+        this.testFile = testFile;
+        this.dateCreated = ZonedDateTime.now();
+        this.lastUpdated = this.dateCreated;
+    }
 }

@@ -68,4 +68,11 @@ public class RPLFile {
         this.dateCreated = now();
         this.lastUpdated = this.dateCreated;
     }
+
+    public void updateData(byte[] bytes) {
+        this.data = bytes;
+        this.lastUpdated = now();
+    }
+
+
 }

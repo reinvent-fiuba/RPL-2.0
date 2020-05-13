@@ -105,4 +105,9 @@ public class ActivitiesService {
             .orElseThrow(() -> new NotFoundException("Activity not found",
                 "activity_not_found"));
     }
+
+    public Activity updateTestMode(Activity activity, boolean isIOTested) {
+        activity.setIsIOTested(isIOTested);
+        return activityRepository.save(activity);
+    }
 }
