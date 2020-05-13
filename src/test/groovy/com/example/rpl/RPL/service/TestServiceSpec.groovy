@@ -27,7 +27,7 @@ class TestServiceSpec extends Specification {
         iOTestRunRepository = Mock(IOTestRunRepository)
         unitTestRunRepository = Mock(UnitTestRunRepository)
 
-        testService = new TestService(iOTestRepository, unitTestsRepository, iOTestRunRepository, unitTestRunRepository)
+        testService = new TestService(iOTestRepository, unitTestsRepository, iOTestRunRepository, unitTestRunRepository, fileRepository)
 
         user = new User(
                 'some-name',

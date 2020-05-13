@@ -1,9 +1,7 @@
 package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.controller.dto.ActivityResponseDTO;
-import com.example.rpl.RPL.controller.dto.ActivityResponseDTO.IOTestResponseDTO;
 import com.example.rpl.RPL.controller.dto.CreateActivityRequestDTO;
-import com.example.rpl.RPL.controller.dto.CreateIOTestRequestDTO;
 import com.example.rpl.RPL.controller.dto.UserActivityResponseDTO;
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivitySubmission;
@@ -25,12 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -144,61 +140,4 @@ public class ActivitiesController {
         return new ResponseEntity<>(ActivityResponseDTO.fromEntity(activity, unitTest, ioTests),
             HttpStatus.OK);
     }
-
-
-    @PreAuthorize("hasAuthority('activity_manage')")
-    @PostMapping(value = "/api/courses/{courseId}/activities/{activityId}/iotests")
-    public ResponseEntity<IOTestResponseDTO> createIOTestCase(
-        @CurrentUser UserPrincipal currentUser,
-        @PathVariable Long courseId,
-        @PathVariable Long activityId,
-        @RequestBody @Valid CreateIOTestRequestDTO createIOTestRequestDTO) {
-
-//        check the activity exists
-        Activity activity = activitiesService.getActivity(activityId);
-
-        IOTest test = testService.createIOTest(activityId, createIOTestRequestDTO.getTextIn(),
-            createIOTestRequestDTO.getTextOut());
-
-        activity.setIsIOTested(true);
-        return new ResponseEntity<>(
-            new IOTestResponseDTO(test.getId(), test.getTestIn(), test.getTestOut()),
-            HttpStatus.CREATED);
-    }
-
-    @PreAuthorize("hasAuthority('activity_manage')")
-    @PutMapping(value = "/api/courses/{courseId}/activities/{activityId}/iotests/{ioTestId}")
-    public ResponseEntity<IOTestResponseDTO> updateIOTestCase(
-        @CurrentUser UserPrincipal currentUser,
-        @PathVariable Long courseId,
-        @PathVariable Long activityId,
-        @PathVariable Long ioTestId,
-        @RequestBody @Valid CreateIOTestRequestDTO createIOTestRequestDTO) {
-
-//        check the activity exists
-        activitiesService.getActivity(activityId);
-
-        IOTest test = testService.updateUnitTest(ioTestId, createIOTestRequestDTO.getTextIn(),
-            createIOTestRequestDTO.getTextOut());
-        return new ResponseEntity<>(
-            new IOTestResponseDTO(test.getId(), test.getTestIn(), test.getTestOut()),
-            HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasAuthority('activity_manage')")
-    @DeleteMapping(value = "/api/courses/{courseId}/activities/{activityId}/iotests/{ioTestId}")
-    public ResponseEntity<ActivityResponseDTO> deleteIOTestCase(
-        @CurrentUser UserPrincipal currentUser,
-        @PathVariable Long courseId,
-        @PathVariable Long activityId,
-        @PathVariable Long ioTestId) {
-
-//        check the activity exists
-        activitiesService.getActivity(activityId);
-
-        testService.deleteUnitTest(ioTestId);
-        return this.getActivity(currentUser, courseId, activityId);
-    }
-
-
 }

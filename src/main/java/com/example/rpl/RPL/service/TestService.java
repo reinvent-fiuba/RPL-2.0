@@ -1,12 +1,15 @@
 package com.example.rpl.RPL.service;
 
 import com.example.rpl.RPL.controller.dto.UnitTestResultDTO;
+import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.IOTest;
 import com.example.rpl.RPL.model.IOTestRun;
+import com.example.rpl.RPL.model.RPLFile;
 import com.example.rpl.RPL.model.TestRun;
 import com.example.rpl.RPL.model.UnitTest;
 import com.example.rpl.RPL.model.UnitTestRun;
+import com.example.rpl.RPL.repository.FileRepository;
 import com.example.rpl.RPL.repository.IOTestRepository;
 import com.example.rpl.RPL.repository.IOTestRunRepository;
 import com.example.rpl.RPL.repository.UnitTestRepository;
@@ -27,16 +30,20 @@ public class TestService {
     private final UnitTestRepository unitTestsRepository;
     private final IOTestRunRepository iOTestRunRepository;
     private final UnitTestRunRepository unitTestRunRepository;
+    private final FileRepository fileRepository;
+
 
     @Autowired
     public TestService(IOTestRepository iOTestRepository,
         UnitTestRepository unitTestsRepository,
         IOTestRunRepository iOTestRunRepository,
-        UnitTestRunRepository unitTestRunRepository) {
+        UnitTestRunRepository unitTestRunRepository,
+        FileRepository fileRepository) {
         this.iOTestRepository = iOTestRepository;
         this.unitTestsRepository = unitTestsRepository;
         this.iOTestRunRepository = iOTestRunRepository;
         this.unitTestRunRepository = unitTestRunRepository;
+        this.fileRepository = fileRepository;
     }
 
 
@@ -126,7 +133,7 @@ public class TestService {
     }
 
     @Transactional
-    public IOTest updateUnitTest(Long ioTestId, String in, String out) {
+    public IOTest updateIOTest(Long ioTestId, String in, String out) {
         IOTest ioTest = iOTestRepository.findById(ioTestId)
             .orElseThrow(() -> new NotFoundException("IO test not found",
                 "iotest_not_found"));
@@ -151,5 +158,39 @@ public class TestService {
 
         return unitTestRunRepository.saveAll(unitTestRuns);
 
+    }
+
+    @Transactional
+    public UnitTest createUnitTest(Long activityId, String unitTestCode) {
+        UnitTest unitTest = this.getUnitTests(activityId);
+
+        if (unitTest != null) {
+            throw new EntityAlreadyExistsException("Unit test already exists for this activity",
+                "unittest_already_exists");
+        }
+
+        RPLFile testFile = fileRepository
+            .save(new RPLFile("test", "text", unitTestCode.getBytes()));
+
+        UnitTest test = new UnitTest(activityId, testFile);
+        return unitTestsRepository.save(test);
+    }
+
+    @Transactional
+    public UnitTest updateUnitTest(Long activityId, String unitTestCode) {
+        UnitTest unitTest = this.getUnitTests(activityId);
+
+        if (unitTest == null) {
+            throw new NotFoundException("Unit test not found", "unittest_not_found");
+        }
+
+        RPLFile testFile = unitTest.getTestFile();
+
+        testFile.updateData(unitTestCode.getBytes());
+
+        fileRepository
+            .save(new RPLFile("test", "text", unitTestCode.getBytes()));
+
+        return unitTest;
     }
 }

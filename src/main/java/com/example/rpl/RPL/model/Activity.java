@@ -91,6 +91,7 @@ public class Activity {
         this.name = name;
         this.description = description;
         this.language = language;
+        this.isIOTested = true;
         this.active = true;
         this.supportingFile = supportingFile;
         this.initialCode = initialCode;
