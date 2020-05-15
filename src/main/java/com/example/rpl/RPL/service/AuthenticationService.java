@@ -2,9 +2,14 @@ package com.example.rpl.RPL.service;
 
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
 import com.example.rpl.RPL.exception.NotFoundException;
+import com.example.rpl.RPL.model.PasswordResetToken;
 import com.example.rpl.RPL.model.User;
+import com.example.rpl.RPL.repository.PasswordResetTokenRepository;
 import com.example.rpl.RPL.repository.UserRepository;
+import java.time.ZonedDateTime;
 import java.util.Optional;
+import java.util.UUID;
+import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,12 +21,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final EmailService emailService;
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthenticationService(UserRepository userRepository,
+        PasswordResetTokenRepository passwordResetTokenRepository,
+        EmailService emailService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -63,5 +74,38 @@ public class AuthenticationService {
         }
 
         return user.get();
+    }
+
+    @Transactional
+    public void sendResetPasswordToken(String email) {
+
+        User user = userRepository.findByEmail(email).orElseThrow(
+            () -> new NotFoundException(String.format("User with email '%s' does not exist", email),
+                "user_not_found"));
+
+        String token = UUID.randomUUID().toString();
+
+        PasswordResetToken myToken = new PasswordResetToken(token, user);
+        passwordResetTokenRepository.save(myToken);
+
+        emailService.sendResetPasswordMessage(email, token);
+    }
+
+    public PasswordResetToken validatePasswordToken(String passwordToken) {
+        PasswordResetToken token = passwordResetTokenRepository.findByToken(passwordToken)
+            .orElseThrow(
+                () -> new NotFoundException("El token no existe o expiró", "token_not_found"));
+
+        if (token.getExpiryDate().isBefore(ZonedDateTime.now())) {
+            throw new NotFoundException("El token no existe o expiró", "token_not_found");
+        }
+        return token;
+    }
+
+    public User resetPassword(PasswordResetToken token, @NotNull String newPassword) {
+        User user = token.getUser();
+        user.changePassword(passwordEncoder.encode(newPassword));
+
+        return userRepository.save(user);
     }
 }

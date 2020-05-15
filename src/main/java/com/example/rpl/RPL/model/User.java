@@ -93,4 +93,9 @@ public class User implements Serializable {
         this.dateCreated = now;
         this.lastUpdated = now;
     }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+        this.lastUpdated = ZonedDateTime.now();
+    }
 }

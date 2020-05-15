@@ -1,9 +1,12 @@
 package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.controller.dto.CreateUserRequestDTO;
+import com.example.rpl.RPL.controller.dto.ForgotPasswordRequestDTO;
 import com.example.rpl.RPL.controller.dto.JwtResponseDTO;
 import com.example.rpl.RPL.controller.dto.LoginRequestDTO;
+import com.example.rpl.RPL.controller.dto.ResetPasswordRequestDTO;
 import com.example.rpl.RPL.controller.dto.UserResponseDTO;
+import com.example.rpl.RPL.model.PasswordResetToken;
 import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.JwtTokenProvider;
@@ -89,6 +92,34 @@ public class AuthenticationController {
     public ResponseEntity<UserResponseDTO> getUser(@CurrentUser UserPrincipal currentUser) {
 
         User user = authenticationService.getUserById(currentUser.getId());
+
+        return new ResponseEntity<>(UserResponseDTO.fromEntity(user), HttpStatus.OK);
+    }
+
+
+    /**
+     *
+     */
+    @PostMapping("/api/auth/forgotPassword")
+    public ResponseEntity<ForgotPasswordRequestDTO> forgotPassword(
+        @Valid @RequestBody final ForgotPasswordRequestDTO resetPasswordDTO) {
+
+        authenticationService.sendResetPasswordToken(resetPasswordDTO.getEmail());
+
+        return new ResponseEntity<>(resetPasswordDTO, HttpStatus.OK);
+    }
+
+    /**
+     *
+     */
+    @PostMapping("/api/auth/resetPassword")
+    public ResponseEntity<UserResponseDTO> resetPassword(
+        @Valid @RequestBody final ResetPasswordRequestDTO resetPasswordDTO) {
+
+        PasswordResetToken token = authenticationService
+            .validatePasswordToken(resetPasswordDTO.getPasswordToken());
+
+        User user = authenticationService.resetPassword(token, resetPasswordDTO.getNewPassword());
 
         return new ResponseEntity<>(UserResponseDTO.fromEntity(user), HttpStatus.OK);
     }

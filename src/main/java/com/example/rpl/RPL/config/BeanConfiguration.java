@@ -2,6 +2,7 @@ package com.example.rpl.RPL.config;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
+import com.example.rpl.RPL.service.EmailService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
@@ -23,8 +24,10 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
+import org.thymeleaf.TemplateEngine;
 
 @Configuration
 public class BeanConfiguration {
@@ -32,6 +35,15 @@ public class BeanConfiguration {
     private static final String ISO_8601_24H_FULL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
     @Value("${client.apis.timeout}")
     private int defaultTimeout;
+
+    @Value("${rpl.frontend.url}")
+    private String frontEndUrl;
+
+    @Bean
+    public EmailService emailService(JavaMailSender emailSender, TemplateEngine templateEngine) {
+        return new EmailService(emailSender, templateEngine, frontEndUrl);
+    }
+
 
     @Bean
     public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {

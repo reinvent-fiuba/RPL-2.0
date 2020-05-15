@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UnitTestRunRepository extends JpaRepository<UnitTestRun, Long> {
 
+
 }
