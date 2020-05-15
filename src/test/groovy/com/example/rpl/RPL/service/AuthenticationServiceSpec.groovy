@@ -16,7 +16,7 @@ class AuthenticationServiceSpec extends Specification {
     def setup() {
         userRepository = Mock(UserRepository)
         passwordEncoder = Mock(PasswordEncoder)
-        authenticationService = new AuthenticationService(userRepository, passwordEncoder)
+        authenticationService = new AuthenticationService(userRepository, passwordResetTokenRepository, emailService, passwordEncoder)
     }
 
     void "should create user successfully"() {

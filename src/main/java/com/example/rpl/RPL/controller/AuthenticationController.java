@@ -3,6 +3,7 @@ package com.example.rpl.RPL.controller;
 import com.example.rpl.RPL.controller.dto.CreateUserRequestDTO;
 import com.example.rpl.RPL.controller.dto.JwtResponseDTO;
 import com.example.rpl.RPL.controller.dto.LoginRequestDTO;
+import com.example.rpl.RPL.controller.dto.ResetPasswordRequestDTO;
 import com.example.rpl.RPL.controller.dto.UserResponseDTO;
 import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.security.CurrentUser;
@@ -92,4 +93,19 @@ public class AuthenticationController {
 
         return new ResponseEntity<>(UserResponseDTO.fromEntity(user), HttpStatus.OK);
     }
+
+
+    /**
+     *
+     */
+    @PostMapping("/api/auth/resetPassword")
+    public ResponseEntity<String> resetPassword(
+        @Valid @RequestBody final ResetPasswordRequestDTO resetPasswordDTO) {
+
+        authenticationService.sendResetPasswordToken(resetPasswordDTO.getEmail());
+
+        return new ResponseEntity<>("ENVIADO", HttpStatus.OK);
+    }
+
+
 }
