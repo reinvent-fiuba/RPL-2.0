@@ -9,12 +9,17 @@ import lombok.Getter;
 public class ResetPasswordRequestDTO {
 
     @NotNull
-    private String email;
+    private String passwordToken;
+
+    @NotNull
+    private String newPassword;
 
     @JsonCreator
     public ResetPasswordRequestDTO(
-        @JsonProperty(value = "email", required = true) String email) {
-        this.email = email;
+        @JsonProperty(value = "password_token", required = true) String passwordToken,
+        @JsonProperty(value = "new_password", required = true) String newPassword) {
+        this.passwordToken = passwordToken;
+        this.newPassword = newPassword;
     }
 
 }

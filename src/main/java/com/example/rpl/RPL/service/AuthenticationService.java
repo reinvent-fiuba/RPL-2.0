@@ -6,8 +6,10 @@ import com.example.rpl.RPL.model.PasswordResetToken;
 import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.repository.PasswordResetTokenRepository;
 import com.example.rpl.RPL.repository.UserRepository;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;
+import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -87,5 +89,23 @@ public class AuthenticationService {
         passwordResetTokenRepository.save(myToken);
 
         emailService.sendResetPasswordMessage(email, token);
+    }
+
+    public PasswordResetToken validatePasswordToken(String passwordToken) {
+        PasswordResetToken token = passwordResetTokenRepository.findByToken(passwordToken)
+            .orElseThrow(
+                () -> new NotFoundException("El token no existe o expiró", "token_not_found"));
+
+        if (token.getExpiryDate().isBefore(ZonedDateTime.now())) {
+            throw new NotFoundException("El token no existe o expiró", "token_not_found");
+        }
+        return token;
+    }
+
+    public User resetPassword(PasswordResetToken token, @NotNull String newPassword) {
+        User user = token.getUser();
+        user.changePassword(passwordEncoder.encode(newPassword));
+
+        return userRepository.save(user);
     }
 }
