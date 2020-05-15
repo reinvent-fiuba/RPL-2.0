@@ -101,12 +101,12 @@ public class AuthenticationController {
      *
      */
     @PostMapping("/api/auth/forgotPassword")
-    public ResponseEntity<String> forgotPassword(
+    public ResponseEntity<ForgotPasswordRequestDTO> forgotPassword(
         @Valid @RequestBody final ForgotPasswordRequestDTO resetPasswordDTO) {
 
         authenticationService.sendResetPasswordToken(resetPasswordDTO.getEmail());
 
-        return new ResponseEntity<>("ENVIADO", HttpStatus.OK);
+        return new ResponseEntity<>(resetPasswordDTO, HttpStatus.OK);
     }
 
     /**
