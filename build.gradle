@@ -61,6 +61,9 @@ dependencies {
     runtime 'mysql:mysql-connector-java'
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.hibernate:hibernate-jpamodelgen:5.3.17.Final'
+
 
     implementation 'com.github.tomakehurst:wiremock:2.21.0'
 //    For groovy Spock testing

@@ -4,14 +4,8 @@ import static com.example.rpl.RPL.model.SubmissionStatus.ENQUEUED;
 import static com.example.rpl.RPL.model.SubmissionStatus.PENDING;
 import static com.example.rpl.RPL.model.SubmissionStatus.PROCESSING;
 
-import com.example.rpl.RPL.controller.dto.ActivitySubmissionResponseDTO;
-import com.example.rpl.RPL.controller.dto.ActivitySubmissionResultResponseDTO;
-import com.example.rpl.RPL.controller.dto.SubmissionResultRequestDTO;
-import com.example.rpl.RPL.controller.dto.UpdateSubmissionStatusRequestDTO;
-import com.example.rpl.RPL.model.ActivitySubmission;
-import com.example.rpl.RPL.model.IOTest;
-import com.example.rpl.RPL.model.TestRun;
-import com.example.rpl.RPL.model.UnitTest;
+import com.example.rpl.RPL.controller.dto.*;
+import com.example.rpl.RPL.model.*;
 import com.example.rpl.RPL.queue.IProducer;
 import com.example.rpl.RPL.repository.TestRunRepository;
 import com.example.rpl.RPL.security.CurrentUser;
@@ -193,6 +187,17 @@ public class SubmissionController {
             }).collect(Collectors.toList());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_submit')")
+    @GetMapping(value = "/api/courses/{courseId}/submissions/stats")
+    public ResponseEntity<ActivitySubmissionStatsResponseDTO> getSubmissionsStats(
+            @CurrentUser UserPrincipal currentUser,
+            @PathVariable Long courseId) {
+
+        ActivitySubmissionStats response = submissionService.getSubmissionsStatsByUserAndCourseId(currentUser.getId(), courseId);
+
+        return new ResponseEntity<>(ActivitySubmissionStatsResponseDTO.fromEntity(response), HttpStatus.OK);
     }
 
 }
