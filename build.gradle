@@ -40,6 +40,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.flywaydb:flyway-core:5.2.4'
 
     implementation 'com.github.ben-manes.caffeine:caffeine:2.6.2'
@@ -49,15 +50,17 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-compress', version: '1.19'
     compile group: 'org.javatuples', name: 'javatuples', version: '1.2'
 
-    compileOnly 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.12'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     runtimeOnly 'com.h2database:h2'
     runtime 'mysql:mysql-connector-java'
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
-
 
     implementation 'com.github.tomakehurst:wiremock:2.21.0'
 //    For groovy Spock testing

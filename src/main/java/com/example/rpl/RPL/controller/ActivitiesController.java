@@ -2,6 +2,7 @@ package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.controller.dto.ActivityResponseDTO;
 import com.example.rpl.RPL.controller.dto.CreateActivityRequestDTO;
+import com.example.rpl.RPL.controller.dto.DisableActivityRequestDTO;
 import com.example.rpl.RPL.controller.dto.UserActivityResponseDTO;
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivitySubmission;
@@ -23,10 +24,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -130,6 +133,42 @@ public class ActivitiesController {
         log.debug("COURSE ID: {}", courseId);
 
         Activity activity = activitiesService.getActivity(activityId);
+
+        //        GET UNIT TESTS
+        UnitTest unitTest = testService.getUnitTests(activity.getId());
+
+        //        GET IO TESTS
+        List<IOTest> ioTests = testService.getAllIOTests(activity.getId());
+
+        return new ResponseEntity<>(ActivityResponseDTO.fromEntity(activity, unitTest, ioTests),
+            HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_manage')")
+    @DeleteMapping(value = "/api/courses/{courseId}/activities/{activityId}")
+    public ResponseEntity<ActivityResponseDTO> deleteActivity(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId, @PathVariable Long activityId) {
+        log.debug("COURSE ID: {}", courseId);
+
+        Activity activity = activitiesService.deleteActivity(activityId);
+
+        return new ResponseEntity<>(
+            ActivityResponseDTO.fromEntity(activity, null, null), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_manage')")
+    @PutMapping(value = "/api/courses/{courseId}/activities/{activityId}/disable")
+    public ResponseEntity<ActivityResponseDTO> disableActivity(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId,
+        @PathVariable Long activityId,
+        @RequestBody @Valid DisableActivityRequestDTO disableActivityRequestDTO) {
+        log.error("COURSE ID: {}\nACTIVITY ID: {}\nACTIVE: {}", courseId, activityId,
+            disableActivityRequestDTO.getActive());
+
+        Activity activity = activitiesService
+            .disableActivity(activityId, disableActivityRequestDTO.getActive());
 
         //        GET UNIT TESTS
         UnitTest unitTest = testService.getUnitTests(activity.getId());

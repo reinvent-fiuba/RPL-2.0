@@ -2,10 +2,10 @@ package com.example.rpl.RPL.controller.dto;
 
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Value;
 
 @AllArgsConstructor
-@Getter
+@Value
 public class CreateUserRequestDTO {
 
     @NotNull

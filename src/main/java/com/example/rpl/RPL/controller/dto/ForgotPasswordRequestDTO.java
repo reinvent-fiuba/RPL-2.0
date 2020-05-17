@@ -1,20 +1,13 @@
 package com.example.rpl.RPL.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotNull;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Value;
 
-@Getter
+@AllArgsConstructor
+@Value
 public class ForgotPasswordRequestDTO {
 
     @NotNull
     private String email;
-
-    @JsonCreator
-    public ForgotPasswordRequestDTO(
-        @JsonProperty(value = "email", required = true) String email) {
-        this.email = email;
-    }
-
 }

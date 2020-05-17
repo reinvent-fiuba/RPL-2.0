@@ -1,12 +1,11 @@
 package com.example.rpl.RPL.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Value;
 
 @AllArgsConstructor
-@Getter
+@Value
 public class CreateActivityCategoryRequestDTO {
 
     @NotNull

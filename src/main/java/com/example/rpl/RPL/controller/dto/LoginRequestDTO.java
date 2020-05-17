@@ -1,14 +1,16 @@
 package com.example.rpl.RPL.controller.dto;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Value;
 
 @Value
+@AllArgsConstructor
 public class LoginRequestDTO {
 
-    @NotBlank
+    @NotNull
     private String usernameOrEmail;
 
-    @NotBlank
+    @NotNull
     private String password;
 }

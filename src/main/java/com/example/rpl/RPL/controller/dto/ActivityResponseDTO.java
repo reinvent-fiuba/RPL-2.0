@@ -34,6 +34,8 @@ public class ActivityResponseDTO {
 
     private Boolean active;
 
+    private Boolean deleted;
+
     private String initialCode;
 
     private Long fileId;
@@ -59,6 +61,7 @@ public class ActivityResponseDTO {
             .isIOTested(activity.getIsIOTested())
             .language(activity.getLanguage().getName())
             .active(activity.getActive())
+            .deleted(activity.getDeleted())
             .initialCode(activity.getInitialCode())
             .fileId(activity.getSupportingFile().getId())
             .dateCreated(activity.getDateCreated())
@@ -67,8 +70,11 @@ public class ActivityResponseDTO {
         if (unitTest != null) {
             ab.activityUnitTests(new String(unitTest.getTestFile().getData()));
         }
-        ab.activityIOTests(ioTests.stream().map(ioTest -> new IOTestResponseDTO(ioTest.getId(),
-            ioTest.getTestIn(), ioTest.getTestOut())).collect(Collectors.toList()));
+        if (ioTests != null) {
+            ab.activityIOTests(ioTests.stream().map(ioTest -> new IOTestResponseDTO(ioTest.getId(),
+                ioTest.getTestIn(), ioTest.getTestOut())).collect(Collectors.toList()));
+
+        }
 
         return ab.build();
     }
