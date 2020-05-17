@@ -49,7 +49,7 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
                     password  : password,
                     name      : "Ale",
                     surname   : "Levinas",
-                    studentId : "95719",
+                    student_id: "95719",
                     degree    : "Ing. Informatica",
                     university: "UBA"
             ]
@@ -69,7 +69,7 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert user.password != body.password // as it is encrypted
             assert user.name == body.name
             assert user.surname == body.surname
-            assert user.student_id == body.studentId
+            assert user.student_id == body.student_id
             assert user.degree == body.degree
             assert user.university == body.university
 
@@ -94,7 +94,7 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
                     password  : password,
                     name      : "Ale",
                     surname   : "Levinas",
-                    studentId : "95719",
+                    student_id: "95719",
                     degree    : "Ing. Informatica",
                     university: "UBA"
             ]
@@ -127,7 +127,7 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
                     password  : password,
                     name      : "Ale",
                     surname   : "Levinas",
-                    studentId : "95719",
+                    student_id: "95719",
                     degree    : "Ing. Informatica",
                     university: "UBA"
             ]
@@ -161,7 +161,7 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
             String username = "ale"
             String password = "1"
 
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
 
         when:
             def response = post("/api/auth/login", body)
@@ -179,7 +179,7 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test login with correct username/email and password should respond with token"() {
         given:
-            Map body = [usernameOrEmail: usernameOrEmail, password: 'supersecret']
+            Map body = [username_or_email: usernameOrEmail, password: 'supersecret']
 
         when:
             def response = post("/api/auth/login", body)
@@ -203,7 +203,7 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test get current profile should retrieve user data"() {
         given:
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
         when:
@@ -219,10 +219,10 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
             System.out.println(result)
             assert result.username == username
             assert result.name == name
-            assert result.student_id == studentId
+            assert result.student_id == student_id
 
         where:
-            username   | password      | name        | studentId
+            username   | password      | name        | student_id
             "username" | "supersecret" | "some-name" | "some-student-id"
     }
 }

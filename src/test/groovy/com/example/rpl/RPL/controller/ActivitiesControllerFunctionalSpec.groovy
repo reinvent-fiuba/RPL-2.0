@@ -176,7 +176,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     void "test create activity with correct values should save activity in DB"() {
         given: "a new activity"
             Long courseId = course.getId()
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             File f = new File("./src/main/resources/db/testdata/unit_test_google.c")
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
@@ -215,7 +215,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     void "test create activity with null values should not save activity in DB"() {
         given: "a new activity"
             Long courseId = 1;
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             File f = new File("./src/main/resources/db/testdata/unit_test_google.c")
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
@@ -255,7 +255,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test create activity in other course should not save activity in DB"() {
         given: "a new activity"
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             File f = new File("./src/main/resources/db/testdata/unit_test_google.c")
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
@@ -288,7 +288,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test create activity with wrong activityCategoryId should not save activity in DB"() {
         given: "a new activity"
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             File f = new File("./src/main/resources/db/testdata/unit_test_google.c")
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
@@ -327,7 +327,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
         given: "a new activity"
             Long courseId = course.getId()
             Long activityId = activity.getId()
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             File f = new File("./src/main/resources/db/testdata/unit_test_google.c")
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 

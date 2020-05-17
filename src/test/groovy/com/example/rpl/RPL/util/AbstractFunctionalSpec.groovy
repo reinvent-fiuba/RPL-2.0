@@ -32,7 +32,7 @@ abstract class AbstractFunctionalSpec extends AbstractSpec {
 
     def authenticate(String username = null, String password = null) {
         if (username != null && password != null) {
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
             api.header("Authorization", "${loginResponse.token_type} ${loginResponse.access_token}")
         }

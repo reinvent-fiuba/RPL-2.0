@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:34035",
+  "host": "localhost:42323",
     "basePath": "/",
     "tags": [
         {
@@ -5443,9 +5443,6 @@
         },
         "DisableActivityRequestDTO": {
             "type": "object",
-            "required": [
-                "active"
-            ],
             "properties": {
                 "active": {
                     "type": "boolean"
@@ -5509,9 +5506,6 @@
         },
         "ForgotPasswordRequestDTO": {
             "type": "object",
-            "required": [
-                "email"
-            ],
             "properties": {
                 "email": {
                     "type": "string"
@@ -5605,10 +5599,6 @@
         },
         "ResetPasswordRequestDTO": {
             "type": "object",
-            "required": [
-                "new_password",
-                "password_token"
-            ],
             "properties": {
                 "password_token": {
                     "type": "string"
@@ -5764,14 +5754,6 @@
         },
         "SubmissionResultRequestDTO": {
             "type": "object",
-            "required": [
-                "test_run_exit_message",
-                "test_run_result",
-                "test_run_stage",
-                "test_run_stderr",
-                "test_run_stdout",
-                "test_run_unit_test_result"
-            ],
             "properties": {
                 "test_run_exit_message": {
                     "type": "string"
@@ -5953,12 +5935,18 @@
         },
         "UpdateSubmissionStatusRequestDTO": {
             "type": "object",
-            "required": [
-                "status"
-            ],
             "properties": {
                 "status": {
-                    "type": "string"
+                  "type": "string",
+                  "enum": [
+                    "PENDING",
+                    "ENQUEUED",
+                    "PROCESSING",
+                    "BUILD_ERROR",
+                    "RUNTIME_ERROR",
+                    "FAILURE",
+                    "SUCCESS"
+                  ]
                 }
             },
             "title": "UpdateSubmissionStatusRequestDTO"
