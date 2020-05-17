@@ -110,4 +110,19 @@ public class ActivitiesService {
         activity.setIsIOTested(isIOTested);
         return activityRepository.save(activity);
     }
+
+    public Activity deleteActivity(Long activityId) {
+        Activity activity = this.getActivity(activityId);
+
+        activity.setDeleted(true);
+        return activityRepository.save(activity);
+    }
+
+    public Activity disableActivity(Long activityId, Boolean active) {
+        Activity activity = this.getActivity(activityId);
+
+        activity.setActive(active);
+        log.error("Setting activity as " + active);
+        return activityRepository.save(activity);
+    }
 }

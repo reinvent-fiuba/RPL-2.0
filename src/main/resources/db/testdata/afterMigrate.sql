@@ -17,7 +17,8 @@ VALUES (3, 'Student', 'Accepted', 00001, 'student_accepted', 'accepted_student@g
         'UBA', now(), now());
 
 INSERT INTO users
-VALUES (4, 'Student', 'NotAccepted', 00001, 'student_not_accepted', 'not_accepted_student@gmail.com',
+VALUES (4, 'Student', 'NotAccepted', 00001, 'student_not_accepted',
+        'not_accepted_student@gmail.com',
         '$2a$10$ab9rVz3lVB.ANA2ss.1pOOFwg.tH5yexgXc58PSMwa6CVlBDWM2Eq', false,
         'Ing. en Informatica',
         'UBA', now(), now());
@@ -29,7 +30,9 @@ VALUES (5, 'Student5', 'student5', 00001, 'student5', 'student5@gmail.com',
         'UBA', now(), now());
 
 INSERT INTO roles
-VALUES (1, 'admin', 'course_delete,course_view,course_edit,activity_view,activity_manage,activity_submit,user_view,user_manage', now(), now());
+VALUES (1, 'admin',
+        'course_delete,course_view,course_edit,activity_view,activity_manage,activity_submit,user_view,user_manage',
+        now(), now());
 
 INSERT INTO roles
 VALUES (2, 'student', 'course_view,activity_view,activity_submit,user_view', now(), now());
@@ -45,8 +48,8 @@ VALUES (3, 'activity_submit', now());
 
 INSERT INTO courses
 VALUES (1, 'Algoritmos y Programación I', 'UBA', 'Hola a todos! Bienvenidos al curso....', true,
-        '2019-2C', 'http://cholilaonline.com/wp-content/uploads/2018/01/algoritmo-amor.jpg', now(),
-        now());
+        false, '2019-2C', 'http://cholilaonline.com/wp-content/uploads/2018/01/algoritmo-amor.jpg',
+        now(), now());
 
 INSERT INTO course_users
 VALUES (1, 1, 1, 1, true, now(), now());
@@ -62,8 +65,8 @@ VALUES (4, 1, 4, 2, false, now(), now());
 
 INSERT INTO rpl_files
 VALUES (1, 'activity_1_supporting_files.tar.gz', 'text/x-c',
-x'1f8b0800af122e5e0003edd2bf0ac23010c7f13ccaad2e92d87fe0ee83847a60a5b63569c4c737bae8224e45c4ef67f941ee86cb7141fdfea4ebf93a9bc5d8acaecb7bbaa6b2aff9e09c35aea85d51daa6292a63dda6dc382376b9919e529c7d1031bed769bcbeeffb54ff51bb38ab689434880feda1bb8c926f41ce49a51fa3e49736c79474af83a4985735f9e025a6287ad4d0766d97ebdbd5b7ff0100000000000000000000000000ffe606912b5d9c00280000',
-now(), now());
+        x'1f8b0800af122e5e0003edd2bf0ac23010c7f13ccaad2e92d87fe0ee83847a60a5b63569c4c737bae8224e45c4ef67f941ee86cb7141fdfea4ebf93a9bc5d8acaecb7bbaa6b2aff9e09c35aea85d51daa6292a63dda6dc382376b9919e529c7d1031bed769bcbeeffb54ff51bb38ab689434880feda1bb8c926f41ce49a51fa3e49736c79474af83a4985735f9e025a6287ad4d0766d97ebdbd5b7ff0100000000000000000000000000ffe606912b5d9c00280000',
+        now(), now());
 
 INSERT INTO rpl_files
 VALUES (2, 'la_submission.tar.xz', 'text/x-c',
@@ -98,27 +101,26 @@ VALUES (1, 1, 'Conceptos Basicos',
 INSERT INTO activities
 VALUES (1, 1, 1, 'Pasar de segundos a horas, minutos, segundos IO Test',
         'Dada una cantidad de segundos, devolver/imprimir la cantidad de horas', 'c_std11', true,
-        true,
-        '//El codigo inicial', 1, now(), now());
+        true, false, '//El codigo inicial', 1, now(), now());
 
 INSERT INTO activities
 VALUES (2, 1, 1, 'Ej2 Unit Test C',
-        'La descripción del ejericio 2', 'c_std11', false, true, '//El codigo inicial', 1,
+        'La descripción del ejericio 2', 'c_std11', false, true, false, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (3, 1, 1, 'Ej 3 Unit Test Python',
-        'La descripción del ejericio 3', 'python_3.7', false, true, '#El codigo inicial', 1,
+        'La descripción del ejericio 3', 'python_3.7', false, true, false, '#El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (4, 1, 1, 'El ejericio 4',
-        'La descripción del ejericio 4', 'c_std11', true, true, '//El codigo inicial', 1,
+        'La descripción del ejericio 4', 'c_std11', true, true, false, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (5, 1, 1, 'El ejericio 5',
-        'La descripción del ejericio 5', 'c_std11', true, true, '//El codigo inicial', 1,
+        'La descripción del ejericio 5', 'c_std11', true, true, false, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activity_categories
@@ -129,28 +131,27 @@ VALUES (2, 1, 'Conceptos no tan Basicos',
 INSERT INTO activities
 VALUES (6, 1, 2, 'Pasar de segundos a horas, minutos, segundos',
         'Dada una cantidad de segundos, devolver/imprimir la cantidad de horas', 'c_std11', true,
-        true,
-        '//El codigo inicial', 1,
+        true, false, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (7, 1, 2, 'El ejericio 2',
-        'La descripción del ejericio 2', 'c_std11', true, true, '//El codigo inicial', 1,
+        'La descripción del ejericio 2', 'c_std11', true, true, false, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (8, 1, 2, 'El ejericio 3',
-        'La descripción del ejericio 3', 'c_std11', true, true, '//El codigo inicial', 1,
+        'La descripción del ejericio 3', 'c_std11', true, true, false, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (9, 1, 2, 'El ejericio 4',
-        'La descripción del ejericio 4', 'c_std11', true, true, '//El codigo inicial', 1,
+        'La descripción del ejericio 4', 'c_std11', true, true, false, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activities
 VALUES (10, 1, 2, 'El ejericio 5',
-        'La descripción del ejericio 5', 'c_std11', true, true, '//El codigo inicial', 1,
+        'La descripción del ejericio 5', 'c_std11', true, true, false, '//El codigo inicial', 1,
         now(), now());
 
 INSERT INTO activity_submissions
