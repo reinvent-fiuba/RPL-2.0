@@ -9,7 +9,6 @@ import com.example.rpl.RPL.repository.CourseUserRepository
 import com.example.rpl.RPL.repository.RoleRepository
 import com.example.rpl.RPL.repository.UserRepository
 import com.example.rpl.RPL.util.AbstractFunctionalSpec
-import com.sun.security.auth.UnixNumericGroupPrincipal
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.ActiveProfiles
@@ -130,15 +129,15 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test create course with correct values should save course in DB"() {
         given: "a new course"
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
             body = [
-                    name              : 'Some new course',
-                    universityCourseId: '75.41',
-                    university        : 'UBA',
-                    description       : 'An awesome description',
-                    semester          : "2019-2c",
+                    name                : 'Some new course',
+                    university_course_id: '75.41',
+                    university          : 'UBA',
+                    description         : 'An awesome description',
+                    semester            : "2019-2c",
             ]
 
         when: "post new course"
@@ -154,7 +153,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
             assert course.id != null
             assert course.name == body.name
-            assert course.university_course_id == body.universityCourseId
+            assert course.university_course_id == body.university_course_id
             assert course.description == body.description
             assert course.semester == body.semester
 
@@ -164,15 +163,15 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test create course with null values should not save course in DB"() {
         given: "a new course"
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
             body = [
-                    name              : name,
-                    universityCourseId: universityCourseId,
-                    university        : 'UBA',
-                    description       : 'An awesome description',
-                    semester          : semester,
+                    name                : name,
+                    university_course_id: university_course_id,
+                    university          : 'UBA',
+                    description         : 'An awesome description',
+                    semester            : semester,
             ]
 
         when: "must fail with invalid request"
@@ -190,10 +189,10 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.error == "validation_error"
 
         where:
-            name              | universityCourseId | semester
-            null              | "75.41"            | '2019-2c'
-            "Some new course" | null               | '2019-2c'
-            "Some new course" | '2019-2c'          | null
+            name              | university_course_id | semester
+            null              | "75.41"              | '2019-2c'
+            "Some new course" | null                 | '2019-2c'
+            "Some new course" | '2019-2c'            | null
     }
 
     /*****************************************************************************************
@@ -203,7 +202,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test get all courses should retrieve 1 course"() {
         given:
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
         when:
@@ -226,7 +225,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test get courses by user with enrolled user should retrieve 1 course"() {
         given:
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
             def profileResponse = getJsonResponse(get("/api/auth/profile", [
                     "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
@@ -248,7 +247,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test get courses by user with wrong user id should not retrieve courses"() {
         given:
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
         when:
@@ -267,7 +266,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test get courses by user with unenrrolled user should not retrieve courses"() {
         given:
-            Map body = [usernameOrEmail: 'otheruser', password: password]
+            Map body = [username_or_email: 'otheruser', password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
             def profileResponse = getJsonResponse(get("/api/auth/profile", [
                     "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
@@ -293,7 +292,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test enroll user in courses"() {
         given:
-            Map body = [usernameOrEmail: otherUsername, password: otherPassword]
+            Map body = [username_or_email: otherUsername, password: otherPassword]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
         when:
@@ -313,7 +312,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test enroll user in wrong courses should fail with not found course"() {
         given:
-            Map body = [usernameOrEmail: otherUsername, password: otherPassword]
+            Map body = [username_or_email: otherUsername, password: otherPassword]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
         when:
@@ -337,7 +336,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test unenroll user from courses"() {
         given:
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
         when:
@@ -352,7 +351,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test unenroll user in wrong courses should fail with not found course"() {
         given:
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
         when:
@@ -376,7 +375,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test get users from course"() {
         given:
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
         when:
@@ -396,13 +395,13 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test get students from course"() {
         given:
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
         when:
-        def response = get(String.format("/api/courses/%s/users?roleName=student", courseId), [
-                "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
-        ])
+            def response = get(String.format("/api/courses/%s/users?roleName=student", courseId), [
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
 
         then:
             response.contentType == "application/json"
@@ -424,8 +423,8 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         when:
             def response = patch(String.format("/api/courses/%s/users/%s", courseId, otherUser.getId()), [
-                accepted: accepted,
-                role: role
+                    accepted: accepted,
+                    role    : role
             ], username, password)
 
         then:
@@ -439,12 +438,12 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         where:
             accepted | role
-            true | null
-            false | null
-            null | "student"
-            null | "admin"
-            true | "student"
-            true | "admin"
+            true     | null
+            false    | null
+            null     | "student"
+            null     | "admin"
+            true     | "student"
+            true     | "admin"
     }
 
     @Unroll
@@ -530,15 +529,15 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test delete missing user in course should fail with not found user"() {
         when:
-        def response = delete(String.format("/api/courses/%s/users/%s", courseId, otherUser.getId()), username, password)
+            def response = delete(String.format("/api/courses/%s/users/%s", courseId, otherUser.getId()), username, password)
 
         then:
-        response.contentType == "application/json"
-        response.statusCode == SC_NOT_FOUND
+            response.contentType == "application/json"
+            response.statusCode == SC_NOT_FOUND
 
-        def result = getJsonResponse(response)
+            def result = getJsonResponse(response)
 
-        result.message == 'User not found in course'
+            result.message == 'User not found in course'
     }
 
     /*****************************************************************************************

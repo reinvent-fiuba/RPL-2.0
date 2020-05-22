@@ -1,10 +1,10 @@
 package com.example.rpl.RPL.controller.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Value;
 
 @AllArgsConstructor
-@Getter
+@Value
 public class PatchCourseUserRequestDTO {
 
     private Boolean accepted;

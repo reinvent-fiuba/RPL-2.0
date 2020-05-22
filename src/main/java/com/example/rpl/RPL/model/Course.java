@@ -37,6 +37,9 @@ public class Course {
     @Column(name = "active")
     private Boolean active;
 
+    @Column(name = "deleted")
+    private Boolean deleted;
+
     @Column(name = "semester")
     private String semester;
 
@@ -63,6 +66,7 @@ public class Course {
         this.universityCourseId = universityCourseId;
         this.description = description;
         this.active = active;
+        this.deleted = false;
         this.semester = semester;
         this.imgUri = imgUri;
         this.dateCreated = now;

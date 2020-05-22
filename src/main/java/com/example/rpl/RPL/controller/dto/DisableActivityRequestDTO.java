@@ -6,12 +6,8 @@ import lombok.Value;
 
 @AllArgsConstructor
 @Value
-public class ResetPasswordRequestDTO {
+public class DisableActivityRequestDTO {
 
     @NotNull
-    private String passwordToken;
-
-    @NotNull
-    private String newPassword;
-
+    private Boolean active;
 }

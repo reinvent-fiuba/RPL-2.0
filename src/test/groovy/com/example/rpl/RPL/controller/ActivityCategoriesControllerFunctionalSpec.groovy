@@ -112,7 +112,7 @@ class ActivityCategoriesControllerFunctionalSpec extends AbstractFunctionalSpec 
     void "test get activity categories should get all the categories"() {
         given:
             Long courseId = course.getId();
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             File f = new File("./src/main/resources/db/testdata/unit_test_google.c")
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
@@ -133,7 +133,7 @@ class ActivityCategoriesControllerFunctionalSpec extends AbstractFunctionalSpec 
     void "test post activity category should create a category"() {
         given:
             Long courseId = course.getId();
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
             body = [
                     name: 'some-name',
@@ -158,7 +158,7 @@ class ActivityCategoriesControllerFunctionalSpec extends AbstractFunctionalSpec 
     @Unroll
     void "test post activity category in other course should fail"() {
         given:
-            Map body = [usernameOrEmail: username, password: password]
+            Map body = [username_or_email: username, password: password]
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
             body = [
                     name: 'some-name',

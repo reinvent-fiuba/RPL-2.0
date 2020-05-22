@@ -60,6 +60,9 @@ public class Activity {
     @Column(name = "active")
     private Boolean active;
 
+    @Column(name = "deleted")
+    private Boolean deleted;
+
     @NonNull
     @Basic()
     @Column(name = "initial_code")
@@ -93,6 +96,7 @@ public class Activity {
         this.language = language;
         this.isIOTested = true;
         this.active = true;
+        this.deleted = false;
         this.supportingFile = supportingFile;
         this.initialCode = initialCode;
         this.dateCreated = now();
@@ -111,6 +115,16 @@ public class Activity {
 
     public void setIsIOTested(boolean isIOTested) {
         this.isIOTested = isIOTested;
+        this.lastUpdated = now();
+    }
+
+    public void setDeleted(boolean isDeleted) {
+        this.deleted = isDeleted;
+        this.lastUpdated = now();
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
         this.lastUpdated = now();
     }
 }

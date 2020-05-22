@@ -208,7 +208,7 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
         given: "A new submission"
             File f = new File("./src/main/resources/db/testdata/la_submission.tar.xz")
 
-            Map loginBody = [usernameOrEmail: "username", password: "supersecret"]
+            Map loginBody = [username_or_email: "username", password: "supersecret"]
             def loginResponse = getJsonResponse(post("/api/auth/login", loginBody))
 
         when:
