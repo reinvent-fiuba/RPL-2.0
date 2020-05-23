@@ -57,6 +57,9 @@ public class Activity {
     @Column(name = "is_io_tested")
     private Boolean isIOTested;
 
+    @Column(name = "points")
+    private Long points;
+
     @Column(name = "active")
     private Boolean active;
 
@@ -87,7 +90,7 @@ public class Activity {
     }
 
     public Activity(Course course, ActivityCategory activityCategory, String name,
-        String description, Language language, String initialCode,
+        String description, Language language, String initialCode, Long points,
         RPLFile supportingFile) {
         this.course = course;
         this.activityCategory = activityCategory;
@@ -99,17 +102,19 @@ public class Activity {
         this.deleted = false;
         this.supportingFile = supportingFile;
         this.initialCode = initialCode;
+        this.points = points;
         this.dateCreated = now();
         this.lastUpdated = this.dateCreated;
     }
 
     public void updateActivity(ActivityCategory activityCategory, String name,
-        String description, Language language, String initialCode) {
+        String description, Language language, String initialCode, Long score) {
         this.activityCategory = activityCategory;
         this.name = name;
         this.description = description;
         this.language = language;
         this.initialCode = initialCode;
+        this.points = points;
         this.lastUpdated = now();
     }
 

@@ -69,6 +69,7 @@ public class ActivitiesController {
             createActivityRequestDTO.getLanguage(),
             true,
             createActivityRequestDTO.getInitialCode(),
+            createActivityRequestDTO.getPoints(),
             compressedSupportingFilesBytes);
 
         return new ResponseEntity<>(
@@ -96,6 +97,7 @@ public class ActivitiesController {
             createActivityRequestDTO.getLanguage(),
             true,
             createActivityRequestDTO.getInitialCode(),
+            createActivityRequestDTO.getPoints(),
             compressedSupportingFilesBytes);
 
         return new ResponseEntity<>(

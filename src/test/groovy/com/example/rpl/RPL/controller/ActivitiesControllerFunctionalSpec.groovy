@@ -135,6 +135,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
                 "An activity",
                 Language.C,
                 "initialCode",
+                10,
                 supportingActivityFile
         )
         activityRepository.save(activity)
@@ -185,7 +186,8 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
                     name              : 'Some name',
                     description       : 'Some description',
                     language          : 'C',
-                    initialCode       : '//initial code'
+                    initialCode       : '//initial code',
+                    points            : 22,
             ]
 
         when: "post new activity"
@@ -424,6 +426,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
                     "Another activity",
                     Language.PYTHON3,
                     "def hola():",
+                    22,
                     supportingActivityFile
             )
             activityRepository.save(activity2)

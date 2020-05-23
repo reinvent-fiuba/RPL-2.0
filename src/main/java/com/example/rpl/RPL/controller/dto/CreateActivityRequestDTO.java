@@ -21,4 +21,6 @@ public class CreateActivityRequestDTO {
 
     @NotNull
     private String initialCode;
+
+    private Long points;
 }

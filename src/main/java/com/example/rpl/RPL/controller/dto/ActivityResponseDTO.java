@@ -38,6 +38,8 @@ public class ActivityResponseDTO {
 
     private String initialCode;
 
+    private Long points;
+
     private Long fileId;
 
     private String activityUnitTests;
@@ -63,6 +65,7 @@ public class ActivityResponseDTO {
             .active(activity.getActive())
             .deleted(activity.getDeleted())
             .initialCode(activity.getInitialCode())
+            .points(activity.getPoints())
             .fileId(activity.getSupportingFile().getId())
             .dateCreated(activity.getDateCreated())
             .lastUpdated(activity.getLastUpdated());

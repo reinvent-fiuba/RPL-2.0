@@ -110,6 +110,7 @@ CREATE TABLE activities
     deleted              BOOLEAN,
     initial_code         varchar(20000),
     supporting_file_id   BIGINT,
+    points               BIGINT,
     date_created         DATETIME,
     last_updated         DATETIME,
 

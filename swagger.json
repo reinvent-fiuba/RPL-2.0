@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-  "host": "localhost:42323",
+    "host": "localhost:62277",
     "basePath": "/",
     "tags": [
         {
@@ -1024,6 +1024,13 @@
                         "type": "string"
                     },
                     {
+                        "name": "points",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
                         "name": "supportingFile",
                         "in": "formData",
                         "description": "supportingFile",
@@ -1424,6 +1431,13 @@
                         "in": "query",
                         "required": false,
                         "type": "string"
+                    },
+                    {
+                        "name": "points",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
                     },
                     {
                         "name": "supportingFile",
@@ -5137,6 +5151,10 @@
                 },
                 "name": {
                     "type": "string"
+                },
+                "points": {
+                    "type": "integer",
+                    "format": "int64"
                 }
             },
             "title": "ActivityResponseDTO"
@@ -5937,16 +5955,16 @@
             "type": "object",
             "properties": {
                 "status": {
-                  "type": "string",
-                  "enum": [
-                    "PENDING",
-                    "ENQUEUED",
-                    "PROCESSING",
-                    "BUILD_ERROR",
-                    "RUNTIME_ERROR",
-                    "FAILURE",
-                    "SUCCESS"
-                  ]
+                    "type": "string",
+                    "enum": [
+                        "PENDING",
+                        "ENQUEUED",
+                        "PROCESSING",
+                        "BUILD_ERROR",
+                        "RUNTIME_ERROR",
+                        "FAILURE",
+                        "SUCCESS"
+                    ]
                 }
             },
             "title": "UpdateSubmissionStatusRequestDTO"
