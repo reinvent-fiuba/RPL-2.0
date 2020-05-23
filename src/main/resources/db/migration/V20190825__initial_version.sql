@@ -218,7 +218,7 @@ CREATE TABLE unit_test_run
 ) ENGINE = InnoDB;
 
 
-CREATE TABLE password_rest_token
+CREATE TABLE validation_token
 (
     id          BIGINT NOT NULL AUTO_INCREMENT,
     user_id     BIGINT,
@@ -226,6 +226,6 @@ CREATE TABLE password_rest_token
     expiry_date DATETIME,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 

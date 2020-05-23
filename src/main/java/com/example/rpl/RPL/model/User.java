@@ -98,4 +98,9 @@ public class User implements Serializable {
         this.password = newPassword;
         this.lastUpdated = ZonedDateTime.now();
     }
+
+    public void markAsValidated() {
+        this.emailValidated = true;
+        this.lastUpdated = ZonedDateTime.now();
+    }
 }

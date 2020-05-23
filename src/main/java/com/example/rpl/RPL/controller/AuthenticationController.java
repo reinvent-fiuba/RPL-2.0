@@ -4,10 +4,12 @@ import com.example.rpl.RPL.controller.dto.CreateUserRequestDTO;
 import com.example.rpl.RPL.controller.dto.ForgotPasswordRequestDTO;
 import com.example.rpl.RPL.controller.dto.JwtResponseDTO;
 import com.example.rpl.RPL.controller.dto.LoginRequestDTO;
+import com.example.rpl.RPL.controller.dto.ResendValidationEmailRequestDTO;
 import com.example.rpl.RPL.controller.dto.ResetPasswordRequestDTO;
 import com.example.rpl.RPL.controller.dto.UserResponseDTO;
-import com.example.rpl.RPL.model.PasswordResetToken;
+import com.example.rpl.RPL.controller.dto.ValidateEmailRequestDTO;
 import com.example.rpl.RPL.model.User;
+import com.example.rpl.RPL.model.ValidationToken;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.JwtTokenProvider;
 import com.example.rpl.RPL.security.UserPrincipal;
@@ -55,6 +57,8 @@ public class AuthenticationController {
                 createUserRequestDTO.getEmail(),
                 createUserRequestDTO.getPassword(), createUserRequestDTO.getUniversity(),
                 createUserRequestDTO.getDegree());
+
+        authenticationService.sendValidateEmailToken(user);
 
         return new ResponseEntity<>(UserResponseDTO.fromEntity(user), HttpStatus.CREATED);
     }
@@ -116,10 +120,40 @@ public class AuthenticationController {
     public ResponseEntity<UserResponseDTO> resetPassword(
         @Valid @RequestBody final ResetPasswordRequestDTO resetPasswordDTO) {
 
-        PasswordResetToken token = authenticationService
-            .validatePasswordToken(resetPasswordDTO.getPasswordToken());
+        ValidationToken token = authenticationService
+            .validateToken(resetPasswordDTO.getPasswordToken());
 
         User user = authenticationService.resetPassword(token, resetPasswordDTO.getNewPassword());
+
+        return new ResponseEntity<>(UserResponseDTO.fromEntity(user), HttpStatus.OK);
+    }
+
+    /**
+     *
+     */
+    @PostMapping("/api/auth/validateEmail")
+    public ResponseEntity<UserResponseDTO> validateEmail(
+        @Valid @RequestBody final ValidateEmailRequestDTO validateEmailDTO) {
+
+        ValidationToken token = authenticationService
+            .validateToken(validateEmailDTO.getValidateEmailToken());
+
+        User user = authenticationService.validateEmail(token.getUser());
+
+        return new ResponseEntity<>(UserResponseDTO.fromEntity(user), HttpStatus.OK);
+    }
+
+    /**
+     *
+     */
+    @PostMapping("/api/auth/resendValidationEmail")
+    public ResponseEntity<UserResponseDTO> resendValidationEmail(
+        @Valid @RequestBody final ResendValidationEmailRequestDTO resendValidationEmailRequestDTO) {
+
+        User user = authenticationService
+            .getUserByUsernameOrEmail(resendValidationEmailRequestDTO.getUsernameOrEmail());
+
+        authenticationService.sendValidateEmailToken(user);
 
         return new ResponseEntity<>(UserResponseDTO.fromEntity(user), HttpStatus.OK);
     }

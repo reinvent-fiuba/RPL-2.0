@@ -2,10 +2,10 @@ package com.example.rpl.RPL.service;
 
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
 import com.example.rpl.RPL.exception.NotFoundException;
-import com.example.rpl.RPL.model.PasswordResetToken;
 import com.example.rpl.RPL.model.User;
-import com.example.rpl.RPL.repository.PasswordResetTokenRepository;
+import com.example.rpl.RPL.model.ValidationToken;
 import com.example.rpl.RPL.repository.UserRepository;
+import com.example.rpl.RPL.repository.ValidationTokenRepository;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,17 +21,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
-    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final ValidationTokenRepository validationTokenRepository;
     private final EmailService emailService;
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public AuthenticationService(UserRepository userRepository,
-        PasswordResetTokenRepository passwordResetTokenRepository,
+        ValidationTokenRepository ValidationTokenRepository,
         EmailService emailService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.validationTokenRepository = ValidationTokenRepository;
         this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -60,9 +60,6 @@ public class AuthenticationService {
         }
 
         log.info("[process:create_user][username:{}] Creating new user", username);
-
-        //TODO: Send confirmation e-mail
-
         return userRepository.save(user);
     }
 
@@ -77,22 +74,15 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public void sendResetPasswordToken(String email) {
-
-        User user = userRepository.findByEmail(email).orElseThrow(
-            () -> new NotFoundException(String.format("User with email '%s' does not exist", email),
-                "user_not_found"));
-
-        String token = UUID.randomUUID().toString();
-
-        PasswordResetToken myToken = new PasswordResetToken(token, user);
-        passwordResetTokenRepository.save(myToken);
-
-        emailService.sendResetPasswordMessage(email, token);
+    public User getUserByUsernameOrEmail(String usernameOrEmail) {
+        return userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+            .orElseThrow(() ->
+                new NotFoundException(String.format("User '%s' does not exist", usernameOrEmail)));
     }
 
-    public PasswordResetToken validatePasswordToken(String passwordToken) {
-        PasswordResetToken token = passwordResetTokenRepository.findByToken(passwordToken)
+    @Transactional
+    public ValidationToken validateToken(String requestToken) {
+        ValidationToken token = validationTokenRepository.findByToken(requestToken)
             .orElseThrow(
                 () -> new NotFoundException("El token no existe o expiró", "token_not_found"));
 
@@ -102,10 +92,50 @@ public class AuthenticationService {
         return token;
     }
 
-    public User resetPassword(PasswordResetToken token, @NotNull String newPassword) {
+    /*
+     ********* RESET PASSWORD *******
+     */
+
+    @Transactional
+    public void sendResetPasswordToken(String email) {
+
+        User user = userRepository.findByEmail(email).orElseThrow(
+            () -> new NotFoundException(String.format("User with email '%s' does not exist", email),
+                "user_not_found"));
+
+        String token = UUID.randomUUID().toString();
+
+        ValidationToken myToken = new ValidationToken(token, user);
+        validationTokenRepository.save(myToken);
+
+        emailService.sendResetPasswordMessage(email, token);
+    }
+
+    @Transactional
+    public User resetPassword(ValidationToken token, @NotNull String newPassword) {
         User user = token.getUser();
         user.changePassword(passwordEncoder.encode(newPassword));
 
+        return userRepository.save(user);
+    }
+
+    /*
+     ********* VALIDATE EMAIL *******
+     */
+
+    @Transactional
+    public void sendValidateEmailToken(User user) {
+        String token = UUID.randomUUID().toString();
+
+        ValidationToken myToken = new ValidationToken(token, user);
+        validationTokenRepository.save(myToken);
+
+        emailService.sendValidateEmailMessage(user.getEmail(), token);
+    }
+
+    @Transactional
+    public User validateEmail(User user) {
+        user.markAsValidated();
         return userRepository.save(user);
     }
 }

@@ -58,8 +58,9 @@ class ActivityCategoriesControllerFunctionalSpec extends AbstractFunctionalSpec 
                 'some@mail.com',
                 passwordEncoder.encode('supersecret'),
                 'some-university',
-                'some-hard-degree'
+                'some-hard-degree',
         )
+        user.markAsValidated()
 
         username = 'username'
         password = 'supersecret'

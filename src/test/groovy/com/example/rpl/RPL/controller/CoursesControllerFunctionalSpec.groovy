@@ -93,6 +93,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
                 'some-university',
                 'some-hard-degree'
         )
+        user.markAsValidated()
 
         username = 'username'
         password = 'supersecret'
@@ -109,6 +110,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
                 'other-university',
                 'other-hard-degree'
         )
+        otherUser.markAsValidated()
 
         otherUsername = 'otheruser'
         otherPassword = 'supersecret'
