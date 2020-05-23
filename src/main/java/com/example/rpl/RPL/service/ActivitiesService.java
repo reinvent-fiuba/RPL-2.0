@@ -49,7 +49,7 @@ public class ActivitiesService {
     @Transactional
     public Activity createActivity(Long courseId, Long activityCategoryId, String name,
         String description, String language,
-        Boolean active, String initialCode, byte[] supportingFilesBytes) {
+        Boolean active, String initialCode, Long points, byte[] supportingFilesBytes) {
 
         Course course = courseRepository.findById(courseId).orElseThrow(
             () -> new NotFoundException("Course not found",
@@ -67,7 +67,7 @@ public class ActivitiesService {
         fileRepository.save(file);
 
         Activity activity = new Activity(course, activityCategory, name, description,
-            Language.getByName(language), initialCode, file);
+            Language.getByName(language), initialCode, points, file);
 
         activityRepository.save(activity);
 
@@ -77,7 +77,7 @@ public class ActivitiesService {
     @Transactional
     public Activity updateActivity(Activity activity, Long activityCategoryId, String name,
         String description, String language,
-        Boolean active, String initialCode, byte[] supportingFilesBytes) {
+        Boolean active, String initialCode, Long points, byte[] supportingFilesBytes) {
 
         ActivityCategory activityCategory = activityCategoryRepository.findById(activityCategoryId)
             .orElseThrow(
@@ -85,7 +85,7 @@ public class ActivitiesService {
                     "category_not_found"));
 
         activity.updateActivity(activityCategory, name, description, Language.getByName(language),
-            initialCode);
+            initialCode, points);
 
         activityRepository.save(activity);
 
