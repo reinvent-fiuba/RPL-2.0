@@ -11,8 +11,11 @@ public class ActivitiesStats {
 
     private Map<String, Long> countByStatus;
 
-    public ActivitiesStats(int total, Map<String, Long> countByStatus) {
+    private Map<String, Long> score;
+
+    public ActivitiesStats(int total, Map<String, Long> countByStatus, Map<String, Long> score) {
         this.total = total;
         this.countByStatus = countByStatus;
+        this.score = score;
     }
 }

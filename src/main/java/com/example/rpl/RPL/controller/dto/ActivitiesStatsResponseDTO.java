@@ -16,10 +16,13 @@ public class ActivitiesStatsResponseDTO {
 
     private Map<String, Long> countByStatus;
 
+    private Map<String, Long> score;
+
     public static ActivitiesStatsResponseDTO fromEntity(ActivitiesStats activitiesStats) {
         return ActivitiesStatsResponseDTO.builder()
             .total(activitiesStats.getTotal())
             .countByStatus(activitiesStats.getCountByStatus())
+            .score(activitiesStats.getScore())
             .build();
     }
 }

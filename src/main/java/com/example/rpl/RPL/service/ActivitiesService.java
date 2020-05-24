@@ -132,7 +132,7 @@ public class ActivitiesService {
     }
 
     public ActivitiesStats getActivitiesStatsByUserAndCourseId(Long userId, Long courseId) {
-        List<Activity> activities = activityRepository.findAll(ActivitySpecifications.byCourseId(courseId));
+        List<Activity> activities = getAllActivitiesByCourse(courseId);
         int total = activities.size();
         List<ActivitySubmission> activitySubmissions = submissionRepository.findAll(
                 ActivitySubmissionSpecifications.byUserIdAndCourseId(userId, courseId)
@@ -146,17 +146,24 @@ public class ActivitiesService {
         countByStatus.put("NON STARTED", (long) 0);
         countByStatus.put("SOLVED", (long) 0);
 
-        activities.forEach(activity -> {
+        HashMap<String, Long> score = new HashMap<>();
+        score.put("OBTAINED", (long) 0);
+        score.put("PENDING", (long) 0);
+
+        for (Activity activity : activities) {
             List<ActivitySubmission> submissions = submissionsByActivity.get(activity.getId());
             if (submissions == null) {
                 countByStatus.put("NON STARTED", countByStatus.get("NON STARTED") + 1);
+                score.put("PENDING", score.get("PENDING") + 1);
             } else if (submissions.stream().anyMatch(activitySubmission -> activitySubmission.getStatus().toString() == "SUCCESS")) {
                 countByStatus.put("SOLVED", countByStatus.get("SOLVED") + 1);
+                score.put("OBTAINED", score.get("OBTAINED") + 1);
             } else {
                 countByStatus.put("STARTED", countByStatus.get("STARTED") + 1);
+                score.put("PENDING", score.get("PENDING") + 1);
             }
-        });
+        }
 
-        return new ActivitiesStats(total, countByStatus);
+        return new ActivitiesStats(total, countByStatus, score);
     }
 }

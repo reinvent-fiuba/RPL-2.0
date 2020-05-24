@@ -180,7 +180,7 @@ public class ActivitiesController {
 
     @PreAuthorize("hasAuthority('activity_submit')")
     @GetMapping(value = "/api/courses/{courseId}/activities/stats")
-    public ResponseEntity<ActivitiesStatsResponseDTO> getSubmissionsStats(
+    public ResponseEntity<ActivitiesStatsResponseDTO> getActivitiesStats(
             @CurrentUser UserPrincipal currentUser,
             @PathVariable Long courseId) {
 
