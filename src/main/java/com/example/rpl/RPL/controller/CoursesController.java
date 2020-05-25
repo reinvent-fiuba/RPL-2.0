@@ -115,27 +115,12 @@ public class CoursesController {
                                                                                 @PathVariable Long courseId) {
 
 
-        List<Activity> courseActivities = activitiesService.getAllActivitiesByCourse(courseId);
-        List<CourseUserScoreResponseDTO> scoreboard =
-                coursesService.getAllUsers(courseId, "student").stream().map(courseUser -> {
-                    LongSummaryStatistics userActivityPoints = submissionService
-                            .getAllSubmissionsByUserAndActivities(courseUser.getUser(), courseActivities)
-                            .stream()
-                            .filter(activitySubmission -> activitySubmission.getStatus() == SubmissionStatus.SUCCESS)
-                            .map(activitySubmission -> activitySubmission.getActivity())
-                            .distinct()
-                            .mapToLong(activity -> activity.getPoints())
-                            .summaryStatistics();
-
-                    Long score = userActivityPoints.getSum();
-                    Long activityCount = userActivityPoints.getCount();
-
-                    return CourseUserScoreResponseDTO.fromEntity(courseUser, score, activityCount);
-                }).collect(Collectors.toList());
-
+        List<CourseUserScore> scoreboard = coursesService.getScoreboard(courseId);
 
         return new ResponseEntity<>(
-                scoreboard,
+                scoreboard.stream()
+                    .map(CourseUserScoreResponseDTO::fromEntity)
+                    .collect(Collectors.toList()),
                 HttpStatus.OK);
     }
 

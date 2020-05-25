@@ -1,6 +1,7 @@
 package com.example.rpl.RPL.controller.dto;
 
 import com.example.rpl.RPL.model.CourseUser;
+import com.example.rpl.RPL.model.CourseUserScore;
 import com.example.rpl.RPL.model.Role;
 import com.example.rpl.RPL.model.User;
 import lombok.Builder;
@@ -32,9 +33,8 @@ public class CourseUserScoreResponseDTO {
 
     private ZonedDateTime lastUpdated;
 
-    public static CourseUserScoreResponseDTO fromEntity(CourseUser courseUser, Long score, Long activitiesCount) {
-        User user = courseUser.getUser();
-        Role role = courseUser.getRole();
+    public static CourseUserScoreResponseDTO fromEntity(CourseUserScore courseUserScore) {
+        User user = courseUserScore.getCourseUser().getUser();
         return CourseUserScoreResponseDTO.builder()
             .id(user.getId())
             .name(user.getName())
@@ -42,8 +42,8 @@ public class CourseUserScoreResponseDTO {
             .studentId(user.getStudentId())
             .username(user.getUsername())
             .email(user.getEmail())
-            .score(score)
-            .activitiesCount(activitiesCount)
+            .score(courseUserScore.getScore())
+            .activitiesCount(courseUserScore.getActivitiesCount())
             .dateCreated(user.getDateCreated())
             .lastUpdated(user.getLastUpdated())
             .build();
