@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.example.rpl.RPL.specification.ActivitySubmissionSpecifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -155,7 +154,7 @@ public class SubmissionService {
 
     public ActivitySubmissionStats getSubmissionsStatsByUserAndCourseId(Long userId,
                                                                               Long courseId) {
-        List<ActivitySubmission> activitySubmissions = submissionRepository.findAll(ActivitySubmissionSpecifications.byUserIdAndCourseId(userId, courseId));
+        List<ActivitySubmission> activitySubmissions = submissionRepository.findAllByUserIdAndCourseId(userId, courseId);
         int total = activitySubmissions.size();
         Map<SubmissionStatus, Long> countByStatus = activitySubmissions.stream()
                 .collect(Collectors.groupingBy(activitySubmission -> activitySubmission.getStatus(),

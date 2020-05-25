@@ -10,11 +10,8 @@ import com.example.rpl.RPL.repository.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import com.example.rpl.RPL.specification.ActivitySpecifications;
-import com.example.rpl.RPL.specification.ActivitySubmissionSpecifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -134,9 +131,7 @@ public class ActivitiesService {
     public ActivitiesStats getActivitiesStatsByUserAndCourseId(Long userId, Long courseId) {
         List<Activity> activities = getAllActivitiesByCourse(courseId);
         int total = activities.size();
-        List<ActivitySubmission> activitySubmissions = submissionRepository.findAll(
-                ActivitySubmissionSpecifications.byUserIdAndCourseId(userId, courseId)
-        );
+        List<ActivitySubmission> activitySubmissions = submissionRepository.findAllByUserIdAndCourseId(userId, courseId);
 
         Map<Long, List<ActivitySubmission>> submissionsByActivity = activitySubmissions.stream()
                 .collect(Collectors.groupingBy(activitySubmission -> activitySubmission.getActivity().getId()));
