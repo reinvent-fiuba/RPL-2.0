@@ -6,6 +6,7 @@ import com.example.rpl.RPL.repository.ActivityCategoryRepository
 import com.example.rpl.RPL.repository.ActivityRepository
 import com.example.rpl.RPL.repository.CourseRepository
 import com.example.rpl.RPL.repository.FileRepository
+import com.example.rpl.RPL.repository.SubmissionRepository
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.web.multipart.MultipartFile
 import spock.lang.Shared
@@ -18,6 +19,7 @@ class ActivitiesServiceSpec extends Specification {
     private ActivityRepository activityRepository;
     private ActivityCategoryRepository activityCategoryRepository;
     private FileRepository fileRepository;
+    private SubmissionRepository submissionRepository;
 
     @Shared
     private User user
@@ -28,11 +30,13 @@ class ActivitiesServiceSpec extends Specification {
         activityRepository = Mock(ActivityRepository)
         activityCategoryRepository = Mock(ActivityCategoryRepository)
         fileRepository = Mock(FileRepository)
+        submissionRepository = Mock(SubmissionRepository)
         activitiesService = new ActivitiesService(
                 courseRepository,
                 activityRepository,
                 activityCategoryRepository,
-                fileRepository
+                fileRepository,
+                submissionRepository
         )
 
         user = Mock(User)

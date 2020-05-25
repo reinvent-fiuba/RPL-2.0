@@ -10,6 +10,7 @@ import com.example.rpl.RPL.model.User
 import com.example.rpl.RPL.repository.CourseRepository
 import com.example.rpl.RPL.repository.CourseUserRepository
 import com.example.rpl.RPL.repository.RoleRepository
+import com.example.rpl.RPL.repository.SubmissionRepository
 import com.example.rpl.RPL.repository.UserRepository
 import spock.lang.Shared
 import spock.lang.Specification
@@ -21,6 +22,8 @@ class CoursesServiceSpec extends Specification {
     private CourseRepository courseRepository
     private RoleRepository roleRepository
     private UserRepository userRepository
+    private ActivitiesService activitiesService
+    private SubmissionService submissionService
 
     @Shared
     private User user
@@ -31,11 +34,15 @@ class CoursesServiceSpec extends Specification {
         courseRepository = Mock(CourseRepository)
         roleRepository = Mock(RoleRepository)
         userRepository = Mock(UserRepository)
+        activitiesService = Mock(ActivitiesService)
+        submissionService = Mock(SubmissionService)
         coursesService = new CoursesService(
                 courseRepository,
                 courseUserRepository,
                 roleRepository,
-                userRepository
+                userRepository,
+                activitiesService,
+                submissionService
         )
 
         user = Mock(User)
