@@ -57,9 +57,6 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     RPLFile submissionFile
 
     @Shared
-    ActivitySubmission activitySubmission
-
-    @Shared
     Course course
 
     @Shared
@@ -146,15 +143,6 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
                 null
         )
         fileRepository.save(submissionFile)
-
-        activitySubmission = new ActivitySubmission(
-                activity,
-                user,
-                submissionFile,
-                SubmissionStatus.PENDING
-        )
-        submissionRepository.save(activitySubmission)
-
     }
 
     def cleanup() {
@@ -369,6 +357,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
      ********** GET ACTIVITIES ***************************************************************
      *****************************************************************************************/
 
+    @Unroll
     void "test get activity should return the activity"() {
         when:
             def response = get("/api/courses/${course.getId()}/activities/${activity.getId()}", username, password)
@@ -391,6 +380,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.last_updated != null
     }
 
+    @Unroll
     void "test get activity should return the activity with tests"() {
         given: "Two unit tests added to the activity"
             IOTest ioTest1 = iOTestRepository.save(new IOTest(activity.getId(), "1", "1"))
@@ -417,8 +407,15 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.last_updated != null
     }
 
+    @Unroll
     void "test get activities should return all the user's activities with submission results"() {
         given: "another activity without submissions"
+            submissionRepository.save(new ActivitySubmission(
+                    activity,
+                    user,
+                    submissionFile,
+                    SubmissionStatus.PENDING
+            ))
             Activity activity2 = new Activity(
                     course,
                     activityCategory,
@@ -473,6 +470,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
      ********** CREATE IO TEST ***************************************************************
      *****************************************************************************************/
 
+    @Unroll
     void "test create IO test for activity"() {
         given: "a new IO Test"
             Map body = [text_in: "1", text_out: "2"]
@@ -489,6 +487,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert ioTest.out == "2"
     }
 
+    @Unroll
     void "test update IO test for activity"() {
         given: "Two unit tests added to the activity"
             IOTest ioTest1 = iOTestRepository.save(new IOTest(activity.getId(), "1", "1"))
@@ -509,6 +508,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert ioTest.out == "2000"
     }
 
+    @Unroll
     void "test delete IO test for activity"() {
         given: "Two unit tests added to the activity"
             IOTest ioTest1 = iOTestRepository.save(new IOTest(activity.getId(), "1", "1"))
@@ -539,4 +539,41 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
     }
 
+    /*****************************************************************************************
+     ********** GET ACTIVITIES STATS *********************************************************
+     *****************************************************************************************/
+
+    @Unroll
+    void "test get activities stats"() {
+        given:
+            for (submissionStatus in submissionStatuses) {
+                submissionRepository.save(new ActivitySubmission(
+                        activity,
+                        user,
+                        submissionFile,
+                        submissionStatus
+                ))
+            }
+        when:
+            def response = get("/api/courses/${course.getId()}/activities/stats", username, password);
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            def result = getJsonResponse(response)
+
+            result.count_by_status == ["NON STARTED": nonStarted, "STARTED": started, "SOLVED": solved]
+            result.score == ["OBTAINED": score, "PENDING": totalScore-score]
+
+        where:
+            submissionStatuses         | score | totalScore | started | solved | nonStarted
+            []                         | 0     | 10         | 0       | 0      | 1
+            [SubmissionStatus.PENDING] | 0     | 10         | 1       | 0      | 0
+            [SubmissionStatus.SUCCESS] | 10    | 10         | 0       | 1      | 0
+            [SubmissionStatus.PENDING,
+             SubmissionStatus.SUCCESS] | 10    | 10         | 0       | 1      | 0
+            [SubmissionStatus.SUCCESS,
+             SubmissionStatus.SUCCESS] | 10    | 10         | 0       | 1      | 0
+    }
 }

@@ -19,6 +19,6 @@ public interface SubmissionRepository extends JpaRepository<ActivitySubmission, 
     @Query("select s " +
         "from ActivitySubmission s " +
         "inner join s.activity a " +
-        "where s.activity.id = ?1 and a.course.id = ?2")
+        "where s.user.id = ?1 and a.course.id = ?2")
     List<ActivitySubmission> findAllByUserIdAndCourseId(Long userId, Long courseId);
 }

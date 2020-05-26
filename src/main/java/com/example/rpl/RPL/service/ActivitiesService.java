@@ -149,13 +149,13 @@ public class ActivitiesService {
             List<ActivitySubmission> submissions = submissionsByActivity.get(activity.getId());
             if (submissions == null) {
                 countByStatus.put("NON STARTED", countByStatus.get("NON STARTED") + 1);
-                score.put("PENDING", score.get("PENDING") + 1);
+                score.put("PENDING", score.get("PENDING") + activity.getPoints());
             } else if (submissions.stream().anyMatch(activitySubmission -> activitySubmission.getStatus().toString() == "SUCCESS")) {
                 countByStatus.put("SOLVED", countByStatus.get("SOLVED") + 1);
-                score.put("OBTAINED", score.get("OBTAINED") + 1);
+                score.put("OBTAINED", score.get("OBTAINED") + activity.getPoints());
             } else {
                 countByStatus.put("STARTED", countByStatus.get("STARTED") + 1);
-                score.put("PENDING", score.get("PENDING") + 1);
+                score.put("PENDING", score.get("PENDING") + + activity.getPoints());
             }
         }
 
