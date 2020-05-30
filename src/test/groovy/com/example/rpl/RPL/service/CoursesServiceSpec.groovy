@@ -1,11 +1,15 @@
 package com.example.rpl.RPL.service
 
-
+import com.example.rpl.RPL.controller.ActivityTestsController
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException
 import com.example.rpl.RPL.exception.NotFoundException
+import com.example.rpl.RPL.model.Activity
+import com.example.rpl.RPL.model.ActivitySubmission
 import com.example.rpl.RPL.model.Course
 import com.example.rpl.RPL.model.CourseUser
+import com.example.rpl.RPL.model.CourseUserScore
 import com.example.rpl.RPL.model.Role
+import com.example.rpl.RPL.model.SubmissionStatus
 import com.example.rpl.RPL.model.User
 import com.example.rpl.RPL.repository.CourseRepository
 import com.example.rpl.RPL.repository.CourseUserRepository
@@ -14,6 +18,8 @@ import com.example.rpl.RPL.repository.SubmissionRepository
 import com.example.rpl.RPL.repository.UserRepository
 import spock.lang.Shared
 import spock.lang.Specification
+
+import java.util.stream.Collectors
 
 class CoursesServiceSpec extends Specification {
 
@@ -418,15 +424,131 @@ class CoursesServiceSpec extends Specification {
 
     void "should throw not found course user while getting permissions if user not enerrolled"() {
         given:
-        Long courseId = 1
-        Long userId = 1
+            Long courseId = 1
+            Long userId = 1
 
         when:
-        List<String> permissions = coursesService.getPermissions(courseId, userId)
+            List<String> permissions = coursesService.getPermissions(courseId, userId)
 
         then:
-        1 * courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId) >> Optional.empty()
+            1 * courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId) >> Optional.empty()
 
-        thrown(NotFoundException)
+            thrown(NotFoundException)
+    }
+
+    void "should get simple scoreboard"() {
+        given:
+            Long courseId = 1
+            Activity courseActivity = Mock(Activity)
+            User user = Mock(User)
+            CourseUser courseUser = Mock(CourseUser)
+            ActivitySubmission submission = Mock(ActivitySubmission)
+            Role studentRole = Mock(Role)
+
+        when:
+            List<CourseUserScore> scoreboard = coursesService.getScoreboard(courseId)
+
+        then:
+            1*activitiesService.getAllActivitiesByCourse(courseId) >> [courseActivity]
+            1*courseRepository.findById(courseId) >> Optional.of(Mock(Course))
+            1*roleRepository.findByName("student") >> Optional.of(studentRole)
+            1*studentRole.getId() >> 1
+            1*courseUserRepository.findByCourse_IdAndRole_Id(courseId, 1) >> [courseUser]
+
+            1*courseUser.getUser() >> user
+            1*submissionService.getAllSubmissionsByUserAndActivities(user, [courseActivity]) >> [submission]
+            1*submission.getStatus() >> SubmissionStatus.SUCCESS;
+            1*submission.getActivity() >> courseActivity
+            1*courseActivity.getPoints() >> 22
+
+            scoreboard[0].getScore() == 22
+            scoreboard[0].getActivitiesCount() == 1
+    }
+
+    void "should get scoreboard with multiple submissions of same activity"() {
+        given:
+            Long courseId = 1
+            Activity courseActivity = Mock(Activity)
+            User user = Mock(User)
+            CourseUser courseUser = Mock(CourseUser)
+            List<ActivitySubmission> submissions = []
+            for (int i=0; i<submissionStatuses.size(); i++) {
+                submissions.add(Mock(ActivitySubmission))
+            }
+            Role studentRole = Mock(Role)
+
+        when:
+            List<CourseUserScore> scoreboard = coursesService.getScoreboard(courseId)
+
+        then:
+            1*activitiesService.getAllActivitiesByCourse(courseId) >> [courseActivity]
+            1*courseRepository.findById(courseId) >> Optional.of(Mock(Course))
+            1*roleRepository.findByName("student") >> Optional.of(studentRole)
+            1*studentRole.getId() >> 1
+            1*courseUserRepository.findByCourse_IdAndRole_Id(courseId, 1) >> [courseUser]
+
+            1*courseUser.getUser() >> user
+            1*submissionService.getAllSubmissionsByUserAndActivities(user, [courseActivity]) >> submissions
+
+            for (int i=0; i<submissionStatuses.size(); i++) {
+                1 * submissions[i].getStatus() >> submissionStatuses[i]
+                if (submissionStatuses[i] == SubmissionStatus.SUCCESS) {
+                    1 * submissions[i].getActivity() >> courseActivity
+                }
+            }
+
+            completedActivities*courseActivity.getPoints() >> 22
+
+            scoreboard[0].getScore() == score
+            scoreboard[0].getActivitiesCount() == completedActivities
+
+        where:
+            submissionStatuses         | completedActivities | score
+            []                         | 0                   | 0
+            [SubmissionStatus.PENDING] | 0                   | 0
+            [SubmissionStatus.SUCCESS] | 1                   | 22
+            [SubmissionStatus.PENDING,
+             SubmissionStatus.SUCCESS] | 1                   | 22
+            [SubmissionStatus.SUCCESS,
+             SubmissionStatus.SUCCESS] | 1                   | 22
+    }
+
+    void "should get scoreboard with multiple users"() {
+        given:
+            Long courseId = 1
+            Activity courseActivity = Mock(Activity)
+
+            List<ActivitySubmission> submissions = []
+            List<CourseUser> courseUsers = []
+            List<User> users = []
+
+            Long numberOfUsers = 5
+            for (int i=0; i<numberOfUsers; i++) {
+                users.add(Mock(User))
+                courseUsers.add(Mock(CourseUser))
+                submissions.add(Mock(ActivitySubmission))
+
+            }
+            Role studentRole = Mock(Role)
+
+        when:
+            List<CourseUserScore> scoreboard = coursesService.getScoreboard(courseId)
+
+        then:
+            1*activitiesService.getAllActivitiesByCourse(courseId) >> [courseActivity]
+            1*courseRepository.findById(courseId) >> Optional.of(Mock(Course))
+            1*roleRepository.findByName("student") >> Optional.of(studentRole)
+            1*studentRole.getId() >> 1
+            1*courseUserRepository.findByCourse_IdAndRole_Id(courseId, 1) >> courseUsers
+
+            for (int i=0; i<numberOfUsers; i++) {
+                1*courseUsers[i].getUser() >> users[i]
+                1*submissionService.getAllSubmissionsByUserAndActivities(users[i], [courseActivity]) >> [submissions[i]]
+                1 * submissions[i].getStatus() >> SubmissionStatus.SUCCESS
+                1 * submissions[i].getActivity() >> courseActivity
+                1 * courseActivity.getPoints() >> 22
+            }
+
+            scoreboard.size() == numberOfUsers
     }
 }
