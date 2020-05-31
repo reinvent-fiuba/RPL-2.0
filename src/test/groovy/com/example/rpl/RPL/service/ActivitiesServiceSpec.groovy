@@ -135,4 +135,46 @@ class ActivitiesServiceSpec extends Specification {
 
             thrown(NotFoundException)
     }
+
+    void "should get stats for user and course"() {
+        given:
+            Long courseId = 1
+            Long userId = 1
+            List<Activity> activities = []
+            List<ActivitySubmission> submissions = []
+            for (int i=0; i<totalActivities; i++) {
+                activities.add(Mock(Activity))
+            }
+            for (int i=0; i<totalActivities*successSubmissionsByActivities; i++) {
+                submissions.add(Mock(ActivitySubmission))
+            }
+
+        when:
+            ActivitiesStats userStats = activitiesService.getActivitiesStatsByUserAndCourseId(userId, courseId)
+
+        then:
+            1 * courseRepository.findById(courseId) >> Optional.of(Mock(Course))
+            1 * activityRepository.findActivitiesByCourse(_ as Course) >> activities
+            1 * submissionRepository.findAllByUserIdAndCourseId(userId, courseId) >> submissions
+            for (int i=0; i<totalActivities*successSubmissionsByActivities; i++) {
+                1 * submissions[i].getActivity() >> activities[i/successSubmissionsByActivities]
+                submissions[i].getStatus() >> SubmissionStatus.SUCCESS
+                1 * activities[i/successSubmissionsByActivities].getId() >> i/successSubmissionsByActivities
+            }
+
+            for (int i=0; i<totalActivities; i++) {
+                1 * activities[i].getId() >> i
+                1 * activities[i].getPoints() >> 22
+            }
+
+            userStats.getCountByStatus()["SOLVED"] == totalActivities
+            userStats.getScore()["OBTAINED"] == 22*totalActivities
+            userStats.getTotal() == totalActivities
+
+        where:
+            totalActivities | successSubmissionsByActivities
+            1               | 1
+            1               | 2
+            2               | 2
+    }
 }

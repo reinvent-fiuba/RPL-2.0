@@ -155,7 +155,7 @@ public class ActivitiesService {
                 score.put("OBTAINED", score.get("OBTAINED") + activity.getPoints());
             } else {
                 countByStatus.put("STARTED", countByStatus.get("STARTED") + 1);
-                score.put("PENDING", score.get("PENDING") + + activity.getPoints());
+                score.put("PENDING", score.get("PENDING") + activity.getPoints());
             }
         }
 
