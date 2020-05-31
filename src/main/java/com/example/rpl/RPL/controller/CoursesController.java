@@ -1,19 +1,19 @@
 package com.example.rpl.RPL.controller;
 
-import com.example.rpl.RPL.controller.dto.CourseResponseDTO;
-import com.example.rpl.RPL.controller.dto.CourseUserResponseDTO;
-import com.example.rpl.RPL.controller.dto.CreateCourseRequestDTO;
-import com.example.rpl.RPL.controller.dto.PatchCourseUserRequestDTO;
-import com.example.rpl.RPL.controller.dto.RoleResponseDTO;
-import com.example.rpl.RPL.model.Course;
-import com.example.rpl.RPL.model.CourseUser;
+import com.example.rpl.RPL.controller.dto.*;
+import com.example.rpl.RPL.model.*;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
+import com.example.rpl.RPL.service.ActivitiesService;
 import com.example.rpl.RPL.service.CoursesService;
-import java.util.Collections;
-import java.util.List;
+
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
 import javax.validation.Valid;
+
+import com.example.rpl.RPL.service.SubmissionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,11 +33,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class CoursesController {
 
     private final CoursesService coursesService;
+    private final SubmissionService submissionService;
+    private final ActivitiesService activitiesService;
 
     @Autowired
     public CoursesController(
-        CoursesService coursesService) {
+            CoursesService coursesService,
+            SubmissionService submissionService,
+            ActivitiesService activitiesService) {
         this.coursesService = coursesService;
+        this.submissionService = submissionService;
+        this.activitiesService = activitiesService;
     }
 
     @PostMapping(value = "/api/courses")
@@ -101,6 +107,21 @@ public class CoursesController {
                 .map(CourseUserResponseDTO::fromEntity)
                 .collect(Collectors.toList()),
             HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('user_view')")
+    @GetMapping(value = "/api/courses/{courseId}/scoreboard")
+    public ResponseEntity<List<CourseUserScoreResponseDTO>> getCourseScoreboard(@CurrentUser UserPrincipal currentUser,
+                                                                                @PathVariable Long courseId) {
+
+
+        List<CourseUserScore> scoreboard = coursesService.getScoreboard(courseId);
+
+        return new ResponseEntity<>(
+                scoreboard.stream()
+                    .map(CourseUserScoreResponseDTO::fromEntity)
+                    .collect(Collectors.toList()),
+                HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('user_manage')")

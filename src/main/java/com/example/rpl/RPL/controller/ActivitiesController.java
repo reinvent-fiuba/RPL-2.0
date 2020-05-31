@@ -1,13 +1,8 @@
 package com.example.rpl.RPL.controller;
 
-import com.example.rpl.RPL.controller.dto.ActivityResponseDTO;
-import com.example.rpl.RPL.controller.dto.CreateActivityRequestDTO;
-import com.example.rpl.RPL.controller.dto.DisableActivityRequestDTO;
-import com.example.rpl.RPL.controller.dto.UserActivityResponseDTO;
-import com.example.rpl.RPL.model.Activity;
-import com.example.rpl.RPL.model.ActivitySubmission;
-import com.example.rpl.RPL.model.IOTest;
-import com.example.rpl.RPL.model.UnitTest;
+import com.example.rpl.RPL.controller.dto.*;
+import com.example.rpl.RPL.controller.dto.ActivityResponseDTO.IOTestResponseDTO;
+import com.example.rpl.RPL.model.*;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.ActivitiesService;
@@ -146,31 +141,32 @@ public class ActivitiesController {
             HttpStatus.OK);
     }
 
+
     @PreAuthorize("hasAuthority('activity_manage')")
     @DeleteMapping(value = "/api/courses/{courseId}/activities/{activityId}")
     public ResponseEntity<ActivityResponseDTO> deleteActivity(
-        @CurrentUser UserPrincipal currentUser,
-        @PathVariable Long courseId, @PathVariable Long activityId) {
+            @CurrentUser UserPrincipal currentUser,
+            @PathVariable Long courseId, @PathVariable Long activityId) {
         log.debug("COURSE ID: {}", courseId);
 
         Activity activity = activitiesService.deleteActivity(activityId);
 
         return new ResponseEntity<>(
-            ActivityResponseDTO.fromEntity(activity, null, null), HttpStatus.OK);
+                ActivityResponseDTO.fromEntity(activity, null, null), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('activity_manage')")
     @PutMapping(value = "/api/courses/{courseId}/activities/{activityId}/disable")
     public ResponseEntity<ActivityResponseDTO> disableActivity(
-        @CurrentUser UserPrincipal currentUser,
-        @PathVariable Long courseId,
-        @PathVariable Long activityId,
-        @RequestBody @Valid DisableActivityRequestDTO disableActivityRequestDTO) {
+            @CurrentUser UserPrincipal currentUser,
+            @PathVariable Long courseId,
+            @PathVariable Long activityId,
+            @RequestBody @Valid DisableActivityRequestDTO disableActivityRequestDTO) {
         log.error("COURSE ID: {}\nACTIVITY ID: {}\nACTIVE: {}", courseId, activityId,
-            disableActivityRequestDTO.getActive());
+                disableActivityRequestDTO.getActive());
 
         Activity activity = activitiesService
-            .disableActivity(activityId, disableActivityRequestDTO.getActive());
+                .disableActivity(activityId, disableActivityRequestDTO.getActive());
 
         //        GET UNIT TESTS
         UnitTest unitTest = testService.getUnitTests(activity.getId());
@@ -179,6 +175,17 @@ public class ActivitiesController {
         List<IOTest> ioTests = testService.getAllIOTests(activity.getId());
 
         return new ResponseEntity<>(ActivityResponseDTO.fromEntity(activity, unitTest, ioTests),
-            HttpStatus.OK);
+                HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_submit')")
+    @GetMapping(value = "/api/courses/{courseId}/activities/stats")
+    public ResponseEntity<ActivitiesStatsResponseDTO> getActivitiesStats(
+            @CurrentUser UserPrincipal currentUser,
+            @PathVariable Long courseId) {
+
+        ActivitiesStats response = activitiesService.getActivitiesStatsByUserAndCourseId(currentUser.getId(), courseId);
+
+        return new ResponseEntity<>(ActivitiesStatsResponseDTO.fromEntity(response), HttpStatus.OK);
     }
 }

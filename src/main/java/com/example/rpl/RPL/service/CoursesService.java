@@ -2,15 +2,13 @@ package com.example.rpl.RPL.service;
 
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
 import com.example.rpl.RPL.exception.NotFoundException;
-import com.example.rpl.RPL.model.Course;
-import com.example.rpl.RPL.model.CourseUser;
-import com.example.rpl.RPL.model.Role;
-import com.example.rpl.RPL.model.User;
+import com.example.rpl.RPL.model.*;
 import com.example.rpl.RPL.repository.CourseRepository;
 import com.example.rpl.RPL.repository.CourseUserRepository;
 import com.example.rpl.RPL.repository.RoleRepository;
 import com.example.rpl.RPL.repository.UserRepository;
 import java.util.List;
+import java.util.LongSummaryStatistics;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -26,16 +24,22 @@ public class CoursesService {
     private final CourseUserRepository courseUserRepository;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
+    private final ActivitiesService activitiesService;
+    private final SubmissionService submissionService;
 
     @Autowired
     public CoursesService(CourseRepository courseRepository,
                           CourseUserRepository courseUserRepository,
                           RoleRepository roleRepository,
-                          UserRepository userRepository) {
+                          UserRepository userRepository,
+                          ActivitiesService activitiesService,
+                          SubmissionService submissionService) {
         this.courseRepository = courseRepository;
         this.courseUserRepository = courseUserRepository;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
+        this.activitiesService = activitiesService;
+        this.submissionService = submissionService;
     }
 
     /**
@@ -178,5 +182,25 @@ public class CoursesService {
         );
 
         return courseUser.getRole().getPermissions();
+    }
+
+    @Transactional
+    public List<CourseUserScore> getScoreboard(Long courseId) {
+        List<Activity> courseActivities = activitiesService.getAllActivitiesByCourse(courseId);
+        return getAllUsers(courseId, "student").stream().map(courseUser -> {
+                    LongSummaryStatistics userActivityPoints = submissionService
+                            .getAllSubmissionsByUserAndActivities(courseUser.getUser(), courseActivities)
+                            .stream()
+                            .filter(activitySubmission -> activitySubmission.getStatus() == SubmissionStatus.SUCCESS)
+                            .map(activitySubmission -> activitySubmission.getActivity())
+                            .distinct()
+                            .mapToLong(activity -> activity.getPoints())
+                            .summaryStatistics();
+
+                    Long score = userActivityPoints.getSum();
+                    Long activityCount = userActivityPoints.getCount();
+
+                    return new CourseUserScore(courseUser, score, activityCount);
+                }).collect(Collectors.toList());
     }
 }

@@ -1,17 +1,28 @@
 package com.example.rpl.RPL.controller
 
+import com.example.rpl.RPL.model.Activity
+import com.example.rpl.RPL.model.ActivityCategory
+import com.example.rpl.RPL.model.ActivitySubmission
 import com.example.rpl.RPL.model.Course
 import com.example.rpl.RPL.model.CourseUser
+import com.example.rpl.RPL.model.Language
+import com.example.rpl.RPL.model.RPLFile
 import com.example.rpl.RPL.model.Role
+import com.example.rpl.RPL.model.SubmissionStatus
 import com.example.rpl.RPL.model.User
+import com.example.rpl.RPL.repository.ActivityCategoryRepository
+import com.example.rpl.RPL.repository.ActivityRepository
 import com.example.rpl.RPL.repository.CourseRepository
 import com.example.rpl.RPL.repository.CourseUserRepository
+import com.example.rpl.RPL.repository.FileRepository
 import com.example.rpl.RPL.repository.RoleRepository
+import com.example.rpl.RPL.repository.SubmissionRepository
 import com.example.rpl.RPL.repository.UserRepository
 import com.example.rpl.RPL.util.AbstractFunctionalSpec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.ActiveProfiles
+import spock.lang.Shared
 import spock.lang.Unroll
 
 import static javax.servlet.http.HttpServletResponse.*
@@ -29,27 +40,50 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     UserRepository userRepository
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder
 
     @Autowired
-    RoleRepository roleRepository;
+    RoleRepository roleRepository
 
-    String username;
+    @Autowired
+    SubmissionRepository submissionRepository
 
-    String password;
+    @Autowired
+    ActivityRepository activityRepository
 
-    String otherUsername;
+    @Autowired
+    ActivityCategoryRepository activityCategoryRepository
 
-    String otherPassword;
+    @Autowired
+    FileRepository fileRepository
 
-    Long courseId;
 
-    User otherUser;
+    String username
 
-    Role adminRole;
+    String password
+
+    String otherUsername
+
+    String otherPassword
+
+    Long courseId
+
+    User otherUser
+
+    Role adminRole
+
+    @Shared
+    Role studentRole
+
+    @Shared
+    User user
+
+    @Shared
+    Course course
+
 
     def setup() {
-        User user = new User(
+        user = new User(
                 'some-name',
                 'some-surname',
                 'some-student-id',
@@ -81,7 +115,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         userRepository.save(otherUser)
 
-        Course course = new Course(
+        course = new Course(
                 "some-course",
                 "some-university-id",
                 "some-description",
@@ -101,21 +135,23 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         roleRepository.save(adminRole);
 
-        Role studentRole = new Role('student', 'course_view,activity_view,activity_submit,user_view')
+        studentRole = new Role('student', 'course_view,activity_view,activity_submit,user_view')
 
-        roleRepository.save(studentRole);
+        roleRepository.save(studentRole)
 
-        CourseUser courseUser = new CourseUser(
+        courseUserRepository.save(new CourseUser(
                 course,
                 user,
                 adminRole,
                 true
-        )
-
-        courseUserRepository.save(courseUser)
+        ))
     }
 
     def cleanup() {
+        submissionRepository.deleteAll()
+        activityRepository.deleteAll()
+        fileRepository.deleteAll()
+        activityCategoryRepository.deleteAll()
         courseUserRepository.deleteAll()
         userRepository.deleteAll()
         courseRepository.deleteAll()
@@ -225,16 +261,18 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test get courses by user with enrolled user should retrieve 1 course"() {
         given:
-            Map body = [username_or_email: username, password: password]
-            def loginResponse = getJsonResponse(post("/api/auth/login", body))
-            def profileResponse = getJsonResponse(get("/api/auth/profile", [
-                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
-            ]))
+            def profileResponse = getJsonResponse(get(
+                    "/api/auth/profile",
+                    username,
+                    password
+            ))
 
         when:
-            def response = get(String.format("/api/users/%s/courses", profileResponse.id), [
-                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
-            ])
+            def response = get(
+                    String.format("/api/users/%s/courses", profileResponse.id),
+                    username,
+                    password
+            )
 
         then:
             response.contentType == "application/json"
@@ -246,14 +284,12 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
     @Unroll
     void "test get courses by user with wrong user id should not retrieve courses"() {
-        given:
-            Map body = [username_or_email: username, password: password]
-            def loginResponse = getJsonResponse(post("/api/auth/login", body))
-
         when:
-            def response = get("/api/users/3/courses", [
-                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
-            ])
+            def response = get(
+                    "/api/users/22/courses",
+                    username,
+                    password
+            )
 
         then:
             response.contentType == "application/json"
@@ -266,16 +302,18 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test get courses by user with unenrrolled user should not retrieve courses"() {
         given:
-            Map body = [username_or_email: 'otheruser', password: password]
-            def loginResponse = getJsonResponse(post("/api/auth/login", body))
-            def profileResponse = getJsonResponse(get("/api/auth/profile", [
-                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
-            ]))
+            def profileResponse = getJsonResponse(get(
+                    "/api/auth/profile",
+                    otherUsername,
+                    otherPassword
+            ))
 
         when:
-            def response = get(String.format("/api/users/%s/courses", profileResponse.id), [
-                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
-            ])
+            def response = get(
+                    String.format("/api/users/%s/courses", profileResponse.id),
+                    otherUsername,
+                    otherPassword
+            )
 
         then:
             response.contentType == "application/json"
@@ -558,4 +596,55 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
             result == adminRole.getPermissions()
     }
 
+    /*****************************************************************************************
+     ********** GET COURSE SCOREBOARD ********************************************************
+     *****************************************************************************************/
+
+    @Unroll
+    void "test get course scoreboard"() {
+        given:
+            courseUserRepository.save(new CourseUser(
+                    course,
+                    otherUser,
+                    studentRole,
+                    true
+            ))
+            ActivityCategory activityCategory = activityCategoryRepository.save(new ActivityCategory())
+            RPLFile rplFile = fileRepository.save(new RPLFile())
+            Activity activity = new Activity(
+                    course,
+                    activityCategory,
+                    "Activity 1",
+                    "An activity",
+                    Language.C,
+                    "//initial code",
+                    22,
+                    rplFile
+            )
+            activityRepository.save(activity)
+
+            submissionRepository.save(new ActivitySubmission(
+                    activity,
+                    otherUser,
+                    rplFile,
+                    SubmissionStatus.SUCCESS
+            ))
+
+        when:
+            def response = get(
+                    String.format("/api/courses/%s/scoreboard", courseId),
+                    otherUsername,
+                    otherPassword
+            )
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            def result = getJsonResponse(response)
+
+            result[0].username == otherUsername
+            result[0].score == activity.getPoints()
+            result[0].activities_count == 1
+    }
 }

@@ -4,16 +4,14 @@ import static java.time.ZonedDateTime.now;
 
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
 import com.example.rpl.RPL.exception.NotFoundException;
-import com.example.rpl.RPL.model.Activity;
-import com.example.rpl.RPL.model.ActivityCategory;
-import com.example.rpl.RPL.model.Course;
-import com.example.rpl.RPL.model.Language;
-import com.example.rpl.RPL.model.RPLFile;
-import com.example.rpl.RPL.repository.ActivityCategoryRepository;
-import com.example.rpl.RPL.repository.ActivityRepository;
-import com.example.rpl.RPL.repository.CourseRepository;
-import com.example.rpl.RPL.repository.FileRepository;
+import com.example.rpl.RPL.model.*;
+import com.example.rpl.RPL.repository.*;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +23,7 @@ public class ActivitiesService {
 
     private final CourseRepository courseRepository;
     private final ActivityRepository activityRepository;
+    private final SubmissionRepository submissionRepository;
     private final ActivityCategoryRepository activityCategoryRepository;
     private final FileRepository fileRepository;
 
@@ -32,11 +31,13 @@ public class ActivitiesService {
     public ActivitiesService(CourseRepository courseRepository,
         ActivityRepository activityRepository,
         ActivityCategoryRepository activityCategoryRepository,
-        FileRepository fileRepository) {
+        FileRepository fileRepository,
+        SubmissionRepository submissionRepository) {
         this.courseRepository = courseRepository;
         this.activityRepository = activityRepository;
         this.activityCategoryRepository = activityCategoryRepository;
         this.fileRepository = fileRepository;
+        this.submissionRepository = submissionRepository;
     }
 
     /**
@@ -92,6 +93,7 @@ public class ActivitiesService {
         return activity;
     }
 
+    @Transactional
     public List<Activity> getAllActivitiesByCourse(Long courseId) {
         Course course = courseRepository.findById(courseId).orElseThrow(
             () -> new NotFoundException("Course not found",
@@ -124,5 +126,39 @@ public class ActivitiesService {
         activity.setActive(active);
         log.error("Setting activity as " + active);
         return activityRepository.save(activity);
+    }
+
+    public ActivitiesStats getActivitiesStatsByUserAndCourseId(Long userId, Long courseId) {
+        List<Activity> activities = getAllActivitiesByCourse(courseId);
+        int total = activities.size();
+        List<ActivitySubmission> activitySubmissions = submissionRepository.findAllByUserIdAndCourseId(userId, courseId);
+
+        Map<Long, List<ActivitySubmission>> submissionsByActivity = activitySubmissions.stream()
+                .collect(Collectors.groupingBy(activitySubmission -> activitySubmission.getActivity().getId()));
+
+        HashMap<String, Long> countByStatus = new HashMap<>();
+        countByStatus.put("STARTED", (long) 0);
+        countByStatus.put("NON STARTED", (long) 0);
+        countByStatus.put("SOLVED", (long) 0);
+
+        HashMap<String, Long> score = new HashMap<>();
+        score.put("OBTAINED", (long) 0);
+        score.put("PENDING", (long) 0);
+
+        for (Activity activity : activities) {
+            List<ActivitySubmission> submissions = submissionsByActivity.get(activity.getId());
+            if (submissions == null) {
+                countByStatus.put("NON STARTED", countByStatus.get("NON STARTED") + 1);
+                score.put("PENDING", score.get("PENDING") + activity.getPoints());
+            } else if (submissions.stream().anyMatch(activitySubmission -> activitySubmission.getStatus().toString() == "SUCCESS")) {
+                countByStatus.put("SOLVED", countByStatus.get("SOLVED") + 1);
+                score.put("OBTAINED", score.get("OBTAINED") + activity.getPoints());
+            } else {
+                countByStatus.put("STARTED", countByStatus.get("STARTED") + 1);
+                score.put("PENDING", score.get("PENDING") + activity.getPoints());
+            }
+        }
+
+        return new ActivitiesStats(total, countByStatus, score);
     }
 }
