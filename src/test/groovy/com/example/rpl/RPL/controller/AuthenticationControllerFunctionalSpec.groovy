@@ -30,6 +30,7 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
                 'some-university',
                 'some-hard-degree'
         );
+        user.markAsValidated()
         userRepository.save(user);
     }
 

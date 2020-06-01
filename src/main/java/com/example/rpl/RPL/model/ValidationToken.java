@@ -15,8 +15,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "password_rest_token")
-public class PasswordResetToken {
+@Table(name = "validation_token")
+public class ValidationToken {
 
     private static final int EXPIRATION_DAYS = 1;
 
@@ -40,10 +40,10 @@ public class PasswordResetToken {
      * @deprecated Only used by hibernate
      */
     @Deprecated
-    public PasswordResetToken() {
+    public ValidationToken() {
     }
 
-    public PasswordResetToken(String token, User user) {
+    public ValidationToken(String token, User user) {
         this.token = token;
         this.user = user;
         this.expiryDate = ZonedDateTime.now().plusDays(EXPIRATION_DAYS);

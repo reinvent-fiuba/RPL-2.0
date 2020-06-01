@@ -1,5 +1,6 @@
 package com.example.rpl.RPL.security;
 
+import com.example.rpl.RPL.exception.EmailNotValidatedException;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.CourseUser;
 import com.example.rpl.RPL.model.User;
@@ -39,6 +40,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                     "User not found with username or email : " + usernameOrEmail)
             );
 
+        checkEmailWasValidated("" + usernameOrEmail, user);
+
         return UserPrincipal.create(user);
     }
 
@@ -49,6 +52,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 "user_not_found")
         );
 
+        checkEmailWasValidated("UserID: " + userId, user);
         return UserPrincipal.create(user);
     }
 
@@ -59,6 +63,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .findByCourse_IdAndUser_Id(courseId, userId);
             if (courseUser.isPresent()) {
                 log.info("Getting UserDetails for UserID:{} and CourseID:{}", userId, courseId);
+
+                checkEmailWasValidated("UserID: " + userId, courseUser.get().getUser());
                 return UserPrincipal.create(courseUser.get());
             }
         }
@@ -69,6 +75,13 @@ public class CustomUserDetailsService implements UserDetailsService {
                 "user_not_found")
         );
 
+        checkEmailWasValidated("UserID: " + userId, user);
         return UserPrincipal.create(user);
+    }
+
+    private void checkEmailWasValidated(String errorData, User user) {
+        if (!user.getEmailValidated()) {
+            throw new EmailNotValidatedException("User email was not validated. " + errorData);
+        }
     }
 }

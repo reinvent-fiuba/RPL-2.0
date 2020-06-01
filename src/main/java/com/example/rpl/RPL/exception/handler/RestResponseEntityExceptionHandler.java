@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -108,14 +109,27 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), errorResponse.getStatusObj());
     }
 
+    @ExceptionHandler({InternalAuthenticationServiceException.class})
+    public ResponseEntity<Object> handleEmailNotValidated(
+        InternalAuthenticationServiceException ex) {
+        String errorCode =
+            ex.getMessage().contains("email") ? "email_not_validated_error" : "bad_credentials";
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED, errorCode,
+            "".concat(ex.getMessage()), ex.getCause());
+        log.info(
+            "[method:exception-handler][exception:EmailNotValidatedException][message:{}][error:{}][status:{}][cause:[{}]]",
+            ex.getMessage(), errorCode, HttpStatus.UNAUTHORIZED, ex.getCause());
+        return new ResponseEntity<>(errorResponse, new HttpHeaders(), errorResponse.getStatusObj());
+    }
+
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<Object> handleAccessDeniedException(
-            AccessDeniedException ex) {
+        AccessDeniedException ex) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.FORBIDDEN,
-                "forbidden", "Forbidden");
+            "forbidden", "Forbidden");
         log.info(
-                "[method:exception-handler][exception:BaseAPIException][message:{}][error:{}][status:{}]",
-                ex.getMessage(), "forbidden", HttpStatus.FORBIDDEN);
+            "[method:exception-handler][exception:BaseAPIException][message:{}][error:{}][status:{}]",
+            ex.getMessage(), "forbidden", HttpStatus.FORBIDDEN);
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), errorResponse.getStatusObj());
     }
 

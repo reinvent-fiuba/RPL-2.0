@@ -290,6 +290,41 @@
                 "deprecated": false
             }
         },
+      "/api/auth/resendValidationEmail": {
+        "post": {
+          "tags": [
+            "authentication-controller"
+          ],
+          "summary": "resendValidationEmail",
+          "operationId": "resendValidationEmailUsingPOST",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "*/*"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "resendValidationEmailRequestDTO",
+              "description": "resendValidationEmailRequestDTO",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/ResendValidationEmailRequestDTO"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/UserResponseDTO"
+              }
+            }
+          },
+          "deprecated": false
+        }
+      },
         "/api/auth/resetPassword": {
             "post": {
                 "tags": [
@@ -360,6 +395,41 @@
                 "deprecated": false
             }
         },
+      "/api/auth/validateEmail": {
+        "post": {
+          "tags": [
+            "authentication-controller"
+          ],
+          "summary": "validateEmail",
+          "operationId": "validateEmailUsingPOST",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "*/*"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "validateEmailDTO",
+              "description": "validateEmailDTO",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/ValidateEmailRequestDTO"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/UserResponseDTO"
+              }
+            }
+          },
+          "deprecated": false
+        }
+      },
         "/api/courses": {
             "get": {
                 "tags": [
@@ -6228,6 +6298,15 @@
             },
             "title": "PatchCourseUserRequestDTO"
         },
+      "ResendValidationEmailRequestDTO": {
+        "type": "object",
+        "properties": {
+          "username_or_email": {
+            "type": "string"
+          }
+        },
+        "title": "ResendValidationEmailRequestDTO"
+      },
         "ResetPasswordRequestDTO": {
             "type": "object",
             "properties": {
@@ -6719,6 +6798,15 @@
                 }
             },
             "title": "UserResponseDTO"
+        },
+      "ValidateEmailRequestDTO": {
+        "type": "object",
+        "properties": {
+          "validate_email_token": {
+            "type": "string"
+          }
+        },
+        "title": "ValidateEmailRequestDTO"
         }
     }
 }

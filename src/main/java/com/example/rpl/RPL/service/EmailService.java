@@ -22,23 +22,30 @@ public class EmailService {
         this.frontEndUrl = frontEndUrl;
     }
 
-    void sendResetPasswordMessage(String email, String token) {
-        String link = frontEndUrl + "/user/changePassword?token=" + token;
-        MimeMessagePreparator message = prepareEmail(email, "RPL: Reseteo de contraseña",
-            this.buildResetPasswordEmail(link));
+    void sendValidateEmailMessage(String email, String token) {
+        String link = frontEndUrl + "/user/validateEmail?token=" + token;
+        MimeMessagePreparator message = prepareEmail(email, "RPL: Validar Email",
+            this.buildTokenEmail(link, "validateEmailEmail"));
 
         emailSender.send(message);
     }
 
-    private String buildResetPasswordEmail(String link) {
+    void sendResetPasswordMessage(String email, String token) {
+        String link = frontEndUrl + "/user/changePassword?token=" + token;
+        MimeMessagePreparator message = prepareEmail(email, "RPL: Reseteo de contraseña",
+            this.buildTokenEmail(link, "resetPasswordEmail"));
+
+        emailSender.send(message);
+    }
+
+    private String buildTokenEmail(String link, String template) {
         Context context = new Context();
         context.setVariable("link", link);
-        return templateEngine.process("resetPasswordEmail", context);
+        return templateEngine.process(template, context);
     }
 
     private MimeMessagePreparator prepareEmail(String recipient, String subject, String message) {
         return mimeMessage -> {
-//            log.info("EMAIL:\n" + message );
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setTo(recipient);
             messageHelper.setSubject(subject);

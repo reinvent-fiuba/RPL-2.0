@@ -83,6 +83,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
                 'some-university',
                 'some-hard-degree'
         )
+        user.markAsValidated()
 
         username = 'username'
         password = 'supersecret'
