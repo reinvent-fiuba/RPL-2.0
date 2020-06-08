@@ -66,7 +66,7 @@ public class AuthenticationService {
 
     @Transactional
     public List<User> findUsers(String queryString) {
-        List<User> users = userRepository.findByQueryString(queryString);
+        List<User> users = userRepository.findByQueryString(queryString != null ? queryString : "");
         return users;
     }
 

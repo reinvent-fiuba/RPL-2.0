@@ -38,7 +38,7 @@ public class UsersController {
     @PreAuthorize("hasAuthority('superadmin')")
     @GetMapping(value = "/api/users")
     public ResponseEntity<List<UserResponseDTO>> findUsers(
-            @RequestParam(required = true) String query) {
+            @RequestParam(required = false) String query) {
 
         return new ResponseEntity<>(
                 authenticationService.findUsers(query)
