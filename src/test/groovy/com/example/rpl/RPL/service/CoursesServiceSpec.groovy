@@ -86,6 +86,32 @@ class CoursesServiceSpec extends Specification {
             assert newCourse.semester == semester
     }
 
+    void "should fail to create course if admin doesn't exist"() {
+        given:
+            String name = "Some new course"
+            String universityCourseId = "75.41"
+            String description = "Some description"
+            String semester = "2c-2019"
+            Long courseAdminId = 1
+
+        when:
+            coursesService.createCourse(
+                    name,
+                    universityCourseId,
+                    description,
+                    true,
+                    semester,
+                    null,
+                    courseAdminId
+            )
+
+        then:
+            1 * courseUserRepository.existsByNameAndUniversityCourseIdAndSemesterAndAdmin(name, universityCourseId, semester, 1) >> false
+            1 * userRepository.findById(courseAdminId) >> Optional.empty()
+
+            thrown(NotFoundException)
+    }
+
     void "should fail to create course if course exists"() {
         given:
             String name = "Some new course"
