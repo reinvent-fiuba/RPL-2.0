@@ -93,6 +93,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
                 'some-university',
                 'some-hard-degree'
         )
+        user.setIsAdmin(true);
         user.markAsValidated()
 
         username = 'username'
@@ -176,6 +177,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
                     university          : 'UBA',
                     description         : 'An awesome description',
                     semester            : "2019-2c",
+                    course_admin_id     : user.getId()
             ]
 
         when: "post new course"
@@ -210,6 +212,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
                     university          : 'UBA',
                     description         : 'An awesome description',
                     semester            : semester,
+                    course_admin_id     : user.getId(),
             ]
 
         when: "must fail with invalid request"

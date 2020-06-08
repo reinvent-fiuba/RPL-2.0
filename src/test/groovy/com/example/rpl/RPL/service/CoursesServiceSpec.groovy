@@ -19,6 +19,7 @@ import com.example.rpl.RPL.repository.UserRepository
 import spock.lang.Shared
 import spock.lang.Specification
 
+import javax.swing.text.html.Option
 import java.util.stream.Collectors
 
 class CoursesServiceSpec extends Specification {
@@ -61,6 +62,7 @@ class CoursesServiceSpec extends Specification {
             String universityCourseId = "75.41"
             String description = "Some description"
             String semester = "2c-2019"
+            Long courseAdminId = 1
 
         when:
             Course newCourse = coursesService.createCourse(
@@ -70,13 +72,13 @@ class CoursesServiceSpec extends Specification {
                     true,
                     semester,
                     null,
-                    user
+                    courseAdminId
             )
 
         then:
             1 * courseUserRepository.existsByNameAndUniversityCourseIdAndSemesterAndAdmin(name, universityCourseId, semester, 1) >> false
             1 * roleRepository.findByName("admin") >> Optional.of(new Role())
-
+            1 * userRepository.findById(courseAdminId) >> Optional.of(new User())
             1 * courseRepository.save(_ as Course) >> { Course course -> return course }
 
             assert newCourse.name == name
@@ -99,7 +101,7 @@ class CoursesServiceSpec extends Specification {
                     true,
                     semester,
                     null,
-                    user
+                    user.getId()
             )
 
         then:
