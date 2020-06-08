@@ -45,6 +45,9 @@ public class UserPrincipal implements UserDetails {
 
     public static UserPrincipal create(User user) {
         List<GrantedAuthority> authorities = new ArrayList<>();
+        if (user.getIsAdmin()) {
+            authorities.add(new SimpleGrantedAuthority("superadmin"));
+        }
         return new UserPrincipal(
             user.getId(),
             user.getName(),
@@ -60,7 +63,9 @@ public class UserPrincipal implements UserDetails {
         List<GrantedAuthority> authorities = courseUser.getRole().getPermissions().stream().map(
             SimpleGrantedAuthority::new
         ).collect(Collectors.toList());
-
+        if (courseUser.getUser().getIsAdmin()) {
+            authorities.add(new SimpleGrantedAuthority("superadmin"));
+        }
         return new UserPrincipal(
             courseUser.getUser().getId(),
             courseUser.getUser().getName(),

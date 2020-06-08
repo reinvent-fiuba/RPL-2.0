@@ -7,6 +7,7 @@ import com.example.rpl.RPL.model.ValidationToken;
 import com.example.rpl.RPL.repository.UserRepository;
 import com.example.rpl.RPL.repository.ValidationTokenRepository;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.validation.constraints.NotNull;
@@ -61,6 +62,12 @@ public class AuthenticationService {
 
         log.info("[process:create_user][username:{}] Creating new user", username);
         return userRepository.save(user);
+    }
+
+    @Transactional
+    public List<User> findUsers(String queryString) {
+        List<User> users = userRepository.findByQueryString(queryString);
+        return users;
     }
 
     @Transactional

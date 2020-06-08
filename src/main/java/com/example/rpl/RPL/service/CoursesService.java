@@ -51,15 +51,17 @@ public class CoursesService {
      */
     @Transactional
     public Course createCourse(String name, String universityCourseId, String description,
-        Boolean active, String semester, String imgUri, User user) {
+        Boolean active, String semester, String imgUri, Long courseAdminId) {
         if (courseUserRepository
             .existsByNameAndUniversityCourseIdAndSemesterAndAdmin(name, universityCourseId,
-                semester, user.getId())) {
+                semester, courseAdminId)) {
             throw new EntityAlreadyExistsException(
                 String.format("Course '%s' with id '%s' for '%s' semester already exists", name,
                     universityCourseId, semester),
                 "ERROR_COURSE_EXISTS");
         }
+
+        User user = userRepository.findById(courseAdminId).orElseThrow(() -> new NotFoundException("User not found"));
 
         Course course = new Course(name, universityCourseId, description, active, semester, imgUri);
 

@@ -59,6 +59,10 @@ public class User implements Serializable {
     @Column(name = "email_validated")
     private Boolean emailValidated;
 
+    @Basic(optional = false)
+    @Column(name = "is_admin")
+    private Boolean isAdmin;
+
     @Column(name = "university")
     private String university;
 
@@ -90,6 +94,7 @@ public class User implements Serializable {
         this.university = university;
         this.degree = degree;
         this.emailValidated = false;
+        this.isAdmin = false;
         this.dateCreated = now;
         this.lastUpdated = now;
     }

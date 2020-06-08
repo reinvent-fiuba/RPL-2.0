@@ -20,5 +20,8 @@ public class CreateCourseRequestDTO {
     @NotNull
     private String semester;
 
+    @NotNull
+    private Long courseAdminId;
+
     private String description;
 }

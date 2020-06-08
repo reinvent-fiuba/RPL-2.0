@@ -23,6 +23,8 @@ public class UserResponseDTO {
 
     private Boolean emailValidated;
 
+    private Boolean isAdmin;
+
     private String university;
 
     private String degree;
@@ -40,6 +42,7 @@ public class UserResponseDTO {
             .username(user.getUsername())
             .email(user.getEmail())
             .emailValidated(user.getEmailValidated())
+            .isAdmin(user.getIsAdmin())
             .university(user.getUniversity())
             .degree(user.getDegree())
             .dateCreated(user.getDateCreated())

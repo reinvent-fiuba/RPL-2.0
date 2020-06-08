@@ -28,6 +28,7 @@ CREATE TABLE users
     email           VARCHAR(255) NOT NULL,
     password        VARCHAR(255) NOT NULL,
     email_validated BOOLEAN      NOT NULL,
+    is_admin        BOOLEAN      DEFAULT FALSE,
     degree          VARCHAR(255),
     university      VARCHAR(255),
     date_created    DATETIME,
