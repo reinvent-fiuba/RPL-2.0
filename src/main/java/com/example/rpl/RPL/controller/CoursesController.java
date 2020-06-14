@@ -46,6 +46,7 @@ public class CoursesController {
         this.activitiesService = activitiesService;
     }
 
+    @PreAuthorize("hasAuthority('superadmin')")
     @PostMapping(value = "/api/courses")
     public ResponseEntity<CourseResponseDTO> createCourse(@CurrentUser UserPrincipal currentUser,
         @RequestBody @Valid CreateCourseRequestDTO createCourseRequestDTO) {
@@ -57,7 +58,7 @@ public class CoursesController {
             true,
             createCourseRequestDTO.getSemester(),
             null,
-            currentUser.getUser()
+            createCourseRequestDTO.getCourseAdminId()
         );
 
         return new ResponseEntity<>(CourseResponseDTO.fromEntity(course), HttpStatus.CREATED);

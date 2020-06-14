@@ -93,6 +93,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
                 'some-university',
                 'some-hard-degree'
         )
+        user.setIsAdmin(true);
         user.markAsValidated()
 
         username = 'username'
@@ -176,6 +177,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
                     university          : 'UBA',
                     description         : 'An awesome description',
                     semester            : "2019-2c",
+                    course_admin_id     : user.getId()
             ]
 
         when: "post new course"
@@ -195,8 +197,48 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert course.description == body.description
             assert course.semester == body.semester
 
+            assert courseUserRepository.findByCourse_IdAndUser_Id(course.id, user.getId()).isPresent()
+
             assert courseRepository.existsById(course.id as Long)
     }
+
+    @Unroll
+    void "test create course with correct values with other admin should save course in DB"() {
+        given: "a new course"
+            Map body = [username_or_email: username, password: password]
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+
+            body = [
+                    name                : 'Some new course',
+                    university_course_id: '75.41',
+                    university          : 'UBA',
+                    description         : 'An awesome description',
+                    semester            : "2019-2c",
+                    course_admin_id     : otherUser.getId()
+            ]
+
+        when: "post new course"
+            def response = post("/api/courses", body, [
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+
+        then: "must return a new saved Course"
+            response.contentType == "application/json"
+            response.statusCode == SC_CREATED
+
+            Map course = getJsonResponse(response)
+
+            assert course.id != null
+            assert course.name == body.name
+            assert course.university_course_id == body.university_course_id
+            assert course.description == body.description
+            assert course.semester == body.semester
+
+            assert courseUserRepository.findByCourse_IdAndUser_Id(course.id, otherUser.getId()).isPresent()
+
+            assert courseRepository.existsById(course.id as Long)
+    }
+
 
     @Unroll
     void "test create course with null values should not save course in DB"() {
@@ -210,6 +252,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
                     university          : 'UBA',
                     description         : 'An awesome description',
                     semester            : semester,
+                    course_admin_id     : user.getId(),
             ]
 
         when: "must fail with invalid request"

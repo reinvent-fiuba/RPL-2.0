@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:63841",
+    "host": "localhost:59483",
     "basePath": "/",
     "tags": [
         {
@@ -49,6 +49,10 @@
         {
             "name": "submission-controller",
             "description": "Submission Controller"
+        },
+        {
+            "name": "users-controller",
+            "description": "Users Controller"
         }
     ],
     "paths": {
@@ -221,6 +225,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
                         "name": "user.lastUpdated",
                         "in": "query",
                         "required": false,
@@ -290,41 +300,41 @@
                 "deprecated": false
             }
         },
-      "/api/auth/resendValidationEmail": {
-        "post": {
-          "tags": [
-            "authentication-controller"
-          ],
-          "summary": "resendValidationEmail",
-          "operationId": "resendValidationEmailUsingPOST",
-          "consumes": [
-            "application/json"
-          ],
-          "produces": [
-            "*/*"
-          ],
-          "parameters": [
-            {
-              "in": "body",
-              "name": "resendValidationEmailRequestDTO",
-              "description": "resendValidationEmailRequestDTO",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/ResendValidationEmailRequestDTO"
-              }
+        "/api/auth/resendValidationEmail": {
+            "post": {
+                "tags": [
+                    "authentication-controller"
+                ],
+                "summary": "resendValidationEmail",
+                "operationId": "resendValidationEmailUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "resendValidationEmailRequestDTO",
+                        "description": "resendValidationEmailRequestDTO",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ResendValidationEmailRequestDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/UserResponseDTO"
+                        }
+                    }
+                },
+                "deprecated": false
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "schema": {
-                "$ref": "#/definitions/UserResponseDTO"
-              }
-            }
-          },
-          "deprecated": false
-        }
-      },
+        },
         "/api/auth/resetPassword": {
             "post": {
                 "tags": [
@@ -395,41 +405,41 @@
                 "deprecated": false
             }
         },
-      "/api/auth/validateEmail": {
-        "post": {
-          "tags": [
-            "authentication-controller"
-          ],
-          "summary": "validateEmail",
-          "operationId": "validateEmailUsingPOST",
-          "consumes": [
-            "application/json"
-          ],
-          "produces": [
-            "*/*"
-          ],
-          "parameters": [
-            {
-              "in": "body",
-              "name": "validateEmailDTO",
-              "description": "validateEmailDTO",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/ValidateEmailRequestDTO"
-              }
+        "/api/auth/validateEmail": {
+            "post": {
+                "tags": [
+                    "authentication-controller"
+                ],
+                "summary": "validateEmail",
+                "operationId": "validateEmailUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "validateEmailDTO",
+                        "description": "validateEmailDTO",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ValidateEmailRequestDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/UserResponseDTO"
+                        }
+                    }
+                },
+                "deprecated": false
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "schema": {
-                "$ref": "#/definitions/UserResponseDTO"
-              }
-            }
-          },
-          "deprecated": false
-        }
-      },
+        },
         "/api/courses": {
             "get": {
                 "tags": [
@@ -570,6 +580,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
                     },
                     {
                         "name": "user.lastUpdated",
@@ -737,6 +753,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
                     },
                     {
                         "name": "user.lastUpdated",
@@ -913,6 +935,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
                     },
                     {
                         "name": "user.lastUpdated",
@@ -1144,6 +1172,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
                         "name": "user.lastUpdated",
                         "in": "query",
                         "required": false,
@@ -1309,6 +1343,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
                     },
                     {
                         "name": "user.lastUpdated",
@@ -1493,6 +1533,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
                     },
                     {
                         "name": "user.lastUpdated",
@@ -1729,6 +1775,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
                         "name": "user.lastUpdated",
                         "in": "query",
                         "required": false,
@@ -1900,6 +1952,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
                     },
                     {
                         "name": "user.lastUpdated",
@@ -2089,6 +2147,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
                         "name": "user.lastUpdated",
                         "in": "query",
                         "required": false,
@@ -2274,6 +2338,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
                     },
                     {
                         "name": "user.lastUpdated",
@@ -2471,6 +2541,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
                         "name": "user.lastUpdated",
                         "in": "query",
                         "required": false,
@@ -2652,6 +2728,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
                         "name": "user.lastUpdated",
                         "in": "query",
                         "required": false,
@@ -2825,6 +2907,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
                     },
                     {
                         "name": "user.lastUpdated",
@@ -3034,6 +3122,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
                         "name": "user.lastUpdated",
                         "in": "query",
                         "required": false,
@@ -3221,6 +3315,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
                         "name": "user.lastUpdated",
                         "in": "query",
                         "required": false,
@@ -3406,6 +3506,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
                         "name": "user.lastUpdated",
                         "in": "query",
                         "required": false,
@@ -3571,6 +3677,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
                     },
                     {
                         "name": "user.lastUpdated",
@@ -3762,6 +3874,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
                         "name": "user.lastUpdated",
                         "in": "query",
                         "required": false,
@@ -3932,6 +4050,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
                         "name": "user.lastUpdated",
                         "in": "query",
                         "required": false,
@@ -4097,6 +4221,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
                     },
                     {
                         "name": "user.lastUpdated",
@@ -4278,6 +4408,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
                         "name": "user.lastUpdated",
                         "in": "query",
                         "required": false,
@@ -4455,6 +4591,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
                     },
                     {
                         "name": "user.lastUpdated",
@@ -4636,6 +4778,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
                         "name": "user.lastUpdated",
                         "in": "query",
                         "required": false,
@@ -4808,6 +4956,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
                     },
                     {
                         "name": "user.lastUpdated",
@@ -4987,6 +5141,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
                     },
                     {
                         "name": "user.lastUpdated",
@@ -5172,6 +5332,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
                     },
                     {
                         "name": "user.lastUpdated",
@@ -5474,6 +5640,48 @@
                 "deprecated": false
             }
         },
+        "/api/users": {
+            "get": {
+                "tags": [
+                    "users-controller"
+                ],
+                "summary": "findUsers",
+                "operationId": "findUsersUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "query",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/UserResponseDTO"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden!!!!!"
+                    },
+                    "500": {
+                        "description": "500 message",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
         "/api/users/{userId}/courses": {
             "get": {
                 "tags": [
@@ -5571,6 +5779,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
                     },
                     {
                         "name": "user.lastUpdated",
@@ -6077,6 +6291,10 @@
                 "semester": {
                     "type": "string"
                 },
+                "course_admin_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
                 "description": {
                     "type": "string"
                 }
@@ -6298,15 +6516,15 @@
             },
             "title": "PatchCourseUserRequestDTO"
         },
-      "ResendValidationEmailRequestDTO": {
-        "type": "object",
-        "properties": {
-          "username_or_email": {
-            "type": "string"
-          }
+        "ResendValidationEmailRequestDTO": {
+            "type": "object",
+            "properties": {
+                "username_or_email": {
+                    "type": "string"
+                }
+            },
+            "title": "ResendValidationEmailRequestDTO"
         },
-        "title": "ResendValidationEmailRequestDTO"
-      },
         "ResetPasswordRequestDTO": {
             "type": "object",
             "properties": {
@@ -6777,6 +6995,9 @@
                     "type": "integer",
                     "format": "int64"
                 },
+                "is_admin": {
+                    "type": "boolean"
+                },
                 "last_updated": {
                     "type": "string",
                     "format": "date-time"
@@ -6799,14 +7020,14 @@
             },
             "title": "UserResponseDTO"
         },
-      "ValidateEmailRequestDTO": {
-        "type": "object",
-        "properties": {
-          "validate_email_token": {
-            "type": "string"
-          }
-        },
-        "title": "ValidateEmailRequestDTO"
+        "ValidateEmailRequestDTO": {
+            "type": "object",
+            "properties": {
+                "validate_email_token": {
+                    "type": "string"
+                }
+            },
+            "title": "ValidateEmailRequestDTO"
         }
     }
 }
