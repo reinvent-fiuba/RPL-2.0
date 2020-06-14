@@ -1,24 +1,14 @@
 package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.controller.dto.*;
-import com.example.rpl.RPL.model.User;
-import com.example.rpl.RPL.model.ValidationToken;
-import com.example.rpl.RPL.security.CurrentUser;
-import com.example.rpl.RPL.security.JwtTokenProvider;
-import com.example.rpl.RPL.security.UserPrincipal;
-import com.example.rpl.RPL.service.AuthenticationService;
+import com.example.rpl.RPL.service.UsersService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,13 +16,13 @@ import java.util.stream.Collectors;
 @RestController
 public class UsersController {
 
-    private final AuthenticationService authenticationService;
+    private final UsersService usersService;
 
     @Autowired
     public UsersController(
-        AuthenticationService authenticationService
+        UsersService usersService
     ) {
-        this.authenticationService = authenticationService;
+        this.usersService = usersService;
     }
 
     @PreAuthorize("hasAuthority('superadmin')")
@@ -41,7 +31,7 @@ public class UsersController {
             @RequestParam(required = false) String query) {
 
         return new ResponseEntity<>(
-                authenticationService.findUsers(query)
+                usersService.findUsers(query)
                         .stream()
                         .map(UserResponseDTO::fromEntity)
                         .collect(Collectors.toList()),
