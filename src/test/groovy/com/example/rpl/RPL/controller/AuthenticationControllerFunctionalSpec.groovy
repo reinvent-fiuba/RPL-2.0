@@ -6,6 +6,7 @@ import com.example.rpl.RPL.util.AbstractFunctionalSpec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.ActiveProfiles
+import spock.lang.Shared
 import spock.lang.Unroll
 
 import static javax.servlet.http.HttpServletResponse.*
@@ -19,8 +20,15 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    String username
+
+    String password
+
+    @Shared
+    User user
+
     def setup() {
-        User user = new User(
+        user = new User(
                 'some-name',
                 'some-surname',
                 'some-student-id',
@@ -30,6 +38,9 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
                 'some-university',
                 'some-hard-degree'
         );
+        username = user.getUsername()
+        password = "supersecret";
+
         user.markAsValidated()
         userRepository.save(user);
     }
@@ -225,6 +236,56 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
         where:
             username   | password      | name        | student_id
             "username" | "supersecret" | "some-name" | "some-student-id"
+    }
+
+    /*****************************************************************************************
+     ********** EDIT USER ********************************************************************
+     *****************************************************************************************/
+
+    @Unroll
+    void "test edit current profile should update user data"() {
+        when:
+            def response = patch("/api/auth/profile", updatedFields, username, password)
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            Map result = getJsonResponse(response)
+
+            ["name", "student_id", "surname", "username", "email", "university", "degree"].each { key ->
+                assert result[key] == (updatedFields[key] ? updatedFields[key] : user.getAt(underscoreToCamelCase(key)))
+            }
+
+        where:
+            updatedFields << [
+                    [:],
+                    [ name: "other-name" ],
+                    [ university: "other-university"],
+                    [ name: "other-name", university: "other-university" ]
+            ]
+    }
+
+    @Unroll
+    void "test edit unmutable properties from profile should not update user data"() {
+        when:
+            def response = patch("/api/auth/profile", updatedFields, username, password)
+
+        then:
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            Map result = getJsonResponse(response)
+
+            updatedFields.each { key, _ ->
+                assert result[key] == user.getAt(key)
+            }
+
+        where:
+            updatedFields << [
+                    [ username: "other-username"],
+                    [ id: 22 ],
+            ]
     }
 }
 

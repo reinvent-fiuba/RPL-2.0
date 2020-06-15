@@ -24,4 +24,11 @@ abstract class AbstractSpec extends Specification {
     void assertEquals(def valueDefault, def value) {
         assert valueDefault == value
     }
+
+    String underscoreToCamelCase(String underscore){
+        if(!underscore || underscore.isAllWhitespace()){
+            return ''
+        }
+        return underscore.replaceAll(/_\w/){ it[1].toUpperCase() }
+    }
 }

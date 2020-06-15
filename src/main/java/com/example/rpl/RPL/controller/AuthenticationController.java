@@ -1,13 +1,6 @@
 package com.example.rpl.RPL.controller;
 
-import com.example.rpl.RPL.controller.dto.CreateUserRequestDTO;
-import com.example.rpl.RPL.controller.dto.ForgotPasswordRequestDTO;
-import com.example.rpl.RPL.controller.dto.JwtResponseDTO;
-import com.example.rpl.RPL.controller.dto.LoginRequestDTO;
-import com.example.rpl.RPL.controller.dto.ResendValidationEmailRequestDTO;
-import com.example.rpl.RPL.controller.dto.ResetPasswordRequestDTO;
-import com.example.rpl.RPL.controller.dto.UserResponseDTO;
-import com.example.rpl.RPL.controller.dto.ValidateEmailRequestDTO;
+import com.example.rpl.RPL.controller.dto.*;
 import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.model.ValidationToken;
 import com.example.rpl.RPL.security.CurrentUser;
@@ -23,10 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -100,6 +90,23 @@ public class AuthenticationController {
         return new ResponseEntity<>(UserResponseDTO.fromEntity(user), HttpStatus.OK);
     }
 
+    @PatchMapping("/api/auth/profile")
+    public ResponseEntity<UserResponseDTO> updateUser(
+            @CurrentUser UserPrincipal currentUser,
+            @RequestBody(required=false) EditUserRequestDTO editUserRequestDTO) {
+
+        User user = authenticationService.updateUser(
+                currentUser.getId(),
+                editUserRequestDTO.getName(),
+                editUserRequestDTO.getSurname(),
+                editUserRequestDTO.getStudentId(),
+                editUserRequestDTO.getEmail(),
+                editUserRequestDTO.getUniversity(),
+                editUserRequestDTO.getDegree()
+        );
+
+        return new ResponseEntity<>(UserResponseDTO.fromEntity(user), HttpStatus.OK);
+    }
 
     /**
      *
