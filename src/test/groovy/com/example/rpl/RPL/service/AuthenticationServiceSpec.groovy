@@ -1,6 +1,7 @@
 package com.example.rpl.RPL.service
 
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException
+import com.example.rpl.RPL.exception.NotFoundException
 import com.example.rpl.RPL.model.User
 import com.example.rpl.RPL.repository.UserRepository
 import com.example.rpl.RPL.repository.ValidationTokenRepository
@@ -67,5 +68,41 @@ class AuthenticationServiceSpec extends Specification {
             property   | usernameExists | emailExists
             "username" | true           | false
             "email"    | false          | true
+    }
+
+    @Unroll
+    void "should update user successfully"() {
+        given:
+            User user = Mock(User)
+
+        when:
+            authenticationService.updateUser(userId, name, surname, studentId, email, university, degree)
+
+        then:
+            1 * userRepository.findById(userId) >> Optional.of(user)
+            if (name != null) 1*user.setName(name)
+            if (surname != null) 1*user.setSurname(surname)
+            if (studentId != null) 1*user.setStudentId(studentId)
+            if (email != null) 1*user.setEmail(email)
+            if (university != null) 1*user.setUniversity(university)
+            if (degree != null) 1*user.setDegree(name)
+            1 * userRepository.save(user)
+
+        where:
+            userId | name   | surname | studentId | email | university | degree
+            1      | "ale"  | null    | null      | null  | null       | null
+            2      | null   | "cano"  | "97925"   | null  | null       | null
+            3      | null   | null    | null      | null  | null       | null
+    }
+
+    @Unroll
+    void "should throw error if user doesnt exist"() {
+        when:
+            authenticationService.updateUser(1, "name", "surname", "studentId", "email", "university", "degree")
+
+        then:
+            1 * userRepository.findById(1) >> Optional.empty()
+
+            thrown(NotFoundException)
     }
 }

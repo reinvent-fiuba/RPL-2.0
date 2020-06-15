@@ -65,6 +65,25 @@ public class AuthenticationService {
     }
 
     @Transactional
+    public User updateUser(Long userId, String name, String surname, String studentId,
+                           String email, String university, String degree) {
+
+        // TODO: Update User all at once without using a SELECT at first
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("User not found", "user_not_found")
+        );
+
+        if (name != null) user.setName(name);
+        if (surname != null) user.setSurname(surname);
+        if (studentId != null) user.setStudentId(studentId);
+        if (email != null) user.setEmail(email);
+        if (university != null) user.setUniversity(university);
+        if (degree != null) user.setDegree(degree);
+
+        return userRepository.save(user);
+    }
+
+    @Transactional
     public User getUserById(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {

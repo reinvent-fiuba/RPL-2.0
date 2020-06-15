@@ -5,7 +5,7 @@ VALUES (1, 'Alejandro', 'Levinas', 95719, 'alepox', 'levinasale@gmail.com',
         'UBA', now(), now());
 
 INSERT INTO users
-VALUES (2, 'Matias', 'Cano', 97925, 'tute', 'matiasjosecc@gmail.com',
+VALUES (2, 'Matias', 'Cano', 97925, 'tutecano22', 'matiasjosecc@gmail.com',
         '$2a$10$ab9rVz3lVB.ANA2ss.1pOOFwg.tH5yexgXc58PSMwa6CVlBDWM2Eq', true,
         false, 'Ing. en Informatica',
         'UBA', now(), now());
@@ -30,7 +30,7 @@ VALUES (5, 'Student5', 'student5', 00001, 'student5', 'student5@gmail.com',
         'UBA', now(), now());
 
 INSERT INTO users
-VALUES (6, 'Admin', 'admin', 00001, 'admin', 'admin@gmail.com',
+VALUES (6, 'Admin', 'admin', 00001, 'superadmin', 'admin@gmail.com',
         '$2a$10$ab9rVz3lVB.ANA2ss.1pOOFwg.tH5yexgXc58PSMwa6CVlBDWM2Eq', true,
         true, '',
         '', now(), now());
