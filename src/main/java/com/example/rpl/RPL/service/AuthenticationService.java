@@ -68,8 +68,6 @@ public class AuthenticationService {
     public User updateUser(Long userId, String name, String surname, String studentId,
                            String email, String university, String degree) {
 
-
-
         // TODO: Update User all at once without using a SELECT at first
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("User not found", "user_not_found")
