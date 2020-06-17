@@ -12,20 +12,20 @@ VALUES (2, 'Matias', 'Cano', 97925, 'tutecano22', 'matiasjosecc@gmail.com',
 
 INSERT INTO users
 VALUES (3, 'Student', 'Accepted', 00001, 'student_accepted', 'accepted_student@gmail.com',
-        '$2a$10$ab9rVz3lVB.ANA2ss.1pOOFwg.tH5yexgXc58PSMwa6CVlBDWM2Eq', false,
+        '$2a$10$ab9rVz3lVB.ANA2ss.1pOOFwg.tH5yexgXc58PSMwa6CVlBDWM2Eq', true,
         false, 'Ing. en Informatica',
         'UBA', now(), now());
 
 INSERT INTO users
 VALUES (4, 'Student', 'NotAccepted', 00001, 'student_not_accepted',
         'not_accepted_student@gmail.com',
-        '$2a$10$ab9rVz3lVB.ANA2ss.1pOOFwg.tH5yexgXc58PSMwa6CVlBDWM2Eq', false,
+        '$2a$10$ab9rVz3lVB.ANA2ss.1pOOFwg.tH5yexgXc58PSMwa6CVlBDWM2Eq', true,
         false, 'Ing. en Informatica',
         'UBA', now(), now());
 
 INSERT INTO users
 VALUES (5, 'Student5', 'student5', 00001, 'student5', 'student5@gmail.com',
-        '$2a$10$ab9rVz3lVB.ANA2ss.1pOOFwg.tH5yexgXc58PSMwa6CVlBDWM2Eq', false,
+        '$2a$10$ab9rVz3lVB.ANA2ss.1pOOFwg.tH5yexgXc58PSMwa6CVlBDWM2Eq', true,
         false, 'Ing. en Informatica',
         'UBA', now(), now());
 
@@ -70,7 +70,7 @@ INSERT INTO course_users
 VALUES (4, 1, 4, 2, false, now(), now());
 
 INSERT INTO rpl_files
-VALUES (1, 'activity_1_supporting_files.tar.gz', 'text/x-c',
+VALUES (1, 'activity_1_starting_filess.tar.gz', 'text/x-c',
         x'1f8b0800af122e5e0003edd2bf0ac23010c7f13ccaad2e92d87fe0ee83847a60a5b63569c4c737bae8224e45c4ef67f941ee86cb7141fdfea4ebf93a9bc5d8acaecb7bbaa6b2aff9e09c35aea85d51daa6292a63dda6dc382376b9919e529c7d1031bed769bcbeeffb54ff51bb38ab689434880feda1bb8c926f41ce49a51fa3e49736c79474af83a4985735f9e025a6287ad4d0766d97ebdbd5b7ff0100000000000000000000000000ffe606912b5d9c00280000',
         now(), now());
 
@@ -99,6 +99,11 @@ VALUES (6, 'la_submission_unit_test_python.tar.xz', 'text/x-c',
         x'fd377a585a000004e6d6b4460200210116000000742fe5a3e007ff013d5d00309cecd2685724bcae385acc81d022c228fc8542d451fd62279b02c1354277cb3b379047fdcb18ebffc2baf4895bf9ce8e52c11db7231052f6f024de9881b6620db9bed2fce29878d5c0d759c9c6e4853b4e712bb9f2c42b243c174b7d5df56d4328fc552eebdaa8dc59c137e76ce01191fcb3361cfd805e9ed5a9c19f4071d256c910152a1274591005748a827ce930a7e0488bb9638539373cb107b33b739f3f6dd042fa954ffd2176947f6af52d1b7c8586fa90bcad59e93f29fd32f5d604de44bbea65d4515f4903a8edf8d4e4c7b93413dd697ec6ea02cffaa4df5e483e00be69479ca5079f1c57008ef24c168199f2dab32357698632030f07f781525dde6b9f124d9628a0748f137cdefdd459e173b372b418a381c95405db2613a8133bf6fa489fbb64d2e57ec67e269f506b773bd185780046d37bff2c2f000000000049b256dd9240d1a60001d9028010000011dfdb7db1c467fb020000000004595a',
         now(), now());
 
+INSERT INTO rpl_files
+VALUES (7, 'multi_submission_c_unit_test.tar.xz', 'text/x-c',
+        x'fd377a585a000004e6d6b4460200210116000000742fe5a3e011ff01ce5d0036984972850270e93a4742c2b005c0f9915c9e4405b5de90fd4154b1a141aa4f3e98954290b8b3da7d29a45adda34ebac0f541e09a1b6987d8026136bb331c91f18794cf969b3a641380074914bd2bc492bf571c6a171d59703945ca0a005e7bb9a4d9876b22b092deb1ee65ded485ae0ab7291bd333495f58c37e3e28f78832c8ae017a24de721524a06bf737b77e65d9b4164020158fd78fd643c46ace8465b4fd390fa08907fe507dfc6b3998939fcf087c8cded1770e7d6d4c56c897f0a12910a9a2732312f1c6c7034001372dc40b6b9c1b2c1db101f8c42241620b0af437dc48a8ca064ecce2885395d7a601df277aa23068c13fcac508ef61aa2152e851e71ff2d86eadebc90077a2bdee8280a435302e17135e44e944acc91aeb012f7ce121b926f5668da04353ac020346ce9234616c675185d12b34192b9f479195388d210f655d7fc0b5d573e8f53d17f20f580c9a6ac73f174d31e2fcffef02419d4b1132284253f5e020d00074299ef0f785b8bc08d2b51c1341c23545e2518ca8ce172db1d8ad54f7f3f3cf93a9583ec250a1cbd436240a6609760811d975c214a4a8d094d0bf890e13ded67ab4b27960222cf67fd86bbe18111623b1b07188607126d7c85fa47baafb47ae762a000000a655d15ce5c5f5030001ea0380240000eece37e1b1c467fb020000000004595a',
+        now(), now());
+
 INSERT INTO activity_categories
 VALUES (1, 1, 'Conceptos Basicos',
         'Ejercicios faciles para empezar', true, now(), now());
@@ -120,8 +125,9 @@ VALUES (3, 1, 1, 'Ej 3 Unit Test Python',
         now(), now());
 
 INSERT INTO activities
-VALUES (4, 1, 1, 'El ejericio 4',
-        'La descripción del ejericio 4', 'c_std11', true, true, false, '//El codigo inicial', 1, 10,
+VALUES (4, 1, 1, 'Ej 4 IO Test Python',
+        'La descripción del ejericio 4', 'python_3.7', true, true, false, '#El codigo inicial', 1,
+        10,
         now(), now());
 
 INSERT INTO activities
@@ -169,6 +175,9 @@ VALUES (2, 2, 1, 3, 'PENDING', now(), now());
 INSERT INTO activity_submissions
 VALUES (3, 3, 1, 6, 'PENDING', now(), now());
 
+INSERT INTO activity_submissions
+VALUES (4, 1, 1, 7, 'PENDING', now(), now());
+
 -- INSERT INTO tests
 -- VALUES (1, 1, now(), now());
 
@@ -188,3 +197,8 @@ INSERT INTO IO_tests
 VALUES (1, 1, '26164', '07:16:04.0000', now(), now());
 INSERT INTO IO_tests
 VALUES (2, 1, '26165', '07:16:05.0000', now(), now());
+
+INSERT INTO IO_tests
+VALUES (3, 4, '26164', '07:16:04.0000', now(), now());
+INSERT INTO IO_tests
+VALUES (4, 4, '26165', '07:16:05.0000', now(), now());

@@ -6185,14 +6185,14 @@
                 "activity_language": {
                     "type": "string"
                 },
-                "activity_supporting_file_id": {
+              "activity_starting_files_id": {
                     "type": "integer",
                     "format": "int64"
                 },
-                "activity_supporting_file_name": {
+              "activity_starting_files_name": {
                     "type": "string"
                 },
-                "activity_supporting_file_type": {
+              "activity_starting_files_type": {
                     "type": "string"
                 },
                 "activity_test_type": {
@@ -6233,14 +6233,14 @@
                 "activity_language": {
                     "type": "string"
                 },
-                "activity_supporting_file_id": {
+              "activity_starting_files_id": {
                     "type": "integer",
                     "format": "int64"
                 },
-                "activity_supporting_file_name": {
+              "activity_starting_files_name": {
                     "type": "string"
                 },
-                "activity_supporting_file_type": {
+              "activity_starting_files_type": {
                     "type": "string"
                 },
                 "activity_test_type": {

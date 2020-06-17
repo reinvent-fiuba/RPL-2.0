@@ -118,6 +118,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .permitAll()
             .antMatchers(HttpMethod.GET,
                 "/api/files/**",
+                "/api/getExtractedFile/**",
                 "/api/submissions/**"
             )
             .permitAll()

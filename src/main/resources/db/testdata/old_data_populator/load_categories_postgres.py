@@ -1,6 +1,9 @@
 import psycopg2
 import requests
 
+headers = {
+  'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTkxMjI0NjI2LCJleHAiOjE1OTEyMzkwMjZ9.Moyl44RMqDTrNxL8u2pJMyz02k6-6GHTXijYXxs41xGAiTg2Db40_wdCObYdbuYGyrwG8wJ9C8R8i3pxAfczTQ'
+}
 
 def connect():
   """ Connect to the PostgreSQL database server """
@@ -34,9 +37,6 @@ def create_category(name):
   payload = {
     'description': name + "no description",
     'name': name,
-  }
-  headers = {
-    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTkwMTUwNTU5LCJleHAiOjE1OTAxNjQ5NTl9.MdybXLrhiFyG3yNbuVTfSfe5BrVIwLlFr5PMRRLjYWxcoK9nb12Ilbx4lS8pj3TjsIEH4JSWKuvVNh5W5bAWng'
   }
 
   response = requests.post(backend_url, headers=headers, json=payload)

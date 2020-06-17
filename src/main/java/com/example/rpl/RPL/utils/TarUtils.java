@@ -1,10 +1,21 @@
 package com.example.rpl.RPL.utils;
 
+import static org.springframework.util.FileCopyUtils.BUFFER_SIZE;
+
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.zip.GZIPOutputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 public class TarUtils {
@@ -97,5 +108,52 @@ public class TarUtils {
             }
         }
         return new byte[0];
+    }
+
+
+    public static Map<String, String> decompress(Resource in) throws IOException {
+        Map<String, String> result = new HashMap<>();
+
+        try (TarArchiveInputStream fin = new TarArchiveInputStream(in.getInputStream())) {
+            TarArchiveEntry entry;
+            while ((entry = fin.getNextTarEntry()) != null) {
+                if (entry.isDirectory()) {
+                    continue;
+                }
+                File curfile = entry.getFile();
+
+                Scanner myReader = new Scanner(curfile);
+
+                result.put(entry.getFile().getName(), myReader.toString());
+            }
+        }
+        System.err.println(result.toString());
+        return result;
+    }
+
+    public static Map<String, String> extractTarGZ(InputStream in) throws IOException {
+        Map<String, String> result = new HashMap<>();
+        GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(in);
+        try (TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)) {
+            TarArchiveEntry entry;
+
+            while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
+                int count;
+                byte data[] = new byte[BUFFER_SIZE];
+                StringBuilder holeFile = new StringBuilder();
+
+                while ((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
+                    holeFile.append(new String(data, 0, count, StandardCharsets.UTF_8).strip());
+                }
+
+                result.put(entry.getName(), holeFile.toString());
+            }
+            System.out.println(result);
+            System.out.println("Untar completed successfully!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 }

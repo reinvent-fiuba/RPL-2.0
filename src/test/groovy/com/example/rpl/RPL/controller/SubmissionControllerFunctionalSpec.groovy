@@ -108,7 +108,7 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
         courseUserRepository.save(courseUser);
 
         RPLFile supportingActivityFile = new RPLFile(
-                "supporting_file",
+                "starting_files",
                 "text",
                 null
         )
@@ -180,9 +180,9 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.submission_file_name == "submission_file"
             assert result.submission_file_type == "text"
             assert result.submission_file_id != null
-            assert result.activity_supporting_file_name == "supporting_file"
-            assert result.activity_supporting_file_type == "text"
-            assert result.activity_supporting_file_id != null
+            assert result.activity_starting_files_name == "starting_files"
+            assert result.activity_starting_files_type == "text"
+            assert result.activity_starting_files_id != null
             assert result.activity_language == "c_std11"
             assert result.activity_iotests.size() == 0
     }
@@ -231,9 +231,9 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.submission_file_name != null
             assert result.submission_file_type == "application/gzip"
             assert result.submission_file_id != null
-            assert result.activity_supporting_file_name == "supporting_file"
-            assert result.activity_supporting_file_type == "text"
-            assert result.activity_supporting_file_id != null
+            assert result.activity_starting_files_name == "starting_files"
+            assert result.activity_starting_files_type == "text"
+            assert result.activity_starting_files_id != null
             assert result.activity_language == "c_std11"
             assert result.activity_iotests.size() == 0
     }

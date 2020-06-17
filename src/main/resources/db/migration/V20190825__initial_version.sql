@@ -110,7 +110,7 @@ CREATE TABLE activities
     active               BOOLEAN,
     deleted              BOOLEAN,
     initial_code         varchar(20000),
-    supporting_file_id   BIGINT,
+    starting_files_id    BIGINT,
     points               BIGINT,
     date_created         DATETIME,
     last_updated         DATETIME,
@@ -118,7 +118,7 @@ CREATE TABLE activities
     PRIMARY KEY (id),
     FOREIGN KEY (course_id) REFERENCES courses (id),
     FOREIGN KEY (activity_category_id) REFERENCES activity_categories (id),
-    FOREIGN KEY (supporting_file_id) REFERENCES rpl_files (id)
+    FOREIGN KEY (starting_files_id) REFERENCES rpl_files (id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE activity_submissions

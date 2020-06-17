@@ -61,7 +61,7 @@ public class UserActivityResponseDTO {
             .isIOTested(activity.getIsIOTested())
             .active(activity.getActive())
             .deleted(activity.getDeleted())
-            .fileId(activity.getSupportingFile().getId())
+            .fileId(activity.getStartingFiles().getId())
             .dateCreated(activity.getDateCreated())
             .lastUpdated(activity.getLastUpdated())
             .submissionStatus(submissionStatus)

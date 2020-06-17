@@ -1,8 +1,15 @@
 package com.example.rpl.RPL.controller;
 
-import com.example.rpl.RPL.controller.dto.*;
-import com.example.rpl.RPL.controller.dto.ActivityResponseDTO.IOTestResponseDTO;
-import com.example.rpl.RPL.model.*;
+import com.example.rpl.RPL.controller.dto.ActivitiesStatsResponseDTO;
+import com.example.rpl.RPL.controller.dto.ActivityResponseDTO;
+import com.example.rpl.RPL.controller.dto.CreateActivityRequestDTO;
+import com.example.rpl.RPL.controller.dto.DisableActivityRequestDTO;
+import com.example.rpl.RPL.controller.dto.UserActivityResponseDTO;
+import com.example.rpl.RPL.model.ActivitiesStats;
+import com.example.rpl.RPL.model.Activity;
+import com.example.rpl.RPL.model.ActivitySubmission;
+import com.example.rpl.RPL.model.IOTest;
+import com.example.rpl.RPL.model.UnitTest;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.ActivitiesService;
@@ -52,9 +59,9 @@ public class ActivitiesController {
         @CurrentUser UserPrincipal currentUser,
         @PathVariable Long courseId,
         @Valid CreateActivityRequestDTO createActivityRequestDTO,
-        @RequestParam(value = "supportingFile") MultipartFile[] supportingFiles) {
+        @RequestParam(value = "startingFile") MultipartFile[] startingFiles) {
 
-        byte[] compressedSupportingFilesBytes = TarUtils.compressToTarGz(supportingFiles);
+        byte[] compressedStartingFilesBytes = TarUtils.compressToTarGz(startingFiles);
 
         Activity activity = activitiesService.createActivity(
             courseId,
@@ -62,10 +69,9 @@ public class ActivitiesController {
             createActivityRequestDTO.getName(),
             createActivityRequestDTO.getDescription(),
             createActivityRequestDTO.getLanguage(),
-            true,
             createActivityRequestDTO.getInitialCode(),
             createActivityRequestDTO.getPoints(),
-            compressedSupportingFilesBytes);
+            compressedStartingFilesBytes);
 
         return new ResponseEntity<>(
             ActivityResponseDTO.fromEntity(activity, null, new ArrayList<>()), HttpStatus.CREATED);
@@ -78,22 +84,21 @@ public class ActivitiesController {
         @PathVariable Long courseId,
         @PathVariable Long activityId,
         @Valid CreateActivityRequestDTO createActivityRequestDTO,
-        @RequestParam(value = "supportingFile") MultipartFile[] supportingFiles) {
+        @RequestParam(value = "startingFile") MultipartFile[] startingFiles) {
 
         Activity activity = activitiesService.getActivity(activityId);
 
-        byte[] compressedSupportingFilesBytes = TarUtils.compressToTarGz(supportingFiles);
+        byte[] compressedStartingFilesBytes = TarUtils.compressToTarGz(startingFiles);
 
-        activitiesService.updateActivity(
+        activity = activitiesService.updateActivity(
             activity,
             createActivityRequestDTO.getActivityCategoryId(),
             createActivityRequestDTO.getName(),
             createActivityRequestDTO.getDescription(),
             createActivityRequestDTO.getLanguage(),
-            true,
             createActivityRequestDTO.getInitialCode(),
             createActivityRequestDTO.getPoints(),
-            compressedSupportingFilesBytes);
+            compressedStartingFilesBytes);
 
         return new ResponseEntity<>(
             ActivityResponseDTO.fromEntity(activity, null, new ArrayList<>()), HttpStatus.OK);
