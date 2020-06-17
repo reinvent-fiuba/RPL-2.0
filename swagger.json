@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:50330",
+  "host": "localhost:33501",
     "basePath": "/",
     "tags": [
         {
@@ -1304,9 +1304,9 @@
                         "format": "int64"
                     },
                     {
-                        "name": "supportingFile",
+                      "name": "startingFile",
                         "in": "formData",
-                        "description": "supportingFile",
+                      "description": "startingFile",
                         "required": true,
                         "type": "array",
                         "items": {
@@ -1907,9 +1907,9 @@
                         "format": "int64"
                     },
                     {
-                        "name": "supportingFile",
+                      "name": "startingFile",
                         "in": "formData",
-                        "description": "supportingFile",
+                      "description": "startingFile",
                         "required": true,
                         "type": "array",
                         "items": {
@@ -5610,6 +5610,49 @@
                             "$ref": "#/definitions/Resource"
                         }
                     },
+                  "403": {
+                    "description": "Forbidden!!!!!"
+                  },
+                  "500": {
+                    "description": "500 message",
+                    "schema": {
+                      "$ref": "#/definitions/Error"
+                    }
+                  }
+                },
+              "deprecated": false
+            }
+        },
+      "/api/getExtractedFile/{fileId}": {
+        "get": {
+          "tags": [
+            "file-controller"
+          ],
+          "summary": "getExtractedFile",
+          "operationId": "getExtractedFileUsingGET",
+          "produces": [
+            "*/*"
+          ],
+          "parameters": [
+            {
+              "name": "fileId",
+              "in": "path",
+              "description": "fileId",
+              "required": true,
+              "type": "integer",
+              "format": "int64"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            },
                     "403": {
                         "description": "Forbidden!!!!!"
                     },
