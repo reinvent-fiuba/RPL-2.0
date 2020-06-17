@@ -2,11 +2,7 @@ package com.example.rpl.RPL.service
 
 import com.example.rpl.RPL.exception.NotFoundException
 import com.example.rpl.RPL.model.*
-import com.example.rpl.RPL.repository.ActivityCategoryRepository
-import com.example.rpl.RPL.repository.ActivityRepository
-import com.example.rpl.RPL.repository.CourseRepository
-import com.example.rpl.RPL.repository.FileRepository
-import com.example.rpl.RPL.repository.SubmissionRepository
+import com.example.rpl.RPL.repository.*
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.web.multipart.MultipartFile
 import spock.lang.Shared
@@ -60,7 +56,6 @@ class ActivitiesServiceSpec extends Specification {
                     name,
                     description,
                     language,
-                    true,
                     initialCode,
                     22,
                     supportingFile.getBytes()
@@ -94,7 +89,6 @@ class ActivitiesServiceSpec extends Specification {
                     name,
                     description,
                     language,
-                    true,
                     initialCode,
                     22,
                     supportingFile.getBytes()
@@ -123,7 +117,6 @@ class ActivitiesServiceSpec extends Specification {
                     name,
                     description,
                     language,
-                    true,
                     initialCode,
                     22,
                     supportingFile.getBytes()

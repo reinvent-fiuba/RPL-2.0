@@ -4,14 +4,23 @@ import static java.time.ZonedDateTime.now;
 
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
 import com.example.rpl.RPL.exception.NotFoundException;
-import com.example.rpl.RPL.model.*;
-import com.example.rpl.RPL.repository.*;
-
+import com.example.rpl.RPL.model.ActivitiesStats;
+import com.example.rpl.RPL.model.Activity;
+import com.example.rpl.RPL.model.ActivityCategory;
+import com.example.rpl.RPL.model.ActivitySubmission;
+import com.example.rpl.RPL.model.Course;
+import com.example.rpl.RPL.model.Language;
+import com.example.rpl.RPL.model.RPLFile;
+import com.example.rpl.RPL.repository.ActivityCategoryRepository;
+import com.example.rpl.RPL.repository.ActivityRepository;
+import com.example.rpl.RPL.repository.CourseRepository;
+import com.example.rpl.RPL.repository.FileRepository;
+import com.example.rpl.RPL.repository.SubmissionRepository;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,8 +58,8 @@ public class ActivitiesService {
      */
     @Transactional
     public Activity createActivity(Long courseId, Long activityCategoryId, String name,
-        String description, String language,
-        Boolean active, String initialCode, Long points, byte[] supportingFilesBytes) {
+        String description, String language, String initialCode, Long points,
+        byte[] startingFilesBytes) {
 
         Course course = courseRepository.findById(courseId).orElseThrow(
             () -> new NotFoundException("Course not found",
@@ -62,8 +71,8 @@ public class ActivitiesService {
                     "category_not_found"));
 
         RPLFile file = new RPLFile(
-            String.format("%s_%d_%s.tar.gz", now().toString(), courseId, name),
-            "application/gzip", supportingFilesBytes);
+            String.format("%s_%d_%s.tar.gz", now().toLocalDate().toString(), courseId, name),
+            "application/gzip", startingFilesBytes);
 
         fileRepository.save(file);
 
@@ -77,13 +86,21 @@ public class ActivitiesService {
 
     @Transactional
     public Activity updateActivity(Activity activity, Long activityCategoryId, String name,
-        String description, String language,
-        Boolean active, String initialCode, Long points, byte[] supportingFilesBytes) {
+        String description, String language, String initialCode, Long points,
+        byte[] startingFilesBytes) {
+
 
         ActivityCategory activityCategory = activityCategoryRepository.findById(activityCategoryId)
             .orElseThrow(
                 () -> new NotFoundException("Category not found",
                     "category_not_found"));
+
+        RPLFile file = activity.getStartingFiles();
+
+        if (!Arrays.equals(file.getData(), startingFilesBytes)) {
+            file.updateData(startingFilesBytes);
+            fileRepository.save(file);
+        }
 
         activity.updateActivity(activityCategory, name, description, Language.getByName(language),
             initialCode, points);
@@ -128,13 +145,14 @@ public class ActivitiesService {
         return activityRepository.save(activity);
     }
 
+    @Transactional
     public ActivitiesStats getActivitiesStatsByUserAndCourseId(Long userId, Long courseId) {
         List<Activity> activities = getAllActivitiesByCourse(courseId);
         int total = activities.size();
         List<ActivitySubmission> activitySubmissions = submissionRepository.findAllByUserIdAndCourseId(userId, courseId);
 
         Map<Long, List<ActivitySubmission>> submissionsByActivity = activitySubmissions.stream()
-                .collect(Collectors.groupingBy(activitySubmission -> activitySubmission.getActivity().getId()));
+            .collect(Collectors.groupingBy(activitySubmission -> activitySubmission.getActivity().getId()));
 
         HashMap<String, Long> countByStatus = new HashMap<>();
         countByStatus.put("STARTED", (long) 0);

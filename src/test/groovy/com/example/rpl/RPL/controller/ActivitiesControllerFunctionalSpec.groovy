@@ -111,7 +111,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
         courseUserRepository.save(courseUser);
 
         supportingActivityFile = new RPLFile(
-                "supporting_file",
+                "starting_files",
                 "text",
                 null
         )
@@ -374,7 +374,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.language == activity.language.getName()
             assert result.active == activity.active
             assert result.initial_code == activity.initialCode
-            assert result.file_id == activity.supportingFile.getId()
+            assert result.file_id == activity.startingFiles.getId()
             assert result.activity_unit_tests == null
             assert result.activity_iotests == []
             assert result.date_created != null
@@ -401,7 +401,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.language == activity.language.getName()
             assert result.active == activity.active
             assert result.initial_code == activity.initialCode
-            assert result.file_id == activity.supportingFile.getId()
+            assert result.file_id == activity.startingFiles.getId()
             assert result.activity_unit_tests == null
             assert result.activity_iotests == [[id: ioTest1.getId(), in: "1", out: "1"], [id: ioTest2.getId(), in: "2", out: "2"]]
             assert result.date_created != null
@@ -445,7 +445,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert resultActivity1.description == activity.description
             assert resultActivity1.language == activity.language.name()
             assert resultActivity1.active == activity.active
-            assert resultActivity1.file_id == activity.supportingFile.getId()
+            assert resultActivity1.file_id == activity.startingFiles.getId()
             assert resultActivity1.submission_status == "PENDING"
             assert resultActivity1.last_submission_date != null
             assert resultActivity1.date_created != null
@@ -460,7 +460,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert resultActivity2.description == activity2.description
             assert resultActivity2.language == activity2.language.name()
             assert resultActivity2.active == activity2.active
-            assert resultActivity2.file_id == activity2.supportingFile.getId()
+            assert resultActivity2.file_id == activity2.startingFiles.getId()
             assert resultActivity2.submission_status == ""
             assert resultActivity2.last_submission_date == null
             assert resultActivity2.date_created != null
@@ -532,7 +532,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.language == activity.language.getName()
             assert result.active == activity.active
             assert result.initial_code == activity.initialCode
-            assert result.file_id == activity.supportingFile.getId()
+            assert result.file_id == activity.startingFiles.getId()
             assert result.activity_unit_tests == null
             assert result.activity_iotests == [[id: ioTest2.getId(), in: "2", out: "2"]]
             assert result.date_created != null

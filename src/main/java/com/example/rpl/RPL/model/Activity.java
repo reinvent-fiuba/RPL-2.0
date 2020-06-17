@@ -71,9 +71,9 @@ public class Activity {
     @Column(name = "initial_code")
     private String initialCode;
 
-    @JoinColumn(name = "supporting_file_id", referencedColumnName = "id")
+    @JoinColumn(name = "starting_files_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private RPLFile supportingFile;
+    private RPLFile startingFiles;
 
 
     @Column(name = "date_created")
@@ -91,16 +91,16 @@ public class Activity {
 
     public Activity(Course course, ActivityCategory activityCategory, String name,
         String description, Language language, String initialCode, Long points,
-        RPLFile supportingFile) {
+        RPLFile startingFiles) {
         this.course = course;
         this.activityCategory = activityCategory;
         this.name = name;
         this.description = description;
         this.language = language;
         this.isIOTested = true;
-        this.active = true;
+        this.active = false;
         this.deleted = false;
-        this.supportingFile = supportingFile;
+        this.startingFiles = startingFiles;
         this.initialCode = initialCode;
         this.points = points;
         this.dateCreated = now();

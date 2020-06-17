@@ -68,7 +68,7 @@ public class TestService {
         List<IOTest> ioTests = this.getAllIOTests(activityId);
 
         List<IOTestRun> ioTestRuns = new ArrayList<>();
-        for (int i = 0; i < results.size(); i++) {
+        for (int i = 0; i < results.size() && i < ioTests.size(); i++) {
             IOTestRun ioTestRun = new IOTestRun(testRun, ioTests.get(i).getTestIn(),
                 ioTests.get(i).getTestOut(), results.get(i));
             ioTestRuns.add(ioTestRun);
@@ -112,7 +112,7 @@ public class TestService {
         List<String> results = new ArrayList<>();
         StringBuilder result = new StringBuilder();
         for (String line : testRunStdout.split("\n")) {
-            if (line.contains("end_RUN")) {
+            if (line.contains("end_RUN") && result.length() > 0) {
                 results.add(result.toString().substring(0,
                     result.length() - 1)); // removing last /n as it was an EOF originally
             } else if (line.contains("start_RUN")) {

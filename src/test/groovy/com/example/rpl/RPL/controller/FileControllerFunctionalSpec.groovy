@@ -26,7 +26,7 @@ class FileControllerFunctionalSpec extends AbstractFunctionalSpec {
         File f = new File("./src/main/resources/db/testdata/la_submission.tar.xz")
 
         submissionFile = new RPLFile(
-                "supporting_file",
+                "starting_files",
                 "application/gzip",
                 f.getBytes()
         )

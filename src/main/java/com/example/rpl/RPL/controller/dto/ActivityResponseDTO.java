@@ -66,7 +66,7 @@ public class ActivityResponseDTO {
             .deleted(activity.getDeleted())
             .initialCode(activity.getInitialCode())
             .points(activity.getPoints())
-            .fileId(activity.getSupportingFile().getId())
+            .fileId(activity.getStartingFiles().getId())
             .dateCreated(activity.getDateCreated())
             .lastUpdated(activity.getLastUpdated());
 

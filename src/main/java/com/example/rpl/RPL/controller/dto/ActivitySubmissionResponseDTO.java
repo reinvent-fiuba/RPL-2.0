@@ -22,11 +22,11 @@ public class ActivitySubmissionResponseDTO {
 
     private String activityTestType;
 
-    private String activitySupportingFileName;
+    private String activityStartingFilesName;
 
-    private String activitySupportingFileType;
+    private String activityStartingFilesType;
 
-    private Long activitySupportingFileId;
+    private Long activityStartingFilesId;
 
     private String activityLanguage;
 
@@ -45,9 +45,9 @@ public class ActivitySubmissionResponseDTO {
             .submissionFileName(as.getFile().getFileName())
             .submissionFileType(as.getFile().getFileType())
             .submissionFileId(as.getFile().getId())
-            .activitySupportingFileName(as.getActivity().getSupportingFile().getFileName())
-            .activitySupportingFileType(as.getActivity().getSupportingFile().getFileType())
-            .activitySupportingFileId(as.getActivity().getSupportingFile().getId())
+            .activityStartingFilesName(as.getActivity().getStartingFiles().getFileName())
+            .activityStartingFilesType(as.getActivity().getStartingFiles().getFileType())
+            .activityStartingFilesId(as.getActivity().getStartingFiles().getId())
             .activityLanguage(as.getActivity().getLanguage().getNameAndVersion())
             .isIOTested(as.getActivity().getIsIOTested())
             .activityUnitTestsContent("");

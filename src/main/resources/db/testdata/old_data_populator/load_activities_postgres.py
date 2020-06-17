@@ -1,6 +1,9 @@
 import psycopg2
 import requests
 
+headers = {
+  'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTkxMjI0NjI2LCJleHAiOjE1OTEyMzkwMjZ9.Moyl44RMqDTrNxL8u2pJMyz02k6-6GHTXijYXxs41xGAiTg2Db40_wdCObYdbuYGyrwG8wJ9C8R8i3pxAfczTQ'
+}
 
 def connect():
   """ Connect to the PostgreSQL database server """
@@ -73,9 +76,6 @@ def create_activity(name, description, language, category_id, initial_code):
   files = [
     ('supportingFile', open('./load_activities_postgres.py', 'rb'))
   ]
-  headers = {
-    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTkwMTUwNTU5LCJleHAiOjE1OTAxNjQ5NTl9.MdybXLrhiFyG3yNbuVTfSfe5BrVIwLlFr5PMRRLjYWxcoK9nb12Ilbx4lS8pj3TjsIEH4JSWKuvVNh5W5bAWng'
-  }
 
   response = requests.post(backend_url, headers=headers, data=payload,
                            files=files)
@@ -92,9 +92,6 @@ def create_io_test(activity_id, course_id, text_in, text_out):
     'text_in': text_in or "",
     'text_out': text_out,
   }
-  headers = {
-    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTkwMTUwNTU5LCJleHAiOjE1OTAxNjQ5NTl9.MdybXLrhiFyG3yNbuVTfSfe5BrVIwLlFr5PMRRLjYWxcoK9nb12Ilbx4lS8pj3TjsIEH4JSWKuvVNh5W5bAWng'
-  }
 
   response = requests.post(backend_url, headers=headers, json=payload)
 
@@ -108,9 +105,6 @@ def create_unit_test(activity_id, course_id, unit_test_code):
 
   payload = {
     'unit_test_code': unit_test_code
-  }
-  headers = {
-    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTkwMTUwNTU5LCJleHAiOjE1OTAxNjQ5NTl9.MdybXLrhiFyG3yNbuVTfSfe5BrVIwLlFr5PMRRLjYWxcoK9nb12Ilbx4lS8pj3TjsIEH4JSWKuvVNh5W5bAWng'
   }
 
   response = requests.post(backend_url, headers=headers, json=payload)
