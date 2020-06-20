@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-  "host": "localhost:33501",
+    "host": "localhost:60830",
     "basePath": "/",
     "tags": [
         {
@@ -1215,6 +1215,12 @@
                         "type": "boolean"
                     },
                     {
+                        "name": "active",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
                         "name": "activityCategoryId",
                         "in": "query",
                         "required": false,
@@ -1223,6 +1229,12 @@
                     },
                     {
                         "name": "authorities[0].authority",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "compilationFlags",
                         "in": "query",
                         "required": false,
                         "type": "string"
@@ -1304,9 +1316,9 @@
                         "format": "int64"
                     },
                     {
-                      "name": "startingFile",
+                        "name": "supportingFile",
                         "in": "formData",
-                      "description": "startingFile",
+                        "description": "supportingFile",
                         "required": true,
                         "type": "array",
                         "items": {
@@ -1810,6 +1822,12 @@
                         "type": "boolean"
                     },
                     {
+                        "name": "active",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
                         "name": "activityCategoryId",
                         "in": "query",
                         "required": false,
@@ -1826,6 +1844,12 @@
                     },
                     {
                         "name": "authorities[0].authority",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "compilationFlags",
                         "in": "query",
                         "required": false,
                         "type": "string"
@@ -1907,9 +1931,9 @@
                         "format": "int64"
                     },
                     {
-                      "name": "startingFile",
+                        "name": "supportingFile",
                         "in": "formData",
-                      "description": "startingFile",
+                        "description": "supportingFile",
                         "required": true,
                         "type": "array",
                         "items": {
@@ -5610,49 +5634,6 @@
                             "$ref": "#/definitions/Resource"
                         }
                     },
-                  "403": {
-                    "description": "Forbidden!!!!!"
-                  },
-                  "500": {
-                    "description": "500 message",
-                    "schema": {
-                      "$ref": "#/definitions/Error"
-                    }
-                  }
-                },
-              "deprecated": false
-            }
-        },
-      "/api/getExtractedFile/{fileId}": {
-        "get": {
-          "tags": [
-            "file-controller"
-          ],
-          "summary": "getExtractedFile",
-          "operationId": "getExtractedFileUsingGET",
-          "produces": [
-            "*/*"
-          ],
-          "parameters": [
-            {
-              "name": "fileId",
-              "in": "path",
-              "description": "fileId",
-              "required": true,
-              "type": "integer",
-              "format": "int64"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "schema": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "string"
-                }
-              }
-            },
                     "403": {
                         "description": "Forbidden!!!!!"
                     },
@@ -6228,20 +6209,23 @@
                 "activity_language": {
                     "type": "string"
                 },
-              "activity_starting_files_id": {
+                "activity_supporting_file_id": {
                     "type": "integer",
                     "format": "int64"
                 },
-              "activity_starting_files_name": {
+                "activity_supporting_file_name": {
                     "type": "string"
                 },
-              "activity_starting_files_type": {
+                "activity_supporting_file_type": {
                     "type": "string"
                 },
                 "activity_test_type": {
                     "type": "string"
                 },
                 "activity_unit_tests_content": {
+                    "type": "string"
+                },
+                "compilation_flags": {
                     "type": "string"
                 },
                 "id": {
@@ -6276,14 +6260,14 @@
                 "activity_language": {
                     "type": "string"
                 },
-              "activity_starting_files_id": {
+                "activity_supporting_file_id": {
                     "type": "integer",
                     "format": "int64"
                 },
-              "activity_starting_files_name": {
+                "activity_supporting_file_name": {
                     "type": "string"
                 },
-              "activity_starting_files_type": {
+                "activity_supporting_file_type": {
                     "type": "string"
                 },
                 "activity_test_type": {

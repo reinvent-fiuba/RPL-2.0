@@ -112,6 +112,7 @@ CREATE TABLE activities
     initial_code         varchar(20000),
     starting_files_id    BIGINT,
     points               BIGINT,
+    compilation_flags    VARCHAR(500),
     date_created         DATETIME,
     last_updated         DATETIME,
 

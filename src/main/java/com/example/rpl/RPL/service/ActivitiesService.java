@@ -58,8 +58,8 @@ public class ActivitiesService {
      */
     @Transactional
     public Activity createActivity(Long courseId, Long activityCategoryId, String name,
-        String description, String language, String initialCode, Long points,
-        byte[] startingFilesBytes) {
+        String description, String language,
+       Boolean active,  String initialCode, Long points, String compilationFlags, byte[] startingFilesBytes) {
 
         Course course = courseRepository.findById(courseId).orElseThrow(
             () -> new NotFoundException("Course not found",
@@ -76,8 +76,11 @@ public class ActivitiesService {
 
         fileRepository.save(file);
 
+        // Default compilation flags should be
+        // "-g -O2 -std=c99 -Wall -Wformat=2 -Wshadow -Wpointer-arith -Wunreachable-code -Wconversion -Wno-sign-conversion -Wbad-function-cast"
+
         Activity activity = new Activity(course, activityCategory, name, description,
-            Language.getByName(language), initialCode, points, file);
+            Language.getByName(language), initialCode, points, file, compilationFlags, active);
 
         activityRepository.save(activity);
 
@@ -86,14 +89,17 @@ public class ActivitiesService {
 
     @Transactional
     public Activity updateActivity(Activity activity, Long activityCategoryId, String name,
-        String description, String language, String initialCode, Long points,
-        byte[] startingFilesBytes) {
+        String description, String language, Boolean active, String initialCode, Long points,
+       String compilationFlags, byte[] startingFilesBytes) {
 
+        ActivityCategory activityCategory = null;
 
-        ActivityCategory activityCategory = activityCategoryRepository.findById(activityCategoryId)
-            .orElseThrow(
-                () -> new NotFoundException("Category not found",
-                    "category_not_found"));
+        if (activityCategoryId != null) {
+            activityCategory = activityCategoryRepository.findById(activityCategoryId)
+                    .orElseThrow(
+                            () -> new NotFoundException("Category not found",
+                                    "category_not_found"));
+        }
 
         RPLFile file = activity.getStartingFiles();
 
@@ -102,8 +108,8 @@ public class ActivitiesService {
             fileRepository.save(file);
         }
 
-        activity.updateActivity(activityCategory, name, description, Language.getByName(language),
-            initialCode, points);
+        activity.updateActivity(activityCategory, name, active, description, Language.getByName(language),
+            initialCode, compilationFlags, points);
 
         activityRepository.save(activity);
 

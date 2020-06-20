@@ -1,10 +1,6 @@
 package com.example.rpl.RPL.controller;
 
-import com.example.rpl.RPL.controller.dto.ActivitiesStatsResponseDTO;
-import com.example.rpl.RPL.controller.dto.ActivityResponseDTO;
-import com.example.rpl.RPL.controller.dto.CreateActivityRequestDTO;
-import com.example.rpl.RPL.controller.dto.DisableActivityRequestDTO;
-import com.example.rpl.RPL.controller.dto.UserActivityResponseDTO;
+import com.example.rpl.RPL.controller.dto.*;
 import com.example.rpl.RPL.model.ActivitiesStats;
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivitySubmission;
@@ -69,8 +65,10 @@ public class ActivitiesController {
             createActivityRequestDTO.getName(),
             createActivityRequestDTO.getDescription(),
             createActivityRequestDTO.getLanguage(),
+            createActivityRequestDTO.getActive(),
             createActivityRequestDTO.getInitialCode(),
             createActivityRequestDTO.getPoints(),
+            createActivityRequestDTO.getCompilationFlags(),
             compressedStartingFilesBytes);
 
         return new ResponseEntity<>(
@@ -83,7 +81,7 @@ public class ActivitiesController {
         @CurrentUser UserPrincipal currentUser,
         @PathVariable Long courseId,
         @PathVariable Long activityId,
-        @Valid CreateActivityRequestDTO createActivityRequestDTO,
+        @Valid UpdateActivityRequestDTO updateActivityRequestDTO,
         @RequestParam(value = "startingFile") MultipartFile[] startingFiles) {
 
         Activity activity = activitiesService.getActivity(activityId);
@@ -92,12 +90,14 @@ public class ActivitiesController {
 
         activity = activitiesService.updateActivity(
             activity,
-            createActivityRequestDTO.getActivityCategoryId(),
-            createActivityRequestDTO.getName(),
-            createActivityRequestDTO.getDescription(),
-            createActivityRequestDTO.getLanguage(),
-            createActivityRequestDTO.getInitialCode(),
-            createActivityRequestDTO.getPoints(),
+            updateActivityRequestDTO.getActivityCategoryId(),
+            updateActivityRequestDTO.getName(),
+            updateActivityRequestDTO.getDescription(),
+            updateActivityRequestDTO.getLanguage(),
+            updateActivityRequestDTO.getActive(),
+            updateActivityRequestDTO.getInitialCode(),
+            updateActivityRequestDTO.getPoints(),
+            updateActivityRequestDTO.getCompilationFlags(),
             compressedStartingFilesBytes);
 
         return new ResponseEntity<>(

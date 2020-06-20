@@ -60,6 +60,9 @@ public class Activity {
     @Column(name = "points")
     private Long points;
 
+    @Column(name = "compilation_flags")
+    private String compilationFlags;
+
     @Column(name = "active")
     private Boolean active;
 
@@ -91,30 +94,33 @@ public class Activity {
 
     public Activity(Course course, ActivityCategory activityCategory, String name,
         String description, Language language, String initialCode, Long points,
-        RPLFile startingFiles) {
+        RPLFile startingFiles, String compilationFlags, Boolean active) {
         this.course = course;
         this.activityCategory = activityCategory;
         this.name = name;
         this.description = description;
         this.language = language;
         this.isIOTested = true;
-        this.active = false;
         this.deleted = false;
         this.startingFiles = startingFiles;
         this.initialCode = initialCode;
         this.points = points;
         this.dateCreated = now();
         this.lastUpdated = this.dateCreated;
+        this.active = active != null ? active : false;
+        if (compilationFlags != null) this.compilationFlags = compilationFlags;
     }
 
-    public void updateActivity(ActivityCategory activityCategory, String name,
-        String description, Language language, String initialCode, Long score) {
-        this.activityCategory = activityCategory;
-        this.name = name;
-        this.description = description;
-        this.language = language;
-        this.initialCode = initialCode;
-        this.points = points;
+    public void updateActivity(ActivityCategory activityCategory, String name, Boolean active,
+        String description, Language language, String initialCode, String compilationFlags, Long score) {
+        if (activityCategory != null) this.activityCategory = activityCategory;
+        if (name != null) this.name = name;
+        if (description!= null) this.description = description;
+        if (language != null) this.language = language;
+        if (initialCode != null) this.initialCode = initialCode;
+        if (points != null) this.points = score;
+        if (compilationFlags != null) this.compilationFlags = compilationFlags;
+        if (active != null) this.active = active;
         this.lastUpdated = now();
     }
 
