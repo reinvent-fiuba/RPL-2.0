@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.language.bm.Lang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,7 +90,7 @@ public class ActivitiesService {
 
     @Transactional
     public Activity updateActivity(Activity activity, Long activityCategoryId, String name,
-        String description, String language, Boolean active, Long points,
+        String description, String languageName, Boolean active, Long points,
        String compilationFlags, byte[] startingFilesBytes) {
 
         ActivityCategory activityCategory = null;
@@ -108,7 +109,9 @@ public class ActivitiesService {
             fileRepository.save(file);
         }
 
-        activity.updateActivity(activityCategory, name, active, description, Language.getByName(language),
+        Language language = languageName != null ? Language.getByName(languageName) : null;
+
+        activity.updateActivity(activityCategory, name, active, description, language,
             compilationFlags, points);
 
         activityRepository.save(activity);

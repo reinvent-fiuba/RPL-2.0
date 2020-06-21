@@ -46,7 +46,6 @@ class ActivitiesServiceSpec extends Specification {
             String name = "Some new activity"
             String description = "Some description"
             String language = "C"
-            String initialCode = "//initial code"
             MultipartFile supportingFile = new MockMultipartFile("some-name", "content".getBytes())
 
         when:
@@ -80,7 +79,6 @@ class ActivitiesServiceSpec extends Specification {
             String name = "Some new activity"
             String description = "Some description"
             String language = "C"
-            String initialCode = "//initial code"
             MultipartFile supportingFile = new MockMultipartFile("some-name", "content".getBytes())
 
         when:
@@ -109,7 +107,6 @@ class ActivitiesServiceSpec extends Specification {
             String name = "Some new activity"
             String description = "Some description"
             String language = "C"
-            String initialCode = "//initial code"
             MultipartFile supportingFile = new MockMultipartFile("some-name", "content".getBytes())
 
         when:
@@ -172,5 +169,66 @@ class ActivitiesServiceSpec extends Specification {
             1               | 1
             1               | 2
             2               | 2
+    }
+
+    void "should update activity successfully"() {
+        given:
+            Long activityCategoryId = 1
+            String name = "Some new activity"
+            String description = "Some description"
+            String language = "C"
+            MultipartFile supportingFile = new MockMultipartFile("some-name", "content".getBytes())
+            Activity activity = Mock(Activity)
+            RPLFile file = Mock(RPLFile)
+            ActivityCategory activityCategory = Mock(ActivityCategory)
+
+        when:
+            activitiesService.updateActivity(
+                    activity,
+                    activityCategoryId,
+                    name,
+                    description,
+                    language,
+                    true,
+                    22,
+                    "",
+                    supportingFile.getBytes()
+            )
+
+        then:
+            1 * activityCategoryRepository.findById(activityCategoryId) >> Optional.of(activityCategory)
+            1 * activity.getStartingFiles() >> file
+            1 * file.getData() >> [1]
+            1 * file.updateData(_ as byte[])
+            1 * fileRepository.save(_ as RPLFile)
+            1 * activity.updateActivity(activityCategory, name, true, description, Language.C, "", 22)
+            1 * activityRepository.save(_ as Activity)
+    }
+
+    void "should update partially activity successfully"() {
+        given:
+            Activity activity = Mock(Activity)
+            RPLFile file = Mock(RPLFile)
+
+        when:
+            activitiesService.updateActivity(
+                    activity,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "-Wall",
+                    null
+            )
+
+        then:
+            0 * activityCategoryRepository.findById(_ as Long)
+            1 * activity.getStartingFiles() >> file
+            0 * file.getData()
+            0 * fileRepository.save(_ as RPLFile)
+            1 * activity.updateActivity(null, null, null, null, null, "-Wall", null)
+            1 * activityRepository.save(_ as Activity)
     }
 }
