@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:60830",
+    "host": "localhost:57225",
     "basePath": "/",
     "tags": [
         {
@@ -1316,9 +1316,9 @@
                         "format": "int64"
                     },
                     {
-                        "name": "supportingFile",
+                        "name": "startingFile",
                         "in": "formData",
-                        "description": "supportingFile",
+                        "description": "startingFile",
                         "required": true,
                         "type": "array",
                         "items": {
@@ -1931,9 +1931,9 @@
                         "format": "int64"
                     },
                     {
-                        "name": "supportingFile",
+                        "name": "startingFile",
                         "in": "formData",
-                        "description": "supportingFile",
+                        "description": "startingFile",
                         "required": true,
                         "type": "array",
                         "items": {
@@ -5647,6 +5647,49 @@
                 "deprecated": false
             }
         },
+        "/api/getExtractedFile/{fileId}": {
+            "get": {
+                "tags": [
+                    "file-controller"
+                ],
+                "summary": "getExtractedFile",
+                "operationId": "getExtractedFileUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "description": "fileId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden!!!!!"
+                    },
+                    "500": {
+                        "description": "500 message",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
         "/api/health": {
             "get": {
                 "tags": [
@@ -6152,6 +6195,9 @@
                 "category_name": {
                     "type": "string"
                 },
+                "compilation_flags": {
+                    "type": "string"
+                },
                 "course_id": {
                     "type": "integer",
                     "format": "int64"
@@ -6209,14 +6255,14 @@
                 "activity_language": {
                     "type": "string"
                 },
-                "activity_supporting_file_id": {
+                "activity_starting_files_id": {
                     "type": "integer",
                     "format": "int64"
                 },
-                "activity_supporting_file_name": {
+                "activity_starting_files_name": {
                     "type": "string"
                 },
-                "activity_supporting_file_type": {
+                "activity_starting_files_type": {
                     "type": "string"
                 },
                 "activity_test_type": {
@@ -6260,14 +6306,14 @@
                 "activity_language": {
                     "type": "string"
                 },
-                "activity_supporting_file_id": {
+                "activity_starting_files_id": {
                     "type": "integer",
                     "format": "int64"
                 },
-                "activity_supporting_file_name": {
+                "activity_starting_files_name": {
                     "type": "string"
                 },
-                "activity_supporting_file_type": {
+                "activity_starting_files_type": {
                     "type": "string"
                 },
                 "activity_test_type": {
@@ -7160,6 +7206,10 @@
                 },
                 "name": {
                     "type": "string"
+                },
+                "points": {
+                    "type": "integer",
+                    "format": "int64"
                 },
                 "submission_status": {
                     "type": "string"

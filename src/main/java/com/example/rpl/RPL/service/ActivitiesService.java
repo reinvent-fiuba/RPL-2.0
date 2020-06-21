@@ -59,7 +59,7 @@ public class ActivitiesService {
     @Transactional
     public Activity createActivity(Long courseId, Long activityCategoryId, String name,
         String description, String language,
-       Boolean active,  String initialCode, Long points, String compilationFlags, byte[] startingFilesBytes) {
+        Boolean active,  String initialCode, Long points, String compilationFlags, byte[] startingFilesBytes) {
 
         Course course = courseRepository.findById(courseId).orElseThrow(
             () -> new NotFoundException("Course not found",
@@ -103,7 +103,7 @@ public class ActivitiesService {
 
         RPLFile file = activity.getStartingFiles();
 
-        if (!Arrays.equals(file.getData(), startingFilesBytes)) {
+        if (startingFilesBytes != null && !Arrays.equals(file.getData(), startingFilesBytes)) {
             file.updateData(startingFilesBytes);
             fileRepository.save(file);
         }

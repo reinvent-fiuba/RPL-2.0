@@ -44,6 +44,8 @@ public class ActivityResponseDTO {
 
     private String activityUnitTests;
 
+    private String compilationFlags;
+
     private List<IOTestResponseDTO> activityIOTests;
 
     private ZonedDateTime dateCreated;
@@ -66,6 +68,7 @@ public class ActivityResponseDTO {
             .deleted(activity.getDeleted())
             .initialCode(activity.getInitialCode())
             .points(activity.getPoints())
+            .compilationFlags(activity.getCompilationFlags())
             .fileId(activity.getStartingFiles().getId())
             .dateCreated(activity.getDateCreated())
             .lastUpdated(activity.getLastUpdated());

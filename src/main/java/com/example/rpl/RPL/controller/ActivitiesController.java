@@ -86,7 +86,11 @@ public class ActivitiesController {
 
         Activity activity = activitiesService.getActivity(activityId);
 
-        byte[] compressedStartingFilesBytes = TarUtils.compressToTarGz(startingFiles);
+        byte[] compressedStartingFilesBytes = null;
+
+        if (startingFiles.length != 0) {
+            compressedStartingFilesBytes = TarUtils.compressToTarGz(startingFiles);
+        }
 
         activity = activitiesService.updateActivity(
             activity,

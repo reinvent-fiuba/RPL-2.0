@@ -118,7 +118,7 @@ public class Activity {
         if (description!= null) this.description = description;
         if (language != null) this.language = language;
         if (initialCode != null) this.initialCode = initialCode;
-        if (points != null) this.points = score;
+        if (score != null) this.points = score;
         if (compilationFlags != null) this.compilationFlags = compilationFlags;
         if (active != null) this.active = active;
         this.lastUpdated = now();
