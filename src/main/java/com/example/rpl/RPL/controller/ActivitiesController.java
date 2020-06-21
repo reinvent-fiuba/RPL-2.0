@@ -1,10 +1,6 @@
 package com.example.rpl.RPL.controller;
 
-import com.example.rpl.RPL.controller.dto.ActivitiesStatsResponseDTO;
-import com.example.rpl.RPL.controller.dto.ActivityResponseDTO;
-import com.example.rpl.RPL.controller.dto.CreateActivityRequestDTO;
-import com.example.rpl.RPL.controller.dto.DisableActivityRequestDTO;
-import com.example.rpl.RPL.controller.dto.UserActivityResponseDTO;
+import com.example.rpl.RPL.controller.dto.*;
 import com.example.rpl.RPL.model.ActivitiesStats;
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivitySubmission;
@@ -26,14 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -69,8 +58,9 @@ public class ActivitiesController {
             createActivityRequestDTO.getName(),
             createActivityRequestDTO.getDescription(),
             createActivityRequestDTO.getLanguage(),
-            createActivityRequestDTO.getInitialCode(),
+            createActivityRequestDTO.getActive(),
             createActivityRequestDTO.getPoints(),
+            createActivityRequestDTO.getCompilationFlags(),
             compressedStartingFilesBytes);
 
         return new ResponseEntity<>(
@@ -78,30 +68,41 @@ public class ActivitiesController {
     }
 
     @PreAuthorize("hasAuthority('activity_manage')")
-    @PutMapping(value = "/api/courses/{courseId}/activities/{activityId}")
+    @PatchMapping(value = "/api/courses/{courseId}/activities/{activityId}")
     public ResponseEntity<ActivityResponseDTO> updateActivity(
         @CurrentUser UserPrincipal currentUser,
         @PathVariable Long courseId,
         @PathVariable Long activityId,
-        @Valid CreateActivityRequestDTO createActivityRequestDTO,
+        @Valid UpdateActivityRequestDTO updateActivityRequestDTO,
         @RequestParam(value = "startingFile") MultipartFile[] startingFiles) {
 
         Activity activity = activitiesService.getActivity(activityId);
 
-        byte[] compressedStartingFilesBytes = TarUtils.compressToTarGz(startingFiles);
+        byte[] compressedStartingFilesBytes = null;
+
+        if (startingFiles.length != 0) {
+            compressedStartingFilesBytes = TarUtils.compressToTarGz(startingFiles);
+        }
 
         activity = activitiesService.updateActivity(
             activity,
-            createActivityRequestDTO.getActivityCategoryId(),
-            createActivityRequestDTO.getName(),
-            createActivityRequestDTO.getDescription(),
-            createActivityRequestDTO.getLanguage(),
-            createActivityRequestDTO.getInitialCode(),
-            createActivityRequestDTO.getPoints(),
+            updateActivityRequestDTO.getActivityCategoryId(),
+            updateActivityRequestDTO.getName(),
+            updateActivityRequestDTO.getDescription(),
+            updateActivityRequestDTO.getLanguage(),
+            updateActivityRequestDTO.getActive(),
+            updateActivityRequestDTO.getPoints(),
+            updateActivityRequestDTO.getCompilationFlags(),
             compressedStartingFilesBytes);
 
+        //        GET UNIT TESTS
+        UnitTest unitTest = testService.getUnitTests(activity.getId());
+
+        //        GET IO TESTS
+        List<IOTest> ioTests = testService.getAllIOTests(activity.getId());
+
         return new ResponseEntity<>(
-            ActivityResponseDTO.fromEntity(activity, null, new ArrayList<>()), HttpStatus.OK);
+            ActivityResponseDTO.fromEntity(activity, unitTest, ioTests), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('activity_view')")
@@ -158,29 +159,6 @@ public class ActivitiesController {
 
         return new ResponseEntity<>(
                 ActivityResponseDTO.fromEntity(activity, null, null), HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasAuthority('activity_manage')")
-    @PutMapping(value = "/api/courses/{courseId}/activities/{activityId}/disable")
-    public ResponseEntity<ActivityResponseDTO> disableActivity(
-            @CurrentUser UserPrincipal currentUser,
-            @PathVariable Long courseId,
-            @PathVariable Long activityId,
-            @RequestBody @Valid DisableActivityRequestDTO disableActivityRequestDTO) {
-        log.error("COURSE ID: {}\nACTIVITY ID: {}\nACTIVE: {}", courseId, activityId,
-                disableActivityRequestDTO.getActive());
-
-        Activity activity = activitiesService
-                .disableActivity(activityId, disableActivityRequestDTO.getActive());
-
-        //        GET UNIT TESTS
-        UnitTest unitTest = testService.getUnitTests(activity.getId());
-
-        //        GET IO TESTS
-        List<IOTest> ioTests = testService.getAllIOTests(activity.getId());
-
-        return new ResponseEntity<>(ActivityResponseDTO.fromEntity(activity, unitTest, ioTests),
-                HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('activity_submit')")

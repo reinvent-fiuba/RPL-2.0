@@ -151,31 +151,27 @@ VALUES (1, 1, 'Conceptos Basicos',
 INSERT INTO activities
 VALUES (1, 1, 1, 'Pasar de segundos a horas, minutos, segundos IO Test',
         'Dada una cantidad de segundos, devolver/imprimir la cantidad de horas', 'c_std11', true,
-        true, false, '//El codigo inicial', 1, 10, now(), now());
+        true, false, 1, 10, '', now(), now());
 
 INSERT INTO activities
 VALUES (2, 1, 1, 'Ej2 Unit Test C',
-        'La descripción del ejericio 2', 'c_std11', false, true, false, '//El codigo inicial', 8,
-        10,
-        now(), now());
+        'La descripción del ejericio 2', 'c_std11', false, true, false, 8,
+        10, '', now(), now());
 
 INSERT INTO activities
 VALUES (3, 1, 1, 'Ej 3 Unit Test Python',
-        'La descripción del ejericio 3', 'python_3.7', false, true, false, '#El codigo inicial', 9,
-        10,
-        now(), now());
+        'La descripción del ejericio 3', 'python_3.7', false, true, false, 9,
+        10, '', now(), now());
 
 INSERT INTO activities
 VALUES (4, 1, 1, 'Ej 4 IO Test Python',
-        'La descripción del ejericio 4', 'python_3.7', true, true, false, '#El codigo inicial', 10,
-        10,
-        now(), now());
+        'La descripción del ejericio 4', 'python_3.7', true, true, false, 10,
+        10, '', now(), now());
 
 INSERT INTO activities
 VALUES (5, 1, 1, 'El ejericio 5',
-        'La descripción del ejericio 5', 'c_std11', true, true, false, '//El codigo inicial', 11,
-        10,
-        now(), now());
+        'La descripción del ejericio 5', 'c_std11', true, true, false, 11,
+        10, '', now(), now());
 
 INSERT INTO activity_categories
 VALUES (2, 1, 'Conceptos no tan Basicos',
@@ -185,32 +181,27 @@ VALUES (2, 1, 'Conceptos no tan Basicos',
 INSERT INTO activities
 VALUES (6, 1, 2, 'Pasar de segundos a horas, minutos, segundos',
         'Dada una cantidad de segundos, devolver/imprimir la cantidad de horas', 'c_std11', true,
-        true, false, '//El codigo inicial', 12, 10,
-        now(), now());
+        true, false, 12, 10, '', now(), now());
 
 INSERT INTO activities
 VALUES (7, 1, 2, 'El ejericio 2',
-        'La descripción del ejericio 2', 'c_std11', true, true, false, '//El codigo inicial', 13,
-        10,
-        now(), now());
+        'La descripción del ejericio 2', 'c_std11', true, true, false, 13,
+        10, '', now(), now());
 
 INSERT INTO activities
 VALUES (8, 1, 2, 'El ejericio 3',
-        'La descripción del ejericio 3', 'c_std11', true, true, false, '//El codigo inicial', 14,
-        10,
-        now(), now());
+        'La descripción del ejericio 3', 'c_std11', true, true, false, 14,
+        10, '', now(), now());
 
 INSERT INTO activities
 VALUES (9, 1, 2, 'El ejericio 4',
-        'La descripción del ejericio 4', 'c_std11', true, true, false, '//El codigo inicial', 15,
-        10,
-        now(), now());
+        'La descripción del ejericio 4', 'c_std11', true, true, false, 15,
+        10, '', now(), now());
 
 INSERT INTO activities
 VALUES (10, 1, 2, 'El ejericio 5',
-        'La descripción del ejericio 5', 'c_std11', true, true, false, '//El codigo inicial', 16,
-        10,
-        now(), now());
+        'La descripción del ejericio 5', 'c_std11', true, true, false, 16,
+        10, '', now(), now());
 
 INSERT INTO activity_submissions
 VALUES (1, 1, 1, 2, 'PENDING', now(), now());

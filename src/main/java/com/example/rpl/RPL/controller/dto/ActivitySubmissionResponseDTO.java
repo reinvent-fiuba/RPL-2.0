@@ -34,6 +34,8 @@ public class ActivitySubmissionResponseDTO {
 
     private String activityUnitTestsContent;
 
+    private String compilationFlags;
+
     private List<String> activityIOTests;
 
     public static ActivitySubmissionResponseDTO fromEntity(ActivitySubmission as,
@@ -50,6 +52,7 @@ public class ActivitySubmissionResponseDTO {
             .activityStartingFilesId(as.getActivity().getStartingFiles().getId())
             .activityLanguage(as.getActivity().getLanguage().getNameAndVersion())
             .isIOTested(as.getActivity().getIsIOTested())
+            .compilationFlags(as.getActivity().getCompilationFlags())
             .activityUnitTestsContent("");
 
         if (unitTest != null) {

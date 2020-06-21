@@ -38,6 +38,8 @@ public class UserActivityResponseDTO {
 
     private Boolean deleted;
 
+    private Long points;
+
     private Long fileId;
 
     private String submissionStatus;
@@ -61,6 +63,7 @@ public class UserActivityResponseDTO {
             .isIOTested(activity.getIsIOTested())
             .active(activity.getActive())
             .deleted(activity.getDeleted())
+            .points(activity.getPoints())
             .fileId(activity.getStartingFiles().getId())
             .dateCreated(activity.getDateCreated())
             .lastUpdated(activity.getLastUpdated())

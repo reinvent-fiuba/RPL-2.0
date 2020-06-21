@@ -132,9 +132,10 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
                 "Activity 1",
                 "An activity",
                 Language.C,
-                "initialCode",
                 10,
-                supportingActivityFile
+                supportingActivityFile,
+                "",
+                false
         )
         activityRepository.save(activity)
 
@@ -327,17 +328,16 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
                     name              : 'Some NEW name',
                     description       : 'Some NEWWWWWW description',
                     language          : activity.getLanguage().getName(),
-                    initialCode       : '//another initial code'
             ].findAll { it.value != null }
 
-        when: "put modified activity"
+        when: "patch modified activity"
             api.headers([
                     "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
             ])
             api.multiPart("supportingFile", f)
             api.formParams(body)
             api.contentType("multipart/form-data")
-            def response = put("/api/courses/${courseId}/activities/${activityId}", null)
+            def response = patch("/api/courses/${courseId}/activities/${activityId}", null)
 
         then: "must return a modified saved Activity"
             response.contentType == "application/json"
@@ -348,7 +348,83 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert modifiedActivity.id == activity.getId()
             assert modifiedActivity.name == "Some NEW name"
             assert modifiedActivity.description == "Some NEWWWWWW description"
-            assert modifiedActivity.initial_code == "//another initial code"
+            assert modifiedActivity.compilation_flags == activity.getCompilationFlags()
+            assert modifiedActivity.points == activity.getPoints()
+
+            assert activityRepository.existsById(modifiedActivity.id as Long)
+            assert fileRepository.existsById(modifiedActivity.file_id as Long)
+    }
+
+    @Unroll
+    void "test enable activity should update active field in DB"() {
+        given: "a new activity"
+            Long courseId = course.getId()
+            Long activityId = activity.getId()
+            Map body = [username_or_email: username, password: password]
+            File f = new File("./src/main/resources/db/testdata/unit_test_google.c")
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+
+            body = [
+                    active: true
+            ].findAll { it.value != null }
+
+        when: "patch modified activity"
+            api.headers([
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+            api.multiPart("supportingFile", f)
+            api.formParams(body)
+            api.contentType("multipart/form-data")
+            def response = api.patch("/api/courses/${courseId}/activities/${activityId}")
+
+        then: "must return a modified saved Activity"
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            Map modifiedActivity = getJsonResponse(response)
+
+            assert modifiedActivity.active == true
+            assert modifiedActivity.name == activity.getName()
+            assert modifiedActivity.description == activity.getDescription()
+            assert modifiedActivity.compilation_flags == activity.getCompilationFlags()
+            assert modifiedActivity.points == activity.getPoints()
+
+            assert activityRepository.existsById(modifiedActivity.id as Long)
+            assert fileRepository.existsById(modifiedActivity.file_id as Long)
+    }
+
+    @Unroll
+    void "test upda activity with tests should retrieve tests"() {
+        given: "a new activity"
+            Long courseId = course.getId()
+            Long activityId = activity.getId()
+            iOTestRepository.save(new IOTest(activity.getId(), "1", "1"))
+            iOTestRepository.save(new IOTest(activity.getId(), "2", "2"))
+
+            Map body = [username_or_email: username, password: password]
+            File f = new File("./src/main/resources/db/testdata/unit_test_google.c")
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+
+            body = [
+                    active: true
+            ].findAll { it.value != null }
+
+        when: "patch modified activity"
+            api.headers([
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+            api.multiPart("supportingFile", f)
+            api.formParams(body)
+            api.contentType("multipart/form-data")
+            def response = api.patch("/api/courses/${courseId}/activities/${activityId}")
+
+        then: "must return a modified saved Activity"
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            Map modifiedActivity = getJsonResponse(response)
+
+            assert modifiedActivity.activity_iotests.size == 2
 
             assert activityRepository.existsById(modifiedActivity.id as Long)
             assert fileRepository.existsById(modifiedActivity.file_id as Long)
@@ -373,7 +449,6 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.description == activity.description
             assert result.language == activity.language.getName()
             assert result.active == activity.active
-            assert result.initial_code == activity.initialCode
             assert result.file_id == activity.startingFiles.getId()
             assert result.activity_unit_tests == null
             assert result.activity_iotests == []
@@ -400,7 +475,6 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.description == activity.description
             assert result.language == activity.language.getName()
             assert result.active == activity.active
-            assert result.initial_code == activity.initialCode
             assert result.file_id == activity.startingFiles.getId()
             assert result.activity_unit_tests == null
             assert result.activity_iotests == [[id: ioTest1.getId(), in: "1", out: "1"], [id: ioTest2.getId(), in: "2", out: "2"]]
@@ -423,9 +497,10 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
                     "Activity 2",
                     "Another activity",
                     Language.PYTHON3,
-                    "def hola():",
                     22,
-                    supportingActivityFile
+                    supportingActivityFile,
+                    "",
+                    false
             )
             activityRepository.save(activity2)
 
@@ -531,7 +606,6 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.description == activity.description
             assert result.language == activity.language.getName()
             assert result.active == activity.active
-            assert result.initial_code == activity.initialCode
             assert result.file_id == activity.startingFiles.getId()
             assert result.activity_unit_tests == null
             assert result.activity_iotests == [[id: ioTest2.getId(), in: "2", out: "2"]]

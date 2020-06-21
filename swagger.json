@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-  "host": "localhost:33501",
+    "host": "localhost:50400",
     "basePath": "/",
     "tags": [
         {
@@ -1215,6 +1215,12 @@
                         "type": "boolean"
                     },
                     {
+                        "name": "active",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
                         "name": "activityCategoryId",
                         "in": "query",
                         "required": false,
@@ -1223,6 +1229,12 @@
                     },
                     {
                         "name": "authorities[0].authority",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "compilationFlags",
                         "in": "query",
                         "required": false,
                         "type": "string"
@@ -1267,12 +1279,6 @@
                         "format": "int64"
                     },
                     {
-                        "name": "initialCode",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
                         "name": "language",
                         "in": "query",
                         "required": false,
@@ -1304,9 +1310,9 @@
                         "format": "int64"
                     },
                     {
-                      "name": "startingFile",
+                        "name": "startingFile",
                         "in": "formData",
-                      "description": "startingFile",
+                        "description": "startingFile",
                         "required": true,
                         "type": "array",
                         "items": {
@@ -1784,237 +1790,6 @@
                 },
                 "deprecated": false
             },
-            "put": {
-                "tags": [
-                    "activities-controller"
-                ],
-                "summary": "updateActivity",
-                "operationId": "updateActivityUsingPUT",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "*/*"
-                ],
-                "parameters": [
-                    {
-                        "name": "accountNonExpired",
-                        "in": "query",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "accountNonLocked",
-                        "in": "query",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "activityCategoryId",
-                        "in": "query",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    {
-                        "name": "activityId",
-                        "in": "path",
-                        "description": "activityId",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    {
-                        "name": "authorities[0].authority",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "courseId",
-                        "in": "path",
-                        "description": "courseId",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    {
-                        "name": "credentialsNonExpired",
-                        "in": "query",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "description",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "enabled",
-                        "in": "query",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "id",
-                        "in": "query",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    {
-                        "name": "initialCode",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "language",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "password",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "points",
-                        "in": "query",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    {
-                      "name": "startingFile",
-                        "in": "formData",
-                      "description": "startingFile",
-                        "required": true,
-                        "type": "array",
-                        "items": {
-                            "type": "file"
-                        },
-                        "collectionFormat": "multi"
-                    },
-                    {
-                        "name": "user.dateCreated",
-                        "in": "query",
-                        "required": false,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    {
-                        "name": "user.degree",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "user.email",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "user.emailValidated",
-                        "in": "query",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "user.id",
-                        "in": "query",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    {
-                        "name": "user.isAdmin",
-                        "in": "query",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "name": "user.lastUpdated",
-                        "in": "query",
-                        "required": false,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    {
-                        "name": "user.name",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "user.password",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "user.studentId",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "user.surname",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "user.university",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "user.username",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "username",
-                        "in": "query",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ActivityResponseDTO"
-                        }
-                    }
-                },
-                "deprecated": false
-            },
             "delete": {
                 "tags": [
                     "activities-controller"
@@ -2193,15 +1968,13 @@
                     }
                 },
                 "deprecated": false
-            }
-        },
-        "/api/courses/{courseId}/activities/{activityId}/disable": {
-            "put": {
+            },
+            "patch": {
                 "tags": [
                     "activities-controller"
                 ],
-                "summary": "disableActivity",
-                "operationId": "disableActivityUsingPUT",
+                "summary": "updateActivity",
+                "operationId": "updateActivityUsingPATCH",
                 "consumes": [
                     "application/json"
                 ],
@@ -2222,6 +1995,19 @@
                         "type": "boolean"
                     },
                     {
+                        "name": "active",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "activityCategoryId",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
                         "name": "activityId",
                         "in": "path",
                         "description": "activityId",
@@ -2231,6 +2017,12 @@
                     },
                     {
                         "name": "authorities[0].authority",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "compilationFlags",
                         "in": "query",
                         "required": false,
                         "type": "string"
@@ -2250,13 +2042,10 @@
                         "type": "boolean"
                     },
                     {
-                        "in": "body",
-                        "name": "disableActivityRequestDTO",
-                        "description": "disableActivityRequestDTO",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/DisableActivityRequestDTO"
-                        }
+                        "name": "description",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "email",
@@ -2278,6 +2067,18 @@
                         "format": "int64"
                     },
                     {
+                        "name": "language",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "name",
                         "in": "query",
                         "required": false,
@@ -2288,6 +2089,24 @@
                         "in": "query",
                         "required": false,
                         "type": "string"
+                    },
+                    {
+                        "name": "points",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "startingFile",
+                        "in": "formData",
+                        "description": "startingFile",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "file"
+                        },
+                        "collectionFormat": "multi"
                     },
                     {
                         "name": "user.dateCreated",
@@ -5610,49 +5429,49 @@
                             "$ref": "#/definitions/Resource"
                         }
                     },
-                  "403": {
-                    "description": "Forbidden!!!!!"
-                  },
-                  "500": {
-                    "description": "500 message",
-                    "schema": {
-                      "$ref": "#/definitions/Error"
+                    "403": {
+                        "description": "Forbidden!!!!!"
+                    },
+                    "500": {
+                        "description": "500 message",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
-                  }
                 },
-              "deprecated": false
+                "deprecated": false
             }
         },
-      "/api/getExtractedFile/{fileId}": {
-        "get": {
-          "tags": [
-            "file-controller"
-          ],
-          "summary": "getExtractedFile",
-          "operationId": "getExtractedFileUsingGET",
-          "produces": [
-            "*/*"
-          ],
-          "parameters": [
-            {
-              "name": "fileId",
-              "in": "path",
-              "description": "fileId",
-              "required": true,
-              "type": "integer",
-              "format": "int64"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "schema": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "string"
-                }
-              }
-            },
+        "/api/getExtractedFile/{fileId}": {
+            "get": {
+                "tags": [
+                    "file-controller"
+                ],
+                "summary": "getExtractedFile",
+                "operationId": "getExtractedFileUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "description": "fileId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
                     "403": {
                         "description": "Forbidden!!!!!"
                     },
@@ -6171,6 +5990,9 @@
                 "category_name": {
                     "type": "string"
                 },
+                "compilation_flags": {
+                    "type": "string"
+                },
                 "course_id": {
                     "type": "integer",
                     "format": "int64"
@@ -6192,9 +6014,6 @@
                 "id": {
                     "type": "integer",
                     "format": "int64"
-                },
-                "initial_code": {
-                    "type": "string"
                 },
                 "is_iotested": {
                     "type": "boolean"
@@ -6228,20 +6047,23 @@
                 "activity_language": {
                     "type": "string"
                 },
-              "activity_starting_files_id": {
+                "activity_starting_files_id": {
                     "type": "integer",
                     "format": "int64"
                 },
-              "activity_starting_files_name": {
+                "activity_starting_files_name": {
                     "type": "string"
                 },
-              "activity_starting_files_type": {
+                "activity_starting_files_type": {
                     "type": "string"
                 },
                 "activity_test_type": {
                     "type": "string"
                 },
                 "activity_unit_tests_content": {
+                    "type": "string"
+                },
+                "compilation_flags": {
                     "type": "string"
                 },
                 "id": {
@@ -6276,14 +6098,14 @@
                 "activity_language": {
                     "type": "string"
                 },
-              "activity_starting_files_id": {
+                "activity_starting_files_id": {
                     "type": "integer",
                     "format": "int64"
                 },
-              "activity_starting_files_name": {
+                "activity_starting_files_name": {
                     "type": "string"
                 },
-              "activity_starting_files_type": {
+                "activity_starting_files_type": {
                     "type": "string"
                 },
                 "activity_test_type": {
@@ -6577,15 +6399,6 @@
                 }
             },
             "title": "CreateUserRequestDTO"
-        },
-        "DisableActivityRequestDTO": {
-            "type": "object",
-            "properties": {
-                "active": {
-                    "type": "boolean"
-                }
-            },
-            "title": "DisableActivityRequestDTO"
         },
         "EditUserRequestDTO": {
             "type": "object",
@@ -7176,6 +6989,10 @@
                 },
                 "name": {
                     "type": "string"
+                },
+                "points": {
+                    "type": "integer",
+                    "format": "int64"
                 },
                 "submission_status": {
                     "type": "string"
