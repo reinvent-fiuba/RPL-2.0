@@ -132,9 +132,10 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
                 "Activity 1",
                 "An activity",
                 Language.C,
-                "initialCode",
                 10,
-                supportingActivityFile
+                supportingActivityFile,
+                "",
+                false
         )
         activityRepository.save(activity)
 
@@ -327,7 +328,6 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
                     name              : 'Some NEW name',
                     description       : 'Some NEWWWWWW description',
                     language          : activity.getLanguage().getName(),
-                    initialCode       : '//another initial code'
             ].findAll { it.value != null }
 
         when: "put modified activity"
@@ -348,7 +348,6 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert modifiedActivity.id == activity.getId()
             assert modifiedActivity.name == "Some NEW name"
             assert modifiedActivity.description == "Some NEWWWWWW description"
-            assert modifiedActivity.initial_code == "//another initial code"
 
             assert activityRepository.existsById(modifiedActivity.id as Long)
             assert fileRepository.existsById(modifiedActivity.file_id as Long)
@@ -373,7 +372,6 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.description == activity.description
             assert result.language == activity.language.getName()
             assert result.active == activity.active
-            assert result.initial_code == activity.initialCode
             assert result.file_id == activity.startingFiles.getId()
             assert result.activity_unit_tests == null
             assert result.activity_iotests == []
@@ -400,7 +398,6 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.description == activity.description
             assert result.language == activity.language.getName()
             assert result.active == activity.active
-            assert result.initial_code == activity.initialCode
             assert result.file_id == activity.startingFiles.getId()
             assert result.activity_unit_tests == null
             assert result.activity_iotests == [[id: ioTest1.getId(), in: "1", out: "1"], [id: ioTest2.getId(), in: "2", out: "2"]]
@@ -423,9 +420,10 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
                     "Activity 2",
                     "Another activity",
                     Language.PYTHON3,
-                    "def hola():",
                     22,
-                    supportingActivityFile
+                    supportingActivityFile,
+                    "",
+                    false
             )
             activityRepository.save(activity2)
 
@@ -531,7 +529,6 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.description == activity.description
             assert result.language == activity.language.getName()
             assert result.active == activity.active
-            assert result.initial_code == activity.initialCode
             assert result.file_id == activity.startingFiles.getId()
             assert result.activity_unit_tests == null
             assert result.activity_iotests == [[id: ioTest2.getId(), in: "2", out: "2"]]

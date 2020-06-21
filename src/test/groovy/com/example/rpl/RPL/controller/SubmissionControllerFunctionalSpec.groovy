@@ -129,9 +129,10 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
                 "Activity 1",
                 "An activity",
                 Language.C,
-                "//initial code",
                 22,
-                supportingActivityFile
+                supportingActivityFile,
+                "",
+                false
         )
         activityRepository.save(activity)
 

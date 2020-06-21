@@ -56,8 +56,9 @@ class ActivitiesServiceSpec extends Specification {
                     name,
                     description,
                     language,
-                    initialCode,
+                    true,
                     22,
+                    "",
                     supportingFile.getBytes()
             )
 
@@ -89,8 +90,9 @@ class ActivitiesServiceSpec extends Specification {
                     name,
                     description,
                     language,
-                    initialCode,
+                    true,
                     22,
+                    "",
                     supportingFile.getBytes()
             )
 
@@ -117,8 +119,9 @@ class ActivitiesServiceSpec extends Specification {
                     name,
                     description,
                     language,
-                    initialCode,
+                    true,
                     22,
+                    "",
                     supportingFile.getBytes()
             )
 

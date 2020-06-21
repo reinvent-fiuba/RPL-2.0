@@ -662,9 +662,10 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
                     "Activity 1",
                     "An activity",
                     Language.C,
-                    "//initial code",
                     22,
-                    rplFile
+                    rplFile,
+                    "",
+                    false
             )
             activityRepository.save(activity)
 
