@@ -337,7 +337,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             api.multiPart("supportingFile", f)
             api.formParams(body)
             api.contentType("multipart/form-data")
-            def response = put("/api/courses/${courseId}/activities/${activityId}", null)
+            def response = patch("/api/courses/${courseId}/activities/${activityId}", null)
 
         then: "must return a modified saved Activity"
             response.contentType == "application/json"

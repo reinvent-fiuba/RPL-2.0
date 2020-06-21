@@ -69,11 +69,6 @@ public class Activity {
     @Column(name = "deleted")
     private Boolean deleted;
 
-    @NonNull
-    @Basic()
-    @Column(name = "initial_code")
-    private String initialCode;
-
     @JoinColumn(name = "starting_files_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private RPLFile startingFiles;
@@ -93,7 +88,7 @@ public class Activity {
     }
 
     public Activity(Course course, ActivityCategory activityCategory, String name,
-        String description, Language language, String initialCode, Long points,
+        String description, Language language, Long points,
         RPLFile startingFiles, String compilationFlags, Boolean active) {
         this.course = course;
         this.activityCategory = activityCategory;
@@ -103,7 +98,6 @@ public class Activity {
         this.isIOTested = true;
         this.deleted = false;
         this.startingFiles = startingFiles;
-        this.initialCode = initialCode;
         this.points = points;
         this.dateCreated = now();
         this.lastUpdated = this.dateCreated;
@@ -112,12 +106,11 @@ public class Activity {
     }
 
     public void updateActivity(ActivityCategory activityCategory, String name, Boolean active,
-        String description, Language language, String initialCode, String compilationFlags, Long score) {
+        String description, Language language, String compilationFlags, Long score) {
         if (activityCategory != null) this.activityCategory = activityCategory;
         if (name != null) this.name = name;
         if (description!= null) this.description = description;
         if (language != null) this.language = language;
-        if (initialCode != null) this.initialCode = initialCode;
         if (score != null) this.points = score;
         if (compilationFlags != null) this.compilationFlags = compilationFlags;
         if (active != null) this.active = active;

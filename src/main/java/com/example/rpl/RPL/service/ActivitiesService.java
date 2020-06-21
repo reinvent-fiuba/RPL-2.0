@@ -59,7 +59,7 @@ public class ActivitiesService {
     @Transactional
     public Activity createActivity(Long courseId, Long activityCategoryId, String name,
         String description, String language,
-        Boolean active,  String initialCode, Long points, String compilationFlags, byte[] startingFilesBytes) {
+        Boolean active, Long points, String compilationFlags, byte[] startingFilesBytes) {
 
         Course course = courseRepository.findById(courseId).orElseThrow(
             () -> new NotFoundException("Course not found",
@@ -80,7 +80,7 @@ public class ActivitiesService {
         // "-g -O2 -std=c99 -Wall -Wformat=2 -Wshadow -Wpointer-arith -Wunreachable-code -Wconversion -Wno-sign-conversion -Wbad-function-cast"
 
         Activity activity = new Activity(course, activityCategory, name, description,
-            Language.getByName(language), initialCode, points, file, compilationFlags, active);
+            Language.getByName(language), points, file, compilationFlags, active);
 
         activityRepository.save(activity);
 
@@ -89,7 +89,7 @@ public class ActivitiesService {
 
     @Transactional
     public Activity updateActivity(Activity activity, Long activityCategoryId, String name,
-        String description, String language, Boolean active, String initialCode, Long points,
+        String description, String language, Boolean active, Long points,
        String compilationFlags, byte[] startingFilesBytes) {
 
         ActivityCategory activityCategory = null;
@@ -109,7 +109,7 @@ public class ActivitiesService {
         }
 
         activity.updateActivity(activityCategory, name, active, description, Language.getByName(language),
-            initialCode, compilationFlags, points);
+            compilationFlags, points);
 
         activityRepository.save(activity);
 

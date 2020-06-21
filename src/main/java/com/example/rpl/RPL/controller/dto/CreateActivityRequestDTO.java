@@ -19,9 +19,6 @@ public class CreateActivityRequestDTO {
     @NotNull
     private String language;
 
-    @NotNull
-    private String initialCode;
-
     private String compilationFlags;
 
     private Boolean active;

@@ -109,10 +109,9 @@ CREATE TABLE activities
     is_io_tested         BOOLEAN,
     active               BOOLEAN,
     deleted              BOOLEAN,
-    initial_code         varchar(20000),
     starting_files_id    BIGINT,
     points               BIGINT,
-    compilation_flags    VARCHAR(500),
+    compilation_flags    VARCHAR(500)  NOT NULL DEFAULT '',
     date_created         DATETIME,
     last_updated         DATETIME,
 

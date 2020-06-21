@@ -17,8 +17,6 @@ public class UpdateActivityRequestDTO {
 
     private String language;
 
-    private String initialCode;
-
     private String compilationFlags;
 
     private Boolean active;

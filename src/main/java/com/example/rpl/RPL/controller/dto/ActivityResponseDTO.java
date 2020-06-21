@@ -36,8 +36,6 @@ public class ActivityResponseDTO {
 
     private Boolean deleted;
 
-    private String initialCode;
-
     private Long points;
 
     private Long fileId;
@@ -66,7 +64,6 @@ public class ActivityResponseDTO {
             .language(activity.getLanguage().getName())
             .active(activity.getActive())
             .deleted(activity.getDeleted())
-            .initialCode(activity.getInitialCode())
             .points(activity.getPoints())
             .compilationFlags(activity.getCompilationFlags())
             .fileId(activity.getStartingFiles().getId())
