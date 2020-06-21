@@ -330,7 +330,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
                     language          : activity.getLanguage().getName(),
             ].findAll { it.value != null }
 
-        when: "put modified activity"
+        when: "patch modified activity"
             api.headers([
                     "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
             ])
@@ -348,6 +348,83 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert modifiedActivity.id == activity.getId()
             assert modifiedActivity.name == "Some NEW name"
             assert modifiedActivity.description == "Some NEWWWWWW description"
+            assert modifiedActivity.compilation_flags == activity.getCompilationFlags()
+            assert modifiedActivity.points == activity.getPoints()
+
+            assert activityRepository.existsById(modifiedActivity.id as Long)
+            assert fileRepository.existsById(modifiedActivity.file_id as Long)
+    }
+
+    @Unroll
+    void "test enable activity should update active field in DB"() {
+        given: "a new activity"
+            Long courseId = course.getId()
+            Long activityId = activity.getId()
+            Map body = [username_or_email: username, password: password]
+            File f = new File("./src/main/resources/db/testdata/unit_test_google.c")
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+
+            body = [
+                    active: true
+            ].findAll { it.value != null }
+
+        when: "patch modified activity"
+            api.headers([
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+            api.multiPart("supportingFile", f)
+            api.formParams(body)
+            api.contentType("multipart/form-data")
+            def response = api.patch("/api/courses/${courseId}/activities/${activityId}")
+
+        then: "must return a modified saved Activity"
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            Map modifiedActivity = getJsonResponse(response)
+
+            assert modifiedActivity.active == true
+            assert modifiedActivity.name == activity.getName()
+            assert modifiedActivity.description == activity.getDescription()
+            assert modifiedActivity.compilation_flags == activity.getCompilationFlags()
+            assert modifiedActivity.points == activity.getPoints()
+
+            assert activityRepository.existsById(modifiedActivity.id as Long)
+            assert fileRepository.existsById(modifiedActivity.file_id as Long)
+    }
+
+    @Unroll
+    void "test upda activity with tests should retrieve tests"() {
+        given: "a new activity"
+            Long courseId = course.getId()
+            Long activityId = activity.getId()
+            iOTestRepository.save(new IOTest(activity.getId(), "1", "1"))
+            iOTestRepository.save(new IOTest(activity.getId(), "2", "2"))
+
+            Map body = [username_or_email: username, password: password]
+            File f = new File("./src/main/resources/db/testdata/unit_test_google.c")
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+
+            body = [
+                    active: true
+            ].findAll { it.value != null }
+
+        when: "patch modified activity"
+            api.headers([
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+            api.multiPart("supportingFile", f)
+            api.formParams(body)
+            api.contentType("multipart/form-data")
+            def response = api.patch("/api/courses/${courseId}/activities/${activityId}")
+
+        then: "must return a modified saved Activity"
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            Map modifiedActivity = getJsonResponse(response)
+
+            assert modifiedActivity.activity_iotests.size == 2
 
             assert activityRepository.existsById(modifiedActivity.id as Long)
             assert fileRepository.existsById(modifiedActivity.file_id as Long)
