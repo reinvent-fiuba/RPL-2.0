@@ -74,8 +74,9 @@ public class ActivityResponseDTO {
             ab.activityUnitTests(new String(unitTest.getTestFile().getData()));
         }
         if (ioTests != null) {
-            ab.activityIOTests(ioTests.stream().map(ioTest -> new IOTestResponseDTO(ioTest.getId(),
-                ioTest.getTestIn(), ioTest.getTestOut())).collect(Collectors.toList()));
+            ab.activityIOTests(ioTests.stream()
+                .map(ioTest -> new IOTestResponseDTO(ioTest.getId(), ioTest.getName(),
+                    ioTest.getTestIn(), ioTest.getTestOut())).collect(Collectors.toList()));
 
         }
 
@@ -87,6 +88,7 @@ public class ActivityResponseDTO {
     public static class IOTestResponseDTO {
 
         private Long id;
+        private String name;
         private String in;
         private String out;
 

@@ -67,12 +67,12 @@ class TestServiceSpec extends Specification {
     @Unroll
     void "test checkIfTestsPassed for an Activity with IO Tests"() {
         given: "activity tests"
-            IOTestRun ioTestRun1 = new IOTestRun(null, "bla",
+            IOTestRun ioTestRun1 = new IOTestRun(null, "name1", "bla",
                     expectedOutput, runOutput);
 
             List<IOTestRun> ioTestRuns = [ioTestRun1]
 
-            IOTest io1 = new IOTest(1, "1", expectedOutput)
+            IOTest io1 = new IOTest(1, "name1", "1", expectedOutput)
 
             1 * iOTestRepository.findAllByActivityId(1) >> [io1]
 
@@ -93,13 +93,13 @@ class TestServiceSpec extends Specification {
     @Unroll
     void "test checkIfTestsPassed when all tests were not executed should return false"() {
         given: "activity tests"
-            IOTestRun ioTestRun1 = new IOTestRun(null, "bla",
+            IOTestRun ioTestRun1 = new IOTestRun(null, "name1", "bla",
                     expectedOutput, runOutput);
 
             List<IOTestRun> ioTestRuns = [ioTestRun1]
 
-            IOTest io1 = new IOTest(1, "1", expectedOutput)
-            IOTest io2 = new IOTest(1, "2", expectedOutput)
+            IOTest io1 = new IOTest(1, "name1", "1", expectedOutput)
+            IOTest io2 = new IOTest(1, "name1", "2", expectedOutput)
 
             1 * iOTestRepository.findAllByActivityId(1) >> [io1, io2]
 
@@ -128,8 +128,8 @@ class TestServiceSpec extends Specification {
                     "testRunExitMessage", "testRunStderr", stdout);
 
         and: "the unit tests"
-            IOTest ioTest1 = new IOTest(1, "1", "1")
-            IOTest ioTest2 = new IOTest(1, "2", "2")
+            IOTest ioTest1 = new IOTest(1, "name1", "1", "1")
+            IOTest ioTest2 = new IOTest(1, "name1", "2", "2")
             1 * iOTestRepository.findAllByActivityId(1) >> [ioTest1, ioTest2]
 
         when: "parsing"

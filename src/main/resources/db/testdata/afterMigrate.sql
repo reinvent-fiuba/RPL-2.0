@@ -231,11 +231,11 @@ INSERT INTO unit_tests
 VALUES (2, 3, 5, now(), now());
 
 INSERT INTO IO_tests
-VALUES (1, 1, '26164', '07:16:04.0000', now(), now());
+VALUES (1, 1, 'Nombre del test 1', '26164', '07:16:04.0000', now(), now());
 INSERT INTO IO_tests
-VALUES (2, 1, '26165', '07:16:05.0000', now(), now());
+VALUES (2, 1, 'Caso 2', '26165', '07:16:05.0000', now(), now());
 
 INSERT INTO IO_tests
-VALUES (3, 4, '26164', '07:16:04.0000', now(), now());
+VALUES (3, 4, 'Nombre de test 1', '26164', '07:16:04.0000', now(), now());
 INSERT INTO IO_tests
-VALUES (4, 4, '26165', '07:16:05.0000', now(), now());
+VALUES (4, 4, 'Caso 2', '26165', '07:16:05.0000', now(), now());

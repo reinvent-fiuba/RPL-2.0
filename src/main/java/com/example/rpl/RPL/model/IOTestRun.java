@@ -32,6 +32,9 @@ public class IOTestRun {
     @ManyToOne(fetch = FetchType.LAZY)
     private TestRun testRun;
 
+    @Column(name = "test_name")
+    private String testName;
+
     @Column(name = "test_in")
     private String testIn;
 
@@ -51,8 +54,10 @@ public class IOTestRun {
     public IOTestRun() {
     }
 
-    public IOTestRun(TestRun testRun, String testIn, String expectedOutput, String runOutput) {
+    public IOTestRun(TestRun testRun, String testName, String testIn, String expectedOutput,
+        String runOutput) {
         this.testRun = testRun;
+        this.testName = testName;
         this.testIn = testIn;
         this.expectedOutput = expectedOutput;
         this.runOutput = runOutput;

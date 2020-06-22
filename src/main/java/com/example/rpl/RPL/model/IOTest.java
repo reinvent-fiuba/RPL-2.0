@@ -33,6 +33,9 @@ public class IOTest {
     @Column(name = "activity_id")
     private Long activityId;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "test_in")
     private String testIn;
 
@@ -52,15 +55,17 @@ public class IOTest {
     public IOTest() {
     }
 
-    public IOTest(Long activityId, String testIn, String testOut) {
+    public IOTest(Long activityId, String name, String testIn, String testOut) {
         this.activityId = activityId;
+        this.name = name;
         this.testIn = testIn;
         this.testOut = testOut;
         this.dateCreated = ZonedDateTime.now();
         this.lastUpdated = this.dateCreated;
     }
 
-    public void update(String in, String out) {
+    public void update(String name, String in, String out) {
+        this.name = name;
         this.testIn = in;
         this.testOut = out;
         this.lastUpdated = ZonedDateTime.now();

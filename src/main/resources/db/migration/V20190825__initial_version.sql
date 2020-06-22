@@ -28,7 +28,7 @@ CREATE TABLE users
     email           VARCHAR(255) NOT NULL,
     password        VARCHAR(255) NOT NULL,
     email_validated BOOLEAN      NOT NULL,
-    is_admin        BOOLEAN      DEFAULT FALSE,
+    is_admin        BOOLEAN DEFAULT FALSE,
     degree          VARCHAR(255),
     university      VARCHAR(255),
     date_created    DATETIME,
@@ -100,7 +100,7 @@ CREATE TABLE activity_categories
 
 CREATE TABLE activities
 (
-    id                   BIGINT NOT NULL AUTO_INCREMENT,
+    id                   BIGINT       NOT NULL AUTO_INCREMENT,
     course_id            BIGINT,
     activity_category_id BIGINT,
     name                 VARCHAR(500),
@@ -111,7 +111,7 @@ CREATE TABLE activities
     deleted              BOOLEAN,
     starting_files_id    BIGINT,
     points               BIGINT,
-    compilation_flags    VARCHAR(500)  NOT NULL DEFAULT '',
+    compilation_flags    VARCHAR(500) NOT NULL DEFAULT '',
     date_created         DATETIME,
     last_updated         DATETIME,
 
@@ -183,6 +183,7 @@ CREATE TABLE IO_tests
 (
     id           BIGINT NOT NULL AUTO_INCREMENT,
     activity_id  BIGINT,
+    name         VARCHAR(500),
     test_in      VARCHAR(5000),
     test_out     VARCHAR(5000),
     date_created DATETIME,
@@ -196,6 +197,7 @@ CREATE TABLE io_test_run
 (
     id              BIGINT NOT NULL AUTO_INCREMENT,
     test_run_id     BIGINT,
+    test_name       VARCHAR(500),
     test_in         VARCHAR(5000),
     expected_output VARCHAR(5000),
     run_output      VARCHAR(5000),

@@ -50,12 +50,14 @@ public class ActivityTestsController {
 //        check the activity exists
         Activity activity = activitiesService.getActivity(activityId);
 
-        IOTest test = testService.createIOTest(activityId, createIOTestRequestDTO.getTextIn(),
+        IOTest test = testService.createIOTest(activityId, createIOTestRequestDTO.getName(),
+            createIOTestRequestDTO.getTextIn(),
             createIOTestRequestDTO.getTextOut());
 
         activitiesService.updateTestMode(activity, true);
         return new ResponseEntity<>(
-            new IOTestResponseDTO(test.getId(), test.getTestIn(), test.getTestOut()),
+            new IOTestResponseDTO(test.getId(), test.getName(), test.getTestIn(),
+                test.getTestOut()),
             HttpStatus.CREATED);
     }
 
@@ -71,10 +73,12 @@ public class ActivityTestsController {
 //        check the activity exists
         activitiesService.getActivity(activityId);
 
-        IOTest test = testService.updateIOTest(ioTestId, createIOTestRequestDTO.getTextIn(),
+        IOTest test = testService.updateIOTest(ioTestId, createIOTestRequestDTO.getName(),
+            createIOTestRequestDTO.getTextIn(),
             createIOTestRequestDTO.getTextOut());
         return new ResponseEntity<>(
-            new IOTestResponseDTO(test.getId(), test.getTestIn(), test.getTestOut()),
+            new IOTestResponseDTO(test.getId(), test.getName(), test.getTestIn(),
+                test.getTestOut()),
             HttpStatus.OK);
     }
 
