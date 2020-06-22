@@ -7,7 +7,6 @@ import com.example.rpl.RPL.model.ValidationToken;
 import com.example.rpl.RPL.repository.UserRepository;
 import com.example.rpl.RPL.repository.ValidationTokenRepository;
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.validation.constraints.NotNull;
@@ -23,14 +22,14 @@ public class AuthenticationService {
 
     private final UserRepository userRepository;
     private final ValidationTokenRepository validationTokenRepository;
-    private final EmailService emailService;
+    private final IEmailService emailService;
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public AuthenticationService(UserRepository userRepository,
         ValidationTokenRepository ValidationTokenRepository,
-        EmailService emailService, PasswordEncoder passwordEncoder) {
+        IEmailService emailService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.validationTokenRepository = ValidationTokenRepository;
         this.emailService = emailService;

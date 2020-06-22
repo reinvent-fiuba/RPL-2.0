@@ -8,7 +8,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 @Slf4j
-public class EmailService {
+public class EmailService implements IEmailService {
 
     private String frontEndUrl;  // See BeanConfiguration.java
 
@@ -22,7 +22,8 @@ public class EmailService {
         this.frontEndUrl = frontEndUrl;
     }
 
-    void sendValidateEmailMessage(String email, String token) {
+    @Override
+    public void sendValidateEmailMessage(String email, String token) {
         String link = frontEndUrl + "/user/validateEmail?token=" + token;
         MimeMessagePreparator message = prepareEmail(email, "RPL: Validar Email",
             this.buildTokenEmail(link, "validateEmailEmail"));
@@ -30,7 +31,8 @@ public class EmailService {
         emailSender.send(message);
     }
 
-    void sendResetPasswordMessage(String email, String token) {
+    @Override
+    public void sendResetPasswordMessage(String email, String token) {
         String link = frontEndUrl + "/user/changePassword?token=" + token;
         MimeMessagePreparator message = prepareEmail(email, "RPL: Reseteo de contraseña",
             this.buildTokenEmail(link, "resetPasswordEmail"));

@@ -3,6 +3,8 @@ package com.example.rpl.RPL.config;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 import com.example.rpl.RPL.service.EmailService;
+import com.example.rpl.RPL.service.IEmailService;
+import com.example.rpl.RPL.utils.MockEmailService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -39,9 +42,16 @@ public class BeanConfiguration {
     @Value("${rpl.frontend.url}")
     private String frontEndUrl;
 
+    @Profile({"producer", "prod"})
     @Bean
-    public EmailService emailService(JavaMailSender emailSender, TemplateEngine templateEngine) {
+    public IEmailService emailService(JavaMailSender emailSender, TemplateEngine templateEngine) {
         return new EmailService(emailSender, templateEngine, frontEndUrl);
+    }
+
+    @Profile({"test-functional", "test-unit"})
+    @Bean
+    public IEmailService fakeEmailService() {
+        return new MockEmailService();
     }
 
 

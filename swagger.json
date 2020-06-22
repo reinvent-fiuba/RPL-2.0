@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:50400",
+  "host": "localhost:45491",
     "basePath": "/",
     "tags": [
         {
@@ -6348,6 +6348,9 @@
                     "type": "integer",
                     "format": "int64"
                 },
+              "name": {
+                "type": "string"
+              },
                 "text_in": {
                     "type": "string"
                 },
@@ -6506,6 +6509,9 @@
                 "in": {
                     "type": "string"
                 },
+              "name": {
+                "type": "string"
+                },
                 "out": {
                     "type": "string"
                 }
@@ -6522,6 +6528,9 @@
                     "type": "integer",
                     "format": "int64"
                 },
+              "name": {
+                "type": "string"
+              },
                 "run_output": {
                     "type": "string"
                 },

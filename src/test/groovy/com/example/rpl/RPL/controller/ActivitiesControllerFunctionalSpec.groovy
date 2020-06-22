@@ -398,8 +398,8 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
         given: "a new activity"
             Long courseId = course.getId()
             Long activityId = activity.getId()
-            iOTestRepository.save(new IOTest(activity.getId(), "1", "1"))
-            iOTestRepository.save(new IOTest(activity.getId(), "2", "2"))
+            iOTestRepository.save(new IOTest(activity.getId(), "name1", "1", "1"))
+            iOTestRepository.save(new IOTest(activity.getId(), "name2", "2", "2"))
 
             Map body = [username_or_email: username, password: password]
             File f = new File("./src/main/resources/db/testdata/unit_test_google.c")
@@ -459,8 +459,8 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test get activity should return the activity with tests"() {
         given: "Two unit tests added to the activity"
-            IOTest ioTest1 = iOTestRepository.save(new IOTest(activity.getId(), "1", "1"))
-            IOTest ioTest2 = iOTestRepository.save(new IOTest(activity.getId(), "2", "2"))
+            IOTest ioTest1 = iOTestRepository.save(new IOTest(activity.getId(), "name1", "1", "1"))
+            IOTest ioTest2 = iOTestRepository.save(new IOTest(activity.getId(), "name2", "2", "2"))
 
         when:
             def response = get("/api/courses/${course.getId()}/activities/${activity.getId()}", username, password)
@@ -477,7 +477,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.active == activity.active
             assert result.file_id == activity.startingFiles.getId()
             assert result.activity_unit_tests == null
-            assert result.activity_iotests == [[id: ioTest1.getId(), in: "1", out: "1"], [id: ioTest2.getId(), in: "2", out: "2"]]
+            assert result.activity_iotests == [[id: ioTest1.getId(), name: "name1", in: "1", out: "1"], [id: ioTest2.getId(), name: "name2", in: "2", out: "2"]]
             assert result.date_created != null
             assert result.last_updated != null
     }
@@ -549,7 +549,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test create IO test for activity"() {
         given: "a new IO Test"
-            Map body = [text_in: "1", text_out: "2"]
+            Map body = [name: "the test's name", text_in: "1", text_out: "2"]
 
         when:
             def response = post("/api/courses/${course.getId()}/activities/${activity.getId()}/iotests", body, username, password)
@@ -566,11 +566,11 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test update IO test for activity"() {
         given: "Two unit tests added to the activity"
-            IOTest ioTest1 = iOTestRepository.save(new IOTest(activity.getId(), "1", "1"))
-            IOTest ioTest2 = iOTestRepository.save(new IOTest(activity.getId(), "2", "2"))
+            IOTest ioTest1 = iOTestRepository.save(new IOTest(activity.getId(), "name1", "1", "1"))
+            IOTest ioTest2 = iOTestRepository.save(new IOTest(activity.getId(), "name2", "2", "2"))
 
         and: "a change"
-            Map body = [text_in: "1000", text_out: "2000"]
+            Map body = [name: "the tests name", text_in: "1000", text_out: "2000"]
 
         when:
             def response = put("/api/courses/${course.getId()}/activities/${activity.getId()}/iotests/${ioTest1.getId()}", body, username, password)
@@ -587,8 +587,8 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test delete IO test for activity"() {
         given: "Two unit tests added to the activity"
-            IOTest ioTest1 = iOTestRepository.save(new IOTest(activity.getId(), "1", "1"))
-            IOTest ioTest2 = iOTestRepository.save(new IOTest(activity.getId(), "2", "2"))
+            IOTest ioTest1 = iOTestRepository.save(new IOTest(activity.getId(), "name1", "1", "1"))
+            IOTest ioTest2 = iOTestRepository.save(new IOTest(activity.getId(), "name2", "2", "2"))
 
         when: "deleting one of those"
             def response = delete("/api/courses/${course.getId()}/activities/${activity.getId()}/iotests/${ioTest1.getId()}", username, password)
@@ -608,7 +608,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.active == activity.active
             assert result.file_id == activity.startingFiles.getId()
             assert result.activity_unit_tests == null
-            assert result.activity_iotests == [[id: ioTest2.getId(), in: "2", out: "2"]]
+            assert result.activity_iotests == [[id: ioTest2.getId(), name: "name2", in: "2", out: "2"]]
             assert result.date_created != null
             assert result.last_updated != null
 

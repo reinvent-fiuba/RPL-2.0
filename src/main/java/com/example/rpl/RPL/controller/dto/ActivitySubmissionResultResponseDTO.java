@@ -82,7 +82,8 @@ public class ActivitySubmissionResultResponseDTO {
                 .stdout(run.getStdout());
 
             ab.ioTestRunResults(run.getIoTestRunList().stream().map(
-                r -> new IOTestRunResultDTO(r.getId(), r.getTestIn(), r.getExpectedOutput(),
+                r -> new IOTestRunResultDTO(r.getId(), r.getTestName(), r.getTestIn(),
+                    r.getExpectedOutput(),
                     r.getRunOutput())).collect(
                 Collectors.toList()));
 
@@ -99,6 +100,7 @@ public class ActivitySubmissionResultResponseDTO {
     private static class IOTestRunResultDTO {
 
         private Long id;
+        private String name;
         private String testIn;
         private String expectedOutput;
         private String runOutput;

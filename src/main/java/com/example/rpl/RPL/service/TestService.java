@@ -69,8 +69,8 @@ public class TestService {
 
         List<IOTestRun> ioTestRuns = new ArrayList<>();
         for (int i = 0; i < results.size() && i < ioTests.size(); i++) {
-            IOTestRun ioTestRun = new IOTestRun(testRun, ioTests.get(i).getTestIn(),
-                ioTests.get(i).getTestOut(), results.get(i));
+            IOTestRun ioTestRun = new IOTestRun(testRun, ioTests.get(i).getName(),
+                ioTests.get(i).getTestIn(), ioTests.get(i).getTestOut(), results.get(i));
             ioTestRuns.add(ioTestRun);
         }
 
@@ -126,19 +126,19 @@ public class TestService {
     }
 
     @Transactional
-    public IOTest createIOTest(Long activityId, String in, String out) {
-        IOTest ioTest = new IOTest(activityId, in, out);
+    public IOTest createIOTest(Long activityId, String name, String in, String out) {
+        IOTest ioTest = new IOTest(activityId, name, in, out);
 
         return iOTestRepository.save(ioTest);
     }
 
     @Transactional
-    public IOTest updateIOTest(Long ioTestId, String in, String out) {
+    public IOTest updateIOTest(Long ioTestId, String name, String in, String out) {
         IOTest ioTest = iOTestRepository.findById(ioTestId)
             .orElseThrow(() -> new NotFoundException("IO test not found",
                 "iotest_not_found"));
 
-        ioTest.update(in, out);
+        ioTest.update(name, in, out);
 
         return iOTestRepository.save(ioTest);
     }

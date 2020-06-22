@@ -11,6 +11,9 @@ public class CreateIOTestRequestDTO {
     private Long id;
 
     @NotNull
+    private String name;
+
+    @NotNull
     private String textIn;
 
     @NotNull
