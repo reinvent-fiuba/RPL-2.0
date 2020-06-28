@@ -1,11 +1,81 @@
+import io
 import psycopg2
 import requests
 
+'''
+DOCUMENTATION
+
+Requisitos:
+ - DUMP.sql de la base anterior de rpl v1.
+ - Postgres 9.5.22 
+
+1. Instalar postgres y crear la DB y el usuario
+
+CREEEO QUE (sudo apt install postgresql-9.5)
+sudo -u postgres psql
+create user rpl with password 'rpl';
+create database rpldb;
+grant all privileges on database rpldb to rpl;
+\q 
+
+
+2. Correr la migracion
+psql -U rpl -d rpldb -1 -f db.sql.backup.12-06-20.mariano.sql 2> errors.txt
+
+'''
+
+
 headers = {
-  'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTkxMjI0NjI2LCJleHAiOjE1OTEyMzkwMjZ9.Moyl44RMqDTrNxL8u2pJMyz02k6-6GHTXijYXxs41xGAiTg2Db40_wdCObYdbuYGyrwG8wJ9C8R8i3pxAfczTQ'
+  'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTkzMjk5OTc4LCJleHAiOjE1OTMzMTQzNzh9.iKzsmpKqlVG1y8UPis4NRTn8kYjIn0h6ZCYaDq2_ONL08Yz-A7JfP52iFLMN0vi3VL2oAo6b_JSbFez4KPZw-w'
 }
 
-def connect():
+
+def migrate_categories():
+  """ Connect to the PostgreSQL database server """
+  conn = None
+  old_to_new_ids = {}
+  try:
+
+    # connect to the PostgreSQL server
+    print('Connecting to the PostgreSQL database...')
+    with psycopg2.connect(host="localhost", database="rpldb", user="postgres",
+                          password="postgres") as conn:
+      # create a cursor
+      with conn.cursor() as cur:
+        cur.execute("SELECT * FROM topic WHERE course_id=22")
+        result = cur.fetchall()
+        for category in result:
+          id, name, course_id, state = category
+          # print(id, "\n====================================================================")
+          # print(name, "\n====================================================================")
+          # print(state, "\n====================================================================")
+
+          my_category = create_category(name)
+          old_to_new_ids[id] = my_category['id']
+          print(f"Created category {my_category['id']}")
+
+  except (Exception, psycopg2.DatabaseError) as error:
+    print(error)
+
+  return old_to_new_ids
+
+
+def create_category(name):
+  backend_url = "http://localhost:8080/api/courses/1/activityCategories"
+
+  payload = {
+    'description': name + "no description",
+    'name': name,
+  }
+
+  response = requests.post(backend_url, headers=headers, json=payload)
+
+  if response.status_code not in [200, 201]:
+    raise Exception(f"Error al postear category: {response.json()}")
+  return response.json()
+
+
+def migrate_activities(old_to_new_category_ids):
   """ Connect to the PostgreSQL database server """
   conn = None
   try:
@@ -17,7 +87,7 @@ def connect():
       # create a cursor
       with conn.cursor() as cur:
         cur.execute(
-          "SELECT * FROM activity WHERE id > 2000 AND state='ENABLED' AND topic_id IS NOT NULL")
+          "SELECT * FROM activity WHERE topic_id in (SELECT id FROM topic WHERE course_id=22) AND state='ENABLED'")
         result = cur.fetchall()
         # activity1 = result[0]
         for activity in result:
@@ -38,8 +108,12 @@ def connect():
           if language == "PYTHON3":
             language = "python"
 
-          my_activity = create_activity(name, description, language, topic_id,
+          my_activity = create_activity(name, description, language,
+                                        old_to_new_category_ids[topic_id],
+                                        points,
                                         initial_code=template)
+          activate_activity(my_activity['id'])
+
 
           try:
             if test_type == "INPUT":
@@ -63,32 +137,49 @@ def connect():
     print(error)
 
 
-def create_activity(name, description, language, category_id, initial_code):
+def activate_activity(id):
+  backend_url = f"http://localhost:8080/api/courses/1/activities/{id}"
+  response = requests.patch(backend_url, headers=headers, data={'active': True},
+                            files={'wo': b'lal'})
+  if response.status_code not in [200, 201]:
+    raise Exception(f"Error al activar la activity: {response.json()}")
+  return response.json()
+
+
+def create_activity(name, description, language, category_id, points,
+    initial_code):
   backend_url = "http://localhost:8080/api/courses/1/activities"
 
   payload = {
     'description': description,
     'name': name,
+    'points': points,
     'language': language,
     'activityCategoryId': category_id,
-    'initialCode': initial_code or "nonull"
   }
-  files = [
-    ('supportingFile', open('./load_activities_postgres.py', 'rb'))
-  ]
 
-  response = requests.post(backend_url, headers=headers, data=payload,
-                           files=files)
+  filename = "main.c" if language.lower() == "c" else "assignment_main.py"
 
-  if response.status_code not in [200, 201]:
-    raise Exception(f"Error al postear la activity: {response.json()}")
-  return response.json()
+  with io.FileIO(filename, 'wb+') as startingFile:
+    startingFile.write(str.encode(initial_code or "no_code"))
+    startingFile.seek(0)
+    files = [
+      ('startingFile', startingFile)
+    ]
+
+    response = requests.post(backend_url, headers=headers, data=payload,
+                             files=files)
+
+    if response.status_code not in [200, 201]:
+      raise Exception(f"Error al postear la activity: {response.json()}")
+    return response.json()
 
 
 def create_io_test(activity_id, course_id, text_in, text_out):
   backend_url = f"http://localhost:8080/api/courses/{course_id}/activities/{activity_id}/iotests"
 
   payload = {
+    'name': "IO Test migrado",
     'text_in': text_in or "",
     'text_out': text_out,
   }
@@ -104,7 +195,7 @@ def create_unit_test(activity_id, course_id, unit_test_code):
   backend_url = f"http://localhost:8080/api/courses/{course_id}/activities/{activity_id}/unittests"
 
   payload = {
-    'unit_test_code': unit_test_code
+    'unit_test_code': unit_test_code + '\n\n\n'
   }
 
   response = requests.post(backend_url, headers=headers, json=payload)
@@ -115,4 +206,5 @@ def create_unit_test(activity_id, course_id, unit_test_code):
 
 
 if __name__ == '__main__':
-  connect()
+  category_ids = migrate_categories()
+  migrate_activities(category_ids)
