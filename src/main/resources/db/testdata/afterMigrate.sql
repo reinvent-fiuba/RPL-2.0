@@ -204,16 +204,16 @@ VALUES (10, 1, 2, 'El ejericio 5',
         10, '', now(), now());
 
 INSERT INTO activity_submissions
-VALUES (1, 1, 3, 2, 'PENDING', now(), now());
+VALUES (1, 1, 3, 2, 'PENDING', false, now(), now());
 
 INSERT INTO activity_submissions
-VALUES (2, 2, 3, 3, 'PENDING', now(), now());
+VALUES (2, 2, 3, 3, 'PENDING', false, now(), now());
 
 INSERT INTO activity_submissions
-VALUES (3, 3, 3, 6, 'PENDING', now(), now());
+VALUES (3, 3, 3, 6, 'PENDING', false, now(), now());
 
 INSERT INTO activity_submissions
-VALUES (4, 1, 3, 7, 'PENDING', now(), now());
+VALUES (4, 1, 3, 7, 'PENDING', false, now(), now());
 
 -- INSERT INTO tests
 -- VALUES (1, 1, now(), now());

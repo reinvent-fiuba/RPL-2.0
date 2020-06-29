@@ -123,11 +123,12 @@ CREATE TABLE activities
 
 CREATE TABLE activity_submissions
 (
-    id                BIGINT NOT NULL AUTO_INCREMENT,
+    id                BIGINT  NOT NULL AUTO_INCREMENT,
     activity_id       BIGINT,
     user_id           BIGINT,
     response_files_id BIGINT,
     status            VARCHAR(255),
+    is_final_solution BOOLEAN NOT NULL DEFAULT FALSE,
     date_created      DATETIME,
     last_updated      DATETIME,
 

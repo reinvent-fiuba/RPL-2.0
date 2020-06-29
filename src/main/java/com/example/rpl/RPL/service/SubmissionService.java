@@ -2,7 +2,14 @@ package com.example.rpl.RPL.service;
 
 import com.example.rpl.RPL.controller.dto.UnitTestResultDTO;
 import com.example.rpl.RPL.exception.NotFoundException;
-import com.example.rpl.RPL.model.*;
+import com.example.rpl.RPL.model.Activity;
+import com.example.rpl.RPL.model.ActivitySubmission;
+import com.example.rpl.RPL.model.ActivitySubmissionStats;
+import com.example.rpl.RPL.model.IOTestRun;
+import com.example.rpl.RPL.model.RPLFile;
+import com.example.rpl.RPL.model.SubmissionStatus;
+import com.example.rpl.RPL.model.TestRun;
+import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.model.RPLFile;
 import com.example.rpl.RPL.repository.*;
 
@@ -10,7 +17,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -196,5 +202,34 @@ public class SubmissionService {
     public List<ActivitySubmission> getAllSubmissionsByUserAndActivityId(User user,
         Long activityId) {
         return submissionRepository.findAllByUserAndActivity_Id(user, activityId);
+    }
+
+    public ActivitySubmissionStats getSubmissionsStatsByUserAndCourseId(Long userId,
+        Long courseId) {
+        List<ActivitySubmission> activitySubmissions = submissionRepository
+            .findAllByUserIdAndCourseId(userId, courseId);
+        int total = activitySubmissions.size();
+        Map<SubmissionStatus, Long> countByStatus = activitySubmissions.stream()
+            .collect(Collectors.groupingBy(activitySubmission -> activitySubmission.getStatus(),
+                Collectors.counting()));
+
+        return new ActivitySubmissionStats(total, countByStatus);
+    }
+
+    @Transactional
+    public ActivitySubmission setSubmissionAsFinalSolution(Long submissionId) {
+        ActivitySubmission submission = this.getActivitySubmission(submissionId);
+
+        submission.setAsFinalSolution();
+
+        return submissionRepository.save(submission);
+    }
+
+    @Transactional
+    public ActivitySubmission getFinalSubmission(Long activityId, User user) {
+        return submissionRepository
+            .findByActivity_IdAndUserIdAndIsFinalSolution(activityId, user.getId(), true)
+            .orElseThrow(() -> new NotFoundException("Activity submission not found",
+                "final_submission_not_found"));
     }
 }

@@ -17,6 +17,8 @@ public class ActivitySubmissionResultResponseDTO {
 
     private Long id;
 
+    private Long activityId;
+
     private String submissionFileName;
 
     private String submissionFileType;
@@ -41,6 +43,8 @@ public class ActivitySubmissionResultResponseDTO {
 
     private String submissionStatus;
 
+    private Boolean isFinalSolution;
+
     private String exitMessage;
 
     private String stderr;
@@ -59,6 +63,7 @@ public class ActivitySubmissionResultResponseDTO {
         ActivitySubmissionResultResponseDTO.ActivitySubmissionResultResponseDTOBuilder ab = ActivitySubmissionResultResponseDTO
             .builder()
             .id(as.getId())
+            .activityId(as.getActivity().getId())
             .submissionFileName(as.getFile().getFileName())
             .submissionFileType(as.getFile().getFileType())
             .submissionFileId(as.getFile().getId())
@@ -69,6 +74,7 @@ public class ActivitySubmissionResultResponseDTO {
             .activityLanguage(as.getActivity().getLanguage().getNameAndVersion())
             .activityUnitTests("")
             .submissionStatus(as.getStatus().name())
+            .isFinalSolution(as.getIsFinalSolution())
             .submissionDate(as.getDateCreated());
 
         if (unitTest != null) {

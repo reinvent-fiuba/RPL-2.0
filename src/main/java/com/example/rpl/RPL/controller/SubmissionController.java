@@ -109,7 +109,7 @@ public class SubmissionController {
     }
 
 
-    @PutMapping(value = "/api/submissions/{submissionId}")
+    @PutMapping(value = "/api/submissions/{submissionId}/status")
     public ResponseEntity<ActivitySubmissionResponseDTO> updateSubmissionStatus(
         @PathVariable Long submissionId,
         @RequestBody @Valid UpdateSubmissionStatusRequestDTO updateSubmissionStatusRequestDTO) {
@@ -118,6 +118,35 @@ public class SubmissionController {
 
         ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
             .fromEntity(activitySubmission, null, List.of());
+        return new ResponseEntity<>(asDto, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_submit')")
+    @PutMapping(value = "/api/courses/{courseId}/activities/{activityId}/submissions/{submissionId}/final")
+    public ResponseEntity<ActivitySubmissionResponseDTO> setSubmissionAsFinalSolution(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId, @PathVariable Long activityId,
+        @PathVariable Long submissionId) {
+        ActivitySubmission activitySubmission = submissionService
+            .setSubmissionAsFinalSolution(submissionId);
+
+        ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
+            .fromEntity(activitySubmission, null, List.of());
+        return new ResponseEntity<>(asDto, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_submit')")
+    @GetMapping(value = "/api/courses/{courseId}/activities/{activityId}/finalSubmission")
+    public ResponseEntity<ActivitySubmissionResponseDTO> getFinalSubmission(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId, @PathVariable Long activityId) {
+
+        ActivitySubmission as = submissionService
+            .getFinalSubmission(activityId, currentUser.getUser());
+
+        ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
+            .fromEntity(as, null, List.of());
+
         return new ResponseEntity<>(asDto, HttpStatus.OK);
     }
 
@@ -136,6 +165,7 @@ public class SubmissionController {
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
 
     @GetMapping(value = "/api/submissions/{submissionId}/result")
     public ResponseEntity<ActivitySubmissionResultResponseDTO> getSubmissionResult(
