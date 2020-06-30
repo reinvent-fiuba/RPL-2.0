@@ -13,6 +13,8 @@ public class CourseUserResponseDTO {
 
     private Long id;
 
+    private Long courseUserId;
+
     private String name;
 
     private String surname;
@@ -42,6 +44,7 @@ public class CourseUserResponseDTO {
         Role role = courseUser.getRole();
         return CourseUserResponseDTO.builder()
             .id(user.getId())
+            .courseUserId(courseUser.getId())
             .name(user.getName())
             .surname(user.getSurname())
             .studentId(user.getStudentId())

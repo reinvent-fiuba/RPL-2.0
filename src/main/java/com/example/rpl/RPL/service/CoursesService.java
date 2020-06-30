@@ -142,6 +142,12 @@ public class CoursesService {
     }
 
     @Transactional
+    public CourseUser getCourseUser(Long courseUserId) {
+        return courseUserRepository.findById(courseUserId).get();
+    }
+
+
+    @Transactional
     public List<CourseUser> getAllUsers(Long courseId, String roleName) {
         courseRepository.findById(courseId).orElseThrow(
             () -> new NotFoundException("Course not found",

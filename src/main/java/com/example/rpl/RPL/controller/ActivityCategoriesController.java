@@ -1,8 +1,10 @@
 package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.controller.dto.ActivityCategoryResponseDTO;
+import com.example.rpl.RPL.controller.dto.ActivityStatsResponseDTO;
 import com.example.rpl.RPL.controller.dto.CreateActivityCategoryRequestDTO;
 import com.example.rpl.RPL.model.ActivityCategory;
+import com.example.rpl.RPL.model.ActivityStats;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.ActivityCategoriesService;
@@ -14,11 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -59,5 +57,28 @@ public class ActivityCategoriesController {
         return new ResponseEntity<>(
             ActivityCategoryResponseDTO.fromEntity(activityCategory),
             HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_manage')")
+    @GetMapping(value = "/api/courses/{courseId}/activityCategories/{categoryId}/stats")
+    public ResponseEntity<List<ActivityStatsResponseDTO>> getActivityCategoriesStats(
+            @CurrentUser UserPrincipal currentUser,
+            @PathVariable Long courseId,
+            @PathVariable Long categoryId,
+            @RequestParam(required = false) Long courseUserId) {
+
+        List<ActivityStats> activityStats;
+
+        if (courseUserId != null) {
+            activityStats = activityCategoriesService.getActivityCategoryStatsByCategoryAndCourseUser(courseId, categoryId, courseUserId);
+        } else {
+            activityStats = activityCategoriesService.getActivityCategoryStatsByCategory(courseId, categoryId);
+        }
+
+        return new ResponseEntity<>(
+                activityStats.stream()
+                        .map(ActivityStatsResponseDTO::fromEntity)
+                        .collect(Collectors.toList()),
+                HttpStatus.OK);
     }
 }

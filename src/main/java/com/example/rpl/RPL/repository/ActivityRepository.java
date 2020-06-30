@@ -11,4 +11,6 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
     List<Activity> findActivitiesByCourse(Course course);
 
+    List<Activity> findActivitiesByActivityCategory_IdAndCourse_Id(Long categoryId, Long courseId);
+
 }
