@@ -17,13 +17,27 @@ public interface SubmissionRepository extends JpaRepository<ActivitySubmission, 
 
     List<ActivitySubmission> findAllByActivityIn(List<Activity> activities);
 
+    List<ActivitySubmission> findAllByActivityInAndUser_Id(List<Activity> activities, Long userId);
+
+    List<ActivitySubmission> findAllByActivityInAndUser_IdAndDateCreatedBetween(List<Activity> activities,
+                                                                                Long userId,
+                                                                                ZonedDateTime dateCreatedStart,
+                                                                                ZonedDateTime dateCreatedEnd);
+
     List<ActivitySubmission> findAllByUserAndActivityIn(User user, List<Activity> activities);
+
+
 
     List<ActivitySubmission> findAllByUserAndActivity_Id(User user, Long activityId);
 
-    List<ActivitySubmission> findAllByDateCreatedBetweenAndActivity_Course_Id(ZonedDateTime dateCreatedStart, ZonedDateTime dateCreatedEnd, Long courseId);
-
     List<ActivitySubmission> findAllByActivity_Course_Id(Long courseId);
+
+    List<ActivitySubmission> findAllByActivity_Course_IdAndUser_Id(Long courseId, Long userId);
+
+    List<ActivitySubmission> findAllByActivity_Course_IdAndUser_IdAndDateCreatedBetween(Long courseId,
+                                                                                        Long userId,
+                                                                                        ZonedDateTime dateCreatedStart,
+                                                                                        ZonedDateTime dateCreatedEnd);
 
     @Query("select s " +
         "from ActivitySubmission s " +

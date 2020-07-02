@@ -64,49 +64,49 @@ public class ActivityCategoriesService {
     }
 
     @Transactional
-    public List<ActivityStats> getActivityCategoryStatsByCategoryAndCourseUser(Long courseId, Long categoryId, Long courseUserId) {
+    public List<SubmissionStat>  getActivityCategoryStatsByCategoryAndCourseUser(Long courseId, Long categoryId, Long courseUserId) {
 
         CourseUser courseUser = coursesService.getCourseUser(courseUserId);
-        List<Activity> activities = activityRepository.findActivitiesByActivityCategory_IdAndCourse_Id(categoryId, courseId);
+        List<Activity> activities = activityRepository.findActivitiesByCourse_IdAndActivityCategory_Id(courseId, categoryId);
 
         List<ActivitySubmission> submissions = submissionService.getAllSubmissionsByUserAndActivities(courseUser.getUser(), activities);
 
-        List<ActivityStats> activityStats = new ArrayList<>();
+        List<SubmissionStat> submissionStats = new ArrayList<>();
 
         Map<Activity, List<ActivitySubmission>> submissionsByActivitysubmissions = submissions.stream()
                 .collect(Collectors.groupingBy(ActivitySubmission::getActivity))
         ;
 
-        for (Activity activity : activities) {
-            activityStats.add(new ActivityStats(
-                    activity,
-                    submissionsByActivitysubmissions.getOrDefault(activity, new ArrayList<>())
-            ));
-        }
+//        for (Activity activity : activities) {
+//            submissionStats.add(new SubmissionStat(
+//                    activity,
+//                    submissionsByActivitysubmissions.getOrDefault(activity, new ArrayList<>())
+//            ));
+//        }
 
-        return activityStats;
+        return submissionStats;
     }
 
     @Transactional
-    public List<ActivityStats> getActivityCategoryStatsByCategory(Long courseId, Long categoryId) {
+    public List<SubmissionStat> getActivityCategoryStatsByCategory(Long courseId, Long categoryId) {
 
-        List<Activity> activities = activityRepository.findActivitiesByActivityCategory_IdAndCourse_Id(categoryId, courseId);
+        List<Activity> activities = activityRepository.findActivitiesByCourse_IdAndActivityCategory_Id(courseId, categoryId);
 
         List<ActivitySubmission> submissions = submissionService.getAllSubmissionsByActivities(activities);
 
-        List<ActivityStats> activityStats = new ArrayList<>();
+        List<SubmissionStat> submissionStats = new ArrayList<>();
 
         Map<Activity, List<ActivitySubmission>> submissionsByActivitysubmissions = submissions.stream()
                 .collect(Collectors.groupingBy(ActivitySubmission::getActivity))
                 ;
 
-        for (Activity activity : activities) {
-            activityStats.add(new ActivityStats(
-                    activity,
-                    submissionsByActivitysubmissions.getOrDefault(activity, new ArrayList<>())
-            ));
-        }
+//        for (Activity activity : activities) {
+//            submissionStats.add(new SubmissionStat(
+//                    activity,
+//                    submissionsByActivitysubmissions.getOrDefault(activity, new ArrayList<>())
+//            ));
+//        }
 
-        return activityStats;
+        return submissionStats;
     }
 }

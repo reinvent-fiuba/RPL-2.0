@@ -161,6 +161,19 @@ public class CoursesService {
     }
 
     @Transactional
+    public CourseUser getStudentByUserId(Long courseId, Long userId) {
+        courseRepository.findById(courseId).orElseThrow(
+                () -> new NotFoundException("Course not found",
+                        "course_not_found"));
+
+        Optional<Role> role = roleRepository.findByName("student");
+
+        return courseUserRepository.findByCourse_IdAndRole_IdAndUser_Id(courseId, role.get().getId(), userId).orElseThrow(
+                () -> new NotFoundException("User not found",
+                        "user_not_found"));
+    }
+
+    @Transactional
     public CourseUser updateCourseUser(Long courseId, Long userId, Boolean accepted, String roleName) {
         // TODO: Update courseUser all at once without using a SELECT at first
         CourseUser courseUser = courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId).orElseThrow(
@@ -197,7 +210,7 @@ public class CoursesService {
         List<Activity> courseActivities = activitiesService.getAllActivitiesByCourse(courseId);
         return getAllUsers(courseId, "student").stream().map(courseUser -> {
                     LongSummaryStatistics userActivityPoints = submissionService
-                            .getAllSubmissionsByUserAndActivities(courseUser.getUser(), courseActivities)
+                            .getAllSubmissionsByActivities(courseActivities, courseUser.getUser().getId())
                             .stream()
                             .filter(activitySubmission -> activitySubmission.getStatus() == SubmissionStatus.SUCCESS)
                             .map(activitySubmission -> activitySubmission.getActivity())

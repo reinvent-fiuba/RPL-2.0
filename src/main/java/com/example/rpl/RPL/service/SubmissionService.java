@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -151,6 +152,44 @@ public class SubmissionService {
         return submissionRepository.findAllByActivityIn(activities);
     }
 
+    public List<ActivitySubmission> getAllSubmissionsByActivities(List<Activity> activities, Long userId) {
+        return userId != null ?
+                submissionRepository.findAllByActivityInAndUser_Id(activities, userId) :
+                submissionRepository.findAllByActivityIn(activities);
+    }
+
+    public List<ActivitySubmission> getAllSubmissionsByActivities(List<Activity> activities, Long userId, LocalDate date) {
+
+        if (date != null) {
+            ZonedDateTime startOfDay = date.atStartOfDay(ZoneId.systemDefault());
+            ZonedDateTime endOfDay = date.plusDays(1).atStartOfDay(ZoneId.systemDefault());
+            return submissionRepository.findAllByActivityInAndUser_IdAndDateCreatedBetween(activities, userId, startOfDay, endOfDay);
+        }
+        return userId != null ?
+                submissionRepository.findAllByActivityInAndUser_Id(activities, userId) :
+                submissionRepository.findAllByActivityIn(activities);
+    }
+
+    public List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId) {
+        return submissionRepository.findAllByActivity_Course_Id(courseId);
+    }
+
+    public List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId, Long userId) {
+        return userId != null ?
+                submissionRepository.findAllByActivity_Course_IdAndUser_Id(courseId, userId) :
+                submissionRepository.findAllByActivity_Course_Id(courseId);
+    }
+
+    public List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId, Long userId, LocalDate date) {
+        if (date != null) {
+            ZonedDateTime startOfDay = date.atStartOfDay(ZoneId.systemDefault());
+            ZonedDateTime endOfDay = date.plusDays(1).atStartOfDay(ZoneId.systemDefault());
+            return submissionRepository
+                    .findAllByActivity_Course_IdAndUser_IdAndDateCreatedBetween(courseId, userId, startOfDay, endOfDay);
+        }
+        return this.getAllSubmissionsByCourseId(courseId, userId);
+    }
+
     public List<ActivitySubmission> getAllSubmissionsByUserAndActivities(User user,
         List<Activity> activities) {
         return submissionRepository.findAllByUserAndActivityIn(user, activities);
@@ -175,12 +214,9 @@ public class SubmissionService {
     public List<UserActivitySubmissionStats> getSubmissionsStatsByCourseIdAndDate(Long courseId,
                                                                         LocalDate date) {
 
-        ZonedDateTime startOfDay = date.atStartOfDay(ZoneId.systemDefault());
-        ZonedDateTime endOfDay = date.plusDays(1).atStartOfDay(ZoneId.systemDefault());
-
         List<CourseUser> courseUsers = courseUserRepository.findByCourse_Id(courseId);
 
-        List<ActivitySubmission> activitySubmissions = submissionRepository.findAllByDateCreatedBetweenAndActivity_Course_Id(startOfDay, endOfDay, courseId);
+        List<ActivitySubmission> activitySubmissions = this.getAllSubmissionsByCourseId(courseId, null, date);
 
         Map<User, List<ActivitySubmission>> activitySubmissionsByUser =  activitySubmissions.stream()
                 .collect(Collectors.groupingBy(activitySubmission -> activitySubmission.getUser()));
@@ -204,7 +240,7 @@ public class SubmissionService {
 
         List<CourseUser> courseUsers = courseUserRepository.findByCourse_Id(courseId);
 
-        List<ActivitySubmission> activitySubmissions = submissionRepository.findAllByActivity_Course_Id(courseId);
+        List<ActivitySubmission> activitySubmissions = this.getAllSubmissionsByCourseId(courseId);
 
         Map<User, List<ActivitySubmission>> activitySubmissionsByUser =  activitySubmissions.stream()
                 .collect(Collectors.groupingBy(activitySubmission -> activitySubmission.getUser()));

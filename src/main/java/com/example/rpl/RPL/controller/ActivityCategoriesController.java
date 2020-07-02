@@ -4,7 +4,7 @@ import com.example.rpl.RPL.controller.dto.ActivityCategoryResponseDTO;
 import com.example.rpl.RPL.controller.dto.ActivityStatsResponseDTO;
 import com.example.rpl.RPL.controller.dto.CreateActivityCategoryRequestDTO;
 import com.example.rpl.RPL.model.ActivityCategory;
-import com.example.rpl.RPL.model.ActivityStats;
+import com.example.rpl.RPL.model.SubmissionStat;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.ActivityCategoriesService;
@@ -67,16 +67,16 @@ public class ActivityCategoriesController {
             @PathVariable Long categoryId,
             @RequestParam(required = false) Long courseUserId) {
 
-        List<ActivityStats> activityStats;
+        List<SubmissionStat> submissionStats;
 
         if (courseUserId != null) {
-            activityStats = activityCategoriesService.getActivityCategoryStatsByCategoryAndCourseUser(courseId, categoryId, courseUserId);
+            submissionStats = activityCategoriesService.getActivityCategoryStatsByCategoryAndCourseUser(courseId, categoryId, courseUserId);
         } else {
-            activityStats = activityCategoriesService.getActivityCategoryStatsByCategory(courseId, categoryId);
+            submissionStats = activityCategoriesService.getActivityCategoryStatsByCategory(courseId, categoryId);
         }
 
         return new ResponseEntity<>(
-                activityStats.stream()
+                submissionStats.stream()
                         .map(ActivityStatsResponseDTO::fromEntity)
                         .collect(Collectors.toList()),
                 HttpStatus.OK);

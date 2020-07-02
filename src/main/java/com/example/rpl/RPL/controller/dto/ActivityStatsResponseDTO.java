@@ -1,11 +1,8 @@
 package com.example.rpl.RPL.controller.dto;
 
-import com.example.rpl.RPL.model.ActivitiesStats;
-import com.example.rpl.RPL.model.ActivityStats;
+import com.example.rpl.RPL.model.SubmissionStat;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.Map;
 
 @Getter
 @Builder
@@ -26,15 +23,15 @@ public class ActivityStatsResponseDTO {
     private long successSubmissions;
 
 
-    public static ActivityStatsResponseDTO fromEntity(ActivityStats activityStats) {
+    public static ActivityStatsResponseDTO fromEntity(SubmissionStat submissionStat) {
         return ActivityStatsResponseDTO.builder()
-            .activityId(activityStats.getActivityId())
-            .name(activityStats.getName())
-            .activityCategoryId(activityStats.getActivityCategoryId())
-            .activityCategoryName(activityStats.getActivityCategoryName())
-            .totalSubmissions(activityStats.getTotalSubmissions())
-            .points(activityStats.getPoints())
-            .successSubmissions(activityStats.getSuccessSubmissions())
+//            .activityId(submissionStat.getActivityId())
+//            .name(submissionStat.getName())
+//            .activityCategoryId(submissionStat.getActivityCategoryId())
+//            .activityCategoryName(submissionStat.getActivityCategoryName())
+//            .totalSubmissions(submissionStat.getTotalSubmissions())
+//            .points(submissionStat.getPoints())
+//            .successSubmissions(submissionStat.getSuccessSubmissions())
             .build();
     }
 }

@@ -51,11 +51,9 @@ public class ActivitiesService {
     }
 
     /**
-     * Creates a new Course.
+     * Creates a new Activity.
      *
-     * @return a new saved Course
-     * @throws EntityAlreadyExistsException if course exists ValidationException declared on the
-     * Course class
+     * @return a new saved Activity
      */
     @Transactional
     public Activity createActivity(Long courseId, Long activityCategoryId, String name,
@@ -119,13 +117,29 @@ public class ActivitiesService {
         return activity;
     }
 
+    /**
+     * Retrieves all activities from a course
+     *
+     * @return a list of Activities
+     * Course class
+     */
     @Transactional
     public List<Activity> getAllActivitiesByCourse(Long courseId) {
-        Course course = courseRepository.findById(courseId).orElseThrow(
-            () -> new NotFoundException("Course not found",
-                "course_not_found"));
+        return activityRepository.findActivitiesByCourse_Id(courseId);
+    }
 
-        return activityRepository.findActivitiesByCourse(course);
+    /**
+     * Retrieves all activities from a course with a specific category (optional)
+     * If cateogoryId is not present, the function ignores the that filter
+     *
+     * @return a list of Activities
+     * Course class
+     */
+    @Transactional
+    public List<Activity> getAllActivitiesByCourse(Long courseId, Long categoryId) {
+        return categoryId != null ?
+                activityRepository.findActivitiesByCourse_IdAndActivityCategory_Id(courseId, categoryId) :
+                activityRepository.findActivitiesByCourse_Id(courseId);
     }
 
     public Activity getActivity(Long activityId) {
