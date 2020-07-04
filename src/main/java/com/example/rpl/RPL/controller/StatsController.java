@@ -1,6 +1,8 @@
 package com.example.rpl.RPL.controller;
 
-import com.example.rpl.RPL.model.*;
+import com.example.rpl.RPL.model.stats.ActivityStat;
+import com.example.rpl.RPL.model.stats.SubmissionStat;
+import com.example.rpl.RPL.model.stats.SubmissionStats;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.StatsService;

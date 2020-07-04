@@ -3,18 +3,15 @@ package com.example.rpl.RPL.service;
 import com.example.rpl.RPL.controller.dto.UnitTestResultDTO;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.*;
+import com.example.rpl.RPL.model.RPLFile;
 import com.example.rpl.RPL.repository.*;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,21 +26,18 @@ public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final FileRepository fileRepository;
     private final TestRunRepository testRunRepository;
-    private final CourseUserRepository courseUserRepository;
 
     @Autowired
     public SubmissionService(TestService testService,
         ActivityRepository activityRepository,
         SubmissionRepository submissionRepository,
         FileRepository fileRepository,
-        TestRunRepository testRunRepository,
-        CourseUserRepository courseUserRepository) {
+        TestRunRepository testRunRepository) {
         this.testService = testService;
         this.activityRepository = activityRepository;
         this.submissionRepository = submissionRepository;
         this.fileRepository = fileRepository;
         this.testRunRepository = testRunRepository;
-        this.courseUserRepository = courseUserRepository;
     }
 
 
@@ -202,73 +196,5 @@ public class SubmissionService {
     public List<ActivitySubmission> getAllSubmissionsByUserAndActivityId(User user,
         Long activityId) {
         return submissionRepository.findAllByUserAndActivity_Id(user, activityId);
-    }
-
-    public ActivitySubmissionStats getSubmissionsStatsByUserAndCourseId(Long userId,
-                                                                              Long courseId) {
-        List<ActivitySubmission> activitySubmissions = submissionRepository.findAllByUserIdAndCourseId(userId, courseId);
-        int total = activitySubmissions.size();
-        Map<SubmissionStatus, Long> countByStatus = activitySubmissions.stream()
-                .collect(Collectors.groupingBy(activitySubmission -> activitySubmission.getStatus(),
-                        Collectors.counting()));
-
-        return new ActivitySubmissionStats(total, countByStatus);
-    }
-
-    public List<UserActivitySubmissionStats> getSubmissionsStatsByCourseIdAndDate(Long courseId,
-                                                                        LocalDate date) {
-
-        List<CourseUser> courseUsers = courseUserRepository.findByCourse_Id(courseId);
-
-        List<ActivitySubmission> activitySubmissions = this.getAllSubmissionsByCourseId(courseId, null, date);
-
-        Map<User, List<ActivitySubmission>> activitySubmissionsByUser =  activitySubmissions.stream()
-                .collect(Collectors.groupingBy(activitySubmission -> activitySubmission.getUser()));
-
-
-        List<UserActivitySubmissionStats> userActivitySubmissionStats = new ArrayList<>();
-
-        for (CourseUser courseUser : courseUsers) {
-            User user = courseUser.getUser();
-            userActivitySubmissionStats.add(new UserActivitySubmissionStats(
-                    user,
-                    activitySubmissionsByUser.getOrDefault(user, new ArrayList<>())
-            ));
-        }
-
-
-        return userActivitySubmissionStats;
-    }
-
-    public List<UserActivitySubmissionStats> getSubmissionsStatsByCourseId(Long courseId) {
-
-        List<CourseUser> courseUsers = courseUserRepository.findByCourse_Id(courseId);
-
-        List<ActivitySubmission> activitySubmissions = this.getAllSubmissionsByCourseId(courseId);
-
-        Map<User, List<ActivitySubmission>> activitySubmissionsByUser =  activitySubmissions.stream()
-                .collect(Collectors.groupingBy(activitySubmission -> activitySubmission.getUser()));
-
-        List<UserActivitySubmissionStats> userActivitySubmissionStats = new ArrayList<>();
-
-        for (CourseUser courseUser : courseUsers) {
-            User user = courseUser.getUser();
-            userActivitySubmissionStats.add(new UserActivitySubmissionStats(
-                    user,
-                    activitySubmissionsByUser.getOrDefault(user, new ArrayList<>())
-            ));
-        }
-
-        return userActivitySubmissionStats;
-    }
-
-    public Map<LocalDate, Long> getSubmissionsCountByDate(Long courseId) {
-
-        List<ActivitySubmission> activitySubmissions = submissionRepository.findAllByActivity_Course_Id(courseId);
-        Map<LocalDate, Long> countByDate = activitySubmissions.stream()
-                   .collect(Collectors.groupingBy(activitySubmission -> activitySubmission.getDateCreated().toLocalDate(),
-                        Collectors.counting()));
-
-        return countByDate;
     }
 }

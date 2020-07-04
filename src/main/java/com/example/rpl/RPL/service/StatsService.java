@@ -1,15 +1,14 @@
 package com.example.rpl.RPL.service;
 
 import com.example.rpl.RPL.model.*;
-import com.example.rpl.RPL.repository.*;
+import com.example.rpl.RPL.model.stats.ActivityStat;
+import com.example.rpl.RPL.model.stats.SubmissionStat;
+import com.example.rpl.RPL.model.stats.SubmissionStats;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

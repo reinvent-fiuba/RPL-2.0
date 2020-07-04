@@ -1,5 +1,7 @@
-package com.example.rpl.RPL.model;
+package com.example.rpl.RPL.model.stats;
 
+import com.example.rpl.RPL.model.ActivitySubmission;
+import com.example.rpl.RPL.model.SubmissionStatus;
 import lombok.Getter;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.example.rpl.RPL.controller.dto;
 
-import com.example.rpl.RPL.model.SubmissionStat;
+import com.example.rpl.RPL.model.stats.SubmissionStat;
 import lombok.Builder;
 import lombok.Getter;
 

@@ -193,46 +193,4 @@ public class SubmissionController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-    @PreAuthorize("hasAuthority('activity_submit')")
-    @GetMapping(value = "/api/courses/{courseId}/submissions/stats")
-    public ResponseEntity<ActivitySubmissionStatsResponseDTO> getSubmissionsStats(
-            @CurrentUser UserPrincipal currentUser,
-            @PathVariable Long courseId) {
-
-        ActivitySubmissionStats response = submissionService.getSubmissionsStatsByUserAndCourseId(currentUser.getId(), courseId);
-
-        return new ResponseEntity<>(ActivitySubmissionStatsResponseDTO.fromEntity(response), HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasAuthority('activity_submit')")
-    @GetMapping(value = "/api/courses/{courseId}/submissions/detailedStats")
-    public ResponseEntity<List<UserActivitySubmissionStatsResponseDTO>> getSubmissionsDetailedStats(
-            @CurrentUser UserPrincipal currentUser,
-            @PathVariable Long courseId,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-
-        List<UserActivitySubmissionStats> response;
-        if (date != null) {
-            response = submissionService.getSubmissionsStatsByCourseIdAndDate(courseId, date);
-        } else {
-            response = submissionService.getSubmissionsStatsByCourseId(courseId);
-        }
-
-        return new ResponseEntity<>(
-                response.stream()
-                        .map(UserActivitySubmissionStatsResponseDTO::fromEntity)
-                        .collect(Collectors.toList()), HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasAuthority('activity_submit')")
-    @GetMapping(value = "/api/courses/{courseId}/submissions/statsByDate")
-    public ResponseEntity<Map<LocalDate, Long>> getSubmissionsByDate(
-            @CurrentUser UserPrincipal currentUser,
-            @PathVariable Long courseId) {
-
-        Map<LocalDate, Long> response = submissionService.getSubmissionsCountByDate(courseId);
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
 }

@@ -57,7 +57,7 @@ class SubmissionServiceSpec extends Specification {
 
     void "should return a submission"() {
         given: "1 submission"
-            RPLFile f = new RPLFile("test_file", "text", null)
+        RPLFile f = new RPLFile("test_file", "text", null)
 
             ActivitySubmission activitySubmission = new ActivitySubmission(null, user, f,
                     SubmissionStatus.PENDING)
@@ -159,42 +159,5 @@ class SubmissionServiceSpec extends Specification {
             assert result.getStatus() == SubmissionStatus.PROCESSING
 
             1 * submissionRepository.save(_ as ActivitySubmission) >> { ActivitySubmission sub -> return sub }
-    }
-
-    void "should get stats for user and course"() {
-        given:
-            Long courseId = 1
-            Long userId = 1
-            List<ActivitySubmission> submissions = []
-            int totalSubmissions = successSubmissions + failedSubmissions + pendingSubmissions
-            for (int i=0; i<totalSubmissions; i++) {
-                submissions.add(Mock(ActivitySubmission))
-            }
-
-        when:
-            ActivitySubmissionStats userStats = submissionService.getSubmissionsStatsByUserAndCourseId(userId, courseId)
-
-        then:
-            1 * submissionRepository.findAllByUserIdAndCourseId(userId, courseId) >> submissions
-
-            for (int i = 0; i<successSubmissions; i++) {
-                1 * submissions[i].getStatus() >> SubmissionStatus.SUCCESS
-            }
-            for (int i = successSubmissions; i<successSubmissions+failedSubmissions; i++) {
-                1 * submissions[i].getStatus() >> SubmissionStatus.FAILURE
-            }
-            for (int i = successSubmissions + failedSubmissions; i<successSubmissions+failedSubmissions+pendingSubmissions; i++) {
-                1 * submissions[i].getStatus() >> SubmissionStatus.PENDING
-            }
-
-            if (successSubmissions != 0) userStats.getCountByStatus()[SubmissionStatus.SUCCESS] == successSubmissions
-            if (failedSubmissions != 0) userStats.getCountByStatus()[SubmissionStatus.FAILURE] == failedSubmissions
-            if (pendingSubmissions != 0) userStats.getCountByStatus()[SubmissionStatus.PENDING] == pendingSubmissions
-
-        where:
-            successSubmissions | failedSubmissions | pendingSubmissions
-            1                  | 0                 | 2
-            2                  | 1                 | 1
-            3                  | 2                 | 0
     }
 }

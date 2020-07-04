@@ -484,7 +484,8 @@ class CoursesServiceSpec extends Specification {
             1*courseUserRepository.findByCourse_IdAndRole_Id(courseId, 1) >> [courseUser]
 
             1*courseUser.getUser() >> user
-            1*submissionService.getAllSubmissionsByUserAndActivities(user, [courseActivity]) >> [submission]
+            1*user.getId() >> 0
+            1*submissionService.getAllSubmissionsByActivities([courseActivity], 0) >> [submission]
             1*submission.getStatus() >> SubmissionStatus.SUCCESS;
             1*submission.getActivity() >> courseActivity
             1*courseActivity.getPoints() >> 22
@@ -516,7 +517,8 @@ class CoursesServiceSpec extends Specification {
             1*courseUserRepository.findByCourse_IdAndRole_Id(courseId, 1) >> [courseUser]
 
             1*courseUser.getUser() >> user
-            1*submissionService.getAllSubmissionsByUserAndActivities(user, [courseActivity]) >> submissions
+            1*user.getId() >> 0
+            1*submissionService.getAllSubmissionsByActivities([courseActivity], 0) >> submissions
 
             for (int i=0; i<submissionStatuses.size(); i++) {
                 1 * submissions[i].getStatus() >> submissionStatuses[i]
@@ -571,7 +573,8 @@ class CoursesServiceSpec extends Specification {
 
             for (int i=0; i<numberOfUsers; i++) {
                 1*courseUsers[i].getUser() >> users[i]
-                1*submissionService.getAllSubmissionsByUserAndActivities(users[i], [courseActivity]) >> [submissions[i]]
+                1*users[i].getId() >> i
+                1*submissionService.getAllSubmissionsByActivities([courseActivity], i) >> [submissions[i]]
                 1 * submissions[i].getStatus() >> SubmissionStatus.SUCCESS
                 1 * submissions[i].getActivity() >> courseActivity
                 1 * courseActivity.getPoints() >> 22

@@ -1,4 +1,4 @@
-package com.example.rpl.RPL.model;
+package com.example.rpl.RPL.model.stats;
 
 import lombok.Getter;
 
