@@ -7,8 +7,8 @@ import com.example.rpl.RPL.model.User;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -52,4 +52,11 @@ public interface SubmissionRepository extends JpaRepository<ActivitySubmission, 
         "inner join s.activity a " +
         "where s.user.id = ?1 and a.course.id = ?2")
     List<ActivitySubmission> findAllByUserIdAndCourseId(Long userId, Long courseId);
+
+    Optional<ActivitySubmission> findByActivity_IdAndUserIdAndIsFinalSolution(Long activityId,
+        Long userId, boolean isFinalSolution);
+
+
+    List<ActivitySubmission> findByActivity_IdAndIsFinalSolution(Long activityId,
+        boolean isFinalSolution);
 }

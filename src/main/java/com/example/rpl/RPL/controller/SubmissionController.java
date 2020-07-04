@@ -4,8 +4,15 @@ import static com.example.rpl.RPL.model.SubmissionStatus.ENQUEUED;
 import static com.example.rpl.RPL.model.SubmissionStatus.PENDING;
 import static com.example.rpl.RPL.model.SubmissionStatus.PROCESSING;
 
-import com.example.rpl.RPL.controller.dto.*;
-import com.example.rpl.RPL.model.*;
+import com.example.rpl.RPL.controller.dto.ActivitySubmissionResponseDTO;
+import com.example.rpl.RPL.controller.dto.ActivitySubmissionResultResponseDTO;
+import com.example.rpl.RPL.controller.dto.AllFinalSubmissionsResponseDTO;
+import com.example.rpl.RPL.controller.dto.SubmissionResultRequestDTO;
+import com.example.rpl.RPL.controller.dto.UpdateSubmissionStatusRequestDTO;
+import com.example.rpl.RPL.model.ActivitySubmission;
+import com.example.rpl.RPL.model.IOTest;
+import com.example.rpl.RPL.model.TestRun;
+import com.example.rpl.RPL.model.UnitTest;
 import com.example.rpl.RPL.queue.IProducer;
 import com.example.rpl.RPL.repository.TestRunRepository;
 import com.example.rpl.RPL.security.CurrentUser;
@@ -13,17 +20,12 @@ import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.SubmissionService;
 import com.example.rpl.RPL.service.TestService;
 import com.example.rpl.RPL.utils.TarUtils;
-
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.AmqpConnectException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -109,7 +111,7 @@ public class SubmissionController {
     }
 
 
-    @PutMapping(value = "/api/submissions/{submissionId}")
+    @PutMapping(value = "/api/submissions/{submissionId}/status")
     public ResponseEntity<ActivitySubmissionResponseDTO> updateSubmissionStatus(
         @PathVariable Long submissionId,
         @RequestBody @Valid UpdateSubmissionStatusRequestDTO updateSubmissionStatusRequestDTO) {
@@ -119,6 +121,49 @@ public class SubmissionController {
         ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
             .fromEntity(activitySubmission, null, List.of());
         return new ResponseEntity<>(asDto, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_submit')")
+    @PutMapping(value = "/api/courses/{courseId}/activities/{activityId}/submissions/{submissionId}/final")
+    public ResponseEntity<ActivitySubmissionResponseDTO> setSubmissionAsFinalSolution(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId, @PathVariable Long activityId,
+        @PathVariable Long submissionId) {
+        ActivitySubmission activitySubmission = submissionService
+            .setSubmissionAsFinalSolution(submissionId);
+
+        ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
+            .fromEntity(activitySubmission, null, List.of());
+        return new ResponseEntity<>(asDto, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_submit')")
+    @GetMapping(value = "/api/courses/{courseId}/activities/{activityId}/finalSubmission")
+    public ResponseEntity<ActivitySubmissionResponseDTO> getFinalSubmission(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId, @PathVariable Long activityId) {
+
+        ActivitySubmission as = submissionService
+            .getFinalSubmission(activityId, currentUser.getUser());
+
+        ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
+            .fromEntity(as, null, List.of());
+
+        return new ResponseEntity<>(asDto, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_submit')")
+    @GetMapping(value = "/api/courses/{courseId}/activities/{activityId}/allFinalSubmissions")
+    public ResponseEntity<AllFinalSubmissionsResponseDTO> getAllFinalSubmissionsFromActivity(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId, @PathVariable Long activityId) {
+
+        List<Long> finalSubmissionsFileIds = submissionService
+            .getAllFinalSubmissionsFileIds(activityId);
+
+        return new ResponseEntity<>(
+            AllFinalSubmissionsResponseDTO.builder().submissionFileIds(finalSubmissionsFileIds)
+                .build(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/api/submissions/{submissionId}/result")
@@ -136,6 +181,7 @@ public class SubmissionController {
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
 
     @GetMapping(value = "/api/submissions/{submissionId}/result")
     public ResponseEntity<ActivitySubmissionResultResponseDTO> getSubmissionResult(

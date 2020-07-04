@@ -51,6 +51,10 @@ public class ActivitySubmission {
     @Enumerated(EnumType.STRING)
     private SubmissionStatus status;
 
+    @Basic(optional = false)
+    @Column(name = "is_final_solution")
+    private Boolean isFinalSolution;
+
     @Column(name = "date_created")
     private ZonedDateTime dateCreated;
 
@@ -69,6 +73,7 @@ public class ActivitySubmission {
         this.user = user;
         this.file = file;
         this.status = status;
+        this.isFinalSolution = false;
         this.dateCreated = now();
         this.lastUpdated = this.dateCreated;
     }
@@ -95,6 +100,11 @@ public class ActivitySubmission {
 
     public void setStatus(SubmissionStatus status) {
         this.status = status;
+        this.lastUpdated = now();
+    }
+
+    public void setAsFinalSolution() {
+        this.isFinalSolution = true;
         this.lastUpdated = now();
     }
 }

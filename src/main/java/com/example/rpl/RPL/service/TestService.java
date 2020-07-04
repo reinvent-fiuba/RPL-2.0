@@ -170,7 +170,7 @@ public class TestService {
         }
 
         RPLFile testFile = fileRepository
-            .save(new RPLFile("test", "text", unitTestCode.getBytes()));
+            .save(new RPLFile("unit_test", "text", unitTestCode.getBytes()));
 
         UnitTest test = new UnitTest(activityId, testFile);
         return unitTestsRepository.save(test);
@@ -188,8 +188,7 @@ public class TestService {
 
         testFile.updateData(unitTestCode.getBytes());
 
-        fileRepository
-            .save(new RPLFile("test", "text", unitTestCode.getBytes()));
+        fileRepository.save(testFile);
 
         return unitTest;
     }
