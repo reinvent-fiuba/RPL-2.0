@@ -1,8 +1,11 @@
 package com.example.rpl.RPL.controller;
 
-import com.example.rpl.RPL.model.stats.ActivityStat;
-import com.example.rpl.RPL.model.stats.SubmissionStat;
-import com.example.rpl.RPL.model.stats.SubmissionStats;
+import com.example.rpl.RPL.controller.dto.ActivitiesStatResponseDTO;
+import com.example.rpl.RPL.controller.dto.SubmissionsStatResponseDTO;
+import com.example.rpl.RPL.controller.dto.SubmissionsStatsResponseDTO;
+import com.example.rpl.RPL.model.stats.ActivitiesStat;
+import com.example.rpl.RPL.model.stats.SubmissionsStat;
+import com.example.rpl.RPL.model.stats.SubmissionsStats;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.StatsService;
@@ -35,9 +38,9 @@ public class StatsController {
         this.statsService = statsService;
     }
 
-    @PreAuthorize("hasAuthority('activity_submit')")
+    @PreAuthorize("hasAuthority('activity_manage')")
     @GetMapping(value = "/api/stats/courses/{courseId}/submissions")
-    public ResponseEntity<SubmissionStats> getSubmissionsStats(
+    public ResponseEntity<SubmissionsStatsResponseDTO> getSubmissionsStats(
             @CurrentUser UserPrincipal currentUser,
             @PathVariable Long courseId,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
@@ -45,40 +48,40 @@ public class StatsController {
             @RequestParam(required = false) Long userId,
             @RequestParam(required = false) GroupBy groupBy
     ) {
-        SubmissionStats submissionStats;
+        SubmissionsStats submissionsStats;
 
         if (groupBy == GroupBy.activity) {
-            submissionStats = statsService.getSubmissionStatsGroupByActivity(courseId,categoryId,userId,date);
+            submissionsStats = statsService.getSubmissionStatsGroupByActivity(courseId,categoryId,userId,date);
         } else if (groupBy == GroupBy.user) {
-            submissionStats = statsService.getSubmissionStatsGroupByUser(courseId,categoryId,userId,date);
+            submissionsStats = statsService.getSubmissionStatsGroupByUser(courseId,categoryId,userId,date);
         } else if (groupBy == GroupBy.date) {
-            submissionStats = statsService.getSubmissionStatsGroupByDate(courseId, categoryId, userId, date);
+            submissionsStats = statsService.getSubmissionStatsGroupByDate(courseId, categoryId, userId, date);
         } else {
-            submissionStats = statsService.getSubmissionStatsGroupByActivity(courseId,categoryId,userId,date);
+            submissionsStats = statsService.getSubmissionStatsGroupByActivity(courseId,categoryId,userId,date);
         }
 
-        return new ResponseEntity<>(submissionStats, HttpStatus.OK);
+        return new ResponseEntity<>(SubmissionsStatsResponseDTO.fromEntity(submissionsStats), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('activity_submit')")
     @GetMapping(value = "/api/stats/courses/{courseId}/activities/me")
-    public ResponseEntity<ActivityStat> getMyActivityStats(
+    public ResponseEntity<ActivitiesStatResponseDTO> getMyActivityStats(
             @CurrentUser UserPrincipal currentUser,
             @PathVariable Long courseId
     ) {
-        ActivityStat activityStat = statsService.getActivityStatByUser(courseId, currentUser.getUser().getId());
+        ActivitiesStat activitiesStat = statsService.getActivityStatByUser(courseId, currentUser.getUser().getId());
 
-        return new ResponseEntity<>(activityStat, HttpStatus.OK);
+        return new ResponseEntity<>(ActivitiesStatResponseDTO.fromEntity(activitiesStat), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('activity_submit')")
     @GetMapping(value = "/api/stats/courses/{courseId}/submissions/me")
-    public ResponseEntity<SubmissionStat> getMySubmissionsStats(
+    public ResponseEntity<SubmissionsStatResponseDTO> getMySubmissionsStats(
             @CurrentUser UserPrincipal currentUser,
             @PathVariable Long courseId
     ) {
-        SubmissionStat submissionStat = statsService.getSubmissionStatByUser(courseId, currentUser.getUser().getId());
+        SubmissionsStat submissionsStat = statsService.getSubmissionStatByUser(courseId, currentUser.getUser().getId());
 
-        return new ResponseEntity<>(submissionStat, HttpStatus.OK);
+        return new ResponseEntity<>(SubmissionsStatResponseDTO.fromEntity(submissionsStat), HttpStatus.OK);
     }
 }

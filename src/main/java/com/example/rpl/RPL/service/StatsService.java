@@ -1,9 +1,9 @@
 package com.example.rpl.RPL.service;
 
 import com.example.rpl.RPL.model.*;
-import com.example.rpl.RPL.model.stats.ActivityStat;
-import com.example.rpl.RPL.model.stats.SubmissionStat;
-import com.example.rpl.RPL.model.stats.SubmissionStats;
+import com.example.rpl.RPL.model.stats.ActivitiesStat;
+import com.example.rpl.RPL.model.stats.SubmissionsStat;
+import com.example.rpl.RPL.model.stats.SubmissionsStats;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class StatsService {
         this.coursesService = coursesService;
     }
 
-    public SubmissionStats getSubmissionStatsGroupByActivity(Long courseId, Long categoryId, Long userId, LocalDate date) {
+    public SubmissionsStats getSubmissionStatsGroupByActivity(Long courseId, Long categoryId, Long userId, LocalDate date) {
 
         List<Activity> activities = activitiesService.getAllActivitiesByCourse(courseId, categoryId);
 
@@ -48,18 +48,18 @@ public class StatsService {
                         "category_name", activity.getActivityCategory().getName()
                 )).collect(Collectors.toCollection(ArrayList::new));
 
-        List<SubmissionStat> submissionStats = new ArrayList<>();
+        List<SubmissionsStat> submissionsStats = new ArrayList<>();
 
         for (Activity activity : activities) {
-            submissionStats.add(new SubmissionStat(
+            submissionsStats.add(new SubmissionsStat(
                     submissionsByActivitysubmissions.getOrDefault(activity, new ArrayList<>())
             ));
         }
 
-        return new SubmissionStats(submissionStats, activitiesMetadata);
+        return new SubmissionsStats(submissionsStats, activitiesMetadata);
     }
 
-    public SubmissionStats getSubmissionStatsGroupByUser(Long courseId, Long categoryId, Long userId, LocalDate date) {
+    public SubmissionsStats getSubmissionStatsGroupByUser(Long courseId, Long categoryId, Long userId, LocalDate date) {
 
         List<CourseUser> courseUsers = userId != null ?
                 List.of(coursesService.getStudentByUserId(courseId, userId)) :
@@ -80,19 +80,19 @@ public class StatsService {
                         "student_id", courseUser.getUser().getStudentId()
                 )).collect(Collectors.toCollection(ArrayList::new));
 
-        List<SubmissionStat> submissionStats = new ArrayList<>();
+        List<SubmissionsStat> submissionsStats = new ArrayList<>();
 
         for (CourseUser courseUser : courseUsers) {
             User user = courseUser.getUser();
-            submissionStats.add(new SubmissionStat(
+            submissionsStats.add(new SubmissionsStat(
                     submissionsByUser.getOrDefault(user, new ArrayList<>())
             ));
         }
 
-        return new SubmissionStats(submissionStats, usersMetadata);
+        return new SubmissionsStats(submissionsStats, usersMetadata);
     }
 
-    public SubmissionStats getSubmissionStatsGroupByDate(Long courseId, Long categoryId, Long userId, LocalDate date) {
+    public SubmissionsStats getSubmissionStatsGroupByDate(Long courseId, Long categoryId, Long userId, LocalDate date) {
         List<ActivitySubmission> submissions = submissionService.getAllSubmissionsByCourseId(courseId, userId, date);
 
         Map<LocalDate, List<ActivitySubmission>> submissionsByDate =
@@ -100,17 +100,17 @@ public class StatsService {
 
 
         List<Map<String,String>> dateMetadata = new ArrayList<>();
-        List<SubmissionStat> submissionStats = new ArrayList<>();
+        List<SubmissionsStat> submissionsStats = new ArrayList<>();
 
         for (LocalDate submissionStatDate : submissionsByDate.keySet()) {
             dateMetadata.add(Map.of("date", submissionStatDate.toString()));
-            submissionStats.add(new SubmissionStat(submissionsByDate.get(submissionStatDate)));
+            submissionsStats.add(new SubmissionsStat(submissionsByDate.get(submissionStatDate)));
         }
 
-        return new SubmissionStats(submissionStats, dateMetadata);
+        return new SubmissionsStats(submissionsStats, dateMetadata);
     }
 
-    public ActivityStat getActivityStatByUser(Long courseId, Long userId) {
+    public ActivitiesStat getActivityStatByUser(Long courseId, Long userId) {
         List<Activity> activities = activitiesService.getAllActivitiesByCourse(courseId);
         List<ActivitySubmission> activitySubmissions = submissionService.getAllSubmissionsByCourseId(courseId, userId);
 
@@ -134,14 +134,14 @@ public class StatsService {
             }
         }
 
-        ActivityStat activityStat = new ActivityStat(started, notStarted, solved, pendingPoints, obtainedPoints);
+        ActivitiesStat activitiesStat = new ActivitiesStat(started, notStarted, solved, pendingPoints, obtainedPoints);
 
-        return activityStat;
+        return activitiesStat;
     }
 
-    public SubmissionStat getSubmissionStatByUser(Long courseId, Long userId) {
+    public SubmissionsStat getSubmissionStatByUser(Long courseId, Long userId) {
         List<ActivitySubmission> activitySubmissions = submissionService.getAllSubmissionsByCourseId(courseId, userId);
 
-        return new SubmissionStat(activitySubmissions);
+        return new SubmissionsStat(activitySubmissions);
     }
 }

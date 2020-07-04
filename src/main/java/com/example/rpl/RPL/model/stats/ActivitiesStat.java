@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class ActivityStat {
+public class ActivitiesStat {
 
     private Long started;
 
@@ -17,7 +17,7 @@ public class ActivityStat {
 
     private Long totalPoints;
 
-    public ActivityStat(Long started, Long notStarted, Long solved, Long obtainedPoints, Long totalPoints) {
+    public ActivitiesStat(Long started, Long notStarted, Long solved, Long obtainedPoints, Long totalPoints) {
         this.started = started;
         this.notStarted = notStarted;
         this.solved = solved;

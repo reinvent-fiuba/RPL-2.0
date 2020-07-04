@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:51563",
+    "host": "localhost:52004",
     "basePath": "/",
     "tags": [
         {
@@ -5321,7 +5321,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ActivityStat"
+                            "$ref": "#/definitions/ActivitiesStatResponseDTO"
                         }
                     },
                     "403": {
@@ -5539,7 +5539,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/SubmissionStats"
+                            "$ref": "#/definitions/SubmissionsStatsResponseDTO"
                         }
                     },
                     "403": {
@@ -5721,7 +5721,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/SubmissionStat"
+                            "$ref": "#/definitions/SubmissionsStatResponseDTO"
                         }
                     },
                     "403": {
@@ -6128,6 +6128,32 @@
         }
     },
     "definitions": {
+        "ActivitiesStatResponseDTO": {
+            "type": "object",
+            "properties": {
+                "not_started": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "obtained_points": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "solved": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "started": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "total_points": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            },
+            "title": "ActivitiesStatResponseDTO"
+        },
         "ActivityCategoryResponseDTO": {
             "type": "object",
             "properties": {
@@ -6232,32 +6258,6 @@
                 }
             },
             "title": "ActivityResponseDTO"
-        },
-        "ActivityStat": {
-            "type": "object",
-            "properties": {
-                "not_started": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "obtained_points": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "solved": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "started": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "total_points": {
-                    "type": "integer",
-                    "format": "int64"
-                }
-            },
-            "title": "ActivityStat"
         },
         "ActivitySubmissionResponseDTO": {
             "type": "object",
@@ -6986,7 +6986,7 @@
             },
             "title": "SubmissionResultRequestDTO"
         },
-        "SubmissionStat": {
+        "SubmissionsStatResponseDTO": {
             "type": "object",
             "properties": {
                 "build_error": {
@@ -7010,9 +7010,9 @@
                     "format": "int64"
                 }
             },
-            "title": "SubmissionStat"
+            "title": "SubmissionsStatResponseDTO"
         },
-        "SubmissionStats": {
+        "SubmissionsStatsResponseDTO": {
             "type": "object",
             "properties": {
                 "metadata": {
@@ -7021,14 +7021,14 @@
                         "$ref": "#/definitions/Map\u00abstring,string\u00bb"
                     }
                 },
-                "submission_stats": {
+                "submissions_stats": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/SubmissionStat"
+                        "$ref": "#/definitions/SubmissionsStatResponseDTO"
                     }
                 }
             },
-            "title": "SubmissionStats"
+            "title": "SubmissionsStatsResponseDTO"
         },
         "TestSuitDTO": {
             "type": "object",

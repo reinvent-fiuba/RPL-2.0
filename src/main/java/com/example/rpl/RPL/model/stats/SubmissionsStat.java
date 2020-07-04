@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
-public class SubmissionStat {
+public class SubmissionsStat {
 
     private long total;
 
@@ -21,7 +21,7 @@ public class SubmissionStat {
 
     private long failure;
 
-    public SubmissionStat(List<ActivitySubmission> submissions) {
+    public SubmissionsStat(List<ActivitySubmission> submissions) {
         this.total = submissions.size();
         Map<SubmissionStatus, Long> submissionsByStatus = submissions.stream()
                 .collect(Collectors.groupingBy(submission -> submission.getStatus(), Collectors.counting()));

@@ -6,18 +6,18 @@ import java.util.List;
 import java.util.Map;
 
 @Getter
-public class SubmissionStats {
+public class SubmissionsStats {
 
-    private List<SubmissionStat> submissionStats;
+    private List<SubmissionsStat> submissionsStats;
 
-     // This metadata could differ depending on way submissions are grouped,
+    // This metadata could differ depending on the way submissions are grouped,
     // For example, for SubmissionsStats by Activity the metadata will
     // contain the information associated to each SubmissionStat in the
     // submissionStats list.
      private List<Map<String, String>> metadata;
 
-    public SubmissionStats(List<SubmissionStat> submissionStats, List<Map<String, String>> metadata) {
-        this.submissionStats = submissionStats;
+    public SubmissionsStats(List<SubmissionsStat> submissionsStats, List<Map<String, String>> metadata) {
+        this.submissionsStats = submissionsStats;
         this.metadata = metadata;
     }
 }
