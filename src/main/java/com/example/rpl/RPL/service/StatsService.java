@@ -32,7 +32,7 @@ public class StatsService {
         this.coursesService = coursesService;
     }
 
-    public SubmissionStats getSubmissionStatsByActivity(Long courseId, Long categoryId, Long userId, LocalDate date) {
+    public SubmissionStats getSubmissionStatsGroupByActivity(Long courseId, Long categoryId, Long userId, LocalDate date) {
 
         List<Activity> activities = activitiesService.getAllActivitiesByCourse(courseId, categoryId);
 
@@ -60,7 +60,7 @@ public class StatsService {
         return new SubmissionStats(submissionStats, activitiesMetadata);
     }
 
-    public SubmissionStats getSubmissionStatsByUser(Long courseId, Long categoryId, Long userId, LocalDate date) {
+    public SubmissionStats getSubmissionStatsGroupByUser(Long courseId, Long categoryId, Long userId, LocalDate date) {
 
         List<CourseUser> courseUsers = userId != null ?
                 List.of(coursesService.getStudentByUserId(courseId, userId)) :
@@ -93,7 +93,7 @@ public class StatsService {
         return new SubmissionStats(submissionStats, usersMetadata);
     }
 
-    public SubmissionStats getSubmissionStatsByDate(Long courseId, Long categoryId, Long userId, LocalDate date) {
+    public SubmissionStats getSubmissionStatsGroupByDate(Long courseId, Long categoryId, Long userId, LocalDate date) {
         List<ActivitySubmission> submissions = submissionService.getAllSubmissionsByCourseId(courseId, userId, date);
 
         Map<LocalDate, List<ActivitySubmission>> submissionsByDate =
@@ -109,5 +109,40 @@ public class StatsService {
         }
 
         return new SubmissionStats(submissionStats, dateMetadata);
+    }
+
+    public ActivityStat getActivityStatByUser(Long courseId, Long userId) {
+        List<Activity> activities = activitiesService.getAllActivitiesByCourse(courseId);
+        List<ActivitySubmission> activitySubmissions = submissionService.getAllSubmissionsByCourseId(courseId, userId);
+
+        Map<Long, List<ActivitySubmission>> submissionsByActivity = activitySubmissions.stream()
+                .collect(Collectors.groupingBy(activitySubmission -> activitySubmission.getActivity().getId()));
+
+        long started, notStarted, solved, pendingPoints, obtainedPoints;
+        started = notStarted = solved = pendingPoints = obtainedPoints = 0;
+
+        for (Activity activity : activities) {
+            List<ActivitySubmission> submissions = submissionsByActivity.get(activity.getId());
+            if (submissions == null) {
+                notStarted++;
+                pendingPoints += activity.getPoints();
+            } else if (submissions.stream().anyMatch(activitySubmission -> activitySubmission.getStatus().toString() == "SUCCESS")) {
+                solved++;
+                obtainedPoints += activity.getPoints();
+            } else {
+                started++;
+                pendingPoints += activity.getPoints();
+            }
+        }
+
+        ActivityStat activityStat = new ActivityStat(started, notStarted, solved, pendingPoints, obtainedPoints);
+
+        return activityStat;
+    }
+
+    public SubmissionStat getSubmissionStatByUser(Long courseId, Long userId) {
+        List<ActivitySubmission> activitySubmissions = submissionService.getAllSubmissionsByCourseId(courseId, userId);
+
+        return new SubmissionStat(activitySubmissions);
     }
 }

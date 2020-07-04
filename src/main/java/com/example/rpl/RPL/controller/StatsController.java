@@ -1,32 +1,19 @@
 package com.example.rpl.RPL.controller;
 
-import com.example.rpl.RPL.controller.dto.*;
 import com.example.rpl.RPL.model.*;
-import com.example.rpl.RPL.queue.IProducer;
-import com.example.rpl.RPL.repository.TestRunRepository;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.StatsService;
 import com.example.rpl.RPL.service.SubmissionService;
-import com.example.rpl.RPL.service.TestService;
-import com.example.rpl.RPL.utils.TarUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.AmqpConnectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static com.example.rpl.RPL.model.SubmissionStatus.*;
 
 @Slf4j
 @RestController
@@ -59,15 +46,37 @@ public class StatsController {
         SubmissionStats submissionStats;
 
         if (groupBy == GroupBy.activity) {
-            submissionStats = statsService.getSubmissionStatsByActivity(courseId,categoryId,userId,date);
+            submissionStats = statsService.getSubmissionStatsGroupByActivity(courseId,categoryId,userId,date);
         } else if (groupBy == GroupBy.user) {
-            submissionStats = statsService.getSubmissionStatsByUser(courseId,categoryId,userId,date);
+            submissionStats = statsService.getSubmissionStatsGroupByUser(courseId,categoryId,userId,date);
         } else if (groupBy == GroupBy.date) {
-            submissionStats = statsService.getSubmissionStatsByDate(courseId, categoryId, userId, date);
+            submissionStats = statsService.getSubmissionStatsGroupByDate(courseId, categoryId, userId, date);
         } else {
-            submissionStats = statsService.getSubmissionStatsByActivity(courseId,categoryId,userId,date);
+            submissionStats = statsService.getSubmissionStatsGroupByActivity(courseId,categoryId,userId,date);
         }
 
         return new ResponseEntity<>(submissionStats, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_submit')")
+    @GetMapping(value = "/api/stats/courses/{courseId}/activities/me")
+    public ResponseEntity<ActivityStat> getMyActivityStats(
+            @CurrentUser UserPrincipal currentUser,
+            @PathVariable Long courseId
+    ) {
+        ActivityStat activityStat = statsService.getActivityStatByUser(courseId, currentUser.getUser().getId());
+
+        return new ResponseEntity<>(activityStat, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_submit')")
+    @GetMapping(value = "/api/stats/courses/{courseId}/submissions/me")
+    public ResponseEntity<SubmissionStat> getMySubmissionsStats(
+            @CurrentUser UserPrincipal currentUser,
+            @PathVariable Long courseId
+    ) {
+        SubmissionStat submissionStat = statsService.getSubmissionStatByUser(courseId, currentUser.getUser().getId());
+
+        return new ResponseEntity<>(submissionStat, HttpStatus.OK);
     }
 }

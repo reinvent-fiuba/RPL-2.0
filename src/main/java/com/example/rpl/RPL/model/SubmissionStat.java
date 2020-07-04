@@ -4,19 +4,28 @@ import lombok.Getter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 public class SubmissionStat {
 
-    private long totalSubmissions;
+    private long total;
 
-    private long successSubmissions;
+    private long success;
+
+    private long runtimeError;
+
+    private long buildError;
+
+    private long failure;
 
     public SubmissionStat(List<ActivitySubmission> submissions) {
-        this.totalSubmissions = submissions.size();
-        this.successSubmissions = submissions.stream()
-                .filter(activitySubmission ->
-                        activitySubmission.getStatus() == SubmissionStatus.SUCCESS
-                ).count();
+        this.total = submissions.size();
+        Map<SubmissionStatus, Long> submissionsByStatus = submissions.stream()
+                .collect(Collectors.groupingBy(submission -> submission.getStatus(), Collectors.counting()));
+        this.success = submissionsByStatus.getOrDefault(SubmissionStatus.SUCCESS, (long) 0);
+        this.runtimeError = submissionsByStatus.getOrDefault(SubmissionStatus.RUNTIME_ERROR, (long) 0);
+        this.buildError = submissionsByStatus.getOrDefault(SubmissionStatus.BUILD_ERROR, (long) 0);
+        this.failure = submissionsByStatus.getOrDefault(SubmissionStatus.FAILURE, (long) 0);
     }
 }

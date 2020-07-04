@@ -19,6 +19,10 @@ public interface SubmissionRepository extends JpaRepository<ActivitySubmission, 
 
     List<ActivitySubmission> findAllByActivityInAndUser_Id(List<Activity> activities, Long userId);
 
+    List<ActivitySubmission> findAllByActivityInAndDateCreatedBetween(List<Activity> activities,
+                                                                      ZonedDateTime dateCreatedStart,
+                                                                      ZonedDateTime dateCreatedEnd);
+
     List<ActivitySubmission> findAllByActivityInAndUser_IdAndDateCreatedBetween(List<Activity> activities,
                                                                                 Long userId,
                                                                                 ZonedDateTime dateCreatedStart,
@@ -33,6 +37,10 @@ public interface SubmissionRepository extends JpaRepository<ActivitySubmission, 
     List<ActivitySubmission> findAllByActivity_Course_Id(Long courseId);
 
     List<ActivitySubmission> findAllByActivity_Course_IdAndUser_Id(Long courseId, Long userId);
+
+    List<ActivitySubmission> findAllByActivity_Course_IdAndDateCreatedBetween(Long courseId,
+                                                                              ZonedDateTime dateCreatedStart,
+                                                                              ZonedDateTime dateCreatedEnd);
 
     List<ActivitySubmission> findAllByActivity_Course_IdAndUser_IdAndDateCreatedBetween(Long courseId,
                                                                                         Long userId,

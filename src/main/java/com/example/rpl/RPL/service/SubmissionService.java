@@ -163,7 +163,9 @@ public class SubmissionService {
         if (date != null) {
             ZonedDateTime startOfDay = date.atStartOfDay(ZoneId.systemDefault());
             ZonedDateTime endOfDay = date.plusDays(1).atStartOfDay(ZoneId.systemDefault());
-            return submissionRepository.findAllByActivityInAndUser_IdAndDateCreatedBetween(activities, userId, startOfDay, endOfDay);
+            return userId != null ?
+                    submissionRepository.findAllByActivityInAndUser_IdAndDateCreatedBetween(activities, userId, startOfDay, endOfDay) :
+                    submissionRepository.findAllByActivityInAndDateCreatedBetween(activities, startOfDay, endOfDay);
         }
         return userId != null ?
                 submissionRepository.findAllByActivityInAndUser_Id(activities, userId) :
@@ -184,8 +186,10 @@ public class SubmissionService {
         if (date != null) {
             ZonedDateTime startOfDay = date.atStartOfDay(ZoneId.systemDefault());
             ZonedDateTime endOfDay = date.plusDays(1).atStartOfDay(ZoneId.systemDefault());
-            return submissionRepository
-                    .findAllByActivity_Course_IdAndUser_IdAndDateCreatedBetween(courseId, userId, startOfDay, endOfDay);
+            return userId != null ?
+                submissionRepository.findAllByActivity_Course_IdAndUser_IdAndDateCreatedBetween(courseId, userId, startOfDay, endOfDay) :
+                submissionRepository.findAllByActivity_Course_IdAndDateCreatedBetween(courseId, startOfDay, endOfDay);
+
         }
         return this.getAllSubmissionsByCourseId(courseId, userId);
     }
