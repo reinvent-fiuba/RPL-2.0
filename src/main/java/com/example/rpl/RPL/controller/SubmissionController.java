@@ -4,6 +4,17 @@ import static com.example.rpl.RPL.model.SubmissionStatus.ENQUEUED;
 import static com.example.rpl.RPL.model.SubmissionStatus.PENDING;
 import static com.example.rpl.RPL.model.SubmissionStatus.PROCESSING;
 
+import com.example.rpl.RPL.controller.dto.ActivitySubmissionResponseDTO;
+import com.example.rpl.RPL.controller.dto.ActivitySubmissionResultResponseDTO;
+import com.example.rpl.RPL.controller.dto.ActivitySubmissionStatsResponseDTO;
+import com.example.rpl.RPL.controller.dto.AllFinalSubmissionsResponseDTO;
+import com.example.rpl.RPL.controller.dto.SubmissionResultRequestDTO;
+import com.example.rpl.RPL.controller.dto.UpdateSubmissionStatusRequestDTO;
+import com.example.rpl.RPL.model.ActivitySubmission;
+import com.example.rpl.RPL.model.ActivitySubmissionStats;
+import com.example.rpl.RPL.model.IOTest;
+import com.example.rpl.RPL.model.TestRun;
+import com.example.rpl.RPL.model.UnitTest;
 import com.example.rpl.RPL.controller.dto.*;
 import com.example.rpl.RPL.model.*;
 import com.example.rpl.RPL.queue.IProducer;
@@ -148,6 +159,20 @@ public class SubmissionController {
             .fromEntity(as, null, List.of());
 
         return new ResponseEntity<>(asDto, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_submit')")
+    @GetMapping(value = "/api/courses/{courseId}/activities/{activityId}/allFinalSubmissions")
+    public ResponseEntity<AllFinalSubmissionsResponseDTO> getAllFinalSubmissionsFromActivity(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId, @PathVariable Long activityId) {
+
+        List<Long> finalSubmissionsFileIds = submissionService
+            .getAllFinalSubmissionsFileIds(activityId);
+
+        return new ResponseEntity<>(
+            AllFinalSubmissionsResponseDTO.builder().submissionFileIds(finalSubmissionsFileIds)
+                .build(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/api/submissions/{submissionId}/result")

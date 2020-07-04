@@ -55,4 +55,8 @@ public interface SubmissionRepository extends JpaRepository<ActivitySubmission, 
 
     Optional<ActivitySubmission> findByActivity_IdAndUserIdAndIsFinalSolution(Long activityId,
         Long userId, boolean isFinalSolution);
+
+
+    List<ActivitySubmission> findByActivity_IdAndIsFinalSolution(Long activityId,
+        boolean isFinalSolution);
 }

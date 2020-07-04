@@ -232,4 +232,9 @@ public class SubmissionService {
             .orElseThrow(() -> new NotFoundException("Activity submission not found",
                 "final_submission_not_found"));
     }
+
+    public List<Long> getAllFinalSubmissionsFileIds(Long activityId) {
+        return submissionRepository.findByActivity_IdAndIsFinalSolution(activityId, true).stream()
+            .map(ActivitySubmission::getFile).map(RPLFile::getId).collect(Collectors.toList());
+    }
 }
