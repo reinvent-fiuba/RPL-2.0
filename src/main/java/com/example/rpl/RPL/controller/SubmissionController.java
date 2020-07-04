@@ -4,16 +4,8 @@ import static com.example.rpl.RPL.model.SubmissionStatus.ENQUEUED;
 import static com.example.rpl.RPL.model.SubmissionStatus.PENDING;
 import static com.example.rpl.RPL.model.SubmissionStatus.PROCESSING;
 
-import com.example.rpl.RPL.controller.dto.ActivitySubmissionResponseDTO;
-import com.example.rpl.RPL.controller.dto.ActivitySubmissionResultResponseDTO;
-import com.example.rpl.RPL.controller.dto.ActivitySubmissionStatsResponseDTO;
-import com.example.rpl.RPL.controller.dto.SubmissionResultRequestDTO;
-import com.example.rpl.RPL.controller.dto.UpdateSubmissionStatusRequestDTO;
-import com.example.rpl.RPL.model.ActivitySubmission;
-import com.example.rpl.RPL.model.ActivitySubmissionStats;
-import com.example.rpl.RPL.model.IOTest;
-import com.example.rpl.RPL.model.TestRun;
-import com.example.rpl.RPL.model.UnitTest;
+import com.example.rpl.RPL.controller.dto.*;
+import com.example.rpl.RPL.model.*;
 import com.example.rpl.RPL.queue.IProducer;
 import com.example.rpl.RPL.repository.TestRunRepository;
 import com.example.rpl.RPL.security.CurrentUser;
@@ -21,12 +13,17 @@ import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.SubmissionService;
 import com.example.rpl.RPL.service.TestService;
 import com.example.rpl.RPL.utils.TarUtils;
+
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.AmqpConnectException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -196,16 +193,4 @@ public class SubmissionController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-    @PreAuthorize("hasAuthority('activity_submit')")
-    @GetMapping(value = "/api/courses/{courseId}/submissions/stats")
-    public ResponseEntity<ActivitySubmissionStatsResponseDTO> getSubmissionsStats(
-            @CurrentUser UserPrincipal currentUser,
-            @PathVariable Long courseId) {
-
-        ActivitySubmissionStats response = submissionService.getSubmissionsStatsByUserAndCourseId(currentUser.getId(), courseId);
-
-        return new ResponseEntity<>(ActivitySubmissionStatsResponseDTO.fromEntity(response), HttpStatus.OK);
-    }
-
 }

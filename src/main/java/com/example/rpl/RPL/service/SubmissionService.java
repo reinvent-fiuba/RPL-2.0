@@ -3,13 +3,13 @@ package com.example.rpl.RPL.service;
 import com.example.rpl.RPL.controller.dto.UnitTestResultDTO;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.*;
-import com.example.rpl.RPL.repository.ActivityRepository;
-import com.example.rpl.RPL.repository.FileRepository;
-import com.example.rpl.RPL.repository.SubmissionRepository;
-import com.example.rpl.RPL.repository.TestRunRepository;
+import com.example.rpl.RPL.model.RPLFile;
+import com.example.rpl.RPL.repository.*;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,6 +142,52 @@ public class SubmissionService {
         return submissionRepository.save(activitySubmission);
     }
 
+    public List<ActivitySubmission> getAllSubmissionsByActivities(List<Activity> activities) {
+        return submissionRepository.findAllByActivityIn(activities);
+    }
+
+    public List<ActivitySubmission> getAllSubmissionsByActivities(List<Activity> activities, Long userId) {
+        return userId != null ?
+                submissionRepository.findAllByActivityInAndUser_Id(activities, userId) :
+                submissionRepository.findAllByActivityIn(activities);
+    }
+
+    public List<ActivitySubmission> getAllSubmissionsByActivities(List<Activity> activities, Long userId, LocalDate date) {
+
+        if (date != null) {
+            ZonedDateTime startOfDay = date.atStartOfDay(ZoneId.systemDefault());
+            ZonedDateTime endOfDay = date.plusDays(1).atStartOfDay(ZoneId.systemDefault());
+            return userId != null ?
+                    submissionRepository.findAllByActivityInAndUser_IdAndDateCreatedBetween(activities, userId, startOfDay, endOfDay) :
+                    submissionRepository.findAllByActivityInAndDateCreatedBetween(activities, startOfDay, endOfDay);
+        }
+        return userId != null ?
+                submissionRepository.findAllByActivityInAndUser_Id(activities, userId) :
+                submissionRepository.findAllByActivityIn(activities);
+    }
+
+    public List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId) {
+        return submissionRepository.findAllByActivity_Course_Id(courseId);
+    }
+
+    public List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId, Long userId) {
+        return userId != null ?
+                submissionRepository.findAllByActivity_Course_IdAndUser_Id(courseId, userId) :
+                submissionRepository.findAllByActivity_Course_Id(courseId);
+    }
+
+    public List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId, Long userId, LocalDate date) {
+        if (date != null) {
+            ZonedDateTime startOfDay = date.atStartOfDay(ZoneId.systemDefault());
+            ZonedDateTime endOfDay = date.plusDays(1).atStartOfDay(ZoneId.systemDefault());
+            return userId != null ?
+                submissionRepository.findAllByActivity_Course_IdAndUser_IdAndDateCreatedBetween(courseId, userId, startOfDay, endOfDay) :
+                submissionRepository.findAllByActivity_Course_IdAndDateCreatedBetween(courseId, startOfDay, endOfDay);
+
+        }
+        return this.getAllSubmissionsByCourseId(courseId, userId);
+    }
+
     public List<ActivitySubmission> getAllSubmissionsByUserAndActivities(User user,
         List<Activity> activities) {
         return submissionRepository.findAllByUserAndActivityIn(user, activities);
@@ -150,16 +196,5 @@ public class SubmissionService {
     public List<ActivitySubmission> getAllSubmissionsByUserAndActivityId(User user,
         Long activityId) {
         return submissionRepository.findAllByUserAndActivity_Id(user, activityId);
-    }
-
-    public ActivitySubmissionStats getSubmissionsStatsByUserAndCourseId(Long userId,
-                                                                              Long courseId) {
-        List<ActivitySubmission> activitySubmissions = submissionRepository.findAllByUserIdAndCourseId(userId, courseId);
-        int total = activitySubmissions.size();
-        Map<SubmissionStatus, Long> countByStatus = activitySubmissions.stream()
-                .collect(Collectors.groupingBy(activitySubmission -> activitySubmission.getStatus(),
-                        Collectors.counting()));
-
-        return new ActivitySubmissionStats(total, countByStatus);
     }
 }

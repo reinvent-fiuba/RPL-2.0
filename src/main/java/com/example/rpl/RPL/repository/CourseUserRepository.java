@@ -10,15 +10,20 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CourseUserRepository extends JpaRepository<CourseUser, Long> {
 
+    Optional <CourseUser> findById(Long courseUserId);
+
     Optional<CourseUser> findByCourse_IdAndUser_Id(Long courseId, Long userId);
 
     Long deleteByCourse_IdAndUser_Id(Long courseId, Long userId);
+
+    Optional<CourseUser> findByCourse_IdAndRole_IdAndUser_Id(Long courseId, Long roleId, Long userId);
 
     List<CourseUser> findByCourse_IdAndRole_Id(Long courseId, Long roleId);
 
     List<CourseUser> findByCourse_Id(Long courseId);
 
     List<CourseUser> findByUser_Id(Long userId);
+
 
     @Query("select case when count(cu)>0 then 'true' else 'false' end " +
         "from CourseUser cu " +

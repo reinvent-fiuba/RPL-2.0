@@ -238,47 +238,6 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.activity_language == "c_std11"
             assert result.activity_iotests.size() == 0
     }
-
-    /*****************************************************************************************
-     ********** GET ACTIVITIES STATS *********************************************************
-     *****************************************************************************************/
-
-    @Unroll
-    void "test get activities stats"() {
-        given:
-            for (submissionStatus in submissionStatuses) {
-                submissionRepository.save(new ActivitySubmission(
-                        activity,
-                        user,
-                        submissionFile,
-                        submissionStatus
-                ))
-            }
-
-        when:
-            def response = get("/api/courses/${course.getId()}/submissions/stats", username, password);
-
-        then:
-            response.contentType == "application/json"
-            response.statusCode == SC_OK
-
-            def result = getJsonResponse(response)
-
-            result.count_by_status["PENDING"] == pending
-            result.count_by_status["SUCCESS"] == success
-
-
-        where:
-            submissionStatuses         | pending | success
-            []                         | null    | null
-            [SubmissionStatus.PENDING] | 1       | null
-            [SubmissionStatus.SUCCESS] | null    | 1
-            [SubmissionStatus.PENDING,
-             SubmissionStatus.SUCCESS] | 1       | 1
-            [SubmissionStatus.SUCCESS,
-             SubmissionStatus.SUCCESS] | null    | 2
-    }
-
 }
 
 

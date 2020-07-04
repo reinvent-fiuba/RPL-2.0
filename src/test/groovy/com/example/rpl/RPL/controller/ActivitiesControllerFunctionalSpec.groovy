@@ -613,42 +613,4 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.last_updated != null
 
     }
-
-    /*****************************************************************************************
-     ********** GET ACTIVITIES STATS *********************************************************
-     *****************************************************************************************/
-
-    @Unroll
-    void "test get activities stats"() {
-        given:
-            for (submissionStatus in submissionStatuses) {
-                submissionRepository.save(new ActivitySubmission(
-                        activity,
-                        user,
-                        submissionFile,
-                        submissionStatus
-                ))
-            }
-        when:
-            def response = get("/api/courses/${course.getId()}/activities/stats", username, password);
-
-        then:
-            response.contentType == "application/json"
-            response.statusCode == SC_OK
-
-            def result = getJsonResponse(response)
-
-            result.count_by_status == ["NON STARTED": nonStarted, "STARTED": started, "SOLVED": solved]
-            result.score == ["OBTAINED": score, "PENDING": totalScore-score]
-
-        where:
-            submissionStatuses         | score | totalScore | started | solved | nonStarted
-            []                         | 0     | 10         | 0       | 0      | 1
-            [SubmissionStatus.PENDING] | 0     | 10         | 1       | 0      | 0
-            [SubmissionStatus.SUCCESS] | 10    | 10         | 0       | 1      | 0
-            [SubmissionStatus.PENDING,
-             SubmissionStatus.SUCCESS] | 10    | 10         | 0       | 1      | 0
-            [SubmissionStatus.SUCCESS,
-             SubmissionStatus.SUCCESS] | 10    | 10         | 0       | 1      | 0
-    }
 }

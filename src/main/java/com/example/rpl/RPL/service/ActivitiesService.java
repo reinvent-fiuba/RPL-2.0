@@ -2,12 +2,9 @@ package com.example.rpl.RPL.service;
 
 import static java.time.ZonedDateTime.now;
 
-import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
 import com.example.rpl.RPL.exception.NotFoundException;
-import com.example.rpl.RPL.model.ActivitiesStats;
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivityCategory;
-import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.Course;
 import com.example.rpl.RPL.model.Language;
 import com.example.rpl.RPL.model.RPLFile;
@@ -15,14 +12,11 @@ import com.example.rpl.RPL.repository.ActivityCategoryRepository;
 import com.example.rpl.RPL.repository.ActivityRepository;
 import com.example.rpl.RPL.repository.CourseRepository;
 import com.example.rpl.RPL.repository.FileRepository;
-import com.example.rpl.RPL.repository.SubmissionRepository;
+
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.language.bm.Lang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +27,6 @@ public class ActivitiesService {
 
     private final CourseRepository courseRepository;
     private final ActivityRepository activityRepository;
-    private final SubmissionRepository submissionRepository;
     private final ActivityCategoryRepository activityCategoryRepository;
     private final FileRepository fileRepository;
 
@@ -41,21 +34,17 @@ public class ActivitiesService {
     public ActivitiesService(CourseRepository courseRepository,
         ActivityRepository activityRepository,
         ActivityCategoryRepository activityCategoryRepository,
-        FileRepository fileRepository,
-        SubmissionRepository submissionRepository) {
+        FileRepository fileRepository) {
         this.courseRepository = courseRepository;
         this.activityRepository = activityRepository;
         this.activityCategoryRepository = activityCategoryRepository;
         this.fileRepository = fileRepository;
-        this.submissionRepository = submissionRepository;
     }
 
     /**
-     * Creates a new Course.
+     * Creates a new Activity.
      *
-     * @return a new saved Course
-     * @throws EntityAlreadyExistsException if course exists ValidationException declared on the
-     * Course class
+     * @return a new saved Activity
      */
     @Transactional
     public Activity createActivity(Long courseId, Long activityCategoryId, String name,
@@ -119,13 +108,29 @@ public class ActivitiesService {
         return activity;
     }
 
+    /**
+     * Retrieves all activities from a course
+     *
+     * @return a list of Activities
+     * Course class
+     */
     @Transactional
     public List<Activity> getAllActivitiesByCourse(Long courseId) {
-        Course course = courseRepository.findById(courseId).orElseThrow(
-            () -> new NotFoundException("Course not found",
-                "course_not_found"));
+        return activityRepository.findActivitiesByCourse_Id(courseId);
+    }
 
-        return activityRepository.findActivitiesByCourse(course);
+    /**
+     * Retrieves all activities from a course with a specific category (optional)
+     * If cateogoryId is not present, the function ignores the that filter
+     *
+     * @return a list of Activities
+     * Course class
+     */
+    @Transactional
+    public List<Activity> getAllActivitiesByCourse(Long courseId, Long categoryId) {
+        return categoryId != null ?
+                activityRepository.findActivitiesByCourse_IdAndActivityCategory_Id(courseId, categoryId) :
+                activityRepository.findActivitiesByCourse_Id(courseId);
     }
 
     public Activity getActivity(Long activityId) {
@@ -144,48 +149,5 @@ public class ActivitiesService {
 
         activity.setDeleted(true);
         return activityRepository.save(activity);
-    }
-
-    public Activity disableActivity(Long activityId, Boolean active) {
-        Activity activity = this.getActivity(activityId);
-
-        activity.setActive(active);
-        log.error("Setting activity as " + active);
-        return activityRepository.save(activity);
-    }
-
-    @Transactional
-    public ActivitiesStats getActivitiesStatsByUserAndCourseId(Long userId, Long courseId) {
-        List<Activity> activities = getAllActivitiesByCourse(courseId);
-        int total = activities.size();
-        List<ActivitySubmission> activitySubmissions = submissionRepository.findAllByUserIdAndCourseId(userId, courseId);
-
-        Map<Long, List<ActivitySubmission>> submissionsByActivity = activitySubmissions.stream()
-            .collect(Collectors.groupingBy(activitySubmission -> activitySubmission.getActivity().getId()));
-
-        HashMap<String, Long> countByStatus = new HashMap<>();
-        countByStatus.put("STARTED", (long) 0);
-        countByStatus.put("NON STARTED", (long) 0);
-        countByStatus.put("SOLVED", (long) 0);
-
-        HashMap<String, Long> score = new HashMap<>();
-        score.put("OBTAINED", (long) 0);
-        score.put("PENDING", (long) 0);
-
-        for (Activity activity : activities) {
-            List<ActivitySubmission> submissions = submissionsByActivity.get(activity.getId());
-            if (submissions == null) {
-                countByStatus.put("NON STARTED", countByStatus.get("NON STARTED") + 1);
-                score.put("PENDING", score.get("PENDING") + activity.getPoints());
-            } else if (submissions.stream().anyMatch(activitySubmission -> activitySubmission.getStatus().toString() == "SUCCESS")) {
-                countByStatus.put("SOLVED", countByStatus.get("SOLVED") + 1);
-                score.put("OBTAINED", score.get("OBTAINED") + activity.getPoints());
-            } else {
-                countByStatus.put("STARTED", countByStatus.get("STARTED") + 1);
-                score.put("PENDING", score.get("PENDING") + activity.getPoints());
-            }
-        }
-
-        return new ActivitiesStats(total, countByStatus, score);
     }
 }

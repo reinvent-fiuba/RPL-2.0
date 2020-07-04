@@ -1,7 +1,6 @@
 package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.controller.dto.*;
-import com.example.rpl.RPL.model.ActivitiesStats;
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.IOTest;
@@ -159,16 +158,5 @@ public class ActivitiesController {
 
         return new ResponseEntity<>(
                 ActivityResponseDTO.fromEntity(activity, null, null), HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasAuthority('activity_submit')")
-    @GetMapping(value = "/api/courses/{courseId}/activities/stats")
-    public ResponseEntity<ActivitiesStatsResponseDTO> getActivitiesStats(
-            @CurrentUser UserPrincipal currentUser,
-            @PathVariable Long courseId) {
-
-        ActivitiesStats response = activitiesService.getActivitiesStatsByUserAndCourseId(currentUser.getId(), courseId);
-
-        return new ResponseEntity<>(ActivitiesStatsResponseDTO.fromEntity(response), HttpStatus.OK);
     }
 }
