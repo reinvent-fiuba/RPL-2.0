@@ -150,6 +150,46 @@ class CoursesServiceSpec extends Specification {
             thrown(EntityAlreadyExistsException)
     }
 
+    void "should edit course successfully"() {
+        given:
+            Long id = 1
+            String name = "Some new course"
+            String university = "fiuba"
+            String universityCourseId = "75.41"
+            String description = "Some description"
+            String semester = "2c-2019"
+            Long courseAdminId = 1
+            Course originalCourse = Mock(Course)
+
+        when:
+            coursesService.editCourse(
+                    id,
+                    name,
+                    university,
+                    universityCourseId,
+                    description,
+                    true,
+                    semester,
+                    LocalDate.now(),
+                    LocalDate.now(),
+                    null
+            )
+
+        then:
+            1 * courseRepository.getOne(id) >> originalCourse
+            1 * originalCourse.setName(name)
+            1 * originalCourse.setUniversity(university)
+            1 * originalCourse.setUniversityCourseId(universityCourseId)
+            1 * originalCourse.setDescription(description)
+            1 * originalCourse.setActive(true)
+            1 * originalCourse.setSemester(semester)
+            1 * originalCourse.setSemesterStartDate(_ as ZonedDateTime)
+            1 * originalCourse.setSemesterEndDate(_ as ZonedDateTime)
+            1 * originalCourse.setImgUri(null)
+            1 * courseRepository.save(_ as Course)
+    }
+
+
     void "should return an empty list of courses when calling getAllCourses"() {
         given: "no courses"
             courseRepository.findAll() >> []

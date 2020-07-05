@@ -248,7 +248,6 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert courseRepository.existsById(course.id as Long)
     }
 
-
     @Unroll
     void "test create course with null values should not save course in DB"() {
         given: "a new course"
@@ -283,6 +282,39 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
             null              | "75.41"              | '2019-2c'
             "Some new course" | null                 | '2019-2c'
             "Some new course" | '2019-2c'            | null
+    }
+
+    /*****************************************************************************************
+     ********** EDIT COURSE ****************************************************************
+     *****************************************************************************************/
+
+    @Unroll
+    void "test edit course with correct values should save course in DB"() {
+        given: "a course"
+            Map body = [
+                    name                : 'Some new name',
+                    university_course_id: '75.41',
+                    university          : 'UBA',
+                    description         : 'An awesome description',
+                    semester            : "2019-2c",
+                    semester_start_date : "2020-05-22",
+                    semester_end_date   : "2020-09-22",
+                    course_admin_id     : user.getId()
+            ]
+
+        when: "put course"
+            def response = put("/api/courses/${courseId}", body, username, password)
+
+        then: "must return a new saved Course"
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
+
+            Map course = getJsonResponse(response)
+
+            assert course.id == courseId
+            assert course.name == body.name
+            assert course.description == body.description
+            assert course.semester == body.semester
     }
 
     /*****************************************************************************************
