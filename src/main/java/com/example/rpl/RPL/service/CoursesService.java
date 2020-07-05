@@ -86,6 +86,23 @@ public class CoursesService {
     }
 
     @Transactional
+    public Course editCourse(Long courseId, String name, String university, String universityCourseId, String description,
+                             Boolean active, String semester, LocalDate semesterStartDate,
+                             LocalDate semesterEndDate, String imgUri) {
+        Course course = courseRepository.getOne(courseId);
+        course.setName(name);
+        course.setUniversity(university);
+        course.setUniversityCourseId(universityCourseId);
+        course.setDescription(description);
+        course.setActive(active);
+        course.setSemester(semester);
+        course.setSemesterStartDate(semesterStartDate.atStartOfDay(ZoneId.systemDefault()));
+        course.setSemesterEndDate(semesterEndDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()));
+        course.setImgUri(imgUri);
+        return courseRepository.save(course);
+    }
+
+    @Transactional
     public Course getCourse(Long courseId) {
         return courseRepository.findById(courseId).orElseThrow(
                 () -> new NotFoundException("Course not found", "course_not_found")

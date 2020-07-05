@@ -19,14 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -44,6 +37,18 @@ public class CoursesController {
         this.coursesService = coursesService;
         this.submissionService = submissionService;
         this.activitiesService = activitiesService;
+    }
+
+    @GetMapping(value = "/api/courses")
+    public ResponseEntity<List<CourseResponseDTO>> getCourses() {
+
+        List<Course> courses = coursesService.getAllCourses();
+
+        return new ResponseEntity<>(
+                courses.stream()
+                        .map(CourseResponseDTO::fromEntity)
+                        .collect(Collectors.toList()),
+                HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('superadmin')")
@@ -67,16 +72,26 @@ public class CoursesController {
         return new ResponseEntity<>(CourseResponseDTO.fromEntity(course), HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/api/courses")
-    public ResponseEntity<List<CourseResponseDTO>> getCourses() {
+    @PreAuthorize("hasAuthority('course_edit')")
+    @PutMapping(value = "/api/courses/{courseId}")
+    public ResponseEntity<CourseResponseDTO> editCourse(@CurrentUser UserPrincipal currentUser,
+                                                        @RequestBody @Valid EditCourseRequestDTO editCourseRequestDTO,
+                                                        @PathVariable Long courseId) {
 
-        List<Course> courses = coursesService.getAllCourses();
+        Course course = coursesService.editCourse(
+                courseId,
+                editCourseRequestDTO.getName(),
+                editCourseRequestDTO.getUniversity(),
+                editCourseRequestDTO.getUniversityCourseId(),
+                editCourseRequestDTO.getDescription(),
+                true,
+                editCourseRequestDTO.getSemester(),
+                editCourseRequestDTO.getSemesterStartDate(),
+                editCourseRequestDTO.getSemesterEndDate(),
+                null
+        );
 
-        return new ResponseEntity<>(
-            courses.stream()
-                .map(CourseResponseDTO::fromEntity)
-                .collect(Collectors.toList()),
-            HttpStatus.OK);
+        return new ResponseEntity<>(CourseResponseDTO.fromEntity(course), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('course_view')")
