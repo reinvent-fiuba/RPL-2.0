@@ -13,6 +13,8 @@ public class CourseResponseDTO {
 
     private String name;
 
+    private String university;
+
     private String universityCourseId;
 
     private String description;
@@ -20,6 +22,10 @@ public class CourseResponseDTO {
     private Boolean active;
 
     private String semester;
+
+    private ZonedDateTime semesterStartDate;
+
+    private ZonedDateTime semesterEndDate;
 
     private String imgUri;
 
@@ -31,10 +37,13 @@ public class CourseResponseDTO {
         return CourseResponseDTO.builder()
             .id(course.getId())
             .name(course.getName())
+            .university(course.getUniversity())
             .universityCourseId(course.getUniversityCourseId())
             .description(course.getDescription())
             .active(course.getActive())
             .semester(course.getSemester())
+            .semesterStartDate(course.getSemesterStartDate())
+            .semesterEndDate(course.getSemesterEndDate())
             .imgUri(course.getImgUri())
             .dateCreated(course.getDateCreated())
             .lastUpdated(course.getLastUpdated())

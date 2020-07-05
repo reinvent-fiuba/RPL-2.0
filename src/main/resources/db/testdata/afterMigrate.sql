@@ -53,8 +53,9 @@ INSERT INTO permissions
 VALUES (3, 'activity_submit', now());
 
 INSERT INTO courses
-VALUES (1, 'Algoritmos y Programación I', 'UBA', 'Hola a todos! Bienvenidos al curso....', true,
-        false, '2019-2C', 'http://cholilaonline.com/wp-content/uploads/2018/01/algoritmo-amor.jpg',
+VALUES (1, 'Algoritmos y Programación I', 'FIUBA', 'UBA', 'Hola a todos! Bienvenidos al curso....', true,
+        false, '2019-2C', TO_DATE('13/04/2020', 'DD/MM/YYYY'), TO_DATE('07/08/2020', 'DD/MM/YYYY'),
+        'http://cholilaonline.com/wp-content/uploads/2018/01/algoritmo-amor.jpg',
         now(), now());
 
 INSERT INTO course_users

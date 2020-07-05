@@ -28,6 +28,9 @@ public class Course {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "university")
+    private String university;
+
     @Column(name = "university_course_id")
     private String universityCourseId;
 
@@ -42,6 +45,12 @@ public class Course {
 
     @Column(name = "semester")
     private String semester;
+
+    @Column(name = "semester_start_date")
+    private ZonedDateTime semesterStartDate;
+
+    @Column(name = "semester_end_date")
+    private ZonedDateTime semesterEndDate;
 
     @Column(name = "img_uri")
     private String imgUri;
@@ -59,15 +68,18 @@ public class Course {
     public Course() {
     }
 
-    public Course(String name, String universityCourseId, String description, Boolean active,
-        String semester, String imgUri) {
+    public Course(String name, String university, String universityCourseId, String description, Boolean active,
+        String semester, ZonedDateTime semesterStartDate, ZonedDateTime semesterEndDate, String imgUri) {
         ZonedDateTime now = ZonedDateTime.now();
         this.name = name;
+        this.university = university;
         this.universityCourseId = universityCourseId;
         this.description = description;
         this.active = active;
         this.deleted = false;
         this.semester = semester;
+        this.semesterEndDate = semesterEndDate;
+        this.semesterStartDate = semesterStartDate;
         this.imgUri = imgUri;
         this.dateCreated = now;
         this.lastUpdated = now;

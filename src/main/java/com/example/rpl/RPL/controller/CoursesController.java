@@ -53,10 +53,13 @@ public class CoursesController {
 
         Course course = coursesService.createCourse(
             createCourseRequestDTO.getName(),
+            createCourseRequestDTO.getUniversity(),
             createCourseRequestDTO.getUniversityCourseId(),
             createCourseRequestDTO.getDescription(),
             true,
             createCourseRequestDTO.getSemester(),
+            createCourseRequestDTO.getSemesterStartDate(),
+            createCourseRequestDTO.getSemesterEndDate(),
             null,
             createCourseRequestDTO.getCourseAdminId()
         );
@@ -78,11 +81,12 @@ public class CoursesController {
 
     @PreAuthorize("hasAuthority('course_view')")
     @GetMapping(value = "/api/courses/{courseId}")
-    public ResponseEntity<UserPrincipal> getCourseDetails(@CurrentUser UserPrincipal currentUser,
+    public ResponseEntity<CourseResponseDTO> getCourseDetails(@CurrentUser UserPrincipal currentUser,
         @PathVariable Long courseId) {
-        log.error("COURSE ID: {}", courseId);
 
-        return new ResponseEntity<>(currentUser, HttpStatus.OK);
+        Course course = coursesService.getCourse(courseId);
+
+        return new ResponseEntity<>(CourseResponseDTO.fromEntity(course), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('course_view')")
