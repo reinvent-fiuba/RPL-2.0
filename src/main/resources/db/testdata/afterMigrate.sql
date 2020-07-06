@@ -70,6 +70,23 @@ VALUES (3, 1, 3, 2, true, now(), now());
 INSERT INTO course_users
 VALUES (4, 1, 4, 2, false, now(), now());
 
+INSERT INTO courses
+VALUES (2, 'Essaya: Algoritmos y Programación I', 'UBA', 'Somos el curso Essaya (Ex-Wachenchauzer) y....', true,
+        false, '2019-2C', 'http://cholilaonline.com/wp-content/uploads/2018/01/algoritmo-amor.jpg',
+        now(), now());
+
+INSERT INTO course_users
+VALUES (5, 2, 1, 1, true, now(), now());
+
+INSERT INTO course_users
+VALUES (6, 2, 2, 1, true, now(), now());
+
+INSERT INTO course_users
+VALUES (7, 2, 3, 2, true, now(), now());
+
+INSERT INTO course_users
+VALUES (8, 2, 4, 2, false, now(), now());
+
 INSERT INTO rpl_files
 VALUES (1, 'activity_1_starting_filess.tar.gz', 'text/x-c',
         x'1f8b0800d89dea5e0003edd34f6b8330180670cff914c1b1d21691c4f907e6d8a5f4b07337d8a12059b555b0b11885c1d8775f4c758cd2d1cbbab2f1fc0eb14dde3751f4d98a42ba2bebac9816867e77e551c0be5e0d3f882c7e13465ec0fd807b16e33cf0428bb2f3ded65eab1a51536a8932db55afdfd79d5affa3ae0ab92adb34a377aa49cbe2c5cdefc9e79cdd14d97657b9b94d08296443b7fa6b194fe81ba15a37b12f480ab9a93325d22a266649ad845cd3b17d9ddacee8b066d217990d0be9d05cc566625d56a2a12adb0cbb649b56a6954a449257b55089ae6e1bfd7f58181f6eedd051aef460b61de9b2e1ac5dad4f3377c4bcf4b61f22d75f2fa5ede896ae615fde5577439d356d2de9fcf9e131593ccd66f3c52226ef977e5d3f6e78c3e73ce354fe79e41fe4dfe38c21ffbfe158fe4dd44f87ef58fe1d93eaa9e9e87ff77d4e1fefe9d03f892ffdec00000000000000000000000000000000ffc107f20e928f00280000',
