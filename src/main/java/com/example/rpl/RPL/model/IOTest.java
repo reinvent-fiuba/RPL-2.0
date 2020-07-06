@@ -17,7 +17,7 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 @Entity
-@Table(name = "IO_tests")
+@Table(name = "io_tests")
 public class IOTest {
 
     @Id

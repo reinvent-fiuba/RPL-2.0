@@ -160,8 +160,8 @@ CREATE TABLE test_run
     activity_submission_id BIGINT,
     success                BOOLEAN,
     exit_message           varchar(255),
-    stderr                 varchar(20000),
-    stdout                 varchar(20000),
+    stderr                 varchar(10000),
+    stdout                 varchar(10000),
     date_created           DATETIME,
     last_updated           DATETIME,
 
@@ -183,7 +183,7 @@ CREATE TABLE unit_tests
     FOREIGN KEY (test_file_id) REFERENCES rpl_files (id)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IO_tests
+CREATE TABLE io_tests
 (
     id           BIGINT NOT NULL AUTO_INCREMENT,
     activity_id  BIGINT,

@@ -53,8 +53,10 @@ INSERT INTO permissions
 VALUES (3, 'activity_submit', now());
 
 INSERT INTO courses
-VALUES (1, 'Algoritmos y Programación I', 'FIUBA', 'UBA', 'Hola a todos! Bienvenidos al curso....', true,
-        false, '2019-2C', TO_DATE('13/04/2020', 'DD/MM/YYYY'), TO_DATE('07/08/2020', 'DD/MM/YYYY'),
+VALUES (1, 'Algoritmos y Programación I', 'FIUBA', 'UBA', 'Hola a todos! Bienvenidos al curso....',
+        true,
+        false, '2019-2C', STR_TO_DATE('13/04/2020', '%d/%m/%Y'),
+        STR_TO_DATE('07/08/2020', '%d/%m/%Y'),
         'http://cholilaonline.com/wp-content/uploads/2018/01/algoritmo-amor.jpg',
         now(), now());
 
@@ -71,8 +73,11 @@ INSERT INTO course_users
 VALUES (4, 1, 4, 2, false, now(), now());
 
 INSERT INTO courses
-VALUES (2, 'Essaya: Algoritmos y Programación I', 'UBA', 'Somos el curso Essaya (Ex-Wachenchauzer) y....', true,
-        false, '2019-2C', 'http://cholilaonline.com/wp-content/uploads/2018/01/algoritmo-amor.jpg',
+VALUES (2, 'Essaya: Algoritmos y Programación I', 'FIUBA', 'UBA',
+        'Somos el curso Essaya (Ex-Wachenchauzer) y....', true,
+        false, '2019-2C', STR_TO_DATE('13/04/2020', '%d/%m/%Y'),
+        STR_TO_DATE('07/08/2020', '%d/%m/%Y'),
+        'http://cholilaonline.com/wp-content/uploads/2018/01/algoritmo-amor.jpg',
         now(), now());
 
 INSERT INTO course_users
@@ -248,14 +253,14 @@ VALUES (1, 2, 4, now(), now());
 INSERT INTO unit_tests
 VALUES (2, 3, 5, now(), now());
 
-INSERT INTO IO_tests
+INSERT INTO io_tests
 VALUES (1, 1, 'Nombre del test 1', '26164', '07:16:04.0000', now(), now());
-INSERT INTO IO_tests
+INSERT INTO io_tests
 VALUES (2, 1, 'Caso 2', '26165', '07:16:05.0000', now(), now());
 
-INSERT INTO IO_tests
+INSERT INTO io_tests
 VALUES (3, 4, 'Nombre de test 1', '26164', '07:16:04.0000', now(), now());
-INSERT INTO IO_tests
+INSERT INTO io_tests
 VALUES (4, 4, 'Caso 2', '26165', '07:16:05.0000', now(), now());
 
 
