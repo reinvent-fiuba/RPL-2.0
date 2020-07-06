@@ -1,16 +1,15 @@
 package com.example.rpl.RPL.controller.dto;
 
-import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 
 @AllArgsConstructor
 @Value
-public class CreateCourseRequestDTO {
+public class EditCourseRequestDTO {
 
     @NotNull
     private String name;
@@ -31,9 +30,6 @@ public class CreateCourseRequestDTO {
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate semesterEndDate;
-
-    @NotNull
-    private Long courseAdminId;
 
     private String description;
 }

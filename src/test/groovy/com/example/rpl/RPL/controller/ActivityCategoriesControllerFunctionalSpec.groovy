@@ -9,6 +9,8 @@ import org.springframework.test.context.ActiveProfiles
 import spock.lang.Shared
 import spock.lang.Unroll
 
+import java.time.ZonedDateTime
+
 import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN
 import static javax.servlet.http.HttpServletResponse.SC_OK
 
@@ -69,10 +71,13 @@ class ActivityCategoriesControllerFunctionalSpec extends AbstractFunctionalSpec 
 
         course = new Course(
                 "some-course",
+                "fiuba",
                 "some-university-id",
                 "some-description",
                 true,
                 "2019-2c",
+                ZonedDateTime.now(),
+                ZonedDateTime.now(),
                 "/some/uri"
         )
 

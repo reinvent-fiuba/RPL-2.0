@@ -7,6 +7,9 @@ import com.example.rpl.RPL.repository.CourseRepository;
 import com.example.rpl.RPL.repository.CourseUserRepository;
 import com.example.rpl.RPL.repository.RoleRepository;
 import com.example.rpl.RPL.repository.UserRepository;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.LongSummaryStatistics;
 import java.util.Optional;
@@ -50,8 +53,9 @@ public class CoursesService {
      * Course class
      */
     @Transactional
-    public Course createCourse(String name, String universityCourseId, String description,
-        Boolean active, String semester, String imgUri, Long courseAdminId) {
+    public Course createCourse(String name, String university, String universityCourseId, String description,
+                               Boolean active, String semester, LocalDate semesterStartDate,
+                               LocalDate semesterEndDate, String imgUri, Long courseAdminId) {
         if (courseUserRepository
             .existsByNameAndUniversityCourseIdAndSemesterAndAdmin(name, universityCourseId,
                 semester, courseAdminId)) {
@@ -63,7 +67,11 @@ public class CoursesService {
 
         User user = userRepository.findById(courseAdminId).orElseThrow(() -> new NotFoundException("User not found"));
 
-        Course course = new Course(name, universityCourseId, description, active, semester, imgUri);
+        semesterStartDate.atStartOfDay(ZoneId.systemDefault());
+
+        Course course = new Course(name, university, universityCourseId, description, active, semester,
+                semesterStartDate.atStartOfDay(ZoneId.systemDefault()),
+                semesterEndDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()), imgUri);
 
         Role adminRole = roleRepository.findByName("admin")
             .orElseThrow(() -> new NotFoundException("role_not_found"));
@@ -75,6 +83,30 @@ public class CoursesService {
         log.info("[process:create_course][name:{}] Creating new course", name);
 
         return course;
+    }
+
+    @Transactional
+    public Course editCourse(Long courseId, String name, String university, String universityCourseId, String description,
+                             Boolean active, String semester, LocalDate semesterStartDate,
+                             LocalDate semesterEndDate, String imgUri) {
+        Course course = courseRepository.getOne(courseId);
+        course.setName(name);
+        course.setUniversity(university);
+        course.setUniversityCourseId(universityCourseId);
+        course.setDescription(description);
+        course.setActive(active);
+        course.setSemester(semester);
+        course.setSemesterStartDate(semesterStartDate.atStartOfDay(ZoneId.systemDefault()));
+        course.setSemesterEndDate(semesterEndDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()));
+        course.setImgUri(imgUri);
+        return courseRepository.save(course);
+    }
+
+    @Transactional
+    public Course getCourse(Long courseId) {
+        return courseRepository.findById(courseId).orElseThrow(
+                () -> new NotFoundException("Course not found", "course_not_found")
+        );
     }
 
     /**
