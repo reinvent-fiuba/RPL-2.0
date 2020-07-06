@@ -30,7 +30,7 @@ public class DataSourceConfiguration {
 
     @Bean
     @Primary
-    @Profile({"prod", "stage", "test"})
+    @Profile({"prod", "stage", "test", "heroku"})
     public DataSource dataSource() {
         HikariDataSource dataSource = DataSourceBuilder.create()
             .username(username)
