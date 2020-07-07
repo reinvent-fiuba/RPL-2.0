@@ -1,6 +1,7 @@
 package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.controller.dto.*;
+import com.example.rpl.RPL.model.Role;
 import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.model.ValidationToken;
 import com.example.rpl.RPL.security.CurrentUser;
@@ -18,6 +19,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @RestController
 public class AuthenticationController {
@@ -25,7 +29,6 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
-
 
     @Autowired
     public AuthenticationController(
@@ -163,5 +166,13 @@ public class AuthenticationController {
         authenticationService.sendValidateEmailToken(user);
 
         return new ResponseEntity<>(UserResponseDTO.fromEntity(user), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/auth/roles")
+    public ResponseEntity<List<RoleResponseDTO>> getRoles() {
+        List<Role> roles = authenticationService.getRoles();
+        return new ResponseEntity<>(roles.stream()
+                .map(RoleResponseDTO::fromEntity)
+                .collect(Collectors.toList()), HttpStatus.OK);
     }
 }
