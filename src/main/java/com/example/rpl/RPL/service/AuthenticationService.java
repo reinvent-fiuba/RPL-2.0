@@ -2,11 +2,14 @@ package com.example.rpl.RPL.service;
 
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
 import com.example.rpl.RPL.exception.NotFoundException;
+import com.example.rpl.RPL.model.Role;
 import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.model.ValidationToken;
+import com.example.rpl.RPL.repository.RoleRepository;
 import com.example.rpl.RPL.repository.UserRepository;
 import com.example.rpl.RPL.repository.ValidationTokenRepository;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.validation.constraints.NotNull;
@@ -23,17 +26,18 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final ValidationTokenRepository validationTokenRepository;
     private final IEmailService emailService;
-
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public AuthenticationService(UserRepository userRepository,
         ValidationTokenRepository ValidationTokenRepository,
-        IEmailService emailService, PasswordEncoder passwordEncoder) {
+        IEmailService emailService, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.validationTokenRepository = ValidationTokenRepository;
         this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     /**
@@ -156,5 +160,10 @@ public class AuthenticationService {
     public User validateEmail(User user) {
         user.markAsValidated();
         return userRepository.save(user);
+    }
+
+    @Transactional
+    public List<Role> getRoles() {
+        return roleRepository.findAll();
     }
 }

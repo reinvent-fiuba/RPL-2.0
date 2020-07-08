@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-  "host": "localhost:39393",
+    "host": "localhost:53897",
     "basePath": "/",
     "tags": [
         {
@@ -543,6 +543,39 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/UserResponseDTO"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/auth/roles": {
+            "get": {
+                "tags": [
+                    "authentication-controller"
+                ],
+                "summary": "getRoles",
+                "operationId": "getRolesUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/RoleResponseDTO"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden!!!!!"
+                    },
+                    "500": {
+                        "description": "500 message",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 },
