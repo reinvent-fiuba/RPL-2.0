@@ -42,7 +42,7 @@ public class BeanConfiguration {
     @Value("${rpl.frontend.url}")
     private String frontEndUrl;
 
-    @Profile({"producer", "prod"})
+    @Profile({"prod", "heroku", "development"})
     @Bean
     public IEmailService emailService(JavaMailSender emailSender, TemplateEngine templateEngine) {
         return new EmailService(emailSender, templateEngine, frontEndUrl);

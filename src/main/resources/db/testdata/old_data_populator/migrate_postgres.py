@@ -26,9 +26,8 @@ psql -U rpl -d rpldb -1 -f db.sql.backup.12-06-20.mariano.sql 2> errors.txt
 
 
 headers = {
-  'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTkzMjk5OTc4LCJleHAiOjE1OTMzMTQzNzh9.iKzsmpKqlVG1y8UPis4NRTn8kYjIn0h6ZCYaDq2_ONL08Yz-A7JfP52iFLMN0vi3VL2oAo6b_JSbFez4KPZw-w'
+  'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTkzODg3MzU1LCJleHAiOjE1OTM5MDE3NTV9.Xg183ArkcyespqSfg1x_6MnO27PiFqRtDiYe2URXaCkA28_sV0ccnnt9h4VgYDKU9F9QYg3UBMN2jsCKkZPDzA'
 }
-
 
 def migrate_categories():
   """ Connect to the PostgreSQL database server """
@@ -61,7 +60,7 @@ def migrate_categories():
 
 
 def create_category(name):
-  backend_url = "http://localhost:8080/api/courses/1/activityCategories"
+  backend_url = "http://localhost:8080/api/courses/2/activityCategories"
 
   payload = {
     'description': name + "no description",
@@ -138,7 +137,7 @@ def migrate_activities(old_to_new_category_ids):
 
 
 def activate_activity(id):
-  backend_url = f"http://localhost:8080/api/courses/1/activities/{id}"
+  backend_url = f"http://localhost:8080/api/courses/2/activities/{id}"
   response = requests.patch(backend_url, headers=headers, data={'active': True},
                             files={'wo': b'lal'})
   if response.status_code not in [200, 201]:
@@ -148,7 +147,7 @@ def activate_activity(id):
 
 def create_activity(name, description, language, category_id, points,
     initial_code):
-  backend_url = "http://localhost:8080/api/courses/1/activities"
+  backend_url = "http://localhost:8080/api/courses/2/activities"
 
   payload = {
     'description': description,
