@@ -3,6 +3,7 @@ package com.example.rpl.RPL.service
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException
 import com.example.rpl.RPL.exception.NotFoundException
 import com.example.rpl.RPL.model.User
+import com.example.rpl.RPL.repository.RoleRepository
 import com.example.rpl.RPL.repository.UserRepository
 import com.example.rpl.RPL.repository.ValidationTokenRepository
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -16,13 +17,15 @@ class AuthenticationServiceSpec extends Specification {
     private PasswordEncoder passwordEncoder
     private ValidationTokenRepository validationTokenRepository
     private EmailService emailService
+    private RoleRepository roleRepository
 
     def setup() {
         userRepository = Mock(UserRepository)
         passwordEncoder = Mock(PasswordEncoder)
         validationTokenRepository = Mock(ValidationTokenRepository)
         emailService = Mock(EmailService)
-        authenticationService = new AuthenticationService(userRepository, validationTokenRepository, emailService, passwordEncoder)
+        roleRepository = Mock(RoleRepository)
+        authenticationService = new AuthenticationService(userRepository, validationTokenRepository, emailService, passwordEncoder, roleRepository)
     }
 
     void "should create user successfully"() {
