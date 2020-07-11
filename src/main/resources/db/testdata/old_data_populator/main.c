@@ -1,5 +1,3 @@
-#include <stdio.h>
-
-int main(){
-    // codigo del alumne
+void invertir_string(char palabra[]){
+    // Aqui va su código...
 }
