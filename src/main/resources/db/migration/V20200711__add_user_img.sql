@@ -1,0 +1,2 @@
+ALTER TABLE users
+ADD img_uri VARCHAR(255);

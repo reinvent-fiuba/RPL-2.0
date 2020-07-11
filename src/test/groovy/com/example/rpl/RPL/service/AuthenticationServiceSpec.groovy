@@ -79,7 +79,7 @@ class AuthenticationServiceSpec extends Specification {
             User user = Mock(User)
 
         when:
-            authenticationService.updateUser(userId, name, surname, studentId, email, university, degree)
+            authenticationService.updateUser(userId, name, surname, studentId, email, university, degree, "")
 
         then:
             1 * userRepository.findById(userId) >> Optional.of(user)
@@ -101,7 +101,7 @@ class AuthenticationServiceSpec extends Specification {
     @Unroll
     void "should throw error if user doesnt exist"() {
         when:
-            authenticationService.updateUser(1, "name", "surname", "studentId", "email", "university", "degree")
+            authenticationService.updateUser(1, "name", "surname", "studentId", "email", "university", "degree", "")
 
         then:
             1 * userRepository.findById(1) >> Optional.empty()

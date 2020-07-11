@@ -69,7 +69,7 @@ public class AuthenticationService {
 
     @Transactional
     public User updateUser(Long userId, String name, String surname, String studentId,
-                           String email, String university, String degree) {
+                           String email, String university, String degree, String imgUri) {
 
         // TODO: Update User all at once without using a SELECT at first
         User user = userRepository.findById(userId).orElseThrow(
@@ -82,6 +82,7 @@ public class AuthenticationService {
         if (email != null) user.setEmail(email);
         if (university != null) user.setUniversity(university);
         if (degree != null) user.setDegree(degree);
+        if (imgUri != null) user.setImgUri(imgUri);
 
         return userRepository.save(user);
     }
