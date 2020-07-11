@@ -29,6 +29,8 @@ public class UserResponseDTO {
 
     private String degree;
 
+    private String imgUri;
+
     private ZonedDateTime dateCreated;
 
     private ZonedDateTime lastUpdated;
@@ -45,6 +47,7 @@ public class UserResponseDTO {
             .isAdmin(user.getIsAdmin())
             .university(user.getUniversity())
             .degree(user.getDegree())
+            .imgUri(user.getImgUri())
             .dateCreated(user.getDateCreated())
             .lastUpdated(user.getLastUpdated())
             .build();

@@ -25,6 +25,8 @@ public class CourseUserScoreResponseDTO {
 
     private String email;
 
+    private String imgUri;
+
     private Long score;
 
     private Long activitiesCount;
@@ -41,6 +43,7 @@ public class CourseUserScoreResponseDTO {
             .surname(user.getSurname())
             .studentId(user.getStudentId())
             .username(user.getUsername())
+            .imgUri(user.getImgUri())
             .email(user.getEmail())
             .score(courseUserScore.getScore())
             .activitiesCount(courseUserScore.getActivitiesCount())

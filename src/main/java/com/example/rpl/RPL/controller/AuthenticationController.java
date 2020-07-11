@@ -105,7 +105,8 @@ public class AuthenticationController {
                 editUserRequestDTO.getStudentId(),
                 editUserRequestDTO.getEmail(),
                 editUserRequestDTO.getUniversity(),
-                editUserRequestDTO.getDegree()
+                editUserRequestDTO.getDegree(),
+                editUserRequestDTO.getImgUri()
         );
 
         return new ResponseEntity<>(UserResponseDTO.fromEntity(user), HttpStatus.OK);

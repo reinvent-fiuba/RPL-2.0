@@ -18,4 +18,6 @@ public class EditUserRequestDTO {
     private String degree;
 
     private String university;
+
+    private String imgUri;
 }

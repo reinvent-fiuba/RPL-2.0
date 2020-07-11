@@ -69,6 +69,9 @@ public class User implements Serializable {
     @Column(name = "degree")
     private String degree;
 
+    @Column(name = "img_uri")
+    private String imgUri;
+
     @Column(name = "date_created")
     private ZonedDateTime dateCreated;
 

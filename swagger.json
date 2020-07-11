@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-  "host": "localhost:44187",
+    "host": "localhost:56575",
     "basePath": "/",
     "tags": [
         {
@@ -229,6 +229,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "user.isAdmin",
                         "in": "query",
                         "required": false,
@@ -411,6 +417,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -794,6 +806,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "user.isAdmin",
                         "in": "query",
                         "required": false,
@@ -965,6 +983,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -1159,6 +1183,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "user.isAdmin",
                         "in": "query",
                         "required": false,
@@ -1330,6 +1360,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -1573,6 +1609,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "user.isAdmin",
                         "in": "query",
                         "required": false,
@@ -1752,6 +1794,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -1940,6 +1988,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -2179,6 +2233,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "user.isAdmin",
                         "in": "query",
                         "required": false,
@@ -2358,6 +2418,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -2548,6 +2614,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -2752,6 +2824,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "user.isAdmin",
                         "in": "query",
                         "required": false,
@@ -2953,6 +3031,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "user.isAdmin",
                         "in": "query",
                         "required": false,
@@ -3138,6 +3222,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -3522,6 +3612,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "user.isAdmin",
                         "in": "query",
                         "required": false,
@@ -3735,6 +3831,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "user.isAdmin",
                         "in": "query",
                         "required": false,
@@ -3925,6 +4027,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -4120,6 +4228,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "user.isAdmin",
                         "in": "query",
                         "required": false,
@@ -4311,6 +4425,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "user.isAdmin",
                         "in": "query",
                         "required": false,
@@ -4482,6 +4602,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -4679,6 +4805,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "user.isAdmin",
                         "in": "query",
                         "required": false,
@@ -4855,6 +4987,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "user.isAdmin",
                         "in": "query",
                         "required": false,
@@ -5026,6 +5164,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -5211,6 +5355,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -5401,6 +5551,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "user.isAdmin",
                         "in": "query",
                         "required": false,
@@ -5579,6 +5735,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -5764,6 +5926,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -5955,6 +6123,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -6293,6 +6467,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "user.isAdmin",
                         "in": "query",
                         "required": false,
@@ -6503,6 +6683,12 @@
                         "format": "int64"
                     },
                     {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "user.isAdmin",
                         "in": "query",
                         "required": false,
@@ -6691,6 +6877,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -7071,6 +7263,12 @@
                         "required": false,
                         "type": "integer",
                         "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "name": "user.isAdmin",
@@ -7556,6 +7754,9 @@
                     "type": "integer",
                     "format": "int64"
                 },
+                "img_uri": {
+                    "type": "string"
+                },
                 "last_updated": {
                     "type": "string",
                     "format": "date-time"
@@ -7740,6 +7941,9 @@
                     "type": "string"
                 },
                 "university": {
+                    "type": "string"
+                },
+                "img_uri": {
                     "type": "string"
                 }
             },
@@ -8388,6 +8592,9 @@
                 "id": {
                     "type": "integer",
                     "format": "int64"
+                },
+                "img_uri": {
+                    "type": "string"
                 },
                 "is_admin": {
                     "type": "boolean"
