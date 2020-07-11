@@ -13,10 +13,12 @@ import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.IOTest;
 import com.example.rpl.RPL.model.TestRun;
 import com.example.rpl.RPL.model.UnitTest;
+import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.queue.IProducer;
 import com.example.rpl.RPL.repository.TestRunRepository;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
+import com.example.rpl.RPL.service.AuthenticationService;
 import com.example.rpl.RPL.service.SubmissionService;
 import com.example.rpl.RPL.service.TestService;
 import com.example.rpl.RPL.utils.TarUtils;
@@ -43,6 +45,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class SubmissionController {
 
     private final SubmissionService submissionService;
+    private final AuthenticationService authenticationService;
     private final TestService testService;
     private final IProducer activitySubmissionQueueProducer;
 
@@ -51,9 +54,11 @@ public class SubmissionController {
 
     @Autowired
     public SubmissionController(SubmissionService submissionService,
+        AuthenticationService authenticationService,
         TestService testService, IProducer activitySubmissionQueueProducer,
         TestRunRepository testRunRepository) {
         this.submissionService = submissionService;
+        this.authenticationService = authenticationService;
         this.testService = testService;
         this.activitySubmissionQueueProducer = activitySubmissionQueueProducer;
         this.testRunRepository = testRunRepository;
@@ -109,7 +114,6 @@ public class SubmissionController {
             .fromEntity(as, null, List.of());
         return new ResponseEntity<>(asDto, HttpStatus.CREATED);
     }
-
 
     @PutMapping(value = "/api/submissions/{submissionId}/status")
     public ResponseEntity<ActivitySubmissionResponseDTO> updateSubmissionStatus(
@@ -218,10 +222,35 @@ public class SubmissionController {
         log.error("COURSE ID: {}", courseId);
         log.error("ACTIVITY ID: {}", activityId);
 
-        List<ActivitySubmission> submissions = submissionService
-            .getAllSubmissionsByUserAndActivityId(currentUser.getUser(), activityId);
+        List<ActivitySubmissionResultResponseDTO> response = getSubmissionsFromStudentAndActivity(
+            activityId, currentUser.getUser());
 
-        List<ActivitySubmissionResultResponseDTO> response = submissions.stream()
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_manage')")
+    @GetMapping(value = "/api/courses/{courseId}/activities/{activityId}/students/{studentId}/submissions")
+    public ResponseEntity<List<ActivitySubmissionResultResponseDTO>> getAllSubmissionResultsFromStudent(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId, @PathVariable Long activityId, @PathVariable Long studentId) {
+        log.error("COURSE ID: {}", courseId);
+        log.error("ACTIVITY ID: {}", activityId);
+
+        User student = authenticationService.getUserById(studentId);
+
+        List<ActivitySubmissionResultResponseDTO> response = getSubmissionsFromStudentAndActivity(
+            activityId, student);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    private List<ActivitySubmissionResultResponseDTO> getSubmissionsFromStudentAndActivity(
+        Long activityId, User student) {
+        List<ActivitySubmission> submissions = submissionService
+            .getAllSubmissionsByUserAndActivityId(student, activityId);
+
+        return submissions.stream()
             .map(as -> {
                 TestRun run = testRunRepository
                     .findTopByActivitySubmission_IdOrderByLastUpdatedDesc(as.getId());
@@ -236,7 +265,6 @@ public class SubmissionController {
                     .fromEntity(as, unitTest, ioTests, run);
 
             }).collect(Collectors.toList());
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 }
