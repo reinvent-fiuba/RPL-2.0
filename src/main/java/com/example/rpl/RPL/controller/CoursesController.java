@@ -9,8 +9,6 @@ import com.example.rpl.RPL.service.CoursesService;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.LongStream;
-import java.util.stream.Stream;
 import javax.validation.Valid;
 
 import com.example.rpl.RPL.service.SubmissionService;
@@ -65,7 +63,7 @@ public class CoursesController {
             createCourseRequestDTO.getSemester(),
             createCourseRequestDTO.getSemesterStartDate(),
             createCourseRequestDTO.getSemesterEndDate(),
-            null,
+            createCourseRequestDTO.getImgUri(),
             createCourseRequestDTO.getCourseAdminId()
         );
 
@@ -88,7 +86,7 @@ public class CoursesController {
                 editCourseRequestDTO.getSemester(),
                 editCourseRequestDTO.getSemesterStartDate(),
                 editCourseRequestDTO.getSemesterEndDate(),
-                null
+                editCourseRequestDTO.getImgUri()
         );
 
         return new ResponseEntity<>(CourseResponseDTO.fromEntity(course), HttpStatus.OK);

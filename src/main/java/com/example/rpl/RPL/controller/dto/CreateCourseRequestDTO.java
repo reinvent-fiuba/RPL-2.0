@@ -36,4 +36,6 @@ public class CreateCourseRequestDTO {
     private Long courseAdminId;
 
     private String description;
+
+    private String imgUri;
 }

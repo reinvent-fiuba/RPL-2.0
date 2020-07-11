@@ -32,4 +32,6 @@ public class EditCourseRequestDTO {
     private LocalDate semesterEndDate;
 
     private String description;
+
+    private String imgUri;
 }
