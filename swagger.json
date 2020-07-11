@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:53897",
+    "host": "localhost:55575",
     "basePath": "/",
     "tags": [
         {
@@ -7419,6 +7419,9 @@
                 },
                 "description": {
                     "type": "string"
+                },
+                "img_uri": {
+                    "type": "string"
                 }
             },
             "title": "CreateCourseRequestDTO"
@@ -7509,6 +7512,9 @@
                     "format": "date"
                 },
                 "description": {
+                    "type": "string"
+                },
+                "img_uri": {
                     "type": "string"
                 }
             },

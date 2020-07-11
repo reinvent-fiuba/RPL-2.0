@@ -55,8 +55,7 @@ VALUES (3, 'activity_submit', now());
 INSERT INTO courses
 VALUES (1, 'Algoritmos y Programación I', 'FIUBA', 'UBA', 'Hola a todos! Bienvenidos al curso....',
         true,
-        false, '2019-2C', STR_TO_DATE('13/04/2020', '%d/%m/%Y'),
-        STR_TO_DATE('07/08/2020', '%d/%m/%Y'),
+        false, '2019-2C', TIMESTAMP '2020-04-13', TIMESTAMP '2020-08-07',
         'http://cholilaonline.com/wp-content/uploads/2018/01/algoritmo-amor.jpg',
         now(), now());
 
@@ -75,8 +74,7 @@ VALUES (4, 1, 4, 2, false, now(), now());
 INSERT INTO courses
 VALUES (2, 'Essaya: Algoritmos y Programación I', 'FIUBA', 'UBA',
         'Somos el curso Essaya (Ex-Wachenchauzer) y....', true,
-        false, '2019-2C', STR_TO_DATE('13/04/2020', '%d/%m/%Y'),
-        STR_TO_DATE('07/08/2020', '%d/%m/%Y'),
+        false, '2019-2C', TIMESTAMP '2020-04-13', TIMESTAMP '2020-08-07',
         'http://cholilaonline.com/wp-content/uploads/2018/01/algoritmo-amor.jpg',
         now(), now());
 
