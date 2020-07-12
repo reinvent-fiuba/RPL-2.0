@@ -18,6 +18,18 @@ public class SubmissionsStatResponseDTO {
 
     private long failure;
 
+    private double avgSubmissionsByStudent;
+
+    private double avgErrorSubmissionsByStudent;
+
+    private double avgSuccessSubmissionsByStudent;
+
+    private long totalStudents;
+
+    private long totalStudentsSuccess;
+
+    private long totalStudentsError;
+
     public static SubmissionsStatResponseDTO fromEntity(SubmissionsStat submissionsStat) {
         return SubmissionsStatResponseDTO.builder()
             .total(submissionsStat.getTotal())
@@ -25,6 +37,12 @@ public class SubmissionsStatResponseDTO {
             .runtimeError(submissionsStat.getRuntimeError())
             .buildError(submissionsStat.getRuntimeError())
             .failure(submissionsStat.getRuntimeError())
+            .avgSubmissionsByStudent(submissionsStat.getAvgSubmissionsByStudent())
+            .avgErrorSubmissionsByStudent(submissionsStat.getAvgErrorSubmissionsByStudent())
+            .avgSuccessSubmissionsByStudent(submissionsStat.getAvgSuccessSubmissionsByStudent())
+            .totalStudents(submissionsStat.getTotalStudents())
+            .totalStudentsSuccess(submissionsStat.getTotalStudentsSuccess())
+            .totalStudentsError(submissionsStat.getTotalStudentsError())
             .build();
     }
 }
