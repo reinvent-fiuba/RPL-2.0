@@ -3,10 +3,7 @@ package com.example.rpl.RPL.service;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.FileMetadata;
 import com.example.rpl.RPL.model.RPLFile;
-import com.example.rpl.RPL.repository.ActivityRepository;
 import com.example.rpl.RPL.repository.FileRepository;
-import com.example.rpl.RPL.repository.SubmissionRepository;
-import com.example.rpl.RPL.repository.TestRunRepository;
 import com.example.rpl.RPL.utils.TarUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,28 +24,40 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class RplFilesService {
 
-    private final TestService testService;
-
-    private final ActivityRepository activityRepository;
-    private final SubmissionRepository submissionRepository;
     private final FileRepository fileRepository;
-    private final TestRunRepository testRunRepository;
 
     @Autowired
-    public RplFilesService(TestService testService,
-        ActivityRepository activityRepository,
-        SubmissionRepository submissionRepository,
-        FileRepository fileRepository,
-        TestRunRepository testRunRepository) {
-        this.testService = testService;
-        this.activityRepository = activityRepository;
-        this.submissionRepository = submissionRepository;
+    public RplFilesService(FileRepository fileRepository) {
         this.fileRepository = fileRepository;
-        this.testRunRepository = testRunRepository;
     }
 
+    /**
+     * Decompresses the tar.gz file.
+     *
+     * @return a Map where key -> fileName and value -> fileContent.
+     */
+    public Map<String, String> extractFile(Long fileId) throws IOException {
+        RPLFile f = fileRepository.findById(fileId).orElseThrow(
+            () -> new NotFoundException("File not found",
+                "file_not_found"));
 
-    public byte[] addAndOverwriteWithActivityFiles(MultipartFile[] submissionFiles,
+        Resource resource = new ByteArrayResource(f.getData());
+
+        return TarUtils.extractTarGZ(resource.getInputStream());
+    }
+
+    /**
+     * The resulting submission package will be determined by: 1.- The student's files. 2.- The
+     * activity's files with {display: "read"} metadata overwriting the student's files (in case
+     * they managed to modify them). 3.- The activity's files with {display: "hidden"} metadata
+     * (which are never sent to a student)
+     *
+     * @param submissionFiles Files submitted by the student
+     * @param activityStartingFiles Files that are the skeleton of the activity (should contain an
+     * extra "files_metada" JSON file)
+     * @return An array of "byte" representing the subimssion's compressed files in a tar.gz.
+     */
+    byte[] addAndOverwriteWithActivityFiles(MultipartFile[] submissionFiles,
         RPLFile activityStartingFiles) throws IOException {
 
         Map<String, String> activityFiles = extractFile(activityStartingFiles.getId());
@@ -108,57 +117,38 @@ public class RplFilesService {
         return TarUtils.compressToTarGz(resultingSubmission);
     }
 
-    private Map<String, String> extractFile(Long fileId) throws IOException {
-        RPLFile f = fileRepository.findById(fileId).orElseThrow(
-            () -> new NotFoundException("File not found",
-                "file_not_found"));
+    /**
+     * Extracts the tar.gz and returns the files as a Map where the key is the filename and the
+     * value is the file content. Only returns files with metadata {"display": "read"} or
+     * {"display": "read_write"}. Doesn't return files with metadata {display: "hidden"}
+     */
+    public Map<String, String> extractFileForStudent(Long fileId) throws IOException {
+        Map<String, String> r = extractFile(fileId);
+        if (!r.containsKey("files_metadata")) {
+            return r;
+        }
+        Map<String, String> filteredFiles = new HashMap<>();
 
-        Resource resource = new ByteArrayResource(f.getData());
-
-        return TarUtils.extractTarGZ(resource.getInputStream());
+        JsonNode root = new ObjectMapper().readTree(r.get("files_metadata"));
+        ObjectNode objectNode = (ObjectNode) root;
+        r.forEach((filename, fileContent) -> {
+            if (!objectNode.has(filename)) {
+                filteredFiles.put(filename, fileContent);
+            } else {
+                JsonNode fileMetadata = objectNode.get(filename);
+                FileMetadata metadata = null;
+                try {
+                    metadata = new ObjectMapper().treeToValue(fileMetadata, FileMetadata.class);
+                } catch (JsonProcessingException e) {
+                    log.warn("File metadata bad formatted {} {}", filename, fileContent);
+                    return;
+                }
+                if (!metadata.getDisplay().equals("hidden")) {
+                    filteredFiles.put(filename, fileContent);
+                }
+            }
+        });
+        filteredFiles.put("files_metadata", r.get("files_metadata"));
+        return filteredFiles;
     }
-
-//    private MultipartFile getNewFile(String fileName, byte[] content, MultipartFile currentFile){
-//        return new MultipartFile() {
-//            @Override
-//            public String getName() {
-//                return currentFile.getName();
-//            }
-//
-//            @Override
-//            public String getOriginalFilename() {
-//                return fileName;
-//            }
-//
-//            @Override
-//            public String getContentType() {
-//                return currentFile.getContentType();
-//            }
-//
-//            @Override
-//            public boolean isEmpty() {
-//                return currentFile.isEmpty();
-//            }
-//
-//            @Override
-//            public long getSize() {
-//                return currentFile.getSize();
-//            }
-//
-//            @Override
-//            public byte[] getBytes() throws IOException {
-//                return content;
-//            }
-//
-//            @Override
-//            public InputStream getInputStream() throws IOException {
-//                return currentFile.getInputStream();
-//            }
-//
-//            @Override
-//            public void transferTo(File file) throws IOException, IllegalStateException {
-//
-//            }
-//        };
-//    }
 }

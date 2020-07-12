@@ -93,8 +93,6 @@ public class SubmissionController {
         log.info("COURSE ID: {}", courseId);
         log.info("ACTIVITY ID: {}", activityId);
 
-//        byte[] compressedFilesBytes = TarUtils.compressToTarGz(files);
-
         ActivitySubmission as = submissionService
             .createSubmission(currentUser.getUser(), courseId, activityId, description,
                 files);
