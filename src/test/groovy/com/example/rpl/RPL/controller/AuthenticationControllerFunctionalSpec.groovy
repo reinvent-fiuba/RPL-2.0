@@ -158,8 +158,7 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         where:
             test                          | username        | email            | password
-            "username less than 6 chars"  | "ale"           | "asd@asdd.com"   | 1234
-            "username more than 12 chars" | "aleeeeeeeeeee" | "asd@asddd.com"  | 1234
+            "username less than 3 chars"  | "a"           | "asd@asdd.com"   | 1234
             "invalid email"               | "alepoxx"       | "alegmail.com"   | 1234
             "invalid password"            | "alepoxxx"      | "asd@asdddd.com" | null
     }

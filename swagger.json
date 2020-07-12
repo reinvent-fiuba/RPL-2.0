@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:56575",
+    "host": "localhost:65457",
     "basePath": "/",
     "tags": [
         {
@@ -3293,207 +3293,213 @@
                         }
                     }
                 },
-              "deprecated": false
+                "deprecated": false
             }
         },
-      "/api/courses/{courseId}/activities/{activityId}/students/{studentId}/submissions": {
-        "get": {
-          "tags": [
-            "submission-controller"
-          ],
-          "summary": "getAllSubmissionResultsFromStudent",
-          "operationId": "getAllSubmissionResultsFromStudentUsingGET",
-          "produces": [
-            "*/*"
-          ],
-          "parameters": [
-            {
-              "name": "accountNonExpired",
-              "in": "query",
-              "required": false,
-              "type": "boolean"
-            },
-            {
-              "name": "accountNonLocked",
-              "in": "query",
-              "required": false,
-              "type": "boolean"
-            },
-            {
-              "name": "activityId",
-              "in": "path",
-              "description": "activityId",
-              "required": true,
-              "type": "integer",
-              "format": "int64"
-            },
-            {
-              "name": "authorities[0].authority",
-              "in": "query",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "courseId",
-              "in": "path",
-              "description": "courseId",
-              "required": true,
-              "type": "integer",
-              "format": "int64"
-            },
-            {
-              "name": "credentialsNonExpired",
-              "in": "query",
-              "required": false,
-              "type": "boolean"
-            },
-            {
-              "name": "email",
-              "in": "query",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "enabled",
-              "in": "query",
-              "required": false,
-              "type": "boolean"
-            },
-            {
-              "name": "id",
-              "in": "query",
-              "required": false,
-              "type": "integer",
-              "format": "int64"
-            },
-            {
-              "name": "name",
-              "in": "query",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "password",
-              "in": "query",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "studentId",
-              "in": "path",
-              "description": "studentId",
-              "required": true,
-              "type": "integer",
-              "format": "int64"
-            },
-            {
-              "name": "user.dateCreated",
-              "in": "query",
-              "required": false,
-              "type": "string",
-              "format": "date-time"
-            },
-            {
-              "name": "user.degree",
-              "in": "query",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "user.email",
-              "in": "query",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "user.emailValidated",
-              "in": "query",
-              "required": false,
-              "type": "boolean"
-            },
-            {
-              "name": "user.id",
-              "in": "query",
-              "required": false,
-              "type": "integer",
-              "format": "int64"
-            },
-            {
-              "name": "user.isAdmin",
-              "in": "query",
-              "required": false,
-              "type": "boolean"
-            },
-            {
-              "name": "user.lastUpdated",
-              "in": "query",
-              "required": false,
-              "type": "string",
-              "format": "date-time"
-            },
-            {
-              "name": "user.name",
-              "in": "query",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "user.password",
-              "in": "query",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "user.studentId",
-              "in": "query",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "user.surname",
-              "in": "query",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "user.university",
-              "in": "query",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "user.username",
-              "in": "query",
-              "required": false,
-              "type": "string"
-            },
-            {
-              "name": "username",
-              "in": "query",
-              "required": false,
-              "type": "string"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/definitions/ActivitySubmissionResultResponseDTO"
-                }
-              }
-            },
-            "403": {
-              "description": "Forbidden!!!!!"
-            },
-            "500": {
-              "description": "500 message",
-              "schema": {
-                "$ref": "#/definitions/Error"
-              }
-            }
-          },
+        "/api/courses/{courseId}/activities/{activityId}/students/{studentId}/submissions": {
+            "get": {
+                "tags": [
+                    "submission-controller"
+                ],
+                "summary": "getAllSubmissionResultsFromStudent",
+                "operationId": "getAllSubmissionResultsFromStudentUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "accountNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "accountNonLocked",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "activityId",
+                        "in": "path",
+                        "description": "activityId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "authorities[0].authority",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "courseId",
+                        "in": "path",
+                        "description": "courseId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "credentialsNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "enabled",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "studentId",
+                        "in": "path",
+                        "description": "studentId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "user.dateCreated",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "user.degree",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.email",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.emailValidated",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "user.id",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "user.lastUpdated",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "user.name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.password",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.studentId",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.surname",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.university",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.username",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ActivitySubmissionResultResponseDTO"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden!!!!!"
+                    },
+                    "500": {
+                        "description": "500 message",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
                 "deprecated": false
             }
         },
