@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:65457",
+    "host": "localhost:54029",
     "basePath": "/",
     "tags": [
         {
@@ -8297,6 +8297,18 @@
         "SubmissionsStatResponseDTO": {
             "type": "object",
             "properties": {
+                "avg_error_submissions_by_student": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "avg_submissions_by_student": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "avg_success_submissions_by_student": {
+                    "type": "number",
+                    "format": "double"
+                },
                 "build_error": {
                     "type": "integer",
                     "format": "int64"
@@ -8314,6 +8326,18 @@
                     "format": "int64"
                 },
                 "total": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "total_students": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "total_students_error": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "total_students_success": {
                     "type": "integer",
                     "format": "int64"
                 }

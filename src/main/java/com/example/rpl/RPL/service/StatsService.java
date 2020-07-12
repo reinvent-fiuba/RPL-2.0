@@ -37,7 +37,7 @@ public class StatsService {
 
         List<ActivitySubmission> submissions = submissionService.getAllSubmissionsByActivities(activities, userId, date);
 
-        Map<Activity, List<ActivitySubmission>> submissionsByActivitysubmissions = submissions.stream()
+        Map<Activity, List<ActivitySubmission>> submissionsByActivity = submissions.stream()
                 .collect(Collectors.groupingBy(ActivitySubmission::getActivity));
 
         List<Map<String,String>> activitiesMetadata = activities.stream()
@@ -52,7 +52,7 @@ public class StatsService {
 
         for (Activity activity : activities) {
             submissionsStats.add(new SubmissionsStat(
-                    submissionsByActivitysubmissions.getOrDefault(activity, new ArrayList<>())
+                    submissionsByActivity.getOrDefault(activity, new ArrayList<>())
             ));
         }
 
