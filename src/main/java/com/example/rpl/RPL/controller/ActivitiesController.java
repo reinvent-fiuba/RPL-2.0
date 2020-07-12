@@ -1,6 +1,9 @@
 package com.example.rpl.RPL.controller;
 
-import com.example.rpl.RPL.controller.dto.*;
+import com.example.rpl.RPL.controller.dto.ActivityResponseDTO;
+import com.example.rpl.RPL.controller.dto.CreateActivityRequestDTO;
+import com.example.rpl.RPL.controller.dto.UpdateActivityRequestDTO;
+import com.example.rpl.RPL.controller.dto.UserActivityResponseDTO;
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.IOTest;
@@ -21,7 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -150,13 +159,13 @@ public class ActivitiesController {
     @PreAuthorize("hasAuthority('activity_manage')")
     @DeleteMapping(value = "/api/courses/{courseId}/activities/{activityId}")
     public ResponseEntity<ActivityResponseDTO> deleteActivity(
-            @CurrentUser UserPrincipal currentUser,
-            @PathVariable Long courseId, @PathVariable Long activityId) {
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId, @PathVariable Long activityId) {
         log.debug("COURSE ID: {}", courseId);
 
         Activity activity = activitiesService.deleteActivity(activityId);
 
         return new ResponseEntity<>(
-                ActivityResponseDTO.fromEntity(activity, null, null), HttpStatus.OK);
+            ActivityResponseDTO.fromEntity(activity, null, null), HttpStatus.OK);
     }
 }

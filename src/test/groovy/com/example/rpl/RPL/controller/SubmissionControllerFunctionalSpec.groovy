@@ -3,7 +3,10 @@ package com.example.rpl.RPL.controller
 import com.example.rpl.RPL.model.*
 import com.example.rpl.RPL.repository.*
 import com.example.rpl.RPL.util.AbstractFunctionalSpec
+import com.example.rpl.RPL.utils.TarUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.io.ByteArrayResource
+import org.springframework.core.io.Resource
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.ActiveProfiles
 import spock.lang.Shared
@@ -112,10 +115,12 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         courseUserRepository.save(courseUser);
 
+        File f = new File("./src/main/resources/data_for_tests_do_not_delete/activity_1_starting_files/activity_1_starting_files.gz")
+
         RPLFile supportingActivityFile = new RPLFile(
                 "starting_files",
                 "text",
-                null
+                f.getBytes()
         )
         fileRepository.save(supportingActivityFile)
 
@@ -213,7 +218,7 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test POST submission should persist it and enqueue task"() {
         given: "A new submission"
-            File f = new File("./src/main/resources/db/testdata/la_submission.tar.xz")
+            File tiempo_c = new File("./src/main/resources/data_for_tests_do_not_delete/activity_1_submission/tiempo.c")
 
             Map loginBody = [username_or_email: "username", password: "supersecret"]
             def loginResponse = getJsonResponse(post("/api/auth/login", loginBody))
@@ -222,7 +227,7 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
             api.headers([
                     "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
             ])
-            api.multiPart("file", f)
+            api.multiPart("file", tiempo_c)
             api.formParam("description", "This is my submission")
             api.contentType("multipart/form-data")
             def response = api.post("/api/courses/${course.getId()}/activities/${activity.getId()}/submissions")
@@ -242,6 +247,62 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
             assert result.activity_starting_files_id != null
             assert result.activity_language == "c_std11"
             assert result.activity_iotests.size() == 0
+    }
+
+    @Unroll
+    void "test POST submission should add 'hidden' activity files and overwrite 'read' files"() {
+        given: "A new submission"
+            File tiempo_c = new File("./src/main/resources/data_for_tests_do_not_delete/activity_1_submission/tiempo.c")
+            File tiempo_h = new File("./src/main/resources/data_for_tests_do_not_delete/activity_1_submission/tiempo.h")
+
+            Map loginBody = [username_or_email: "username", password: "supersecret"]
+            def loginResponse = getJsonResponse(post("/api/auth/login", loginBody))
+        and: "That the activity files_metadata is"
+            def files_metadata = "{\"main.c\":{\"display\":\"hidden\"}," +
+                    "\"tiempo.c\":{\"display\":\"read_write\"}," +
+                    "\"tiempo.h\":{\"display\":\"read\"}}"
+
+        when:
+            api.headers([
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+            api.multiPart("file", tiempo_c)
+            api.formParam("description", "This is my submission")
+
+            api.multiPart("file", tiempo_h)
+            api.formParam("description", "This is my submission")
+
+            api.contentType("multipart/form-data")
+            def response = api.post("/api/courses/${course.getId()}/activities/${activity.getId()}/submissions")
+
+        then: "submission should include main.c and tiempo.h should be the activity's one"
+            response.contentType == "application/json"
+            response.statusCode == SC_CREATED
+
+            def result = getJsonResponse(response)
+
+            assert result.id != null
+            assert result.submission_file_name != null
+            assert result.submission_file_type == "application/gzip"
+            assert result.submission_file_id != null
+            assert result.activity_starting_files_name == "starting_files"
+            assert result.activity_starting_files_type == "text"
+            assert result.activity_starting_files_id != null
+            assert result.activity_language == "c_std11"
+            assert result.activity_iotests.size() == 0
+
+            Resource activityFilesResource = new ByteArrayResource(activity.startingFiles.getData())
+            Map<String, String> activityFiles = TarUtils.extractTarGZ(activityFilesResource.getInputStream())
+
+            RPLFile submissionFile = fileRepository.findById(result.submission_file_id as Long).get()
+            Resource resource = new ByteArrayResource(submissionFile.getData())
+            Map<String, String> submissionFiles = TarUtils.extractTarGZ(resource.getInputStream())
+
+            assert submissionFiles.keySet().containsAll(["tiempo.c", "tiempo.h", "main.c"])
+
+            assert !submissionFiles["tiempo.h"].contains("INTEGRATION_TEST_FAILED")
+            assert submissionFiles["tiempo.h"] == activityFiles["tiempo.h"]
+            assert submissionFiles["main.c"] == activityFiles["main.c"]
     }
 }
 

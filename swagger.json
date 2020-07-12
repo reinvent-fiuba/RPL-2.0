@@ -6304,6 +6304,91 @@
                 "produces": [
                     "*/*"
                 ],
+              "parameters": [
+                {
+                  "name": "filesIds",
+                  "in": "path",
+                  "description": "filesIds",
+                  "required": true,
+                  "type": "string"
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/Map\u00abstring,string\u00bb"
+                    }
+                  }
+                },
+                "403": {
+                  "description": "Forbidden!!!!!"
+                },
+                "500": {
+                  "description": "500 message",
+                  "schema": {
+                    "$ref": "#/definitions/Error"
+                  }
+                }
+              },
+              "deprecated": false
+            }
+        },
+      "/api/getFileForStudent/{fileId}": {
+        "get": {
+          "tags": [
+            "file-controller"
+          ],
+          "summary": "getFileForStudent",
+          "operationId": "getFileForStudentUsingGET",
+          "produces": [
+            "*/*"
+          ],
+          "parameters": [
+            {
+              "name": "fileId",
+              "in": "path",
+              "description": "fileId",
+              "required": true,
+              "type": "integer",
+              "format": "int64"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden!!!!!"
+            },
+            "500": {
+              "description": "500 message",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            }
+          },
+          "deprecated": false
+        }
+      },
+      "/api/getFilesForStudent/{filesIds}": {
+        "get": {
+          "tags": [
+            "file-controller"
+          ],
+          "summary": "getExtractedFilesForStudent",
+          "operationId": "getExtractedFilesForStudentUsingGET",
+          "produces": [
+            "*/*"
+                ],
                 "parameters": [
                     {
                         "name": "filesIds",

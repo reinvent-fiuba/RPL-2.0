@@ -82,7 +82,7 @@ public class RplFilesService {
                 JsonNode fileMetadata = metadataObjectNode.get(fileName);
                 FileMetadata metadata = new ObjectMapper()
                     .treeToValue(fileMetadata, FileMetadata.class);
-                if (!metadata.getDisplay().equals("read")) {
+                if (metadata.getDisplay().equals("read")) {
                     // If file was read only, overwrite with teacher's version of the file
                     resultingSubmission.put(fileName, activityFiles.get(fileName));
                 } else {

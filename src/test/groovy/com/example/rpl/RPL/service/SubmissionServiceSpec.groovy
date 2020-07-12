@@ -8,6 +8,7 @@ import com.example.rpl.RPL.repository.FileRepository
 import com.example.rpl.RPL.repository.SubmissionRepository
 import com.example.rpl.RPL.repository.TestRunRepository
 import org.springframework.mock.web.MockMultipartFile
+import org.springframework.web.multipart.MultipartFile
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -19,6 +20,7 @@ class SubmissionServiceSpec extends Specification {
     private SubmissionService submissionService
     private TestService testService
     private TestRunRepository testRunRepository
+    private RplFilesService rplFilesService
 
     @Shared
     User user
@@ -29,6 +31,7 @@ class SubmissionServiceSpec extends Specification {
         fileRepository = Mock(FileRepository)
         testService = Mock(TestService)
         testRunRepository = Mock(TestRunRepository)
+        rplFilesService = Mock(RplFilesService)
         submissionService = new SubmissionService(testService, activityRepository, submissionRepository, fileRepository, testRunRepository, rplFilesService)
 
         user = new User(
@@ -57,7 +60,7 @@ class SubmissionServiceSpec extends Specification {
 
     void "should return a submission"() {
         given: "1 submission"
-        RPLFile f = new RPLFile("test_file", "text", null)
+            RPLFile f = new RPLFile("test_file", "text", null)
 
             ActivitySubmission activitySubmission = new ActivitySubmission(null, user, f,
                     SubmissionStatus.PENDING)
@@ -77,7 +80,8 @@ class SubmissionServiceSpec extends Specification {
             activityRepository.findById(_ as Long) >> Optional.of(a)
 
         when: "creating a submission"
-            ActivitySubmission aSub = submissionService.createSubmission(user, 1, 1, "bla", new MockMultipartFile("mockfile").getBytes())
+            MultipartFile[] files = [new MockMultipartFile("mockfile")]
+            ActivitySubmission aSub = submissionService.createSubmission(user, 1, 1, "bla", files)
 
         then:
             1 * fileRepository.save(_ as RPLFile) >> { RPLFile f -> return f }
@@ -93,7 +97,8 @@ class SubmissionServiceSpec extends Specification {
             activityRepository.findById(_ as Long) >> Optional.empty()
 
         when: "creating a submission"
-            submissionService.createSubmission(user, 1, 1, "bla", new MockMultipartFile("mockfile").getBytes())
+            MultipartFile[] files = [new MockMultipartFile("mockfile")]
+            submissionService.createSubmission(user, 1, 1, "bla", files)
 
         then:
             NotFoundException e = thrown(NotFoundException)
