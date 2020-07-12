@@ -1,11 +1,17 @@
 package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.exception.NotFoundException;
+import com.example.rpl.RPL.model.FileMetadata;
 import com.example.rpl.RPL.model.RPLFile;
 import com.example.rpl.RPL.repository.FileRepository;
 import com.example.rpl.RPL.utils.TarUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -72,6 +78,41 @@ public class FileController {
         Map<String, String> r = extractFile(fileId);
 
         return new ResponseEntity<>(r, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/api/getFileForStudent/{fileId}")
+    public ResponseEntity<Map<String, String>> getFileForStudent(@PathVariable Long fileId,
+        HttpServletRequest request) throws IOException {
+        log.error("FILE ID: {}", fileId);
+
+        Map<String, String> r = extractFile(fileId);
+        if (!r.containsKey("files_metadata")) {
+            return new ResponseEntity<>(r, HttpStatus.OK);
+        }
+
+        Map<String, String> filteredFiles = new HashMap<>();
+
+        JsonNode root = new ObjectMapper().readTree(r.get("files_metadata"));
+        ObjectNode objectNode = (ObjectNode) root;
+        r.forEach((filename, fileContent) -> {
+            if (!objectNode.has(filename)) {
+                filteredFiles.put(filename, fileContent);
+            } else {
+                JsonNode fileMetadata = objectNode.get(filename);
+                FileMetadata metadata = null;
+                try {
+                    metadata = new ObjectMapper().treeToValue(fileMetadata, FileMetadata.class);
+                } catch (JsonProcessingException e) {
+                    log.warn("File metadata bad formatted {} {}", filename, fileContent);
+                    return;
+                }
+                if (!metadata.getDisplay().equals("hidden")) {
+                    filteredFiles.put(filename, fileContent);
+                }
+            }
+        });
+        filteredFiles.put("files_metadata", r.get("files_metadata"));
+        return new ResponseEntity<>(filteredFiles, HttpStatus.OK);
     }
 
     @GetMapping(value = "/api/getExtractedFiles/{filesIds}")

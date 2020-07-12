@@ -21,7 +21,6 @@ import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.AuthenticationService;
 import com.example.rpl.RPL.service.SubmissionService;
 import com.example.rpl.RPL.service.TestService;
-import com.example.rpl.RPL.utils.TarUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -94,11 +93,11 @@ public class SubmissionController {
         log.info("COURSE ID: {}", courseId);
         log.info("ACTIVITY ID: {}", activityId);
 
-        byte[] compressedFilesBytes = TarUtils.compressToTarGz(files);
+//        byte[] compressedFilesBytes = TarUtils.compressToTarGz(files);
 
         ActivitySubmission as = submissionService
             .createSubmission(currentUser.getUser(), courseId, activityId, description,
-                compressedFilesBytes);
+                files);
 
         // Submit submission ID to queue
         try {

@@ -29,7 +29,7 @@ class SubmissionServiceSpec extends Specification {
         fileRepository = Mock(FileRepository)
         testService = Mock(TestService)
         testRunRepository = Mock(TestRunRepository)
-        submissionService = new SubmissionService(testService, activityRepository, submissionRepository, fileRepository, testRunRepository)
+        submissionService = new SubmissionService(testService, activityRepository, submissionRepository, fileRepository, testRunRepository, rplFilesService)
 
         user = new User(
                 'some-name',

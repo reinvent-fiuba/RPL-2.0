@@ -13,6 +13,7 @@ import com.example.rpl.RPL.repository.ActivityRepository;
 import com.example.rpl.RPL.repository.FileRepository;
 import com.example.rpl.RPL.repository.SubmissionRepository;
 import com.example.rpl.RPL.repository.TestRunRepository;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -33,18 +35,21 @@ public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final FileRepository fileRepository;
     private final TestRunRepository testRunRepository;
+    private RplFilesService rplFilesService;
 
     @Autowired
     public SubmissionService(TestService testService,
         ActivityRepository activityRepository,
         SubmissionRepository submissionRepository,
         FileRepository fileRepository,
-        TestRunRepository testRunRepository) {
+        TestRunRepository testRunRepository,
+        RplFilesService rplFilesService) {
         this.testService = testService;
         this.activityRepository = activityRepository;
         this.submissionRepository = submissionRepository;
         this.fileRepository = fileRepository;
         this.testRunRepository = testRunRepository;
+        this.rplFilesService = rplFilesService;
     }
 
 
@@ -57,21 +62,27 @@ public class SubmissionService {
 
     /**
      * Creates a new submission by a user for a given Activity.
-     *
-     * @param user The submitter of the assignment
+     *  @param user The submitter of the assignment
      * @param courseId CourseId, for logging purposes
      * @param activityId The activity the user wants to complete
      * @param description File description
-     * @param compressedFilesBytes Actual MultipartFile sent by the front-end (typically a
-     * compressed tar.gz with
+     * @param files Actual MultipartFile sent by the front-end (typically a
      */
     @Transactional
     public ActivitySubmission createSubmission(User user, Long courseId, Long activityId,
-        String description, byte[] compressedFilesBytes) {
+        String description, MultipartFile[] files) {
 
         Activity ac = activityRepository.findById(activityId).orElseThrow(
             () -> new NotFoundException("Activity not found",
                 "activity_not_found"));
+
+        byte[] compressedFilesBytes = new byte[0];
+        try {
+            compressedFilesBytes = rplFilesService
+                .addAndOverwriteWithActivityFiles(files, ac.getStartingFiles());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         RPLFile f = new RPLFile(String.format("%d_%d_%d", courseId, activityId, user.getId()),
             "application/gzip", compressedFilesBytes);

@@ -119,6 +119,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET,
                 "/api/files/**",
                 "/api/getExtractedFile/**",
+                "/api/getFileForStudent/**",
                 "/api/getExtractedFiles/**",
                 "/api/submissions/**"
             )
