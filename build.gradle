@@ -79,6 +79,9 @@ dependencies {
     compile "io.springfox:springfox-swagger2:2.9.2"
     compile 'org.springframework.plugin:spring-plugin-core:1.2.0.RELEASE'
 
+
+    runtime "com.newrelic.agent.java:newrelic-java:5.13.0"
+
 }
 
 dependencyManagement {

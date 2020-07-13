@@ -1,0 +1,17 @@
+Jul 12, 2020 22:40:00 -0300 [7718 1] com.newrelic INFO: Writing to New Relic log file: /home/alepox/Desktop/tp_prof/RPL_example/RPL/newrelic/logs/newrelic_agent.log
+Jul 12, 2020 22:40:00 -0300 [7718 1] com.newrelic INFO: JRE vendor AdoptOpenJDK version 11.0.4
+Jul 12, 2020 22:40:00 -0300 [7718 1] com.newrelic INFO: JVM vendor AdoptOpenJDK OpenJDK 64-Bit Server VM version 11.0.4+11
+Jul 12, 2020 22:40:00 -0300 [7718 1] com.newrelic INFO: OS Linux version 4.15.0-109-generic arch amd64
+Jul 12, 2020 22:40:00 -0300 [7718 1] com.newrelic INFO: Agent Host: alepox-Lenovo-YOGA-910-13IKB IP: 127.0.1.1
+Jul 12, 2020 22:40:00 -0300 [7718 1] com.newrelic INFO: New Relic Agent v5.13.0 is initializing...
+Jul 12, 2020 22:40:01 -0300 [7718 16] com.newrelic INFO: Instrumentation com.newrelic.instrumentation.jdbc-resultset is disabled. Skipping.
+Jul 12, 2020 22:40:02 -0300 [7718 1] com.newrelic.agent.RPMServiceManagerImpl INFO: Configured to connect to New Relic at collector.newrelic.com:443
+Jul 12, 2020 22:40:02 -0300 [7718 1] com.newrelic INFO: Setting audit_mode to false
+Jul 12, 2020 22:40:02 -0300 [7718 1] com.newrelic INFO: Setting protocol to "https"
+Jul 12, 2020 22:40:03 -0300 [7718 1] com.newrelic.agent.config.ConfigServiceImpl INFO: Configuration file is /home/alepox/Desktop/tp_prof/RPL_example/RPL/newrelic/./newrelic.yml
+Jul 12, 2020 22:40:03 -0300 [7718 1] com.newrelic INFO: New Relic Agent v5.13.0 has started
+Jul 12, 2020 22:40:03 -0300 [7718 1] com.newrelic INFO: Agent class loader: com.newrelic.bootstrap.BootstrapAgent$JVMAgentClassLoader@4d1b0d2a
+Jul 12, 2020 22:40:03 -0300 [7718 1] com.newrelic INFO: Premain startup complete in 3,824ms
+Jul 12, 2020 22:40:07 -0300 [7718 45] com.newrelic INFO: Server Info: Apache Tomcat/9.0.22
+Jul 12, 2020 22:40:12 -0300 [7718 11] com.newrelic.agent.core.CoreServiceImpl INFO: JVM is shutting down
+Jul 12, 2020 22:40:12 -0300 [7718 11] com.newrelic.agent.core.CoreServiceImpl INFO: New Relic Agent has shutdown
