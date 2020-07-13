@@ -12,10 +12,8 @@ import com.example.rpl.RPL.repository.ActivityCategoryRepository;
 import com.example.rpl.RPL.repository.ActivityRepository;
 import com.example.rpl.RPL.repository.CourseRepository;
 import com.example.rpl.RPL.repository.FileRepository;
-
 import java.util.Arrays;
 import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 public class ActivitiesService {
+
+    private static final String DEFAULT_GCC_FLAGS = "-g -O2 -std=c99 -Wall -Wformat=2 -Wshadow -Wpointer-arith -Wunreachable-code -Wconversion -Wno-sign-conversion -Wbad-function-cast";
 
     private final CourseRepository courseRepository;
     private final ActivityRepository activityRepository;
@@ -67,7 +67,9 @@ public class ActivitiesService {
         fileRepository.save(file);
 
         // Default compilation flags should be
-        // "-g -O2 -std=c99 -Wall -Wformat=2 -Wshadow -Wpointer-arith -Wunreachable-code -Wconversion -Wno-sign-conversion -Wbad-function-cast"
+        if (compilationFlags == null && Language.getByName(language) == Language.C) {
+            compilationFlags = DEFAULT_GCC_FLAGS;
+        }
 
         Activity activity = new Activity(course, activityCategory, name, description,
             Language.getByName(language), points, file, compilationFlags, active);
@@ -80,15 +82,15 @@ public class ActivitiesService {
     @Transactional
     public Activity updateActivity(Activity activity, Long activityCategoryId, String name,
         String description, String languageName, Boolean active, Long points,
-       String compilationFlags, byte[] startingFilesBytes) {
+        String compilationFlags, byte[] startingFilesBytes) {
 
         ActivityCategory activityCategory = null;
 
         if (activityCategoryId != null) {
             activityCategory = activityCategoryRepository.findById(activityCategoryId)
-                    .orElseThrow(
-                            () -> new NotFoundException("Category not found",
-                                    "category_not_found"));
+                .orElseThrow(
+                    () -> new NotFoundException("Category not found",
+                        "category_not_found"));
         }
 
         RPLFile file = activity.getStartingFiles();
@@ -111,8 +113,7 @@ public class ActivitiesService {
     /**
      * Retrieves all activities from a course
      *
-     * @return a list of Activities
-     * Course class
+     * @return a list of Activities Course class
      */
     @Transactional
     public List<Activity> getAllActivitiesByCourse(Long courseId) {
@@ -120,16 +121,16 @@ public class ActivitiesService {
     }
 
     /**
-     * Retrieves all activities from a course with a specific category (optional)
-     * If cateogoryId is not present, the function ignores the that filter
+     * Retrieves all activities from a course with a specific category (optional) If cateogoryId is
+     * not present, the function ignores the that filter
      *
-     * @return a list of Activities
-     * Course class
+     * @return a list of Activities Course class
      */
     @Transactional
     public List<Activity> getAllActivitiesByCourse(Long courseId, Long categoryId) {
         return categoryId != null ?
-                activityRepository.findActivitiesByCourse_IdAndActivityCategory_Id(courseId, categoryId) :
+            activityRepository.findActivitiesByCourse_IdAndActivityCategory_Id(courseId, categoryId)
+            :
                 activityRepository.findActivitiesByCourse_Id(courseId);
     }
 

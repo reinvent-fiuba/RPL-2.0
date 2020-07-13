@@ -3,7 +3,7 @@ package com.example.rpl.RPL.controller;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.RPLFile;
 import com.example.rpl.RPL.repository.FileRepository;
-import com.example.rpl.RPL.utils.TarUtils;
+import com.example.rpl.RPL.service.RplFilesService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +26,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class FileController {
 
     private final FileRepository fileRepository;
+    private RplFilesService rplFilesService;
 
     @Autowired
-    public FileController(FileRepository fileRepository) {
+    public FileController(FileRepository fileRepository,
+        RplFilesService rplFilesService) {
         this.fileRepository = fileRepository;
+        this.rplFilesService = rplFilesService;
     }
 
+    /**
+     * Returns the file "as is" compressed as a tar.gz
+     */
     @GetMapping(value = "/api/files/{fileId}")
     public ResponseEntity<Resource> getFile(@PathVariable Long fileId,
         HttpServletRequest request) {
@@ -63,17 +69,39 @@ public class FileController {
             .body(resource);
     }
 
-
+    /**
+     * Extracts the tar.gz and returns the files as a JSON object where the key is the filename and
+     * the value is the content.
+     */
     @GetMapping(value = "/api/getExtractedFile/{fileId}")
     public ResponseEntity<Map<String, String>> getExtractedFile(@PathVariable Long fileId,
         HttpServletRequest request) throws IOException {
         log.error("FILE ID: {}", fileId);
 
-        Map<String, String> r = extractFile(fileId);
+        Map<String, String> r = rplFilesService.extractFile(fileId);
 
         return new ResponseEntity<>(r, HttpStatus.OK);
     }
 
+    /**
+     * Extracts the tar.gz and returns the files as a JSON object where the key is the filename and
+     * the value is the content. Only returns files with metadata "display" field "READ" or
+     * "READ_WRITE". Doesn't return files with metadata {display: "hidden"}
+     */
+    @GetMapping(value = "/api/getFileForStudent/{fileId}")
+    public ResponseEntity<Map<String, String>> getFileForStudent(@PathVariable Long fileId,
+        HttpServletRequest request) throws IOException {
+        log.error("FILE ID: {}", fileId);
+
+        Map<String, String> filteredFiles = rplFilesService.extractFileForStudent(fileId);
+
+        return new ResponseEntity<>(filteredFiles, HttpStatus.OK);
+    }
+
+    /**
+     * Same as @getExtractedFile but returns a list with all the extracted fileIds in the query
+     * list.
+     */
     @GetMapping(value = "/api/getExtractedFiles/{filesIds}")
     public ResponseEntity<List<Map<String, String>>> getExtractedFiles(
         @PathVariable Long[] filesIds,
@@ -83,7 +111,7 @@ public class FileController {
 
         for (Long fileId : filesIds) {
             try {
-                files.add(extractFile(fileId));
+                files.add(rplFilesService.extractFile(fileId));
             } catch (IOException e) {
                 log.error("Error trying to extract file {}. Exception: {}", fileId, e.getMessage());
             }
@@ -92,14 +120,25 @@ public class FileController {
         return new ResponseEntity<>(files, HttpStatus.OK);
     }
 
+    /**
+     * Same as @getFileForStudent but returns a list with all the extracted fileIds in the query
+     * list.
+     */
+    @GetMapping(value = "/api/getFilesForStudent/{filesIds}")
+    public ResponseEntity<List<Map<String, String>>> getExtractedFilesForStudent(
+        @PathVariable Long[] filesIds,
+        HttpServletRequest request) {
 
-    private Map<String, String> extractFile(Long fileId) throws IOException {
-        RPLFile f = fileRepository.findById(fileId).orElseThrow(
-            () -> new NotFoundException("File not found",
-                "file_not_found"));
+        List<Map<String, String>> files = new ArrayList<>();
 
-        Resource resource = new ByteArrayResource(f.getData());
+        for (Long fileId : filesIds) {
+            try {
+                files.add(rplFilesService.extractFileForStudent(fileId));
+            } catch (IOException e) {
+                log.error("Error trying to extract file {}. Exception: {}", fileId, e.getMessage());
+            }
+        }
 
-        return TarUtils.extractTarGZ(resource.getInputStream());
+        return new ResponseEntity<>(files, HttpStatus.OK);
     }
 }
