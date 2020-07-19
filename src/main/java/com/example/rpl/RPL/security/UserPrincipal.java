@@ -60,9 +60,9 @@ public class UserPrincipal implements UserDetails {
     }
 
     public static UserPrincipal create(CourseUser courseUser) {
-        List<GrantedAuthority> authorities = courseUser.getRole().getPermissions().stream().map(
+        List<GrantedAuthority> authorities = courseUser.getAccepted() ? courseUser.getRole().getPermissions().stream().map(
             SimpleGrantedAuthority::new
-        ).collect(Collectors.toList());
+        ).collect(Collectors.toList()) : new ArrayList<>();
         if (courseUser.getUser().getIsAdmin()) {
             authorities.add(new SimpleGrantedAuthority("superadmin"));
         }

@@ -10,14 +10,18 @@ import com.example.rpl.RPL.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.LongSummaryStatistics;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.javatuples.Pair;
+import org.javatuples.Triplet;
+import org.javatuples.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.TupleElement;
 
 @Slf4j
 @Service
@@ -115,8 +119,20 @@ public class CoursesService {
      * @return a new saved User
      */
     @Transactional
-    public List<Course> getAllCourses() {
-        return courseRepository.findAll();
+    public List<Triplet<Course, Boolean, Boolean>> getAllCourses(Long userId) {
+        Map<Course, Pair<Boolean, Boolean>> courses = new HashMap<>();
+        courseRepository.findAll().forEach(course -> courses.put(course, new Pair<>(false, false)));
+        if (userId != null)
+            courseUserRepository.findByUser_Id(userId).forEach(courseUser ->
+                    courses.put(courseUser.getCourse(), new Pair<>(true, courseUser.getAccepted()))
+            );
+        return courses.entrySet().stream().map(coursePairEntry ->
+                new Triplet<>(
+                        coursePairEntry.getKey(),
+                        coursePairEntry.getValue().getValue0(),
+                        coursePairEntry.getValue().getValue1()
+                )
+        ).collect(Collectors.toList());
     }
 
     @Transactional
@@ -149,7 +165,7 @@ public class CoursesService {
             course,
             user,
             studentRole,
-            true
+            false
         );
 
         courseUser = courseUserRepository.save(courseUser);
@@ -233,7 +249,6 @@ public class CoursesService {
                 () -> new NotFoundException("Enrolled User not found in this Course",
                         "course_user_not_found")
         );
-
         return courseUser.getRole().getPermissions();
     }
 

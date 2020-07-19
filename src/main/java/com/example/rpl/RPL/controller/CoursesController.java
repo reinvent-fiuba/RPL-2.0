@@ -13,6 +13,7 @@ import javax.validation.Valid;
 
 import com.example.rpl.RPL.service.SubmissionService;
 import lombok.extern.slf4j.Slf4j;
+import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,13 +39,18 @@ public class CoursesController {
     }
 
     @GetMapping(value = "/api/courses")
-    public ResponseEntity<List<CourseResponseDTO>> getCourses() {
+    public ResponseEntity<List<CourseResponseDTO>> getCourses(@CurrentUser UserPrincipal currentUser) {
 
-        List<Course> courses = coursesService.getAllCourses();
+        List<Triplet<Course, Boolean, Boolean>> courses = coursesService.getAllCourses(currentUser.getId());
 
         return new ResponseEntity<>(
                 courses.stream()
-                        .map(CourseResponseDTO::fromEntity)
+                        .map(triplet ->
+                                // If the user is not enrolled and not accepted we don't return user info
+                                (!triplet.getValue1() && !triplet.getValue2()) ?
+                                        CourseResponseDTO.fromEntity(triplet.getValue0()) :
+                                        CourseResponseDTO.fromEntity(triplet.getValue0(), triplet.getValue1(), triplet.getValue2())
+                        )
                         .collect(Collectors.toList()),
                 HttpStatus.OK);
     }
@@ -102,9 +108,8 @@ public class CoursesController {
         return new ResponseEntity<>(CourseResponseDTO.fromEntity(course), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('course_view')")
     @GetMapping(value = "/api/courses/{courseId}/permissions")
-    public ResponseEntity<List<String>> getCourseUsers(@CurrentUser UserPrincipal currentUser,
+    public ResponseEntity<List<String>> getPermissions(@CurrentUser UserPrincipal currentUser,
                                                                       @PathVariable Long courseId) {
 
         List<String> permissions = coursesService.getPermissions(courseId, currentUser.getId());
