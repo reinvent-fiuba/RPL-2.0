@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-  "host": "localhost:46675",
+    "host": "localhost:60876",
     "basePath": "/",
     "tags": [
         {
@@ -673,6 +673,156 @@
                 "operationId": "getCoursesUsingGET",
                 "produces": [
                     "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "accountNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "accountNonLocked",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "authorities[0].authority",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "credentialsNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "enabled",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.dateCreated",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "user.degree",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.email",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.emailValidated",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "user.id",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "user.lastUpdated",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "user.name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.password",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.studentId",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.surname",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.university",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.username",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    }
                 ],
                 "responses": {
                     "200": {
@@ -5070,8 +5220,8 @@
                 "tags": [
                     "courses-controller"
                 ],
-                "summary": "getCourseUsers",
-                "operationId": "getCourseUsersUsingGET",
+                "summary": "getPermissions",
+                "operationId": "getPermissionsUsingGET",
                 "produces": [
                     "*/*"
                 ],
@@ -5635,7 +5785,7 @@
                     "courses-controller"
                 ],
                 "summary": "getCourseUsers",
-                "operationId": "getCourseUsersUsingGET_1",
+                "operationId": "getCourseUsersUsingGET",
                 "produces": [
                     "*/*"
                 ],
@@ -6303,91 +6453,6 @@
                 "operationId": "getExtractedFilesUsingGET",
                 "produces": [
                     "*/*"
-                ],
-              "parameters": [
-                {
-                  "name": "filesIds",
-                  "in": "path",
-                  "description": "filesIds",
-                  "required": true,
-                  "type": "string"
-                }
-              ],
-              "responses": {
-                "200": {
-                  "description": "OK",
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/definitions/Map\u00abstring,string\u00bb"
-                    }
-                  }
-                },
-                "403": {
-                  "description": "Forbidden!!!!!"
-                },
-                "500": {
-                  "description": "500 message",
-                  "schema": {
-                    "$ref": "#/definitions/Error"
-                  }
-                }
-              },
-              "deprecated": false
-            }
-        },
-      "/api/getFileForStudent/{fileId}": {
-        "get": {
-          "tags": [
-            "file-controller"
-          ],
-          "summary": "getFileForStudent",
-          "operationId": "getFileForStudentUsingGET",
-          "produces": [
-            "*/*"
-          ],
-          "parameters": [
-            {
-              "name": "fileId",
-              "in": "path",
-              "description": "fileId",
-              "required": true,
-              "type": "integer",
-              "format": "int64"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "schema": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "string"
-                }
-              }
-            },
-            "403": {
-              "description": "Forbidden!!!!!"
-            },
-            "500": {
-              "description": "500 message",
-              "schema": {
-                "$ref": "#/definitions/Error"
-              }
-            }
-          },
-          "deprecated": false
-        }
-      },
-      "/api/getFilesForStudent/{filesIds}": {
-        "get": {
-          "tags": [
-            "file-controller"
-          ],
-          "summary": "getExtractedFilesForStudent",
-          "operationId": "getExtractedFilesForStudentUsingGET",
-          "produces": [
-            "*/*"
                 ],
                 "parameters": [
                     {
@@ -7731,6 +7796,9 @@
         "CourseResponseDTO": {
             "type": "object",
             "properties": {
+                "accepted": {
+                    "type": "boolean"
+                },
                 "active": {
                     "type": "boolean"
                 },
@@ -7740,6 +7808,9 @@
                 },
                 "description": {
                     "type": "string"
+                },
+                "enrolled": {
+                    "type": "boolean"
                 },
                 "id": {
                     "type": "integer",

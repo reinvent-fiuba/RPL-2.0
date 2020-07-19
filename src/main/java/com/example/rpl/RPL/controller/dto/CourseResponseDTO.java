@@ -33,6 +33,12 @@ public class CourseResponseDTO {
 
     private ZonedDateTime lastUpdated;
 
+    // This fields are user related fields
+
+    private Boolean enrolled;
+
+    private Boolean accepted;
+
     public static CourseResponseDTO fromEntity(Course course) {
         return CourseResponseDTO.builder()
             .id(course.getId())
@@ -48,5 +54,24 @@ public class CourseResponseDTO {
             .dateCreated(course.getDateCreated())
             .lastUpdated(course.getLastUpdated())
             .build();
+    }
+
+    public static CourseResponseDTO fromEntity(Course course, Boolean enrolled, Boolean accepted) {
+        return CourseResponseDTO.builder()
+                .id(course.getId())
+                .name(course.getName())
+                .university(course.getUniversity())
+                .universityCourseId(course.getUniversityCourseId())
+                .description(course.getDescription())
+                .active(course.getActive())
+                .semester(course.getSemester())
+                .semesterStartDate(course.getSemesterStartDate())
+                .semesterEndDate(course.getSemesterEndDate())
+                .imgUri(course.getImgUri())
+                .dateCreated(course.getDateCreated())
+                .lastUpdated(course.getLastUpdated())
+                .enrolled(enrolled)
+                .accepted(accepted)
+                .build();
     }
 }
