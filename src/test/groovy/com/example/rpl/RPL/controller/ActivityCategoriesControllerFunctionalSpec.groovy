@@ -172,7 +172,7 @@ class ActivityCategoriesControllerFunctionalSpec extends AbstractFunctionalSpec 
         ]
 
         when: "get activity categories"
-            def response = post(String.format("/api/courses/%d/activityCategories", 22), body, [
+            def response = post(String.format("/api/courses/%d/activityCategories", course.getId()+1), body, [
                     "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
             ])
 
