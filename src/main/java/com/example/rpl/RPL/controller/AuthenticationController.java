@@ -2,6 +2,7 @@ package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.controller.dto.*;
 import com.example.rpl.RPL.model.Role;
+import com.example.rpl.RPL.model.University;
 import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.model.ValidationToken;
 import com.example.rpl.RPL.security.CurrentUser;
@@ -19,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -174,6 +176,13 @@ public class AuthenticationController {
         List<Role> roles = authenticationService.getRoles();
         return new ResponseEntity<>(roles.stream()
                 .map(RoleResponseDTO::fromEntity)
+                .collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/auth/universities")
+    public ResponseEntity<List<UniversityResponseDTO>> getUniversities() {
+        return new ResponseEntity<>(Arrays.stream(University.values()).
+                map(university -> UniversityResponseDTO.fromEntity(university))
                 .collect(Collectors.toList()), HttpStatus.OK);
     }
 }
