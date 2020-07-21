@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:63973",
+    "host": "localhost:50201",
     "basePath": "/",
     "tags": [
         {
@@ -623,6 +623,39 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/UserResponseDTO"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/auth/universities": {
+            "get": {
+                "tags": [
+                    "authentication-controller"
+                ],
+                "summary": "getUniversities",
+                "operationId": "getUniversitiesUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/UniversityResponseDTO"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden!!!!!"
+                    },
+                    "500": {
+                        "description": "500 message",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 },
@@ -8759,6 +8792,25 @@
                 }
             },
             "title": "UnitTestRunResultDTO"
+        },
+        "UniversityResponseDTO": {
+            "type": "object",
+            "properties": {
+                "degrees": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "title": "UniversityResponseDTO"
         },
         "UpdateSubmissionStatusRequestDTO": {
             "type": "object",
