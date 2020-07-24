@@ -60,4 +60,6 @@ hs_err_pid*
 
 /venv/
 
-!/newrelic/**
+/newrelic/logs/newrelic_agent.log
+!/newrelic/*.jar
+

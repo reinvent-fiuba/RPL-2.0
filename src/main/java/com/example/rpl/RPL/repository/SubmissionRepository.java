@@ -3,8 +3,6 @@ package com.example.rpl.RPL.repository;
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.User;
-
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
