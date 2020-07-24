@@ -13,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -103,18 +102,32 @@ public class Activity {
         this.dateCreated = now();
         this.lastUpdated = this.dateCreated;
         this.active = active != null ? active : false;
-        if (compilationFlags != null) this.compilationFlags = compilationFlags;
+        this.compilationFlags = compilationFlags != null ? compilationFlags : "";
     }
 
     public void updateActivity(ActivityCategory activityCategory, String name, Boolean active,
         String description, Language language, String compilationFlags, Long score) {
-        if (activityCategory != null) this.activityCategory = activityCategory;
-        if (name != null) this.name = name;
-        if (description!= null) this.description = description;
-        if (language != null) this.language = language;
-        if (score != null) this.points = score;
-        if (compilationFlags != null) this.compilationFlags = compilationFlags;
-        if (active != null) this.active = active;
+        if (activityCategory != null) {
+            this.activityCategory = activityCategory;
+        }
+        if (name != null) {
+            this.name = name;
+        }
+        if (description != null) {
+            this.description = description;
+        }
+        if (language != null) {
+            this.language = language;
+        }
+        if (score != null) {
+            this.points = score;
+        }
+        if (compilationFlags != null) {
+            this.compilationFlags = compilationFlags;
+        }
+        if (active != null) {
+            this.active = active;
+        }
         this.lastUpdated = now();
     }
 
