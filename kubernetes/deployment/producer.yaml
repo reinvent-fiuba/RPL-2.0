@@ -23,13 +23,20 @@ spec:
         - name: SPRING_PROFILES_ACTIVE
           value: "local,producer,development"
         - name: QUEUE_SERVICE_HOST
-          value: localhost
+          value: queue
         ports:
           - name: http
             containerPort: 8080
         readinessProbe:
-          initialDelaySeconds: 5
-          periodSeconds: 5
+          initialDelaySeconds: 60
+          periodSeconds: 60
+          httpGet:
+            path: /api/health
+            port: 8080
+        livenessProbe:
+          initialDelaySeconds: 60
+          periodSeconds: 60
+          failureThreshold: 3
           httpGet:
             path: /api/health
             port: 8080
