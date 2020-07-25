@@ -4,9 +4,9 @@ metadata:
   name: producer
 spec:
   ports:
-  - protocol: TCP
+    - nodePort: 30020
+      protocol: TCP
     port: 8080
-    targetPort: http
   selector:
     app: producer
     tier: backend
