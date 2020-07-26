@@ -30,7 +30,6 @@ env:
 jobs:
   setup-build-publish-deploy:
     name: Setup, Build, Publish, and Deploy
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
