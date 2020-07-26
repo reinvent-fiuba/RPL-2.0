@@ -51,7 +51,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build --debug
 
   setup-build-publish-deploy:
     name: Setup, Build, Publish, and Deploy
