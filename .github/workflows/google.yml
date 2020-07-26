@@ -28,8 +28,9 @@ env:
   DEPLOYMENT_NAME: producer
 
 jobs:
-  build:
-    name: build JAR
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -53,15 +54,9 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build --debug
 
-  setup-build-publish-deploy:
-    name: Setup, Build, Publish, and Deploy
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
       # Setup gcloud CLI
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          version: '270.0.0'
           service_account_email: ${{ secrets.GKE_EMAIL }}
           service_account_key: ${{ secrets.GKE_KEY }}
 
