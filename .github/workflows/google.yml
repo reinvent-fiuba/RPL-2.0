@@ -14,7 +14,7 @@ name: Build and Deploy to GKE
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [ kubernetes/google-config ]
 
 # Environment variables available to all jobs and steps in this workflow
 env:
@@ -30,6 +30,7 @@ env:
 jobs:
   build:
     name: build JAR
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -38,6 +39,13 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -50,10 +58,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-
-      - name: Checkout
-        uses: actions/checkout@v2
-
       # Setup gcloud CLI
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
