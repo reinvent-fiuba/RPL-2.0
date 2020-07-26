@@ -14,7 +14,7 @@ name: Build and Deploy to GKE
 # events but only for the master branch
 on:
   push:
-    branches: [ kubernetes/google-config ]
+    branches: [ master ]
 
 # Environment variables available to all jobs and steps in this workflow
 env:
