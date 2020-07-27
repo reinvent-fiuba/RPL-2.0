@@ -90,18 +90,18 @@ minikube start \
 
 - Create the message broker deployment and service:
 ```shell script
-kubectl create -f ./kubernetes/deployment/queue.yaml
-kubectl create -f ./kubernetes/service/queue.yaml
+kubectl create -f ./kubernetes/deployments/queue.yaml
+kubectl create -f ./kubernetes/services/queue.yaml
 ```
-- Create the producer deployment and service:
+- Create the producer deployments and services:
 ```shell script
-kubectl create -f ./kubernetes/deployment/producer.yaml
-kubectl create -f ./kubernetes/service/producer.yaml
+kubectl create -f ./kubernetes/deployments/producer.yaml
+kubectl create -f ./kubernetes/services/producer.yaml
 ```
-- Create the consumer deployment and service:
+- Create the consumer deployments and services:
 ```shell script
-kubectl create -f ./kubernetes/deployment/consumer.yaml
-kubectl create -f ./kubernetes/service/consumer.yaml
+kubectl create -f ./kubernetes/deployments/consumer.yaml
+kubectl create -f ./kubernetes/services/consumer.yaml
 ```
 - Get the ip address of the cluster:
 ```shell script
