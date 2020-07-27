@@ -12,7 +12,6 @@ spec:
       containers:
       - name: rabbitmq
         image: deadtrickster/rabbitmq_prometheus:latest
-        imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 15671
           - containerPort: 15672

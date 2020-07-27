@@ -18,16 +18,25 @@ spec:
     spec:
       containers:
       - name: producer
-        image: alepox/rpl-2.0:latest
+        image: gcr.io/fiuba-rpl/rpl-2.0:latest
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "local,producer,development"
+        - name: QUEUE_SERVICE_HOST
+          value: queue
         ports:
           - name: http
             containerPort: 8080
         readinessProbe:
-          initialDelaySeconds: 5
-          periodSeconds: 5
+          initialDelaySeconds: 60
+          periodSeconds: 60
+          httpGet:
+            path: /api/health
+            port: 8080
+        livenessProbe:
+          initialDelaySeconds: 60
+          periodSeconds: 60
+          failureThreshold: 3
           httpGet:
             path: /api/health
             port: 8080
