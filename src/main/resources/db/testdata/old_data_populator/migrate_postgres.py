@@ -1,7 +1,10 @@
 import io
+from pathlib import Path
 
 import psycopg2
 import requests
+
+import json
 
 '''
 DOCUMENTATION
@@ -26,12 +29,12 @@ psql -U rpl -d rpldb -1 -f db.sql.backup.12-06-20.mariano.sql 2> errors.txt
 '''
 
 headers = {
-    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTk0NDIyMjY3LCJleHAiOjE1OTQ0MzY2Njd9.Gfi-caq1GOkqQ3dVo25hxjOkCQgvCiIMjzxAc9k4a-GX09-MaoHXsireNVXsDGqCto0JJZNe0Cb0FPRFM2WsuQ'
+    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTk1OTk2NTI3LCJleHAiOjE1OTYwMTA5Mjd9.5dR8HdlXOiOJviZ7qk4jGkjO2fJckBGgD6h5F-2EoR5tgIz7BdyTqYrrO49EXA4UuwF8NUXi6y2B38qesB4ntw'
 }
 
 # base_url = "https://enigmatic-bayou-58033.herokuapp.com"
 base_url = "http://localhost:8080"
-migration_course_id = 1
+migration_course_id = 7
 
 
 def migrate_categories():
@@ -118,7 +121,8 @@ def migrate_activities(old_to_new_category_ids):
                                                   old_to_new_category_ids[
                                                       topic_id],
                                                   points,
-                                                  initial_code=template)
+                                                  template,
+                                                  test_type)
                     activate_activity(my_activity['id'])
 
                     try:
@@ -129,7 +133,7 @@ def migrate_activities(old_to_new_category_ids):
 
                         if test_type == "TEST":
                             tests = tests.replace('#include "solution.c"',
-                                                  '#include "main.c"')
+                                                  '#include "solucion.h"')
                             test = create_unit_test(my_activity["id"],
                                                     my_activity["course_id"],
                                                     tests)
@@ -156,8 +160,7 @@ def activate_activity(id):
     return response.json()
 
 
-def create_activity(name, description, language, category_id, points,
-        initial_code):
+def create_activity(name, description, language, category_id, points, initial_code, test_type):
     backend_url = f"{base_url}/api/courses/{migration_course_id}/activities"
 
     payload = {
@@ -171,19 +174,66 @@ def create_activity(name, description, language, category_id, points,
 
     filename = "main.c" if language.lower() == "c" else "assignment_main.py"
 
-    with io.FileIO(filename, 'wb+') as startingFile:
-        startingFile.write(str.encode(initial_code or "no_code"))
-        startingFile.seek(0)
-        files = [
-            ('startingFile', startingFile)
-        ]
+    if test_type == "INPUT" or language.lower() != "c":
+        with io.FileIO(filename, 'wb+') as startingFile:
+            startingFile.write(str.encode(initial_code or "no_code"))
+            startingFile.seek(0)
+            files = [
+                ('startingFile', startingFile)
+            ]
 
-        response = requests.post(backend_url, headers=headers, data=payload,
-                                 files=files)
+            response = requests.post(backend_url, headers=headers, data=payload,
+                                     files=files)
 
-        if response.status_code not in [200, 201]:
-            raise Exception(f"Error al postear la activity: {response.json()}")
-        return response.json()
+            if response.status_code not in [200, 201]:
+                raise Exception(
+                    f"Error al postear la activity: {response.json()}")
+            return response.json()
+
+    if test_type == "TEST":
+        path = Path(f"./{category_id}/{name[:20]}")
+        path.mkdir(parents=True,exist_ok=True)
+        # with io.FileIO("solucion.c", 'wb+') as mainC, io.FileIO("solucion.h", 'wb+') as mainH, open("files_metadata",'wb+') as files_metadata:
+        with open(path / "solucion.c", 'w+') as mainC, open(path / "solucion.h",'w+') as mainH, open(path / "files_metadata",'w+') as files_metadata:
+
+            lines = initial_code.split("\n")
+
+
+            # Everything I add to solution.h,  I remove from solution.c
+            function_firm = ""
+            for i, line in enumerate(lines):
+                if "{" in line and "struct" not in line:
+                    function_firm += line.replace("{", ";")
+                    break
+                function_firm += line + "\n"
+
+            # mainH.write(str.encode(function_firm))
+            mainH.write(function_firm)
+            mainH.seek(0)
+
+            initial_code = "\n".join(lines[i:])
+            initial_code = '#include "solucion.h"\n' + initial_code
+            # mainC.write(str.encode(initial_code or "no_code"))
+            mainC.write(initial_code or "no_code")
+            mainC.seek(0)
+
+            # files_metadata.write(str.encode(json.dumps({"solucion.c": "read_write", "solucion.h": "read"}))
+            files_metadata.write(json.dumps({"solucion.c": {"display": "read_write"}, "solucion.h": {"display": "read_write"}}))
+            files_metadata.seek(0)
+
+            files = [
+                ('startingFile', mainC),
+                ('startingFile', mainH),
+                ('startingFile', files_metadata)
+            ]
+
+            response = requests.post(backend_url, headers=headers, data=payload,
+                                     files=files)
+
+            if response.status_code not in [200, 201]:
+                raise Exception(
+                    f"Error al postear la activity: {response.json()}")
+            return response.json()
 
 
 def create_io_test(activity_id, course_id, text_in, text_out):

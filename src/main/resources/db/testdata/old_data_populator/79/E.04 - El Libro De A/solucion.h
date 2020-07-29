@@ -1,0 +1,1 @@
+void pasar_borrador(char libro[], char borrador[]) ;

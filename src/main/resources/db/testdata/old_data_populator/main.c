@@ -1,3 +1,5 @@
-void invertir_string(char palabra[]){
-    // Aqui va su código...
+#include <stdio.h>
+
+int main (){
+    // Aquí va tu código..
 }

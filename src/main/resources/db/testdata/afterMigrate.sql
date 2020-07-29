@@ -41,14 +41,6 @@ VALUES (6, 'Admin', 'admin', 00001, 'superadmin', 'admin@gmail.com',
         true, '',
         '', now(), now());
 
-INSERT INTO roles
-VALUES (1, 'admin',
-        'course_delete,course_view,course_edit,activity_view,activity_manage,activity_submit,user_view,user_manage',
-        now(), now());
-
-INSERT INTO roles
-VALUES (2, 'student', 'course_view,activity_view,activity_submit,user_view', now(), now());
-
 INSERT INTO permissions
 VALUES (1, 'course_create', now());
 
