@@ -4,7 +4,9 @@ import com.example.rpl.RPL.security.CustomUserDetailsService;
 import com.example.rpl.RPL.security.JwtAuthenticationEntryPoint;
 import com.example.rpl.RPL.security.JwtAuthenticationFilter;
 import com.example.rpl.RPL.security.JwtTokenProvider;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -38,6 +40,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationEntryPoint unauthorizedHandler;
 
     private JwtTokenProvider tokenProvider;
+
+    @Value("${rpl.logging.requests}")
+    private boolean logRequests;
 
 
     @Autowired
@@ -157,8 +162,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public CommonsRequestLoggingFilter logFilter() {
-        CommonsRequestLoggingFilter filter
-            = new CommonsRequestLoggingFilter();
+        CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter() {
+            // Don't log passwords
+            @Override
+            protected boolean shouldLog(HttpServletRequest request) {
+                return !(request.getRequestURI().contains("login") || request.getRequestURI()
+                    .contains("Password") || request.getRequestURI().contains("signup") || request
+                    .getRequestURI().contains("health")) && logRequests;
+            }
+        };
+
         filter.setIncludeQueryString(true);
         filter.setIncludePayload(true);
         filter.setMaxPayloadLength(10000);
