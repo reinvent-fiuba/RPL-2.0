@@ -227,7 +227,7 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
             response.statusCode == SC_OK
 
             Map result = getJsonResponse(response)
-            System.out.println(result)
+//            System.out.println(result)
             assert result.username == username
             assert result.name == name
             assert result.student_id == student_id
