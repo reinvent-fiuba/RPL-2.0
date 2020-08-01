@@ -162,18 +162,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public CommonsRequestLoggingFilter logFilter() {
+        // Don't log the polled endpoints (/health || /api/submissions/123/result)
         CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter() {
             // Don't log passwords
             @Override
             protected boolean shouldLog(HttpServletRequest request) {
-                return !(request.getRequestURI().contains("login") || request.getRequestURI()
-                    .contains("Password") || request.getRequestURI().contains("signup") || request
-                    .getRequestURI().contains("health")) && logRequests;
+                return !request.getRequestURI().contains("login") && !request.getRequestURI()
+                    .contains("Password") && !request.getRequestURI().contains("signup") && !request
+                    .getRequestURI().contains("health") &&
+                    !(request.getRequestURI().matches("/api/submissions/.*/result")
+                        && request.getMethod().equals("GET")) && logRequests;
             }
         };
 
         filter.setIncludeQueryString(true);
         filter.setIncludePayload(true);
+
         filter.setMaxPayloadLength(10000);
         filter.setIncludeHeaders(false);
         filter.setAfterMessagePrefix("REQUEST DATA : ");

@@ -35,7 +35,7 @@ public class TarUtils {
       a ByteArrayOutputStream to lay nothing down on disk if you wanted
       to do something else with your newly created archive
     */
-            System.err.println("Entered try");
+//            System.err.println("Entered try");
             gzOut = new TarArchiveOutputStream(
                 new GZIPOutputStream(
 //                    new BufferedOutputStream(
@@ -43,14 +43,14 @@ public class TarUtils {
 //                    )
                 ));
 
-            System.err.println("Created TarArchiveOutputStream");
+//            System.err.println("Created TarArchiveOutputStream");
 
             for (int i = 0; i < files.length; i++) {
                 MultipartFile file = files[i];
                 String fileName = file.getOriginalFilename();
                 byte[] bytes = file.getBytes();
 
-                System.err.println("Processing file " + fileName);
+//                System.err.println("Processing file " + fileName);
 
                 //Name your entry with the complete path relative to the base directory
                 //of your archive. Any directories that don't exist (e.g. "testDir") will
@@ -58,17 +58,17 @@ public class TarUtils {
                 TarArchiveEntry textFile = new TarArchiveEntry(
                     fileName != null ? fileName : String.format("FILE_WITHOUT_NAME_%d", i));
 
-                System.err.println("Created TarArchiveEntry");
+//                System.err.println("Created TarArchiveEntry");
 
                 //Make sure to set the size of the entry. If you don't you will not be able
                 //to write to it
                 textFile.setSize(bytes.length);
-                System.err.println("set size");
+//                System.err.println("set size");
 
                 //When you put an ArchiveEntry into the archive output stream,
                 //it sets it as the current entry
                 gzOut.putArchiveEntry(textFile);
-                System.err.println("Put archive entry");
+//                System.err.println("Put archive entry");
 
                 //The write command allows you to write bytes to the current entry
                 //on the output stream, which was set by the above command.
@@ -76,7 +76,7 @@ public class TarUtils {
                 //that you specified when you created the archive entry above
                 gzOut.write(bytes);
 
-                System.err.println("bytes written");
+//                System.err.println("bytes written");
 
                 gzOut.closeArchiveEntry();
 
@@ -88,14 +88,14 @@ public class TarUtils {
             //the previous "current entry" if there was one
 //            gzOut.closeArchiveEntry();
 
-            System.err.println("tar CLOSED");
+//            System.err.println("tar CLOSED");
 
             gzOut.close();
 
             return bos.toByteArray();
 
         } catch (Exception ex) {
-            System.err.println("ERROR: " + ex.getMessage());
+//            System.err.println("ERROR: " + ex.getMessage());
         } finally {
             if (gzOut != null) {
                 try {
@@ -125,8 +125,8 @@ public class TarUtils {
 
                 result.put(entry.getName(), holeFile.toString());
             }
-            System.out.println(result);
-            System.out.println("Untar completed successfully!");
+//            System.out.println(result);
+//            System.out.println("Untar completed successfully!");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -145,7 +145,7 @@ public class TarUtils {
       a ByteArrayOutputStream to lay nothing down on disk if you wanted
       to do something else with your newly created archive
     */
-            System.err.println("Entered try");
+//            System.err.println("Entered try");
             gzOut = new TarArchiveOutputStream(
                 new GZIPOutputStream(
 //                    new BufferedOutputStream(
@@ -153,7 +153,7 @@ public class TarUtils {
 //                    )
                 ));
 
-            System.err.println("Created TarArchiveOutputStream");
+//            System.err.println("Created TarArchiveOutputStream");
 
             TarArchiveOutputStream finalGzOut = gzOut;
             Set<String> fileNames = resultingSubmission.keySet();
@@ -161,24 +161,24 @@ public class TarUtils {
                 String content = resultingSubmission.get(fileName);
                 byte[] bytes = content.getBytes();
 
-                System.err.println("Processing file " + fileName);
+//                System.err.println("Processing file " + fileName);
 
                 //Name your entry with the complete path relative to the base directory
                 //of your archive. Any directories that don't exist (e.g. "testDir") will
                 //be created for you
                 TarArchiveEntry textFile = new TarArchiveEntry(fileName);
 
-                System.err.println("Created TarArchiveEntry");
+//                System.err.println("Created TarArchiveEntry");
 
                 //Make sure to set the size of the entry. If you don't you will not be able
                 //to write to it
                 textFile.setSize(bytes.length);
-                System.err.println("set size");
+//                System.err.println("set size");
 
                 //When you put an ArchiveEntry into the archive output stream,
                 //it sets it as the current entry
                 finalGzOut.putArchiveEntry(textFile);
-                System.err.println("Put archive entry");
+//                System.err.println("Put archive entry");
 
                 //The write command allows you to write bytes to the current entry
                 //on the output stream, which was set by the above command.
@@ -186,7 +186,7 @@ public class TarUtils {
                 //that you specified when you created the archive entry above
                 finalGzOut.write(bytes);
 
-                System.err.println("bytes written");
+//                System.err.println("bytes written");
 
                 finalGzOut.closeArchiveEntry();
 
@@ -198,14 +198,14 @@ public class TarUtils {
             //the previous "current entry" if there was one
 //            gzOut.closeArchiveEntry();
 
-            System.err.println("tar CLOSED");
+//            System.err.println("tar CLOSED");
 
             gzOut.close();
 
             return bos.toByteArray();
 
         } catch (Exception ex) {
-            System.err.println("ERROR: " + ex.getMessage());
+//            System.err.println("ERROR: " + ex.getMessage());
         } finally {
             if (gzOut != null) {
                 try {

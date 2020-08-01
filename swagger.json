@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:34845",
+  "host": "localhost:35597",
     "basePath": "/",
     "tags": [
         {
@@ -7231,6 +7231,33 @@
                         }
                     }
                 },
+              "deprecated": false
+            }
+        },
+      "/api/submissions/reprocessAll": {
+        "post": {
+          "tags": [
+            "submission-controller"
+          ],
+          "summary": "reprocessAllPendingSubmissions",
+          "operationId": "reprocessAllPendingSubmissionsUsingPOST",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "*/*"
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/ActivitySubmissionResponseDTO"
+                }
+              }
+            }
+          },
                 "deprecated": false
             }
         },

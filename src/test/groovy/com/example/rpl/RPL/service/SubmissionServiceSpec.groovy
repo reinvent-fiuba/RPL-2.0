@@ -1,8 +1,8 @@
 package com.example.rpl.RPL.service
 
-
 import com.example.rpl.RPL.exception.NotFoundException
 import com.example.rpl.RPL.model.*
+import com.example.rpl.RPL.queue.IProducer
 import com.example.rpl.RPL.repository.ActivityRepository
 import com.example.rpl.RPL.repository.FileRepository
 import com.example.rpl.RPL.repository.SubmissionRepository
@@ -21,6 +21,7 @@ class SubmissionServiceSpec extends Specification {
     private TestService testService
     private TestRunRepository testRunRepository
     private RplFilesService rplFilesService
+    private IProducer activitySubmissionQueueProducer
 
     @Shared
     User user
@@ -32,7 +33,8 @@ class SubmissionServiceSpec extends Specification {
         testService = Mock(TestService)
         testRunRepository = Mock(TestRunRepository)
         rplFilesService = Mock(RplFilesService)
-        submissionService = new SubmissionService(testService, activityRepository, submissionRepository, fileRepository, testRunRepository, rplFilesService)
+        activitySubmissionQueueProducer = Mock(IProducer)
+        submissionService = new SubmissionService(testService, activityRepository, submissionRepository, fileRepository, testRunRepository, rplFilesService, activitySubmissionQueueProducer)
 
         user = new User(
                 'some-name',

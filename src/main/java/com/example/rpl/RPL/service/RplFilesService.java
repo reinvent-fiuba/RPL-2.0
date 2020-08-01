@@ -76,7 +76,7 @@ public class RplFilesService {
             MultipartFile file = submissionFiles[i];
             String fileName = file.getOriginalFilename();
             byte[] bytes = file.getBytes();
-            System.err.println("Processing file " + fileName);
+//            System.err.println("Processing file " + fileName);
 
             if (metadataObjectNode.has(fileName)) {
                 JsonNode fileMetadata = metadataObjectNode.get(fileName);
