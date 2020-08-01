@@ -2,6 +2,7 @@ package com.example.rpl.RPL.repository;
 
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivitySubmission;
+import com.example.rpl.RPL.model.SubmissionStatus;
 import com.example.rpl.RPL.model.User;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -57,4 +58,6 @@ public interface SubmissionRepository extends JpaRepository<ActivitySubmission, 
 
     List<ActivitySubmission> findByActivity_IdAndIsFinalSolution(Long activityId,
         boolean isFinalSolution);
+
+    List<ActivitySubmission> findAllByStatus(SubmissionStatus status);
 }

@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.AmqpConnectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +45,6 @@ public class SubmissionController {
     private final SubmissionService submissionService;
     private final AuthenticationService authenticationService;
     private final TestService testService;
-    private final IProducer activitySubmissionQueueProducer;
 
     private final TestRunRepository testRunRepository;
 
@@ -59,7 +57,6 @@ public class SubmissionController {
         this.submissionService = submissionService;
         this.authenticationService = authenticationService;
         this.testService = testService;
-        this.activitySubmissionQueueProducer = activitySubmissionQueueProducer;
         this.testRunRepository = testRunRepository;
     }
 
@@ -97,15 +94,7 @@ public class SubmissionController {
             .createSubmission(currentUser.getUser(), courseId, activityId, description,
                 files);
 
-        // Submit submission ID to queue
-        try {
-            this.activitySubmissionQueueProducer
-                .send(as.getId().toString(), as.getActivity().getLanguage().getNameAndVersion());
-            as.setEnqueued();
-        } catch (AmqpConnectException e) {
-            log.error("Error sending submission ID to queue. Connection refused");
-            log.error(e.getMessage());
-        }
+        as = submissionService.postSubmissionToQueue(as);
 
         ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
             .fromEntity(as, null, List.of());
@@ -264,4 +253,16 @@ public class SubmissionController {
             }).collect(Collectors.toList());
     }
 
+    @PostMapping(value = "/api/submissions/reprocessAll")
+    public ResponseEntity<List<ActivitySubmissionResponseDTO>> reprocessAllPendingSubmissions() {
+        List<ActivitySubmission> submissions = submissionService.reprocessAllPendingSubmissions();
+
+        List<ActivitySubmission> enqueuedSubmissions = submissions.stream()
+            .map(submissionService::postSubmissionToQueue).collect(Collectors.toList());
+
+        List<ActivitySubmissionResponseDTO> asDtos = enqueuedSubmissions.stream()
+            .map(as -> ActivitySubmissionResponseDTO
+                .fromEntity(as, null, List.of())).collect(Collectors.toList());
+        return new ResponseEntity<>(asDtos, HttpStatus.CREATED);
+    }
 }

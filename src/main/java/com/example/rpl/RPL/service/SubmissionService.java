@@ -9,6 +9,7 @@ import com.example.rpl.RPL.model.RPLFile;
 import com.example.rpl.RPL.model.SubmissionStatus;
 import com.example.rpl.RPL.model.TestRun;
 import com.example.rpl.RPL.model.User;
+import com.example.rpl.RPL.queue.IProducer;
 import com.example.rpl.RPL.repository.ActivityRepository;
 import com.example.rpl.RPL.repository.FileRepository;
 import com.example.rpl.RPL.repository.SubmissionRepository;
@@ -20,6 +21,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.AmqpConnectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +37,8 @@ public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final FileRepository fileRepository;
     private final TestRunRepository testRunRepository;
-    private RplFilesService rplFilesService;
+    private final RplFilesService rplFilesService;
+    private final IProducer activitySubmissionQueueProducer;
 
     @Autowired
     public SubmissionService(TestService testService,
@@ -43,13 +46,15 @@ public class SubmissionService {
         SubmissionRepository submissionRepository,
         FileRepository fileRepository,
         TestRunRepository testRunRepository,
-        RplFilesService rplFilesService) {
+        RplFilesService rplFilesService,
+        IProducer activitySubmissionQueueProducer) {
         this.testService = testService;
         this.activityRepository = activityRepository;
         this.submissionRepository = submissionRepository;
         this.fileRepository = fileRepository;
         this.testRunRepository = testRunRepository;
         this.rplFilesService = rplFilesService;
+        this.activitySubmissionQueueProducer = activitySubmissionQueueProducer;
     }
 
 
@@ -62,7 +67,8 @@ public class SubmissionService {
 
     /**
      * Creates a new submission by a user for a given Activity.
-     *  @param user The submitter of the assignment
+     *
+     * @param user The submitter of the assignment
      * @param courseId CourseId, for logging purposes
      * @param activityId The activity the user wants to complete
      * @param description File description
@@ -152,6 +158,7 @@ public class SubmissionService {
     }
 
 
+    @Transactional
     public ActivitySubmission updateSubmissionStatus(Long submissionId,
         SubmissionStatus status) {
         ActivitySubmission activitySubmission = this.getActivitySubmission(submissionId);
@@ -171,7 +178,7 @@ public class SubmissionService {
             submissionRepository.findAllByActivityIn(activities);
     }
 
-    public List<ActivitySubmission> getAllSubmissionsByActivities(List<Activity> activities,
+    List<ActivitySubmission> getAllSubmissionsByActivities(List<Activity> activities,
         Long userId, LocalDate date) {
 
         if (date != null) {
@@ -193,13 +200,13 @@ public class SubmissionService {
         return submissionRepository.findAllByActivity_Course_Id(courseId);
     }
 
-    public List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId, Long userId) {
+    List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId, Long userId) {
         return userId != null ?
             submissionRepository.findAllByActivity_Course_IdAndUser_Id(courseId, userId) :
             submissionRepository.findAllByActivity_Course_Id(courseId);
     }
 
-    public List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId, Long userId,
+    List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId, Long userId,
         LocalDate date) {
         if (date != null) {
             ZonedDateTime startOfDay = date.atStartOfDay(ZoneId.systemDefault());
@@ -216,11 +223,13 @@ public class SubmissionService {
         return this.getAllSubmissionsByCourseId(courseId, userId);
     }
 
+    @Transactional
     public List<ActivitySubmission> getAllSubmissionsByUserAndActivities(User user,
         List<Activity> activities) {
         return submissionRepository.findAllByUserAndActivityIn(user, activities);
     }
 
+    @Transactional
     public List<ActivitySubmission> getAllSubmissionsByUserAndActivityId(User user,
         Long activityId) {
         return submissionRepository.findAllByUserAndActivity_Id(user, activityId);
@@ -243,8 +252,34 @@ public class SubmissionService {
                 "final_submission_not_found"));
     }
 
+    @Transactional
     public List<Long> getAllFinalSubmissionsFileIds(Long activityId) {
         return submissionRepository.findByActivity_IdAndIsFinalSolution(activityId, true).stream()
             .map(ActivitySubmission::getFile).map(RPLFile::getId).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<ActivitySubmission> reprocessAllPendingSubmissions() {
+        List<ActivitySubmission> processingStuckSubmissions = submissionRepository
+            .findAllByStatus(SubmissionStatus.PROCESSING);
+        List<ActivitySubmission> pendingSubmissions = submissionRepository
+            .findAllByStatus(SubmissionStatus.PENDING);
+
+        processingStuckSubmissions.addAll(pendingSubmissions);
+        return processingStuckSubmissions;
+    }
+
+    @Transactional
+    public ActivitySubmission postSubmissionToQueue(ActivitySubmission as) {
+        try {
+            this.activitySubmissionQueueProducer
+                .send(as.getId().toString(),
+                    as.getActivity().getLanguage().getNameAndVersion());
+            as.setEnqueued();
+        } catch (AmqpConnectException e) {
+            log.error("Error sending submission ID to queue. Connection refused");
+            log.error(e.getMessage());
+        }
+        return submissionRepository.save(as);
     }
 }
