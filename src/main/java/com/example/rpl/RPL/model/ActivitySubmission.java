@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -85,6 +84,11 @@ public class ActivitySubmission {
 
     public void setProcessedWithError(String stage) {
         this.status = SubmissionStatus.getStatusIfError(stage);
+        this.lastUpdated = now();
+    }
+
+    public void setProcessedWithTimeOut() {
+        this.status = SubmissionStatus.TIME_OUT;
         this.lastUpdated = now();
     }
 

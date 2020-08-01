@@ -1,7 +1,7 @@
 package com.example.rpl.RPL.model;
 
 public enum SubmissionStatus {
-    PENDING, ENQUEUED, PROCESSING, BUILD_ERROR, RUNTIME_ERROR, FAILURE, SUCCESS;
+    PENDING, ENQUEUED, PROCESSING, BUILD_ERROR, RUNTIME_ERROR, FAILURE, SUCCESS, TIME_OUT;
 
 
     public static SubmissionStatus getStatusIfError(String stage) {

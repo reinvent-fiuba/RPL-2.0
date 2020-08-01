@@ -107,7 +107,8 @@ public class SubmissionService {
      * Creates a new submission run. That is, the result of running all the activity tests on the
      * submission files.
      *
-     * @param testRunResult "OK" or "ERROR"
+     * @param testRunResult "OK" if we could execute the hole code or "ERROR" if we couldn't, also
+     * TIME_OUT
      * @param testRunExitMessage Message describing why the program terminated if with "ERROR"
      * @param testRunStage "BUILD", "RUN", "COMPLETED". Only useful if error
      * @param testRunStderr stderr of the test run
@@ -132,7 +133,7 @@ public class SubmissionService {
             return submissionRepository.save(activitySubmission);
         }
 
-        boolean passedTests;
+        boolean passedTests = false;
 
         // Check if IO tests where correct
         if (activitySubmission.getActivity().getIsIOTested()) {
@@ -141,7 +142,7 @@ public class SubmissionService {
 
             passedTests = testService
                 .checkIfTestsPassed(activitySubmission.getActivity().getId(), ioTestRuns);
-        } else {
+        } else if (testRunUnitTestResult != null) {
             // Check if Unit tests passed
             testService.saveUnitTestRuns(testRun, testRunUnitTestResult);
             passedTests =
@@ -152,6 +153,12 @@ public class SubmissionService {
             activitySubmission.setProcessedSuccess();
         } else {
             activitySubmission.setProcessedFailure();
+        }
+
+        // We override the overall status with TIME_OUT but we still want to save IO/Unit tests if
+        // the TIME_OUT only happened in one IO/Unit test case
+        if ("TIME_OUT".equals(testRunResult)) {
+            activitySubmission.setProcessedWithTimeOut();
         }
 
         return submissionRepository.save(activitySubmission);
