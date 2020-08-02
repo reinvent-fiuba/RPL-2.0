@@ -120,7 +120,10 @@ public class ActivitiesController {
         @PathVariable Long courseId) {
         log.debug("COURSE ID: {}", courseId);
 
-        List<Activity> activities = activitiesService.getAllActivitiesByCourse(courseId);
+
+        List<Activity> activities = currentUser.hasAuthority("activity_manage") ?
+                activitiesService.getAllActivitiesByCourse(courseId) :
+                activitiesService.getAllActiveActivitiesByCourse(courseId);
 
         List<ActivitySubmission> submissions = submissionService
             .getAllSubmissionsByUserAndActivities(currentUser.getUser(), activities);

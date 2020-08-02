@@ -121,6 +121,17 @@ public class ActivitiesService {
     }
 
     /**
+     * Retrieves all activities from a course
+     *
+     * @return a list of Activities Course class
+     */
+    @Transactional
+    public List<Activity> getAllActiveActivitiesByCourse(Long courseId) {
+        return activityRepository.findActivitiesByCourse_IdAndActiveAndDeleted(courseId, true, false);
+    }
+
+
+    /**
      * Retrieves all activities from a course with a specific category (optional) If cateogoryId is
      * not present, the function ignores the that filter
      *

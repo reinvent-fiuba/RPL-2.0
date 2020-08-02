@@ -77,6 +77,15 @@ public class UserPrincipal implements UserDetails {
         );
     }
 
+    public boolean hasAuthority(String authorityName) {
+        for (GrantedAuthority authority : authorities) {
+            if (authority.getAuthority().toString().equals(authorityName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
