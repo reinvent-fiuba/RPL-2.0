@@ -269,6 +269,7 @@ public class CoursesService {
                     Long activityCount = userActivityPoints.getCount();
 
                     return new CourseUserScore(courseUser, score, activityCount);
-                }).collect(Collectors.toList());
+                }).sorted((score1, score2) -> Long.compare(score2.getScore(), score1.getScore()))
+                .collect(Collectors.toList());
     }
 }
