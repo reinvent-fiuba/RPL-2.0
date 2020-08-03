@@ -2,9 +2,11 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head></head>
 <body>
-<p>Bienvenido ${userName}, fuiste aceptado en el curso <b>${universityCourseId} - ${courseName}</b>!!!</p>
+<p>Bienvenido <span th:text="${name}"></span> <span th:text="${surname}"></span>, fuiste aceptado en el curso
+    <span th:text="${universityCourseId}"></span> - <span th:text="${courseName}"></span>
 </p>
-<p>${description}</p>
+</p>
+<p th:text="${description}"></p>
 </p>
 <p>Para acceder al curso podes hacer click <a th:href="${link}">acá</a></p>
 </body>
