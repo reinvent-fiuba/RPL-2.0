@@ -48,7 +48,7 @@ public class EmailService implements IEmailService {
         String link = frontEndUrl + "/courses/" + courseUser.getCourse().getId();
 
         MimeMessagePreparator message = prepareEmail(email, "RPL: Fuiste aceptado en " + courseUser.getCourse().getName(),
-                this.buildAcceptedEmail(courseUser.getUser(), courseUser.getCourse(), link, "acceptedToCourseEmail"));
+                this.buildAcceptedEmail(courseUser.getUser(), courseUser.getCourse(), link));
 
         emailSender.send(message);
     }
@@ -59,14 +59,15 @@ public class EmailService implements IEmailService {
         return templateEngine.process(template, context);
     }
 
-    private String buildAcceptedEmail(User user, Course course, String link, String template) {
+    private String buildAcceptedEmail(User user, Course course, String link) {
         Context context = new Context();
-        context.setVariable("userName", user.getName());
+        context.setVariable("name", user.getName());
+        context.setVariable("surname", user.getSurname());
         context.setVariable("courseName", course.getName());
         context.setVariable("universityCourseId", course.getUniversityCourseId());
         context.setVariable("description", course.getDescription());
         context.setVariable("link", link);
-        return templateEngine.process(template, context);
+        return templateEngine.process("acceptedToCourseEmail", context);
     }
 
     private MimeMessagePreparator prepareEmail(String recipient, String subject, String message) {
