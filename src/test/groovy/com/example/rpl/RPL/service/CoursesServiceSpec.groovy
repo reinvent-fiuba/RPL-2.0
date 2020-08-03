@@ -33,6 +33,7 @@ class CoursesServiceSpec extends Specification {
     private UserRepository userRepository
     private ActivitiesService activitiesService
     private SubmissionService submissionService
+    private IEmailService emailService
 
     @Shared
     private User user
@@ -45,13 +46,15 @@ class CoursesServiceSpec extends Specification {
         userRepository = Mock(UserRepository)
         activitiesService = Mock(ActivitiesService)
         submissionService = Mock(SubmissionService)
+        emailService = Mock(IEmailService)
         coursesService = new CoursesService(
                 courseRepository,
                 courseUserRepository,
                 roleRepository,
                 userRepository,
                 activitiesService,
-                submissionService
+                submissionService,
+                emailService
         )
 
         user = Mock(User)
@@ -376,13 +379,20 @@ class CoursesServiceSpec extends Specification {
             Long userId = 1
             CourseUser tempCourseUser = Mock(CourseUser);
             Role tempRole = Mock(Role);
-
+            User tempUser = Mock(User);
         when:
             coursesService.updateCourseUser(courseId, userId, accepted, roleName);
 
         then:
             1 * courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId) >> Optional.of(tempCourseUser)
-            if (shouldUpdateAccepted) 1 * tempCourseUser.setAccepted(accepted)
+            if (shouldUpdateAccepted) {
+                1 * tempCourseUser.setAccepted(accepted)
+            }
+            if (accepted) {
+                1 * tempCourseUser.getUser() >> tempUser
+                1 * tempUser.getEmail() >> "some@email.com"
+                1 * emailService.sendAcceptedStudentMessage("some@email.com", tempCourseUser)
+            }
             if (shouldUpdateRole) {
                 1 * roleRepository.findByName(roleName) >> Optional.of(new Role())
                 1 * tempCourseUser.setRole(_ as Role)
@@ -417,14 +427,18 @@ class CoursesServiceSpec extends Specification {
             Long userId = 1
             String roleName = "some-rolename"
             CourseUser tempCourseUser = Mock(CourseUser);
-
+            User tempUser = Mock(User);
         when:
             coursesService.updateCourseUser(courseId, userId, true, roleName);
 
         then:
-        1 * courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId) >> Optional.of(tempCourseUser)
-        1 * roleRepository.findByName(roleName) >> Optional.empty()
-        0 * tempCourseUser.setRole(_ as Role)
+            1 * courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId) >> Optional.of(tempCourseUser)
+            1 * roleRepository.findByName(roleName) >> Optional.empty()
+            1 * tempCourseUser.setAccepted(true)
+            1 * tempCourseUser.getUser() >> tempUser
+            1 * tempUser.getEmail() >> "some@email.com"
+            1 * emailService.sendAcceptedStudentMessage("some@email.com", tempCourseUser)
+            0 * tempCourseUser.setRole(_ as Role)
     }
 
     void "should delete course from user succesfully"() {

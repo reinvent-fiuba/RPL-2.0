@@ -1,5 +1,8 @@
 package com.example.rpl.RPL.service;
 
+import com.example.rpl.RPL.model.Course;
+import com.example.rpl.RPL.model.CourseUser;
+import com.example.rpl.RPL.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -40,8 +43,28 @@ public class EmailService implements IEmailService {
         emailSender.send(message);
     }
 
+    @Override
+    public void sendAcceptedStudentMessage(String email, CourseUser courseUser) {
+        String link = frontEndUrl + "/courses/" + courseUser.getCourse().getId();
+
+        MimeMessagePreparator message = prepareEmail(email, "RPL: Fuiste aceptado en " + courseUser.getCourse().getName(),
+                this.buildAcceptedEmail(courseUser.getUser(), courseUser.getCourse(), link, "acceptedToCourseEmail"));
+
+        emailSender.send(message);
+    }
+
     private String buildTokenEmail(String link, String template) {
         Context context = new Context();
+        context.setVariable("link", link);
+        return templateEngine.process(template, context);
+    }
+
+    private String buildAcceptedEmail(User user, Course course, String link, String template) {
+        Context context = new Context();
+        context.setVariable("userName", user.getName());
+        context.setVariable("courseName", course.getName());
+        context.setVariable("universityCourseId", course.getUniversityCourseId());
+        context.setVariable("description", course.getDescription());
         context.setVariable("link", link);
         return templateEngine.process(template, context);
     }
