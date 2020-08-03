@@ -33,6 +33,7 @@ public class CoursesService {
     private final UserRepository userRepository;
     private final ActivitiesService activitiesService;
     private final SubmissionService submissionService;
+    private final IEmailService emailService;
 
     @Autowired
     public CoursesService(CourseRepository courseRepository,
@@ -40,13 +41,15 @@ public class CoursesService {
                           RoleRepository roleRepository,
                           UserRepository userRepository,
                           ActivitiesService activitiesService,
-                          SubmissionService submissionService) {
+                          SubmissionService submissionService,
+                          IEmailService emailService) {
         this.courseRepository = courseRepository;
         this.courseUserRepository = courseUserRepository;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.activitiesService = activitiesService;
         this.submissionService = submissionService;
+        this.emailService = emailService;
     }
 
     /**
@@ -231,6 +234,9 @@ public class CoursesService {
 
         if (accepted != null) {
             courseUser.setAccepted(accepted);
+            if (accepted) {
+                emailService.sendAcceptedStudentMessage(courseUser.getUser().getEmail(), courseUser);
+            }
         }
 
         Optional<Role> role;
