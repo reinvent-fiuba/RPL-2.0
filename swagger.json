@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:62069",
+    "host": "localhost:63818",
     "basePath": "/",
     "tags": [
         {
@@ -4880,8 +4880,8 @@
                 "tags": [
                     "activity-categories-controller"
                 ],
-                "summary": "getActivityCategories",
-                "operationId": "getActivityCategoriesUsingPOST",
+                "summary": "createActivityCategory",
+                "operationId": "createActivityCategoryUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
@@ -4960,6 +4960,205 @@
                         "in": "query",
                         "required": false,
                         "type": "string"
+                    },
+                    {
+                        "name": "user.dateCreated",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "user.degree",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.email",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.emailValidated",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "user.id",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "user.imgUri",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.isAdmin",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "user.lastUpdated",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "user.name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.password",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.studentId",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.surname",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.university",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user.username",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ActivityCategoryResponseDTO"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/courses/{courseId}/activityCategories/{activityCategoryId}": {
+            "patch": {
+                "tags": [
+                    "activity-categories-controller"
+                ],
+                "summary": "updateActivityCategory",
+                "operationId": "updateActivityCategoryUsingPATCH",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "accountNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "accountNonLocked",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "activityCategoryId",
+                        "in": "path",
+                        "description": "activityCategoryId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "authorities[0].authority",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "courseId",
+                        "in": "path",
+                        "description": "courseId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "credentialsNonExpired",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "enabled",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "updateActivityCategoryRequestDTO",
+                        "description": "updateActivityCategoryRequestDTO",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UpdateActivityCategoryRequestDTO"
+                        }
                     },
                     {
                         "name": "user.dateCreated",
@@ -8839,6 +9038,21 @@
             },
             "title": "UniversityResponseDTO"
         },
+        "UpdateActivityCategoryRequestDTO": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "active": {
+                    "type": "boolean"
+                }
+            },
+            "title": "UpdateActivityCategoryRequestDTO"
+        },
         "UpdateSubmissionStatusRequestDTO": {
             "type": "object",
             "properties": {
@@ -8866,6 +9080,10 @@
                 },
                 "category_description": {
                     "type": "string"
+                },
+                "category_id": {
+                    "type": "integer",
+                    "format": "int64"
                 },
                 "category_name": {
                     "type": "string"

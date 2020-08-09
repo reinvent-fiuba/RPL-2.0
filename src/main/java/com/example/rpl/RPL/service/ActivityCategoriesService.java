@@ -53,4 +53,33 @@ public class ActivityCategoriesService {
 
         return activityCategory;
     }
+
+    @Transactional
+    public ActivityCategory updateActivityCategory(Long courseId,
+                                                   Long activityCategoryId,
+                                                   String name,
+                                                   String description,
+                                                   Boolean active) {
+
+        ActivityCategory activityCategory = activityCategoryRepository.findByCourse_IdAndId(courseId, activityCategoryId).orElseThrow(
+                () -> new NotFoundException("Activity category not found",
+                        "activity_category_not_found")
+        );
+
+        if (name != null) {
+            activityCategory.setName(name);
+        }
+
+        if (description != null) {
+            activityCategory.setDescription(description);
+        }
+
+        if (active != null) {
+            activityCategory.setActive(active);
+        }
+
+        activityCategoryRepository.save(activityCategory);
+
+        return activityCategory;
+    }
 }

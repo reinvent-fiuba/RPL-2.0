@@ -22,6 +22,8 @@ public class UserActivityResponseDTO {
 
     private Long courseId;
 
+    private Long categoryId;
+
     private String categoryName;
 
     private String categoryDescription;
@@ -55,6 +57,7 @@ public class UserActivityResponseDTO {
         return UserActivityResponseDTO.builder()
             .id(activity.getId())
             .courseId(activity.getCourse().getId())
+            .categoryId(activity.getActivityCategory().getId())
             .categoryName(activity.getActivityCategory().getName())
             .categoryDescription(activity.getActivityCategory().getDescription())
             .name(activity.getName())

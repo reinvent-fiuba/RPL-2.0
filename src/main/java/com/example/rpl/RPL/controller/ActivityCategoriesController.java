@@ -2,6 +2,7 @@ package com.example.rpl.RPL.controller;
 
 import com.example.rpl.RPL.controller.dto.ActivityCategoryResponseDTO;
 import com.example.rpl.RPL.controller.dto.CreateActivityCategoryRequestDTO;
+import com.example.rpl.RPL.controller.dto.UpdateActivityCategoryRequestDTO;
 import com.example.rpl.RPL.model.ActivityCategory;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
@@ -45,7 +46,7 @@ public class ActivityCategoriesController {
 
     @PreAuthorize("hasAuthority('activity_manage')")
     @PostMapping(value = "/api/courses/{courseId}/activityCategories")
-    public ResponseEntity<ActivityCategoryResponseDTO> getActivityCategories(@CurrentUser UserPrincipal currentUser,
+    public ResponseEntity<ActivityCategoryResponseDTO> createActivityCategory(@CurrentUser UserPrincipal currentUser,
                                                                                    @RequestBody @Valid CreateActivityCategoryRequestDTO createActivityCategoryRequestDTO,
                                                                                    @PathVariable Long courseId) {
 
@@ -55,5 +56,25 @@ public class ActivityCategoriesController {
         return new ResponseEntity<>(
             ActivityCategoryResponseDTO.fromEntity(activityCategory),
             HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_manage')")
+    @PatchMapping(value = "/api/courses/{courseId}/activityCategories/{activityCategoryId}")
+    public ResponseEntity<ActivityCategoryResponseDTO> updateActivityCategory(@CurrentUser UserPrincipal currentUser,
+                                                                              @RequestBody @Valid UpdateActivityCategoryRequestDTO updateActivityCategoryRequestDTO,
+                                                                              @PathVariable Long courseId,
+                                                                              @PathVariable Long activityCategoryId) {
+
+
+        ActivityCategory activityCategory = activityCategoriesService.updateActivityCategory(courseId,
+                activityCategoryId,
+                updateActivityCategoryRequestDTO.getName(),
+                updateActivityCategoryRequestDTO.getDescription(),
+                updateActivityCategoryRequestDTO.getActive()
+        );
+
+        return new ResponseEntity<>(
+                ActivityCategoryResponseDTO.fromEntity(activityCategory),
+                HttpStatus.OK);
     }
 }
