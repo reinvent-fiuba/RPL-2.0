@@ -37,6 +37,8 @@ spec:
           env:
             - name: MYSQL_ROOT_PASSWORD
               value: Bh2gujvNJOD7e9sa
+      nodeSelector:
+        db: mysql
       volumes:
         - name: mysql-data
           persistentVolumeClaim:
