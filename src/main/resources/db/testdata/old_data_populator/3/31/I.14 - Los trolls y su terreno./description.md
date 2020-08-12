@@ -1,0 +1,1 @@
+<p>     El bosque de los trolls describe una superficie rectangular. En esta oportunidad desean formar un perímetro con hongos venenosos que limite su territorio de los extraños que quieran ingresar sin su permiso. Para ello necesitan que dado un terreno marques el contorno del mismo que representara  el perímetro de su terreno.<br/></p>

@@ -1,0 +1,1 @@
+void invertir_string(char palabra[]);

@@ -1,0 +1,1 @@
+<p>El dueño de la posada “El Pony Pisador” quiere saber cuántas son las personas alojadas en el lugar. <br/>Dado un vector en cual las posiciones simulan ser habitaciones distintas y en cada una de ellas se encuentra una cierta cantidad de huéspedes, se pide crear una función que devuelva el total solicitado.<br/></p>
