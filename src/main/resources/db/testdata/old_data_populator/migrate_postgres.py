@@ -1,10 +1,9 @@
 import io
+import json
 from pathlib import Path
 
 import psycopg2
 import requests
-
-import json
 
 '''
 DOCUMENTATION
@@ -29,12 +28,19 @@ psql -U rpl -d rpldb -1 -f db.sql.backup.12-06-20.mariano.sql 2> errors.txt
 '''
 
 headers = {
-    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTk1OTk2NTI3LCJleHAiOjE1OTYwMTA5Mjd9.5dR8HdlXOiOJviZ7qk4jGkjO2fJckBGgD6h5F-2EoR5tgIz7BdyTqYrrO49EXA4UuwF8NUXi6y2B38qesB4ntw'
+    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTk2MTE3MzY4LCJleHAiOjE1OTYxMzE3Njh9.jD50lAZRbdc66Xlto7fSFNGCjvPpDhAbs6aVTYlbOMlrOlTO4oMbR5FphC0uqHR6oFWTx8Q8R63Hr2XnIi_4vw'
 }
 
+# headers = {
+#     'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTk2MTE3NTg4LCJleHAiOjE1OTYxMzE5ODh9.zB8N7m2pAR9d_bxPLRU0d0vdx-OO4g4k5d2YXhpV1uJPiMD2cWSlXAE8ghrdZEdcVjmMRaK_JyJENA2EX6Vj-g'
+#
+# }
+
+
 # base_url = "https://enigmatic-bayou-58033.herokuapp.com"
-base_url = "http://localhost:8080"
-migration_course_id = 7
+# base_url = "http://localhost:8080"
+base_url = "http://www.rpl.codes"
+migration_course_id = 3
 
 
 def migrate_categories():
@@ -72,7 +78,7 @@ def create_category(name):
     backend_url = f"{base_url}/api/courses/{migration_course_id}/activityCategories"
 
     payload = {
-        'description': name + "no description",
+        'description': name + " no description",
         'name': name,
     }
 
@@ -117,15 +123,17 @@ def migrate_activities(old_to_new_category_ids):
                     if language == "PYTHON3":
                         language = "python"
 
-                    my_activity = create_activity(name, description, language,
-                                                  old_to_new_category_ids[
-                                                      topic_id],
-                                                  points,
-                                                  template,
-                                                  test_type)
-                    activate_activity(my_activity['id'])
-
                     try:
+                        my_activity = create_activity(name, description,
+                                                      language,
+                                                      old_to_new_category_ids[
+                                                          topic_id],
+                                                      points,
+                                                      template,
+                                                      test_type)
+                        activate_activity(my_activity['id'])
+
+
                         if test_type == "INPUT":
                             test = create_io_test(my_activity["id"],
                                                   my_activity["course_id"],
@@ -137,13 +145,15 @@ def migrate_activities(old_to_new_category_ids):
                             test = create_unit_test(my_activity["id"],
                                                     my_activity["course_id"],
                                                     tests)
+
+                        print(
+                            f"created Activity {my_activity['id']} and test {test['id']}")
+
                     except Exception as e:
                         print(e)
                         print(activity)
                         print(my_activity)
 
-                    print(
-                        f"created Activity {my_activity['id']} and test {test['id']}")
 
 
     except (Exception, psycopg2.DatabaseError) as error:
@@ -169,7 +179,7 @@ def create_activity(name, description, language, category_id, points, initial_co
         'points': points,
         'language': language,
         'activityCategoryId': category_id,
-        'compilationFlags': ''
+        'compilationFlags': '-g -O2 -std=c99 -Wall -Wformat=2 -Wshadow -Wpointer-arith -Wunreachable-code -Wconversion -Wno-sign-conversion -Wbad-function-cast'
     }
 
     filename = "main.c" if language.lower() == "c" else "assignment_main.py"
@@ -191,8 +201,10 @@ def create_activity(name, description, language, category_id, points, initial_co
             return response.json()
 
     if test_type == "TEST":
-        path = Path(f"./{category_id}/{name[:20]}")
+        path = Path(f"./{migration_course_id}/{category_id}/{name}")
         path.mkdir(parents=True,exist_ok=True)
+        with open(path / "description.md", 'w+') as description_f:
+            description_f.write(description)
         # with io.FileIO("solucion.c", 'wb+') as mainC, io.FileIO("solucion.h", 'wb+') as mainH, open("files_metadata",'wb+') as files_metadata:
         with open(path / "solucion.c", 'w+') as mainC, open(path / "solucion.h",'w+') as mainH, open(path / "files_metadata",'w+') as files_metadata:
 
@@ -232,7 +244,7 @@ def create_activity(name, description, language, category_id, points, initial_co
 
             if response.status_code not in [200, 201]:
                 raise Exception(
-                    f"Error al postear la activity: {response.json()}")
+                    f"Error al postear la activity {name}: {response.json()}")
             return response.json()
 
 
@@ -240,7 +252,7 @@ def create_io_test(activity_id, course_id, text_in, text_out):
     backend_url = f"{base_url}/api/courses/{course_id}/activities/{activity_id}/iotests"
 
     payload = {
-        'name': "IO Test migrado",
+        'name': "IO Test",
         'text_in': text_in or "",
         'text_out': text_out,
     }

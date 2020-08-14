@@ -37,6 +37,10 @@ spec:
           env:
             - name: MYSQL_ROOT_PASSWORD
               value: Bh2gujvNJOD7e9sa
+          resources:
+            requests:
+              cpu: 15m
+              memory: 300Mi
       nodeSelector:
         db: mysql
       volumes:
