@@ -1,0 +1,1 @@
+void eliminar_vocales(char string_original[], char string_modificado[]);

@@ -2,16 +2,19 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: spring-boot-hpa
+  name: runners-hpa
 spec:
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
-    name: consumer
+    name: runner
   minReplicas: 1
   maxReplicas: 10
   metrics:
-  - type: Pods
-    pods:
-      metricName: messages
-      targetAverageValue: 10
+    - type: External
+      external:
+        metricName: "custom.googleapis.com|rabbitmq_queue_messages_ready"
+        metricSelector:
+          matchLabels:
+            metric.labels.queue: hello
+        targetValue: 10

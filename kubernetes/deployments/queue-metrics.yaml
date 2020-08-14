@@ -1,0 +1,54 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: amqp-metrics
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: amqp-metrics
+    spec:
+      containers:
+        - name: prometheus
+          image: kbudde/rabbitmq-exporter
+          env:
+            - name: RABBIT_URL
+              value: http://queue:15672
+            - name: RABBIT_USER
+              value: guest
+            - name: RABBIT_PASSWORD
+              value: guest
+            - name: PUBLISH_PORT
+              value: "9419"
+            # amqp 3.6.9++
+            - name: RABBIT_CAPABILITIES
+              value: "bert,no_sort"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
+        - name: prometheus-to-sd
+          image: gcr.io/google-containers/prometheus-to-sd:v0.8.2
+          command:
+            - /monitor
+            - --source=:http://localhost:9419
+            - --stackdriver-prefix=custom.googleapis.com
+            - --pod-id=$(POD_ID)
+            - --namespace-id=$(POD_NAMESPACE)
+            - --scrape-interval=15s
+            - --export-interval=15s
+          env:
+            - name: POD_ID
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.uid
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi

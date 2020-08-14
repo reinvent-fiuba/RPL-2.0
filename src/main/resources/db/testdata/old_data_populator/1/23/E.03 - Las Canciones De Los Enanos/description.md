@@ -1,0 +1,1 @@
+<p>A los enanos les encanta cantar pero a veces se olvidan las letras asi que todos quieren tener su copia del cancionero. Te pidieron que crees una función que reciba el cancionero y lo copie a un libro vacío.<br/><br/></p>

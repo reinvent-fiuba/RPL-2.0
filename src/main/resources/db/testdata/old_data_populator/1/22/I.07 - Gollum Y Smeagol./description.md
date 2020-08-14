@@ -1,0 +1,1 @@
+<h6>          Gollum y Smeagol(su doble personalidad), son bastante contradictorios.<br/>         Por lo cual no saben cuando un numero es par o impar, aveces se pone a discutir de manera muy violenta. Para calmar las aguas y ayudarle te ofreces a  crear un programa que dice si un numero es par o impar. Implementarlo con recursividad cruzada.<br/></h6>

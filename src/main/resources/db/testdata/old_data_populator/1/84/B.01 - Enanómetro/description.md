@@ -1,0 +1,1 @@
+<p>Los<b> enanos</b> son una raza que habita en la Tierra Media. Cada criatura es considerada como tal si su altura varía entre 120 y 150 cm inclusive. Pese a que tienen más distinciones, ésta es la más importante.</p><p>Se debe crear una función que, dada cierta altura, devuelva<i> </i><b>true</b> si es un enano o <b>false</b> si no lo es.<br/></p><p></p>

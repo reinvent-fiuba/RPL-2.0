@@ -1,0 +1,1 @@
+bool es_contrasenia_correcta(char contrasenia[]);
