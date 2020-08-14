@@ -26,8 +26,8 @@ spec:
               value: "bert,no_sort"
           resources:
             requests:
-              cpu: 50m
-              memory: 50Mi
+              cpu: 10m
+              memory: 25Mi
         - name: prometheus-to-sd
           image: gcr.io/google-containers/prometheus-to-sd:v0.8.2
           command:
@@ -50,5 +50,5 @@ spec:
                   fieldPath: metadata.namespace
           resources:
             requests:
-              cpu: 50m
-              memory: 50Mi
+              cpu: 10m
+              memory: 25Mi
