@@ -17,4 +17,4 @@ spec:
         metricSelector:
           matchLabels:
             metric.labels.queue: hello
-        targetValue: 10
+        targetAverageValue: 10
