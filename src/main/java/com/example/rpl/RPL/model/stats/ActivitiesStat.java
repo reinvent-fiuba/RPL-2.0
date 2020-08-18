@@ -17,11 +17,11 @@ public class ActivitiesStat {
 
     private Long totalPoints;
 
-    public ActivitiesStat(Long started, Long notStarted, Long solved, Long obtainedPoints, Long totalPoints) {
+    public ActivitiesStat(Long started, Long notStarted, Long solved, Long pendingPoints, Long obtainedPoints) {
         this.started = started;
         this.notStarted = notStarted;
         this.solved = solved;
         this.obtainedPoints = obtainedPoints;
-        this.totalPoints = totalPoints;
+        this.totalPoints = pendingPoints + obtainedPoints;
     }
 }
