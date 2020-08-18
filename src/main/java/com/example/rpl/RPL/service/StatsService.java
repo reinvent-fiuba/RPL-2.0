@@ -148,7 +148,7 @@ public class StatsService {
                 notStarted++;
                 pendingPoints += activity.getPoints();
             } else if (submissions.stream().anyMatch(
-                activitySubmission -> activitySubmission.getStatus().toString() == "SUCCESS")) {
+                activitySubmission -> activitySubmission.getStatus().toString().equals("SUCCESS"))) {
                 solved++;
                 obtainedPoints += activity.getPoints();
             } else {
