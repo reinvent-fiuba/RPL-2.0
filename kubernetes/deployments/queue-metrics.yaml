@@ -9,6 +9,8 @@ spec:
       labels:
         app: amqp-metrics
     spec:
+      nodeSelector:
+        task: core
       containers:
         - name: prometheus
           image: kbudde/rabbitmq-exporter

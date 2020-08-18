@@ -16,6 +16,8 @@ spec:
         tier: backend
         track: stable
     spec:
+      nodeSelector:
+        task: core
       containers:
       - name: producer
         image: gcr.io/fiuba-rpl/rpl-2.0:latest

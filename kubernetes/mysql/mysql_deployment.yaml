@@ -43,6 +43,7 @@ spec:
               memory: 300Mi
       nodeSelector:
         db: mysql
+        task: core
       volumes:
         - name: mysql-data
           persistentVolumeClaim:

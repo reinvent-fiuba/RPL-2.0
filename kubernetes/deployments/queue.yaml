@@ -9,6 +9,8 @@ spec:
       labels:
         app: queue
     spec:
+      nodeSelector:
+        task: core
       containers:
       - name: rabbitmq
         image: deadtrickster/rabbitmq_prometheus:latest
