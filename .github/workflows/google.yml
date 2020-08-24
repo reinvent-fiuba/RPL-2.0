@@ -14,7 +14,7 @@ name: Build and Deploy to GKE
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [ master, test/** ]
 
 # Environment variables available to all jobs and steps in this workflow
 env:
