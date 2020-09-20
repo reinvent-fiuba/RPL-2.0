@@ -117,7 +117,9 @@ public class TestService {
                     result.length() - 1)); // removing last /n as it was an EOF originally
             } else if (line.contains("start_RUN")) {
                 result = new StringBuilder();
-            } else if (line.contains("assignment_main.py") || line.contains("./main")) {
+            } else if (line.contains("assignment_main.py") || line.contains("./main") || line
+                .contains("/usr/bin/python3.7")) {
+                continue;
             } else {
                 result.append(line).append("\n");
             }
