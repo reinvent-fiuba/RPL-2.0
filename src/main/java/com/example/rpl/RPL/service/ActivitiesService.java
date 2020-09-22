@@ -79,6 +79,22 @@ public class ActivitiesService {
         return activity;
     }
 
+    /**
+     * Creates a new Activity.
+     *
+     * @return a new saved Activity
+     */
+    @Transactional
+    public Activity cloneActivity(Course course, ActivityCategory activityCategory, Activity activity) {
+
+        Activity newActivity = new Activity(course, activityCategory, activity);
+
+        fileRepository.save(newActivity.getStartingFiles());
+
+        return activityRepository.save(newActivity);
+    }
+
+
     @Transactional
     public Activity updateActivity(Activity activity, Long activityCategoryId, String name,
         String description, String languageName, Boolean active, Long points,

@@ -59,6 +59,15 @@ public class ActivityCategory {
     public ActivityCategory() {
     }
 
+    public ActivityCategory(Course course, ActivityCategory activityCategory) {
+        this(
+            course,
+            activityCategory.getName(),
+            activityCategory.getDescription(),
+            activityCategory.getActive()
+        );
+    }
+
     public ActivityCategory(Course course, String name, String description, Boolean active) {
         this.course = course;
         this.name = name;

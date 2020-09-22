@@ -41,6 +41,15 @@ public class ActivityCategoriesService {
     }
 
     @Transactional
+    public ActivityCategory cloneActivityCategory(Course course, ActivityCategory activityCategory) {
+
+        ActivityCategory newActivityCategory = new ActivityCategory(course, activityCategory);
+        activityCategoryRepository.save(newActivityCategory);
+
+        return newActivityCategory;
+    }
+
+    @Transactional
     public ActivityCategory createActivityCategory(Long courseId, String name, String description) {
 
         Course course = courseRepository.findById(courseId).orElseThrow(
