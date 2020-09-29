@@ -120,16 +120,16 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         courseId = course.getId()
 
-        adminRole = new Role(
-                "admin",
-                "course_delete,course_view,course_edit,activity_view,activity_manage,activity_submit,user_view,user_manage"
-        )
+//        adminRole = new Role('admin', 'course_delete,course_view,course_edit,activity_view,activity_manage,activity_submit,user_view,user_manage')
+//
+//        roleRepository.save(adminRole)
+//
+//        studentRole = new Role('student', 'course_view,activity_view,activity_submit,user_view')
+//
+//        roleRepository.save(studentRole)
 
-        roleRepository.save(adminRole);
-
-        studentRole = new Role('student', 'course_view,activity_view,activity_submit,user_view')
-
-        roleRepository.save(studentRole)
+        adminRole = roleRepository.findByName("admin").get();
+        studentRole = roleRepository.findByName("student").get();
 
         courseUserRepository.save(new CourseUser(
                 course,
@@ -147,91 +147,89 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
         courseUserRepository.deleteAll()
         userRepository.deleteAll()
         courseRepository.deleteAll()
-        roleRepository.deleteAll()
     }
 
     /*****************************************************************************************
      ********** CREATE COURSE ****************************************************************
      *****************************************************************************************/
 
-//    TODO: Figure out why only this test fails in Github Actions workflow (it passes locally and in Travis...)
-//    @Unroll
-//    void "test create course with correct values should save course in DB"() {
-//        given: "a new course"
-//            Map body = [username_or_email: username, password: password]
-//            def loginResponse = getJsonResponse(post("/api/auth/login", body))
-//
-//            body = [
-//                    name                : 'Some new course',
-//                    university_course_id: '75.41',
-//                    university          : 'UBA',
-//                    description         : 'An awesome description',
-//                    semester            : "2019-2c",
-//                    semester_start_date : "2020-05-22",
-//                    semester_end_date   : "2020-09-22",
-//                    course_admin_id     : user.getId()
-//            ]
-//
-//        when: "post new course"
-//            def response = post("/api/courses", body, [
-//                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
-//            ])
-//
-//        then: "must return a new saved Course"
-//            response.contentType == "application/json"
-//            response.statusCode == SC_CREATED
-//
-//            Map course = getJsonResponse(response)
-//
-//            assert course.id != null
-//            assert course.name == body.name
-//            assert course.university_course_id == body.university_course_id
-//            assert course.description == body.description
-//            assert course.semester == body.semester
-//
-//            assert courseUserRepository.findByCourse_IdAndUser_Id(course.id as Long, user.getId() as Long).isPresent()
-//
-//            assert courseRepository.existsById(course.id as Long)
-//    }
+    @Unroll
+    void "test create course with correct values should save course in DB"() {
+        given: "a new course"
+            Map body = [username_or_email: username, password: password]
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
-//    @Unroll
-//    void "test create course with correct values with other admin should save course in DB"() {
-//        given: "a new course"
-//            Map body = [username_or_email: username, password: password]
-//            def loginResponse = getJsonResponse(post("/api/auth/login", body))
-//
-//            body = [
-//                    name                : 'Some new course',
-//                    university_course_id: '75.41',
-//                    university          : 'UBA',
-//                    description         : 'An awesome description',
-//                    semester            : "2019-2c",
-//                    semester_start_date : "2020-04-22",
-//                    semester_end_date   : "2020-08-25",
-//                    course_admin_id     : otherUser.getId()
-//            ]
-//
-//        when: "post new course"
-//            def response = post("/api/courses", body, [
-//                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
-//            ])
-//
-//        then: "must return a new saved Course"
-//            response.contentType == "application/json"
-//            response.statusCode == SC_CREATED
-//
-//            Map course = getJsonResponse(response)
-//
-//            assert course.id != null
-//            assert course.name == body.name
-//            assert course.university_course_id == body.university_course_id
-//            assert course.description == body.description
-//            assert course.semester == body.semester
-//
-//            assert courseUserRepository.findByCourse_IdAndUser_Id(course.id, otherUser.getId()).isPresent()
-//
-//            assert courseRepository.existsById(course.id as Long)
-//    }
+            body = [
+                    name                : 'Some new course',
+                    university_course_id: '75.41',
+                    university          : 'UBA',
+                    description         : 'An awesome description',
+                    semester            : "2019-2c",
+                    semester_start_date : "2020-05-22",
+                    semester_end_date   : "2020-09-22",
+                    course_admin_id     : user.getId()
+            ]
+
+        when: "post new course"
+            def response = post("/api/courses", body, [
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+
+        then: "must return a new saved Course"
+            response.contentType == "application/json"
+            response.statusCode == SC_CREATED
+
+            Map course = getJsonResponse(response)
+
+            assert course.id != null
+            assert course.name == body.name
+            assert course.university_course_id == body.university_course_id
+            assert course.description == body.description
+            assert course.semester == body.semester
+
+            assert courseUserRepository.findByCourse_IdAndUser_Id(course.id as Long, user.getId() as Long).isPresent()
+
+            assert courseRepository.existsById(course.id as Long)
+    }
+
+    @Unroll
+    void "test create course with correct values with other admin should save course in DB"() {
+        given: "a new course"
+            Map body = [username_or_email: username, password: password]
+            def loginResponse = getJsonResponse(post("/api/auth/login", body))
+
+            body = [
+                    name                : 'Some new course',
+                    university_course_id: '75.41',
+                    university          : 'UBA',
+                    description         : 'An awesome description',
+                    semester            : "2019-2c",
+                    semester_start_date : "2020-04-22",
+                    semester_end_date   : "2020-08-25",
+                    course_admin_id     : otherUser.getId()
+            ]
+
+        when: "post new course"
+            def response = post("/api/courses", body, [
+                    "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
+            ])
+
+        then: "must return a new saved Course"
+            response.contentType == "application/json"
+            response.statusCode == SC_CREATED
+
+            Map course = getJsonResponse(response)
+
+            assert course.id != null
+            assert course.name == body.name
+            assert course.university_course_id == body.university_course_id
+            assert course.description == body.description
+            assert course.semester == body.semester
+
+            assert courseUserRepository.findByCourse_IdAndUser_Id(course.id, otherUser.getId()).isPresent()
+
+            assert courseRepository.existsById(course.id as Long)
+    }
 
     @Unroll
     void "test create course with null values should not save course in DB"() {

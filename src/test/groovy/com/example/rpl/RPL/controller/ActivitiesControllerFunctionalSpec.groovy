@@ -69,11 +69,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     String password;
 
     def setup() {
-        Role role = new Role(
-                "admin",
-                "course_delete,course_view,course_edit,activity_view,activity_manage,activity_submit,user_view,user_manage"
-        )
-        roleRepository.save(role);
+        Role role = roleRepository.findByName("admin").get();
 
         user = new User(
                 'some-name',
@@ -161,7 +157,6 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
         courseUserRepository.deleteAll()
         userRepository.deleteAll()
         courseRepository.deleteAll()
-        roleRepository.deleteAll()
     }
 
     /*****************************************************************************************
