@@ -118,17 +118,40 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         course = courseRepository.save(course);
 
+        ActivityCategory activityCategory = new ActivityCategory(
+                course,
+                "Easy activities",
+                "Some easy activities",
+                true
+        )
+
+        activityCategoryRepository.save(activityCategory)
+
+        RPLFile supportingActivityFile = new RPLFile(
+                "starting_files",
+                "text",
+                null
+        )
+        fileRepository.save(supportingActivityFile)
+
+        Activity activity = new Activity(
+                course,
+                activityCategory,
+                "Activity 1",
+                "An activity",
+                Language.C,
+                10,
+                supportingActivityFile,
+                "",
+                false
+        )
+
+        activityRepository.save(activity)
+
         courseId = course.getId()
 
-//        adminRole = new Role('admin', 'course_delete,course_view,course_edit,activity_view,activity_manage,activity_submit,user_view,user_manage')
-//
-//        roleRepository.save(adminRole)
-//
-//        studentRole = new Role('student', 'course_view,activity_view,activity_submit,user_view')
-//
-//        roleRepository.save(studentRole)
-
         adminRole = roleRepository.findByName("admin").get();
+
         studentRole = roleRepository.findByName("student").get();
 
         courseUserRepository.save(new CourseUser(
@@ -265,6 +288,47 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
             null              | "75.41"              | '2019-2c'
             "Some new course" | null                 | '2019-2c'
             "Some new course" | '2019-2c'            | null
+    }
+
+    /*****************************************************************************************
+     ********** CLONE COURSE ****************************************************************
+     *****************************************************************************************/
+
+    @Unroll
+    void "test clone course with correct values should save course in DB"() {
+        given: "a new course"
+            Map body = [
+                name                : 'Some new course',
+                university_course_id: '75.41',
+                university          : 'UBA',
+                description         : 'An awesome description',
+                semester            : "2019-2c",
+                semester_start_date : "2020-05-22",
+                semester_end_date   : "2020-09-22",
+                course_admin_id     : user.getId(),
+                id                  : courseId
+            ]
+
+        when: "post new course"
+            def response = post("/api/courses", body, username, password)
+
+        then: "must return a new saved Course"
+            response.contentType == "application/json"
+            response.statusCode == SC_CREATED
+
+            Map course = getJsonResponse(response)
+
+            assert course.id != courseId
+            assert course.name == body.name
+            assert course.university_course_id == body.university_course_id
+            assert course.description == body.description
+            assert course.semester == body.semester
+
+            assert courseUserRepository.findByCourse_IdAndUser_Id(course.id as Long, user.getId() as Long).isPresent()
+
+            assert activityRepository.findActivitiesByCourse_Id(course.id as Long).size() == 1
+
+            assert courseRepository.existsById(course.id as Long)
     }
 
     /*****************************************************************************************
