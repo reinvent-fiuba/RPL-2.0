@@ -419,7 +419,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     void "test get courses by user with wrong user id should not retrieve courses"() {
         when:
             def response = get(
-                    "/api/users/22/courses",
+                    "/api/users/100/courses",
                     username,
                     password
             )
