@@ -60,6 +60,5 @@ hs_err_pid*
 
 /venv/
 
-/newrelic/logs/newrelic_agent.log
-!/newrelic/*.jar
+!/datadog/*.jar
 
