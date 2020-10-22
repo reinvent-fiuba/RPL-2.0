@@ -15,7 +15,7 @@ class ActivitiesServiceSpec extends Specification {
     private ActivityRepository activityRepository;
     private ActivityCategoryRepository activityCategoryRepository;
     private FileRepository fileRepository;
-    private SubmissionRepository submissionRepository;
+    private ActivitySubmissionRepository submissionRepository;
 
     @Shared
     private User user

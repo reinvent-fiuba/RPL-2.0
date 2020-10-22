@@ -54,6 +54,10 @@ public class ActivitySubmission {
     @Column(name = "is_final_solution")
     private Boolean isFinalSolution;
 
+    @Basic(optional = false)
+    @Column(name = "is_shared")
+    private Boolean isShared;
+
     @Column(name = "date_created")
     private ZonedDateTime dateCreated;
 
@@ -73,6 +77,7 @@ public class ActivitySubmission {
         this.file = file;
         this.status = status;
         this.isFinalSolution = false;
+        this.isShared = false;
         this.dateCreated = now();
         this.lastUpdated = this.dateCreated;
     }
@@ -109,6 +114,11 @@ public class ActivitySubmission {
 
     public void setAsFinalSolution() {
         this.isFinalSolution = true;
+        this.lastUpdated = now();
+    }
+
+    public void setShared() {
+        this.isShared = true;
         this.lastUpdated = now();
     }
 }

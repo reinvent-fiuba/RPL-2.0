@@ -7,9 +7,14 @@ import static com.example.rpl.RPL.model.SubmissionStatus.PROCESSING;
 import com.example.rpl.RPL.controller.dto.ActivitySubmissionResponseDTO;
 import com.example.rpl.RPL.controller.dto.ActivitySubmissionResultResponseDTO;
 import com.example.rpl.RPL.controller.dto.AllFinalSubmissionsResponseDTO;
+import com.example.rpl.RPL.controller.dto.PatchActivitySubmissionRequestDTO;
+import com.example.rpl.RPL.controller.dto.SubmissionCommentRequestDTO;
+import com.example.rpl.RPL.controller.dto.SubmissionCommentsResponseDTO;
 import com.example.rpl.RPL.controller.dto.SubmissionResultRequestDTO;
 import com.example.rpl.RPL.controller.dto.UpdateSubmissionStatusRequestDTO;
+import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.ActivitySubmission;
+import com.example.rpl.RPL.model.ActivitySubmissionComment;
 import com.example.rpl.RPL.model.IOTest;
 import com.example.rpl.RPL.model.TestRun;
 import com.example.rpl.RPL.model.UnitTest;
@@ -29,7 +34,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -121,6 +128,24 @@ public class SubmissionController {
         @PathVariable Long submissionId) {
         ActivitySubmission activitySubmission = submissionService
             .setSubmissionAsFinalSolution(submissionId);
+
+        ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
+            .fromEntity(activitySubmission, null, List.of());
+        return new ResponseEntity<>(asDto, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_submit')")
+    @PatchMapping(value = "/api/courses/{courseId}/activities/{activityId}/submissions/{submissionId}")
+    public ResponseEntity<ActivitySubmissionResponseDTO> updateSubmission(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId, @PathVariable Long activityId,
+        @PathVariable Long submissionId,
+        @RequestBody @Valid PatchActivitySubmissionRequestDTO patchActivitySubmissionRequestDTO) {
+
+        ActivitySubmission activitySubmission = submissionService
+            .updateSubmission(submissionId, patchActivitySubmissionRequestDTO.getStatus(),
+                patchActivitySubmissionRequestDTO.getIsFinal(),
+                patchActivitySubmissionRequestDTO.getIsShared());
 
         ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
             .fromEntity(activitySubmission, null, List.of());
@@ -251,6 +276,46 @@ public class SubmissionController {
                     .fromEntity(as, unitTest, ioTests, run);
 
             }).collect(Collectors.toList());
+    }
+
+    //    @PreAuthorize("hasAuthority('activity_view')")
+    @PostMapping(value = "/api/submissions/{submissionId}/comment")
+    public ResponseEntity<SubmissionCommentsResponseDTO> addSubmissionComment(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long submissionId,
+        @RequestBody @Valid SubmissionCommentRequestDTO addSubmissionCommentRequestDTO) {
+
+        if (currentUser == null) {
+            throw new NotFoundException("Not found", "user_not_found");
+        }
+
+        List<ActivitySubmissionComment> comments = submissionService
+            .addSubmissionComment(
+                currentUser.getUser(),
+                submissionId,
+                addSubmissionCommentRequestDTO.getComment()
+            );
+
+        return new ResponseEntity<>(SubmissionCommentsResponseDTO.fromEntity(comments),
+            HttpStatus.CREATED);
+    }
+
+    //    @PreAuthorize("hasAuthority('activity_view')")
+    @DeleteMapping(value = "/api/submissions/{submissionId}/comment/{commentId}")
+    public ResponseEntity<SubmissionCommentsResponseDTO> deleteSubmissionComment(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long submissionId,
+        @PathVariable Long commentId
+    ) {
+
+        Boolean isTeacher = currentUser.getAuthorities().stream()
+            .anyMatch(o -> o.getAuthority().equals("activity_manage"));
+
+        List<ActivitySubmissionComment> comments = submissionService
+            .deleteSubmissionComment(currentUser.getUser(), isTeacher, submissionId, commentId);
+
+        return new ResponseEntity<>(SubmissionCommentsResponseDTO.fromEntity(comments),
+            HttpStatus.OK);
     }
 
     @PostMapping(value = "/api/submissions/reprocessAll")

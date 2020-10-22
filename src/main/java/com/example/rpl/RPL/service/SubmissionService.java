@@ -4,6 +4,7 @@ import com.example.rpl.RPL.controller.dto.UnitTestResultDTO;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivitySubmission;
+import com.example.rpl.RPL.model.ActivitySubmissionComment;
 import com.example.rpl.RPL.model.IOTestRun;
 import com.example.rpl.RPL.model.RPLFile;
 import com.example.rpl.RPL.model.SubmissionStatus;
@@ -11,8 +12,9 @@ import com.example.rpl.RPL.model.TestRun;
 import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.queue.IProducer;
 import com.example.rpl.RPL.repository.ActivityRepository;
+import com.example.rpl.RPL.repository.ActivitySubmissionCommentRepository;
+import com.example.rpl.RPL.repository.ActivitySubmissionRepository;
 import com.example.rpl.RPL.repository.FileRepository;
-import com.example.rpl.RPL.repository.SubmissionRepository;
 import com.example.rpl.RPL.repository.TestRunRepository;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -34,32 +36,35 @@ public class SubmissionService {
     private final TestService testService;
 
     private final ActivityRepository activityRepository;
-    private final SubmissionRepository submissionRepository;
+    private final ActivitySubmissionRepository activitySubmissionRepository;
     private final FileRepository fileRepository;
     private final TestRunRepository testRunRepository;
     private final RplFilesService rplFilesService;
     private final IProducer activitySubmissionQueueProducer;
+    private final ActivitySubmissionCommentRepository activitySubmissionCommentRepository;
 
     @Autowired
     public SubmissionService(TestService testService,
         ActivityRepository activityRepository,
-        SubmissionRepository submissionRepository,
+        ActivitySubmissionRepository activitySubmissionRepository,
         FileRepository fileRepository,
         TestRunRepository testRunRepository,
         RplFilesService rplFilesService,
-        IProducer activitySubmissionQueueProducer) {
+        IProducer activitySubmissionQueueProducer,
+        ActivitySubmissionCommentRepository activitySubmissionCommentRepository) {
         this.testService = testService;
         this.activityRepository = activityRepository;
-        this.submissionRepository = submissionRepository;
+        this.activitySubmissionRepository = activitySubmissionRepository;
         this.fileRepository = fileRepository;
         this.testRunRepository = testRunRepository;
         this.rplFilesService = rplFilesService;
         this.activitySubmissionQueueProducer = activitySubmissionQueueProducer;
+        this.activitySubmissionCommentRepository = activitySubmissionCommentRepository;
     }
 
 
     public ActivitySubmission getActivitySubmission(Long submissionId) {
-        return submissionRepository.findById(submissionId).orElseThrow(
+        return activitySubmissionRepository.findById(submissionId).orElseThrow(
             () -> new NotFoundException("Activity submission not found",
                 "activity_submission_not_found"));
     }
@@ -98,7 +103,7 @@ public class SubmissionService {
         ActivitySubmission as = new ActivitySubmission(ac, user, f,
             SubmissionStatus.PENDING);
 
-        as = submissionRepository.save(as);
+        as = activitySubmissionRepository.save(as);
 
         return as;
     }
@@ -130,7 +135,7 @@ public class SubmissionService {
 
         if ("ERROR".equals(testRunResult)) {
             activitySubmission.setProcessedWithError(testRunStage);
-            return submissionRepository.save(activitySubmission);
+            return activitySubmissionRepository.save(activitySubmission);
         }
 
         boolean passedTests = false;
@@ -161,7 +166,7 @@ public class SubmissionService {
             activitySubmission.setProcessedWithTimeOut();
         }
 
-        return submissionRepository.save(activitySubmission);
+        return activitySubmissionRepository.save(activitySubmission);
     }
 
 
@@ -171,18 +176,18 @@ public class SubmissionService {
         ActivitySubmission activitySubmission = this.getActivitySubmission(submissionId);
         activitySubmission.setStatus(status);
 
-        return submissionRepository.save(activitySubmission);
+        return activitySubmissionRepository.save(activitySubmission);
     }
 
     public List<ActivitySubmission> getAllSubmissionsByActivities(List<Activity> activities) {
-        return submissionRepository.findAllByActivityIn(activities);
+        return activitySubmissionRepository.findAllByActivityIn(activities);
     }
 
     public List<ActivitySubmission> getAllSubmissionsByActivities(List<Activity> activities,
         Long userId) {
         return userId != null ?
-            submissionRepository.findAllByActivityInAndUser_Id(activities, userId) :
-            submissionRepository.findAllByActivityIn(activities);
+            activitySubmissionRepository.findAllByActivityInAndUser_Id(activities, userId) :
+            activitySubmissionRepository.findAllByActivityIn(activities);
     }
 
     List<ActivitySubmission> getAllSubmissionsByActivities(List<Activity> activities,
@@ -192,25 +197,25 @@ public class SubmissionService {
             ZonedDateTime startOfDay = date.atStartOfDay(ZoneId.systemDefault());
             ZonedDateTime endOfDay = date.plusDays(1).atStartOfDay(ZoneId.systemDefault());
             return userId != null ?
-                submissionRepository
+                activitySubmissionRepository
                     .findAllByActivityInAndUser_IdAndDateCreatedBetween(activities, userId,
                         startOfDay, endOfDay) :
-                submissionRepository
+                activitySubmissionRepository
                     .findAllByActivityInAndDateCreatedBetween(activities, startOfDay, endOfDay);
         }
         return userId != null ?
-            submissionRepository.findAllByActivityInAndUser_Id(activities, userId) :
-            submissionRepository.findAllByActivityIn(activities);
+            activitySubmissionRepository.findAllByActivityInAndUser_Id(activities, userId) :
+            activitySubmissionRepository.findAllByActivityIn(activities);
     }
 
     public List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId) {
-        return submissionRepository.findAllByActivity_Course_Id(courseId);
+        return activitySubmissionRepository.findAllByActivity_Course_Id(courseId);
     }
 
     List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId, Long userId) {
         return userId != null ?
-            submissionRepository.findAllByActivity_Course_IdAndUser_Id(courseId, userId) :
-            submissionRepository.findAllByActivity_Course_Id(courseId);
+            activitySubmissionRepository.findAllByActivity_Course_IdAndUser_Id(courseId, userId) :
+            activitySubmissionRepository.findAllByActivity_Course_Id(courseId);
     }
 
     List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId, Long userId,
@@ -219,10 +224,10 @@ public class SubmissionService {
             ZonedDateTime startOfDay = date.atStartOfDay(ZoneId.systemDefault());
             ZonedDateTime endOfDay = date.plusDays(1).atStartOfDay(ZoneId.systemDefault());
             return userId != null ?
-                submissionRepository
+                activitySubmissionRepository
                     .findAllByActivity_Course_IdAndUser_IdAndDateCreatedBetween(courseId, userId,
                         startOfDay, endOfDay) :
-                submissionRepository
+                activitySubmissionRepository
                     .findAllByActivity_Course_IdAndDateCreatedBetween(courseId, startOfDay,
                         endOfDay);
 
@@ -233,13 +238,13 @@ public class SubmissionService {
     @Transactional
     public List<ActivitySubmission> getAllSubmissionsByUserAndActivities(User user,
         List<Activity> activities) {
-        return submissionRepository.findAllByUserAndActivityIn(user, activities);
+        return activitySubmissionRepository.findAllByUserAndActivityIn(user, activities);
     }
 
     @Transactional
     public List<ActivitySubmission> getAllSubmissionsByUserAndActivityId(User user,
         Long activityId) {
-        return submissionRepository.findAllByUserAndActivity_Id(user, activityId);
+        return activitySubmissionRepository.findAllByUserAndActivity_Id(user, activityId);
     }
 
     @Transactional
@@ -248,12 +253,12 @@ public class SubmissionService {
 
         submission.setAsFinalSolution();
 
-        return submissionRepository.save(submission);
+        return activitySubmissionRepository.save(submission);
     }
 
     @Transactional
     public ActivitySubmission getFinalSubmission(Long activityId, User user) {
-        return submissionRepository
+        return activitySubmissionRepository
             .findByActivity_IdAndUserIdAndIsFinalSolution(activityId, user.getId(), true)
             .orElseThrow(() -> new NotFoundException("Activity submission not found",
                 "final_submission_not_found"));
@@ -261,15 +266,16 @@ public class SubmissionService {
 
     @Transactional
     public List<Long> getAllFinalSubmissionsFileIds(Long activityId) {
-        return submissionRepository.findByActivity_IdAndIsFinalSolution(activityId, true).stream()
+        return activitySubmissionRepository.findByActivity_IdAndIsFinalSolution(activityId, true)
+            .stream()
             .map(ActivitySubmission::getFile).map(RPLFile::getId).collect(Collectors.toList());
     }
 
     @Transactional
     public List<ActivitySubmission> reprocessAllPendingSubmissions() {
-        List<ActivitySubmission> processingStuckSubmissions = submissionRepository
+        List<ActivitySubmission> processingStuckSubmissions = activitySubmissionRepository
             .findAllByStatus(SubmissionStatus.PROCESSING);
-        List<ActivitySubmission> pendingSubmissions = submissionRepository
+        List<ActivitySubmission> pendingSubmissions = activitySubmissionRepository
             .findAllByStatus(SubmissionStatus.PENDING);
 
         processingStuckSubmissions.addAll(pendingSubmissions);
@@ -287,6 +293,73 @@ public class SubmissionService {
             log.error("Error sending submission ID to queue. Connection refused");
             log.error(e.getMessage());
         }
-        return submissionRepository.save(as);
+        return activitySubmissionRepository.save(as);
+    }
+
+    @Transactional
+    public List<ActivitySubmissionComment> addSubmissionComment(User author, Long submissionId,
+        String comment) {
+
+        ActivitySubmission submission = this.getActivitySubmission(submissionId);
+
+//        Users can only see submissions marked as shared :)
+//        if (!submission.getIsShared()) {
+//            throw new NotFoundException("Activity submission not shared",
+//                "final_submission_not_shared");
+//        }
+
+        ActivitySubmissionComment submissionComment = new ActivitySubmissionComment(
+            submission.getActivity(), submission, author, comment);
+
+        activitySubmissionCommentRepository.save(submissionComment);
+
+        return activitySubmissionCommentRepository.findAllByActivitySubmission(submission);
+    }
+
+    @Transactional
+    public List<ActivitySubmissionComment> deleteSubmissionComment(User user, Boolean isTeacher,
+        Long submissionId,
+        Long commentId) {
+        ActivitySubmission submission = this.getActivitySubmission(submissionId);
+
+        ActivitySubmissionComment comment = activitySubmissionCommentRepository.findById(commentId)
+            .orElseThrow(
+                () -> new NotFoundException("Comment not found",
+                    "activity_submission_comment_not_found"));
+
+        if (user.getId().equals(comment.getAuthor().getId()) || isTeacher) {
+            activitySubmissionCommentRepository.delete(comment);
+        }
+
+        return activitySubmissionCommentRepository.findAllByActivitySubmission(submission);
+    }
+
+    @Transactional
+    public ActivitySubmission updateSubmission(Long submissionId, SubmissionStatus status,
+        Boolean isFinal, Boolean isShared) {
+        ActivitySubmission submission = this.getActivitySubmission(submissionId);
+
+        if (status != null) {
+            submission = this.updateSubmissionStatus(submissionId, status);
+        }
+
+        if (isFinal != null) {
+            submission = this.setSubmissionAsFinalSolution(submissionId);
+        }
+
+        if (isShared != null) {
+            submission = this.setSubmissionAsShared(submissionId);
+        }
+
+        return submission;
+    }
+
+    @Transactional
+    public ActivitySubmission setSubmissionAsShared(Long submissionId) {
+        ActivitySubmission submission = this.getActivitySubmission(submissionId);
+
+        submission.setShared();
+
+        return activitySubmissionRepository.save(submission);
     }
 }

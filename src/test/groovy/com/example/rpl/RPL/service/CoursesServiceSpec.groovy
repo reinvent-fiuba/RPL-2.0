@@ -1,28 +1,17 @@
 package com.example.rpl.RPL.service
 
-import com.example.rpl.RPL.controller.ActivityTestsController
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException
 import com.example.rpl.RPL.exception.NotFoundException
-import com.example.rpl.RPL.model.Activity
-import com.example.rpl.RPL.model.ActivitySubmission
-import com.example.rpl.RPL.model.Course
-import com.example.rpl.RPL.model.CourseUser
-import com.example.rpl.RPL.model.CourseUserScore
-import com.example.rpl.RPL.model.Role
-import com.example.rpl.RPL.model.SubmissionStatus
-import com.example.rpl.RPL.model.User
+import com.example.rpl.RPL.model.*
 import com.example.rpl.RPL.repository.CourseRepository
 import com.example.rpl.RPL.repository.CourseUserRepository
 import com.example.rpl.RPL.repository.RoleRepository
-import com.example.rpl.RPL.repository.SubmissionRepository
 import com.example.rpl.RPL.repository.UserRepository
 import spock.lang.Shared
 import spock.lang.Specification
 
-import javax.swing.text.html.Option
 import java.time.LocalDate
 import java.time.ZonedDateTime
-import java.util.stream.Collectors
 
 class CoursesServiceSpec extends Specification {
 

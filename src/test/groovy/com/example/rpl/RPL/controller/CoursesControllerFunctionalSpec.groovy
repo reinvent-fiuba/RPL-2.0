@@ -32,7 +32,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
     RoleRepository roleRepository
 
     @Autowired
-    SubmissionRepository submissionRepository
+    ActivitySubmissionRepository submissionRepository
 
     @Autowired
     ActivityRepository activityRepository

@@ -4,8 +4,8 @@ import com.example.rpl.RPL.exception.NotFoundException
 import com.example.rpl.RPL.model.*
 import com.example.rpl.RPL.queue.IProducer
 import com.example.rpl.RPL.repository.ActivityRepository
+import com.example.rpl.RPL.repository.ActivitySubmissionRepository
 import com.example.rpl.RPL.repository.FileRepository
-import com.example.rpl.RPL.repository.SubmissionRepository
 import com.example.rpl.RPL.repository.TestRunRepository
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.web.multipart.MultipartFile
@@ -15,7 +15,7 @@ import spock.lang.Unroll
 
 class SubmissionServiceSpec extends Specification {
     private ActivityRepository activityRepository
-    private SubmissionRepository submissionRepository
+    private ActivitySubmissionRepository submissionRepository
     private FileRepository fileRepository
     private SubmissionService submissionService
     private TestService testService
@@ -28,13 +28,13 @@ class SubmissionServiceSpec extends Specification {
 
     def setup() {
         activityRepository = Mock(ActivityRepository)
-        submissionRepository = Mock(SubmissionRepository)
+        submissionRepository = Mock(ActivitySubmissionRepository)
         fileRepository = Mock(FileRepository)
         testService = Mock(TestService)
         testRunRepository = Mock(TestRunRepository)
         rplFilesService = Mock(RplFilesService)
         activitySubmissionQueueProducer = Mock(IProducer)
-        submissionService = new SubmissionService(testService, activityRepository, submissionRepository, fileRepository, testRunRepository, rplFilesService, activitySubmissionQueueProducer)
+        submissionService = new SubmissionService(testService, activityRepository, submissionRepository, fileRepository, testRunRepository, rplFilesService, activitySubmissionQueueProducer, activitySubmissionCommentRepository)
 
         user = new User(
                 'some-name',

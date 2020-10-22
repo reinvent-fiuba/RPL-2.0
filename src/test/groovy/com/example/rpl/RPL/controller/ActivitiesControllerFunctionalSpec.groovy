@@ -38,7 +38,7 @@ class ActivitiesControllerFunctionalSpec extends AbstractFunctionalSpec {
     ActivityCategoryRepository activityCategoryRepository;
 
     @Autowired
-    SubmissionRepository submissionRepository
+    ActivitySubmissionRepository submissionRepository
 
     @Autowired
     FileRepository fileRepository
