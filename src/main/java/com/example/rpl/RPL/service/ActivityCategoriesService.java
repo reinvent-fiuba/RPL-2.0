@@ -44,9 +44,7 @@ public class ActivityCategoriesService {
     public ActivityCategory cloneActivityCategory(Course course, ActivityCategory activityCategory) {
 
         ActivityCategory newActivityCategory = new ActivityCategory(course, activityCategory);
-        activityCategoryRepository.save(newActivityCategory);
-
-        return newActivityCategory;
+        return activityCategoryRepository.save(newActivityCategory);
     }
 
     @Transactional

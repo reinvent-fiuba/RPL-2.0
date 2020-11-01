@@ -100,7 +100,7 @@ public class CoursesService {
     }
 
     /**
-     * Creates a new Course.
+     * Clones a Course: Creates a new course with the same content as the original course.
      *
      * @return a new saved Course
      * @throws EntityAlreadyExistsException if course exists ValidationException declared on the
@@ -131,6 +131,9 @@ public class CoursesService {
         HashMap<ActivityCategory, ActivityCategory> toNewActivityCategory = new HashMap<>();
 
         for (Activity activity : activitiesService.getAllActivitiesByCourse(course.getId())) {
+            if (activity.getDeleted()) {
+                continue;
+            }
             ActivityCategory activityCategory = activity.getActivityCategory();
             if (!toNewActivityCategory.containsKey(activityCategory)) {
                 toNewActivityCategory.put(
