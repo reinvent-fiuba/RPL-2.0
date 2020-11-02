@@ -34,7 +34,7 @@ class SubmissionServiceSpec extends Specification {
         testRunRepository = Mock(TestRunRepository)
         rplFilesService = Mock(RplFilesService)
         activitySubmissionQueueProducer = Mock(IProducer)
-        submissionService = new SubmissionService(testService, activityRepository, submissionRepository, fileRepository, testRunRepository, rplFilesService, activitySubmissionQueueProducer)
+        submissionService = new SubmissionService(testService, activityRepository, submissionRepository, fileRepository, testRunRepository, rplFilesService, activitySubmissionQueueProducer, ghClient)
 
         user = new User(
                 'some-name',

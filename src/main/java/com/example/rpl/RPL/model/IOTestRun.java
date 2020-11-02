@@ -63,4 +63,23 @@ public class IOTestRun {
         this.runOutput = runOutput;
         this.dateCreated = ZonedDateTime.now();
     }
+
+
+    public String buildMarkdownRepresentation() {
+        String codeblock = "\n```\n";
+        return "## "
+            .concat(this.testName)
+            .concat("\n### Entrada")
+            .concat(codeblock)
+            .concat(this.testIn)
+            .concat(codeblock)
+            .concat("\n### Salida esperada")
+            .concat(codeblock)
+            .concat(this.expectedOutput)
+            .concat(codeblock)
+            .concat("\n### Salida")
+            .concat(codeblock)
+            .concat(this.runOutput)
+            .concat(codeblock);
+    }
 }

@@ -45,6 +45,8 @@ public class ActivitySubmissionResultResponseDTO {
 
     private Boolean isFinalSolution;
 
+    private String shareUrl;
+
     private String exitMessage;
 
     private String stderr;
@@ -75,6 +77,7 @@ public class ActivitySubmissionResultResponseDTO {
             .activityUnitTests("")
             .submissionStatus(as.getStatus().name())
             .isFinalSolution(as.getIsFinalSolution())
+            .shareUrl(as.getShareUrl())
             .submissionDate(as.getDateCreated());
 
         if (unitTest != null) {

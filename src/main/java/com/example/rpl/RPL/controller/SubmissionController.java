@@ -128,6 +128,20 @@ public class SubmissionController {
     }
 
     @PreAuthorize("hasAuthority('activity_submit')")
+    @PutMapping(value = "/api/courses/{courseId}/activities/{activityId}/submissions/{submissionId}/share")
+    public ResponseEntity<ActivitySubmissionResponseDTO> setSubmissionAsShared(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId, @PathVariable Long activityId,
+        @PathVariable Long submissionId) {
+        ActivitySubmission activitySubmission = submissionService
+            .shareSubmission(submissionId);
+
+        ActivitySubmissionResponseDTO asDto = ActivitySubmissionResponseDTO
+            .fromEntity(activitySubmission, null, List.of());
+        return new ResponseEntity<>(asDto, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('activity_submit')")
     @GetMapping(value = "/api/courses/{courseId}/activities/{activityId}/finalSubmission")
     public ResponseEntity<ActivitySubmissionResponseDTO> getFinalSubmission(
         @CurrentUser UserPrincipal currentUser,

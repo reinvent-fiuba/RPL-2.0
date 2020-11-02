@@ -58,4 +58,18 @@ public class UnitTestRun {
         this.errorMessages = errorMessages;
         this.dateCreated = ZonedDateTime.now();
     }
+
+    public String buildMarkdownRepresentation() {
+        String codeblock = "\n```\n";
+        return "## "
+            .concat(this.name)
+            .concat("\n### Resultado")
+            .concat(codeblock)
+            .concat(this.passed.toString())
+            .concat(codeblock)
+            .concat("\n### Mensajes")
+            .concat(codeblock)
+            .concat(this.errorMessages)
+            .concat(codeblock);
+    }
 }

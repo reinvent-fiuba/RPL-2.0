@@ -223,16 +223,17 @@ VALUES (10, 1, 2, 'El ejericio 5',
         10, '', now(), now());
 
 INSERT INTO activity_submissions
-VALUES (1, 1, 3, 2, 'PENDING', false, now(), now());
+VALUES (1, 1, 3, 2, 'PENDING', false, now(), now(),
+        'https://gist.github.com/rpl-bot/f840f777149ebfa6b926143a26253398');
 
 INSERT INTO activity_submissions
-VALUES (2, 2, 3, 3, 'PENDING', false, now(), now());
+VALUES (2, 2, 3, 3, 'PENDING', false, now(), now(), null);
 
 INSERT INTO activity_submissions
-VALUES (3, 3, 3, 6, 'PENDING', false, now(), now());
+VALUES (3, 3, 3, 6, 'PENDING', false, now(), now(), null);
 
 INSERT INTO activity_submissions
-VALUES (4, 1, 3, 7, 'PENDING', false, now(), now());
+VALUES (4, 1, 3, 7, 'PENDING', false, now(), now(), null);
 
 -- INSERT INTO tests
 -- VALUES (1, 1, now(), now());

@@ -54,6 +54,9 @@ public class ActivitySubmission {
     @Column(name = "is_final_solution")
     private Boolean isFinalSolution;
 
+    @Column(name = "share_url")
+    private String shareUrl;
+
     @Column(name = "date_created")
     private ZonedDateTime dateCreated;
 
@@ -109,6 +112,11 @@ public class ActivitySubmission {
 
     public void setAsFinalSolution() {
         this.isFinalSolution = true;
+        this.lastUpdated = now();
+    }
+
+    public void setShareLink(String gistUrl) {
+        this.shareUrl = gistUrl;
         this.lastUpdated = now();
     }
 }

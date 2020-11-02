@@ -38,6 +38,10 @@ public class ActivitySubmissionResponseDTO {
 
     private List<String> activityIOTests;
 
+    private Boolean isFinalSolution;
+
+    private String shareUrl;
+
     public static ActivitySubmissionResponseDTO fromEntity(ActivitySubmission as,
         UnitTest unitTest,
         List<IOTest> ioTests) {
@@ -53,7 +57,9 @@ public class ActivitySubmissionResponseDTO {
             .activityLanguage(as.getActivity().getLanguage().getNameAndVersion())
             .isIOTested(as.getActivity().getIsIOTested())
             .compilationFlags(as.getActivity().getCompilationFlags())
-            .activityUnitTestsContent("");
+            .activityUnitTestsContent("")
+            .isFinalSolution(as.getIsFinalSolution())
+            .shareUrl(as.getShareUrl());
 
         if (unitTest != null) {
             ab.activityUnitTestsContent(new String(unitTest.getTestFile().getData()));
