@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:63818",
+    "host": "localhost:63504",
     "basePath": "/",
     "tags": [
         {
@@ -8301,6 +8301,10 @@
         "CreateCourseRequestDTO": {
             "type": "object",
             "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
                 "name": {
                     "type": "string"
                 },

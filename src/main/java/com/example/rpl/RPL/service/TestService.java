@@ -135,6 +135,13 @@ public class TestService {
     }
 
     @Transactional
+    public List<IOTest> cloneIOTests(Long activityId, List<IOTest> ioTests) {
+        return ioTests.stream().map(
+                ioTest -> iOTestRepository.save(new IOTest(activityId, ioTest))
+        ).collect(Collectors.toList());
+    }
+
+    @Transactional
     public IOTest updateIOTest(Long ioTestId, String name, String in, String out) {
         IOTest ioTest = iOTestRepository.findById(ioTestId)
             .orElseThrow(() -> new NotFoundException("IO test not found",
@@ -176,6 +183,15 @@ public class TestService {
 
         UnitTest test = new UnitTest(activityId, testFile);
         return unitTestsRepository.save(test);
+    }
+
+    @Transactional
+    public UnitTest cloneUnitTest(Long activityId, UnitTest unitTest) {
+        UnitTest newUnitTest = new UnitTest(activityId, unitTest);
+
+        fileRepository.save(newUnitTest.getTestFile());
+
+        return unitTestsRepository.save(newUnitTest);
     }
 
     @Transactional

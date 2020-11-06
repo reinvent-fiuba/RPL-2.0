@@ -34,6 +34,8 @@ class CoursesServiceSpec extends Specification {
     private ActivitiesService activitiesService
     private SubmissionService submissionService
     private IEmailService emailService
+    private ActivityCategoriesService activityCategoriesService
+    private TestService testService
 
     @Shared
     private User user
@@ -47,6 +49,8 @@ class CoursesServiceSpec extends Specification {
         activitiesService = Mock(ActivitiesService)
         submissionService = Mock(SubmissionService)
         emailService = Mock(IEmailService)
+        activityCategoriesService = Mock(ActivityCategoriesService)
+        testService = Mock(TestService)
         coursesService = new CoursesService(
                 courseRepository,
                 courseUserRepository,
@@ -54,7 +58,9 @@ class CoursesServiceSpec extends Specification {
                 userRepository,
                 activitiesService,
                 submissionService,
-                emailService
+                emailService,
+                activityCategoriesService,
+                testService
         )
 
         user = Mock(User)

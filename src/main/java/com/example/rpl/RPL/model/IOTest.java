@@ -55,6 +55,10 @@ public class IOTest {
     public IOTest() {
     }
 
+    public IOTest(Long activityId, IOTest ioTest) {
+        this(activityId, ioTest.getName(), ioTest.getTestIn(), ioTest.getTestOut());
+    }
+
     public IOTest(Long activityId, String name, String testIn, String testOut) {
         this.activityId = activityId;
         this.name = name;
