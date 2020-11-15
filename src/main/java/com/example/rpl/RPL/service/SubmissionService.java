@@ -23,9 +23,12 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.AmqpConnectException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.*;
 
 @Slf4j
 @Service
@@ -174,60 +177,27 @@ public class SubmissionService {
         return submissionRepository.save(activitySubmission);
     }
 
-    public List<ActivitySubmission> getAllSubmissionsByActivities(List<Activity> activities) {
-        return submissionRepository.findAllByActivityIn(activities);
-    }
-
-    public List<ActivitySubmission> getAllSubmissionsByActivities(List<Activity> activities,
-        Long userId) {
-        return userId != null ?
-            submissionRepository.findAllByActivityInAndUser_Id(activities, userId) :
-            submissionRepository.findAllByActivityIn(activities);
-    }
-
     List<ActivitySubmission> getAllSubmissionsByActivities(List<Activity> activities,
         Long userId, LocalDate date) {
 
-        if (date != null) {
-            ZonedDateTime startOfDay = date.atStartOfDay(ZoneId.systemDefault());
-            ZonedDateTime endOfDay = date.plusDays(1).atStartOfDay(ZoneId.systemDefault());
-            return userId != null ?
-                submissionRepository
-                    .findAllByActivityInAndUser_IdAndDateCreatedBetween(activities, userId,
-                        startOfDay, endOfDay) :
-                submissionRepository
-                    .findAllByActivityInAndDateCreatedBetween(activities, startOfDay, endOfDay);
-        }
-        return userId != null ?
-            submissionRepository.findAllByActivityInAndUser_Id(activities, userId) :
-            submissionRepository.findAllByActivityIn(activities);
+        Specification<ActivitySubmission> specification = Specification
+                .where(activities == null ? null : activitiesIn(activities))
+                .and(userId == null ? null : userIdIs(userId))
+                .and(date == null ? null : dateCreatedIs(date));
+
+        return submissionRepository.findAll(specification);
     }
 
-    public List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId) {
-        return submissionRepository.findAllByActivity_Course_Id(courseId);
-    }
+    List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId, Long userId, Long activityId,
+                                                         LocalDate date) {
 
-    List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId, Long userId) {
-        return userId != null ?
-            submissionRepository.findAllByActivity_Course_IdAndUser_Id(courseId, userId) :
-            submissionRepository.findAllByActivity_Course_Id(courseId);
-    }
+        Specification<ActivitySubmission> specification = Specification
+                .where(courseId == null ? null : courseIdIs(courseId))
+                .and(userId == null ? null : userIdIs(userId))
+                .and(date == null ? null : dateCreatedIs(date))
+                .and(activityId == null ? null : activityIdIs(activityId));
 
-    List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId, Long userId,
-        LocalDate date) {
-        if (date != null) {
-            ZonedDateTime startOfDay = date.atStartOfDay(ZoneId.systemDefault());
-            ZonedDateTime endOfDay = date.plusDays(1).atStartOfDay(ZoneId.systemDefault());
-            return userId != null ?
-                submissionRepository
-                    .findAllByActivity_Course_IdAndUser_IdAndDateCreatedBetween(courseId, userId,
-                        startOfDay, endOfDay) :
-                submissionRepository
-                    .findAllByActivity_Course_IdAndDateCreatedBetween(courseId, startOfDay,
-                        endOfDay);
-
-        }
-        return this.getAllSubmissionsByCourseId(courseId, userId);
+        return submissionRepository.findAll(specification);
     }
 
     @Transactional

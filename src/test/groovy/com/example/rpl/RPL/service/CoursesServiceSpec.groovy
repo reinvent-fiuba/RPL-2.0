@@ -1,6 +1,6 @@
 package com.example.rpl.RPL.service
 
-import com.example.rpl.RPL.controller.ActivityTestsController
+
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException
 import com.example.rpl.RPL.exception.NotFoundException
 import com.example.rpl.RPL.model.Activity
@@ -14,15 +14,12 @@ import com.example.rpl.RPL.model.User
 import com.example.rpl.RPL.repository.CourseRepository
 import com.example.rpl.RPL.repository.CourseUserRepository
 import com.example.rpl.RPL.repository.RoleRepository
-import com.example.rpl.RPL.repository.SubmissionRepository
 import com.example.rpl.RPL.repository.UserRepository
 import spock.lang.Shared
 import spock.lang.Specification
 
-import javax.swing.text.html.Option
 import java.time.LocalDate
 import java.time.ZonedDateTime
-import java.util.stream.Collectors
 
 class CoursesServiceSpec extends Specification {
 
@@ -545,7 +542,7 @@ class CoursesServiceSpec extends Specification {
             List<CourseUserScore> scoreboard = coursesService.getScoreboard(courseId)
 
         then:
-            1*activitiesService.getAllActivitiesByCourse(courseId) >> [courseActivity]
+            1*activitiesService.search(courseId) >> [courseActivity]
             1*courseRepository.findById(courseId) >> Optional.of(Mock(Course))
             1*roleRepository.findByName("student") >> Optional.of(studentRole)
             1*studentRole.getId() >> 1
@@ -553,7 +550,7 @@ class CoursesServiceSpec extends Specification {
 
             1*courseUser.getUser() >> user
             1*user.getId() >> 0
-            1*submissionService.getAllSubmissionsByActivities([courseActivity], 0) >> [submission]
+            1*submissionService.getAllSubmissionsByActivities([courseActivity], 0, null) >> [submission]
             1*submission.getStatus() >> SubmissionStatus.SUCCESS;
             1*submission.getActivity() >> courseActivity
             1*courseActivity.getPoints() >> 22
@@ -578,7 +575,7 @@ class CoursesServiceSpec extends Specification {
             List<CourseUserScore> scoreboard = coursesService.getScoreboard(courseId)
 
         then:
-            1*activitiesService.getAllActivitiesByCourse(courseId) >> [courseActivity]
+            1*activitiesService.search(courseId) >> [courseActivity]
             1*courseRepository.findById(courseId) >> Optional.of(Mock(Course))
             1*roleRepository.findByName("student") >> Optional.of(studentRole)
             1*studentRole.getId() >> 1
@@ -586,7 +583,7 @@ class CoursesServiceSpec extends Specification {
 
             1*courseUser.getUser() >> user
             1*user.getId() >> 0
-            1*submissionService.getAllSubmissionsByActivities([courseActivity], 0) >> submissions
+            1*submissionService.getAllSubmissionsByActivities([courseActivity], 0, null) >> submissions
 
             for (int i=0; i<submissionStatuses.size(); i++) {
                 1 * submissions[i].getStatus() >> submissionStatuses[i]
@@ -633,7 +630,7 @@ class CoursesServiceSpec extends Specification {
             List<CourseUserScore> scoreboard = coursesService.getScoreboard(courseId)
 
         then:
-            1*activitiesService.getAllActivitiesByCourse(courseId) >> [courseActivity]
+            1*activitiesService.search(courseId) >> [courseActivity]
             1*courseRepository.findById(courseId) >> Optional.of(Mock(Course))
             1*roleRepository.findByName("student") >> Optional.of(studentRole)
             1*studentRole.getId() >> 1
@@ -642,7 +639,7 @@ class CoursesServiceSpec extends Specification {
             for (int i=0; i<numberOfUsers; i++) {
                 1*courseUsers[i].getUser() >> users[i]
                 1*users[i].getId() >> i
-                1*submissionService.getAllSubmissionsByActivities([courseActivity], i) >> [submissions[i]]
+                1*submissionService.getAllSubmissionsByActivities([courseActivity], i, null) >> [submissions[i]]
                 1 * submissions[i].getStatus() >> SubmissionStatus.SUCCESS
                 1 * submissions[i].getActivity() >> courseActivity
                 1 * courseActivity.getPoints() >> 22
