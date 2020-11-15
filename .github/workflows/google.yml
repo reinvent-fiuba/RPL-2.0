@@ -22,7 +22,7 @@ env:
   GKE_EMAIL: ${{ secrets.GKE_ALE_FIUBA_EMAIL }}
   GITHUB_SHA: ${{ github.sha }}
   GKE_ZONE: us-central1-c
-  GKE_CLUSTER: vigilant-mix-295715
+  GKE_CLUSTER: cluster-rpl-1
   IMAGE: rpl-2.0
   REGISTRY_HOSTNAME: gcr.io
   DEPLOYMENT_NAME: producer
