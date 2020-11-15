@@ -3,10 +3,3 @@ kind: Kustomization
 resources:
   - deployments/producer.yaml
   - services/producer.yaml
-  - deployments/queue.yaml
-  - deployments/queue-metrics.yaml
-  - mysql/mysql_deployment.yaml
-  - mysql/persistent_volume_deployment.yaml
-  - services/queue.yaml
-  - hpa.yaml
-  - hpa-custom-metrics-adapter.yaml
