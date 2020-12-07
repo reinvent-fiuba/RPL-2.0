@@ -1,13 +1,20 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: queue
 spec:
+  selector:
+    matchLabels:
+      app: queue
+      tier: backend
+      track: stable
   replicas: 1
   template:
     metadata:
       labels:
         app: queue
+        tier: backend
+        track: stable
     spec:
       nodeSelector:
         task: core

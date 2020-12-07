@@ -30,6 +30,8 @@ public class CoursesService {
     private final ActivitiesService activitiesService;
     private final SubmissionService submissionService;
     private final IEmailService emailService;
+    private final ActivityCategoriesService activityCategoriesService;
+    private final TestService testService;
 
     @Autowired
     public CoursesService(CourseRepository courseRepository,
@@ -38,7 +40,9 @@ public class CoursesService {
                           UserRepository userRepository,
                           ActivitiesService activitiesService,
                           SubmissionService submissionService,
-                          IEmailService emailService) {
+                          IEmailService emailService,
+                          ActivityCategoriesService activityCategoriesService,
+                          TestService testService) {
         this.courseRepository = courseRepository;
         this.courseUserRepository = courseUserRepository;
         this.roleRepository = roleRepository;
@@ -46,6 +50,8 @@ public class CoursesService {
         this.activitiesService = activitiesService;
         this.submissionService = submissionService;
         this.emailService = emailService;
+        this.activityCategoriesService = activityCategoriesService;
+        this.testService = testService;
     }
 
     /**
@@ -86,6 +92,67 @@ public class CoursesService {
         log.info("[process:create_course][name:{}] Creating new course", name);
 
         return course;
+    }
+
+    /**
+     * Clones a Course: Creates a new course with the same content as the original course.
+     *
+     * @return a new saved Course
+     * @throws EntityAlreadyExistsException if course exists ValidationException declared on the
+     * Course class
+     */
+    @Transactional
+    public Course cloneCourse(Long id, String name, String university, String universityCourseId, String description,
+                               Boolean active, String semester, LocalDate semesterStartDate,
+                               LocalDate semesterEndDate, String imgUri, Long courseAdminId) {
+
+        Course course = courseRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Course not found", "course_not_found")
+        );
+
+        Course newCourse = this.createCourse(
+                name,
+                university,
+                universityCourseId,
+                description != null ? description : course.getDescription(),
+                active,
+                semester,
+                semesterStartDate,
+                semesterEndDate,
+                imgUri != null ? imgUri : course.getImgUri(),
+                courseAdminId
+        );
+
+        HashMap<ActivityCategory, ActivityCategory> toNewActivityCategory = new HashMap<>();
+
+        for (Activity activity : activitiesService.getAllActivitiesByCourse(course.getId())) {
+            if (activity.getDeleted()) {
+                continue;
+            }
+            ActivityCategory activityCategory = activity.getActivityCategory();
+            if (!toNewActivityCategory.containsKey(activityCategory)) {
+                toNewActivityCategory.put(
+                        activityCategory,
+                        activityCategoriesService.cloneActivityCategory(newCourse, activityCategory)
+                );
+            }
+            ActivityCategory newActivityCategory = toNewActivityCategory.get(activityCategory);
+            Activity newActivity = activitiesService.cloneActivity(newCourse, newActivityCategory, activity);
+
+            if (newActivity.getIsIOTested()) {
+                testService.cloneIOTests(
+                    newActivity.getId(),
+                    testService.getAllIOTests(activity.getId())
+                );
+            } else {
+                testService.cloneUnitTest(
+                    newActivity.getId(),
+                    testService.getUnitTests(activity.getId())
+                );
+            }
+        }
+
+        return newCourse;
     }
 
     @Transactional

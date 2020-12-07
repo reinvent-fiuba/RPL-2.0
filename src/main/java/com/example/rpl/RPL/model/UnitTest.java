@@ -53,6 +53,10 @@ public class UnitTest {
     public UnitTest() {
     }
 
+    public UnitTest(Long activityId, UnitTest unitTest) {
+        this(activityId, new RPLFile("unit_test", unitTest.getTestFile()));
+    }
+
     public UnitTest(Long activityId, RPLFile testFile) {
         this.activityId = activityId;
         this.testFile = testFile;

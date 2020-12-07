@@ -60,7 +60,7 @@ public class CoursesController {
     public ResponseEntity<CourseResponseDTO> createCourse(@CurrentUser UserPrincipal currentUser,
         @RequestBody @Valid CreateCourseRequestDTO createCourseRequestDTO) {
 
-        Course course = coursesService.createCourse(
+        Course course = createCourseRequestDTO.getId() == null ? coursesService.createCourse(
             createCourseRequestDTO.getName(),
             createCourseRequestDTO.getUniversity(),
             createCourseRequestDTO.getUniversityCourseId(),
@@ -71,6 +71,18 @@ public class CoursesController {
             createCourseRequestDTO.getSemesterEndDate(),
             createCourseRequestDTO.getImgUri(),
             createCourseRequestDTO.getCourseAdminId()
+        ) : coursesService.cloneCourse(
+                createCourseRequestDTO.getId(),
+                createCourseRequestDTO.getName(),
+                createCourseRequestDTO.getUniversity(),
+                createCourseRequestDTO.getUniversityCourseId(),
+                createCourseRequestDTO.getDescription(),
+                true,
+                createCourseRequestDTO.getSemester(),
+                createCourseRequestDTO.getSemesterStartDate(),
+                createCourseRequestDTO.getSemesterEndDate(),
+                createCourseRequestDTO.getImgUri(),
+                createCourseRequestDTO.getCourseAdminId()
         );
 
         return new ResponseEntity<>(CourseResponseDTO.fromEntity(course), HttpStatus.CREATED);
