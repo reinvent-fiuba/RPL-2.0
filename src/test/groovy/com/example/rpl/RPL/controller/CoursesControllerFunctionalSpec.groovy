@@ -69,6 +69,9 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
 
     def setup() {
+        adminRole = roleRepository.findByName("admin").get()
+        studentRole = roleRepository.findByName("student").get()
+
         user = new User(
                 'some-name',
                 'some-surname',
@@ -120,17 +123,6 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
 
         courseId = course.getId()
 
-        adminRole = new Role(
-                "admin",
-                "course_delete,course_view,course_edit,activity_view,activity_manage,activity_submit,user_view,user_manage"
-        )
-
-        roleRepository.save(adminRole);
-
-        studentRole = new Role('student', 'course_view,activity_view,activity_submit,user_view')
-
-        roleRepository.save(studentRole)
-
         courseUserRepository.save(new CourseUser(
                 course,
                 user,
@@ -147,7 +139,6 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
         courseUserRepository.deleteAll()
         userRepository.deleteAll()
         courseRepository.deleteAll()
-        roleRepository.deleteAll()
     }
 
     /*****************************************************************************************

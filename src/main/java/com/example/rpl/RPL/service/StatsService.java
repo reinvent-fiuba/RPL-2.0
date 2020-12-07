@@ -73,10 +73,10 @@ public class StatsService {
             coursesService.getAllUsers(courseId, "student");
 
         List<ActivitySubmission> submissions = submissionService
-            .getAllSubmissionsByCourseId(courseId, userId, activityId, date);
+            .search(courseId, userId, activityId, categoryId, date);
 
         Map<User, List<ActivitySubmission>> submissionsByUser = submissions.stream()
-            .collect(Collectors.groupingBy(activitySubmission -> activitySubmission.getUser()));
+            .collect(Collectors.groupingBy(ActivitySubmission::getUser));
 
         List<Map<String, String>> usersMetadata = courseUsers.stream()
             .map(courseUser -> Map.of(
@@ -106,14 +106,14 @@ public class StatsService {
             List.of(coursesService.getStudentByUserId(courseId, userId)) :
             coursesService.getAllUsers(courseId, "student");
 
-        List<User> courseRPLUsers = courseUsers.stream().map(CourseUser::getUser)
+        List<User> users = courseUsers.stream().map(CourseUser::getUser)
             .collect(Collectors.toList());
-//
+
         List<ActivitySubmission> submissions = submissionService
-            .getAllSubmissionsByCourseId(courseId, userId, activityId, date);
+            .search(courseId, userId, activityId, categoryId, date);
 
         List<ActivitySubmission> studentSubmissions = submissions.stream()
-            .filter(submission -> courseRPLUsers.contains(submission.getUser())).collect(
+            .filter(submission -> users.contains(submission.getUser())).collect(
                 Collectors.toList());
 
         Map<LocalDate, List<ActivitySubmission>> submissionsByDate =
@@ -134,7 +134,7 @@ public class StatsService {
     public ActivitiesStat getActivityStatByUser(Long courseId, Long userId) {
         List<Activity> activities = activitiesService.search(courseId);
         List<ActivitySubmission> activitySubmissions = submissionService
-            .getAllSubmissionsByCourseId(courseId, userId, null, null);
+            .search(courseId, userId, null, null, null);
 
         Map<Long, List<ActivitySubmission>> submissionsByActivity = activitySubmissions.stream()
             .collect(Collectors
@@ -166,7 +166,7 @@ public class StatsService {
 
     public SubmissionsStat getSubmissionStatByUser(Long courseId, Long userId) {
         List<ActivitySubmission> activitySubmissions = submissionService
-            .getAllSubmissionsByCourseId(courseId, userId, null, null);
+            .search(courseId, userId, null,null,null);
 
         return new SubmissionsStat(activitySubmissions);
     }

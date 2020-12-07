@@ -14,13 +14,13 @@ public final class ActivitySpecifications {
 
     public static Specification<Activity> courseIdIs(Long courseId) {
         return (root, query, builder) -> builder.equal(
-                root.get("activity").<String>get("course").<String>get("id"),
+                root.get("course").<String>get("id"),
                 courseId);
     }
 
     public static Specification<Activity> categoryIdIs(Long categoryId) {
         return (root, query, builder) -> builder.equal(
-                root.get("activity").<String>get("activityCategory").<String>get("id"),
+                root.get("activityCategory").<String>get("id"),
                 categoryId);
     }
 }

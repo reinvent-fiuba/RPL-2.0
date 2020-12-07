@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -180,6 +181,10 @@ public class SubmissionService {
     List<ActivitySubmission> getAllSubmissionsByActivities(List<Activity> activities,
         Long userId, LocalDate date) {
 
+        if (activities != null && activities.size() == 0) {
+            return new ArrayList<>();
+        }
+
         Specification<ActivitySubmission> specification = Specification
                 .where(activities == null ? null : activitiesIn(activities))
                 .and(userId == null ? null : userIdIs(userId))
@@ -188,14 +193,15 @@ public class SubmissionService {
         return submissionRepository.findAll(specification);
     }
 
-    List<ActivitySubmission> getAllSubmissionsByCourseId(Long courseId, Long userId, Long activityId,
-                                                         LocalDate date) {
+    List<ActivitySubmission> search(Long courseId, Long userId, Long activityId, Long categoryId,
+                                    LocalDate date) {
 
         Specification<ActivitySubmission> specification = Specification
                 .where(courseId == null ? null : courseIdIs(courseId))
                 .and(userId == null ? null : userIdIs(userId))
                 .and(date == null ? null : dateCreatedIs(date))
-                .and(activityId == null ? null : activityIdIs(activityId));
+                .and(activityId == null ? null : activityIdIs(activityId))
+                .and(categoryId == null ? null : categoryIdIs(categoryId));
 
         return submissionRepository.findAll(specification);
     }
