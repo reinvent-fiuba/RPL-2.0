@@ -122,7 +122,7 @@ public class ActivitiesController {
 
 
         List<Activity> activities = currentUser.hasAuthority("activity_manage") ?
-                activitiesService.search(courseId) :
+                activitiesService.getAllActivitiesByCourse(courseId) :
                 activitiesService.getAllActiveActivitiesByCourse(courseId);
 
         List<ActivitySubmission> submissions = submissionService

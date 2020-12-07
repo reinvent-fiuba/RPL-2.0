@@ -256,7 +256,7 @@ public class CoursesService {
 
     @Transactional
     public List<CourseUserScore> getScoreboard(Long courseId) {
-        List<Activity> courseActivities = activitiesService.search(courseId);
+        List<Activity> courseActivities = activitiesService.getAllActivitiesByCourse(courseId);
         return getAllUsers(courseId, "student").stream().map(courseUser -> {
                     LongSummaryStatistics userActivityPoints = submissionService
                             .getAllSubmissionsByActivities(courseActivities, courseUser.getUser().getId(), null)

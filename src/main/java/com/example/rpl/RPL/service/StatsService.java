@@ -132,7 +132,7 @@ public class StatsService {
     }
 
     public ActivitiesStat getActivityStatByUser(Long courseId, Long userId) {
-        List<Activity> activities = activitiesService.search(courseId);
+        List<Activity> activities = activitiesService.getAllActivitiesByCourse(courseId);
         List<ActivitySubmission> activitySubmissions = submissionService
             .search(courseId, userId, null, null, null);
 

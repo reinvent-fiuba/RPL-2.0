@@ -542,7 +542,7 @@ class CoursesServiceSpec extends Specification {
             List<CourseUserScore> scoreboard = coursesService.getScoreboard(courseId)
 
         then:
-            1*activitiesService.search(courseId) >> [courseActivity]
+            1*activitiesService.getAllActivitiesByCourse(courseId) >> [courseActivity]
             1*courseRepository.findById(courseId) >> Optional.of(Mock(Course))
             1*roleRepository.findByName("student") >> Optional.of(studentRole)
             1*studentRole.getId() >> 1
@@ -575,7 +575,7 @@ class CoursesServiceSpec extends Specification {
             List<CourseUserScore> scoreboard = coursesService.getScoreboard(courseId)
 
         then:
-            1*activitiesService.search(courseId) >> [courseActivity]
+            1*activitiesService.getAllActivitiesByCourse(courseId) >> [courseActivity]
             1*courseRepository.findById(courseId) >> Optional.of(Mock(Course))
             1*roleRepository.findByName("student") >> Optional.of(studentRole)
             1*studentRole.getId() >> 1
@@ -630,7 +630,7 @@ class CoursesServiceSpec extends Specification {
             List<CourseUserScore> scoreboard = coursesService.getScoreboard(courseId)
 
         then:
-            1*activitiesService.search(courseId) >> [courseActivity]
+            1*activitiesService.getAllActivitiesByCourse(courseId) >> [courseActivity]
             1*courseRepository.findById(courseId) >> Optional.of(Mock(Course))
             1*roleRepository.findByName("student") >> Optional.of(studentRole)
             1*studentRole.getId() >> 1

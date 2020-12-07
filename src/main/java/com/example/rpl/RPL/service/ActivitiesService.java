@@ -120,7 +120,7 @@ public class ActivitiesService {
      * @return a list of Activities Course class
      */
     @Transactional
-    public List<Activity> search(Long courseId) {
+    public List<Activity> getAllActivitiesByCourse(Long courseId) {
         return activityRepository.findActivitiesByCourse_Id(courseId);
     }
 
