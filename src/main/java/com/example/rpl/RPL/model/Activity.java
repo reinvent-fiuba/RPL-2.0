@@ -87,6 +87,24 @@ public class Activity {
     public Activity() {
     }
 
+    public Activity(Course course, ActivityCategory activityCategory, Activity activity) {
+        this(
+            course,
+            activityCategory,
+            activity.getName(),
+            activity.getDescription(),
+            activity.getLanguage(),
+            activity.getPoints(),
+            new RPLFile(
+                String.format("%s_%d_%s.tar.gz", now().toLocalDate().toString(), course.getId(), activity.getName()),
+                activity.getStartingFiles()
+            ),
+            activity.getCompilationFlags(),
+            activity.getActive()
+        );
+        this.isIOTested = activity.getIsIOTested();
+    }
+
     public Activity(Course course, ActivityCategory activityCategory, String name,
         String description, Language language, Long points,
         RPLFile startingFiles, String compilationFlags, Boolean active) {

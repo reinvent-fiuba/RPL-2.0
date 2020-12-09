@@ -14,15 +14,15 @@ name: Build and Deploy to GKE
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [ master, test/** ]
 
 # Environment variables available to all jobs and steps in this workflow
 env:
-  GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
-  GKE_EMAIL: ${{ secrets.GKE_EMAIL }}
+  GKE_PROJECT: ${{ secrets.GKE_ALE_FIUBA_PROJECT }}
+  GKE_EMAIL: ${{ secrets.GKE_ALE_FIUBA_EMAIL }}
   GITHUB_SHA: ${{ github.sha }}
   GKE_ZONE: us-central1-c
-  GKE_CLUSTER: fiuba-rpl
+  GKE_CLUSTER: cluster-rpl-1
   IMAGE: rpl-2.0
   REGISTRY_HOSTNAME: gcr.io
   DEPLOYMENT_NAME: producer
@@ -56,8 +56,8 @@ jobs:
       # Setup gcloud CLI
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          service_account_email: ${{ secrets.GKE_EMAIL }}
-          service_account_key: ${{ secrets.GKE_KEY }}
+          service_account_email: ${{ secrets.GKE_ALE_FIUBA_EMAIL }}
+          service_account_key: ${{ secrets.GKE_ALE_FIUBA_KEY }}
 
       # Configure docker to use the gcloud command-line tool as a credential helper
       - run: |

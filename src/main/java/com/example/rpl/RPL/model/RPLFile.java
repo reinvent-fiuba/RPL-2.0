@@ -69,6 +69,10 @@ public class RPLFile {
         this.lastUpdated = this.dateCreated;
     }
 
+    public RPLFile(String fileName, RPLFile rplFile) {
+        this(fileName, rplFile.getFileType(), rplFile.getData());
+    }
+
     public void updateData(byte[] bytes) {
         this.data = bytes;
         this.lastUpdated = now();

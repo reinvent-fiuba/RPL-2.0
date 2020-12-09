@@ -12,6 +12,8 @@ import java.time.ZonedDateTime;
 @Value
 public class CreateCourseRequestDTO {
 
+    private Long id;
+
     @NotNull
     private String name;
 
