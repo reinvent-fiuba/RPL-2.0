@@ -1,5 +1,6 @@
 package com.example.rpl.RPL.service
 
+import com.example.rpl.RPL.client.GitHubClientWrapper
 import com.example.rpl.RPL.exception.NotFoundException
 import com.example.rpl.RPL.model.*
 import com.example.rpl.RPL.queue.IProducer
@@ -22,6 +23,7 @@ class SubmissionServiceSpec extends Specification {
     private TestRunRepository testRunRepository
     private RplFilesService rplFilesService
     private IProducer activitySubmissionQueueProducer
+    private GitHubClientWrapper ghClientWrapper
 
     @Shared
     User user
@@ -34,7 +36,8 @@ class SubmissionServiceSpec extends Specification {
         testRunRepository = Mock(TestRunRepository)
         rplFilesService = Mock(RplFilesService)
         activitySubmissionQueueProducer = Mock(IProducer)
-        submissionService = new SubmissionService(testService, activityRepository, submissionRepository, fileRepository, testRunRepository, rplFilesService, activitySubmissionQueueProducer, ghClient)
+        ghClientWrapper = Mock(GitHubClientWrapper)
+        submissionService = new SubmissionService(testService, activityRepository, submissionRepository, fileRepository, testRunRepository, rplFilesService, activitySubmissionQueueProducer, ghClientWrapper)
 
         user = new User(
                 'some-name',

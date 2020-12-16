@@ -1,9 +1,14 @@
 package com.example.rpl.RPL.service;
 
-//import com.example.rpl.RPL.client.GitHubClient;
 
-import com.example.rpl.RPL.client.GithubClientService;
-import com.example.rpl.RPL.client.dto.GistFileDTO;
+import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.activitiesIn;
+import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.activityIdIs;
+import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.categoryIdIs;
+import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.courseIdIs;
+import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.dateCreatedIs;
+import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.userIdIs;
+
+import com.example.rpl.RPL.client.GitHubClientWrapper;
 import com.example.rpl.RPL.controller.dto.UnitTestResultDTO;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.Activity;
@@ -12,35 +17,25 @@ import com.example.rpl.RPL.model.IOTestRun;
 import com.example.rpl.RPL.model.RPLFile;
 import com.example.rpl.RPL.model.SubmissionStatus;
 import com.example.rpl.RPL.model.TestRun;
-import com.example.rpl.RPL.model.UnitTestRun;
 import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.queue.IProducer;
 import com.example.rpl.RPL.repository.ActivityRepository;
 import com.example.rpl.RPL.repository.FileRepository;
 import com.example.rpl.RPL.repository.SubmissionRepository;
 import com.example.rpl.RPL.repository.TestRunRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.egit.github.core.Gist;
-import org.eclipse.egit.github.core.GistFile;
-import org.eclipse.egit.github.core.service.GistService;
 import org.springframework.amqp.AmqpConnectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.*;
 
 @Slf4j
 @Service
@@ -54,7 +49,7 @@ public class SubmissionService {
     private final TestRunRepository testRunRepository;
     private final RplFilesService rplFilesService;
     private final IProducer activitySubmissionQueueProducer;
-    private final GithubClientService GHClient;
+    private final GitHubClientWrapper ghClientWrapper;
 
     @Autowired
     public SubmissionService(TestService testService,
@@ -64,7 +59,7 @@ public class SubmissionService {
         TestRunRepository testRunRepository,
         RplFilesService rplFilesService,
         IProducer activitySubmissionQueueProducer,
-        GithubClientService ghClient) {
+        GitHubClientWrapper ghClientWrapper) {
         this.testService = testService;
         this.activityRepository = activityRepository;
         this.submissionRepository = submissionRepository;
@@ -72,7 +67,7 @@ public class SubmissionService {
         this.testRunRepository = testRunRepository;
         this.rplFilesService = rplFilesService;
         this.activitySubmissionQueueProducer = activitySubmissionQueueProducer;
-        this.GHClient = ghClient;
+        this.ghClientWrapper = ghClientWrapper;
     }
 
 
@@ -280,145 +275,21 @@ public class SubmissionService {
         return submissionRepository.save(as);
     }
 
+    @Transactional
     public ActivitySubmission shareSubmission(Long submissionId) {
         ActivitySubmission submission = this.getActivitySubmission(submissionId);
 
-        TestRun run = testRunRepository.findByActivitySubmission_Id(submissionId);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
         try {
-            GistFileDTO fileStderr = GistFileDTO.builder()//.filename("stderr.txt")
-                .content(run.getStderr()).build();
+            TestRun run = testRunRepository.findByActivitySubmission_Id(submissionId);
 
-            GistFile fileStderrGF = new GistFile();
-            fileStderrGF.setContent(run.getStderr());
-
-            GistFileDTO fileStdout = GistFileDTO.builder()//.filename("stdout.txt")
-                .content(run.getStdout()).build();
-
-            GistFile fileStdoutGF = new GistFile();
-            fileStdoutGF.setContent(run.getStdout());
-
-            //                    objectMapper.writeValueAsString(
-            GistFileDTO fileIOTestResult = GistFileDTO.builder()
-                .content(
-                    run.getIoTestRunList().stream().map(
-                        IOTestRun::buildMarkdownRepresentation
-
-//                                Map.of(
-//                                "test_name", r.getTestName(),
-//                                "test_input", r.getTestIn(),
-//                                "test_expected_output", r.getExpectedOutput(),
-//                                "test_actual_output", r.getRunOutput())
-                    ).collect(
-                        Collectors.joining("\n\n----\n\n"))
-                ).build();
-
-            GistFile fileIOTestResultGF = new GistFile();
-            fileIOTestResultGF.setContent(run.getIoTestRunList().stream().map(
-                IOTestRun::buildMarkdownRepresentation
-
-//                                Map.of(
-//                                "test_name", r.getTestName(),
-//                                "test_input", r.getTestIn(),
-//                                "test_expected_output", r.getExpectedOutput(),
-//                                "test_actual_output", r.getRunOutput())
-            ).collect(
-                Collectors.joining("\n\n----\n\n")));
-
-            GistFile fileUnitTestResultGF = new GistFile();
-
-            fileUnitTestResultGF.setContent(run.getUnitTestRunList().stream().map(
-                UnitTestRun::buildMarkdownRepresentation
-//                                Map.of(
-//                                "test_name", r.getName(),
-//                                "passed", r.getPassed(),
-//                                "errors", r.getErrorMessages())
-            )
-                .collect(
-                    Collectors.joining("\n----\n")));
-
-            GistFileDTO fileUnitTestResult = GistFileDTO.builder()
-                .content(
-//                    objectMapper.writeValueAsString(
-                    run.getUnitTestRunList().stream().map(
-                        UnitTestRun::buildMarkdownRepresentation
-//                                Map.of(
-//                                "test_name", r.getName(),
-//                                "passed", r.getPassed(),
-//                                "errors", r.getErrorMessages())
-                    )
-                        .collect(
-                            Collectors.joining("\n----\n"))
-                ).build();
-
-            Map<String, GistFileDTO> files = new HashMap<>();
-
-            Map<String, GistFile> filesGF = new HashMap<>();
-
-            if (!fileStderr.getContent().isEmpty()) {
-                files.put("stderr.txt", fileStderr);
-                filesGF.put("stderr.txt", fileStderrGF);
-            }
-
-            if (!fileStdout.getContent().isEmpty()) {
-                files.put("stdout.txt", fileStdout);
-                filesGF.put("stdout.txt", fileStdoutGF);
-            }
-
-            if (!run.getUnitTestRunList().isEmpty()) {
-                files.put("unit_test_run_result.md", fileUnitTestResult);
-                filesGF.put("unit_test_run_result.md", fileUnitTestResultGF);
-            }
-
-            if (!run.getIoTestRunList().isEmpty()) {
-                files.put("io_test_run_result.md", fileIOTestResult);
-                filesGF.put("io_test_run_result.md", fileIOTestResultGF);
-            }
-
+            // Add student files (without teacher tests or hidden files)
             Map<String, String> submissionFiles = rplFilesService
                 .extractFileForStudent(submission.getFile().getId());
 
-            submissionFiles.remove("files_metadata");
+            String gistUrl = ghClientWrapper.postSubmissionGist(run, submissionFiles);
 
-            submissionFiles.forEach((filename, content) -> {
-                    files.put(filename,
-                        GistFileDTO.builder()
-//                        .filename(filename)
-                            .content(content.isEmpty() ? "---" : content).build());
-
-                    GistFile gf = new GistFile();
-                    gf.setContent(content.isEmpty() ? "---" : content);
-                    filesGF.put(filename, gf);
-                }
-            );
-
-//            GitHubClient client = new GitHubClient();
-//
-//            String gistUrl = client.createGist("demo description", files);
-
-            //OAuth2 token authentication
-//            GitHubClient client = new GitHubClient();
-//            client.setOAuth2Token("SlAV32hkKG");
-
-//            GistFile file = new GistFile();
-//            file.setContent("System.out.println(\"Hello World\");");
-
-            Gist gist = new Gist();
-            gist.setDescription("Prints a string to standard out");
-            gist.setFiles(filesGF);
-
-            GistService service = new GistService();
-            service.getClient().setOAuth2Token("a8ec3a8910959f77e88b7d71742940c42f6cb1c0");
-            gist = service.createGist(gist); //returns the created gist
-
-            log.info("Created gist with id {}", gist.getHtmlUrl());
-            submission.setShareLink(gist.getHtmlUrl());
-//
-//
-//            log.info("Created gist with id {}", gistUrl);
-//            submission.setShareLink(gistUrl);
+            log.info("Created gist with id {}", gistUrl);
+            submission.setShareLink(gistUrl);
             return submissionRepository.save(submission);
         } catch (Exception e) {
             e.printStackTrace();

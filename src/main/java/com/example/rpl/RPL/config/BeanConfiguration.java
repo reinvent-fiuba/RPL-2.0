@@ -2,6 +2,7 @@ package com.example.rpl.RPL.config;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
+import com.example.rpl.RPL.client.GitHubClientWrapper;
 import com.example.rpl.RPL.service.EmailService;
 import com.example.rpl.RPL.service.IEmailService;
 import com.example.rpl.RPL.utils.MockEmailService;
@@ -17,6 +18,7 @@ import java.text.SimpleDateFormat;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.eclipse.egit.github.core.client.GitHubClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,6 +56,12 @@ public class BeanConfiguration {
         return new MockEmailService();
     }
 
+    @Bean
+    public GitHubClientWrapper gitHubClientWrapper() {
+        GitHubClient client = new GitHubClient();
+        client.setOAuth2Token("a8ec3a8910959f77e88b7d71742940c42f6cb1c0");
+        return new GitHubClientWrapper(client);
+    }
 
     @Bean
     public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
