@@ -36,7 +36,7 @@ spec:
         - name: QUEUE_SERVICE_HOST
           value: queue
         - name: MYSQL_SERVICE_HOST
-          value: mysql # this is the Service name the kubeDNS will route to
+          value: "35.238.210.247"
         - name: MYSQL_SERVICE_PORT
           value: "3306"
         - name: MYSQL_USERNAME
