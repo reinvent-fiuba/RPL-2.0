@@ -76,7 +76,7 @@ jobs:
       # Push the Docker image to Google Container Registry
       - name: Publish
         run: |
-          docker push $REGISTRY_HOSTNAME/$GKE_PROJECT/$IMAGE
+          docker push -a $REGISTRY_HOSTNAME/$GKE_PROJECT/$IMAGE
 
       # Set up kustomize
       - name: Set up Kustomize
