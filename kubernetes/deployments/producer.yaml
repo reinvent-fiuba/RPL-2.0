@@ -37,11 +37,14 @@ spec:
               name: jwt-secret
               key: secret
         - name: JWT_EXPIRATION_MS
-          value: "14400000" # 4 hours
+          value: "43200000" # 12 hours
         - name: QUEUE_SERVICE_HOST
           value: queue
         - name: MYSQL_SERVICE_HOST
-          value: "35.238.210.247"
+          valueFrom:
+            secretKeyRef:
+              name: db-host
+              key: host
         - name: MYSQL_SERVICE_PORT
           value: "3306"
         - name: MYSQL_USERNAME
