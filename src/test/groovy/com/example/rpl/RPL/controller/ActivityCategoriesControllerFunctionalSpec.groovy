@@ -45,7 +45,7 @@ class ActivityCategoriesControllerFunctionalSpec extends AbstractFunctionalSpec 
     def password
 
     def setup() {
-        Role role = roleRepository.findByName("admin").get();
+        Role role = roleRepository.findByName("admin").get()
 
         User user = new User(
                 'some-name',
