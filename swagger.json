@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-  "host": "localhost:45563",
+    "host": "localhost:62704",
     "basePath": "/",
     "tags": [
         {
@@ -7043,6 +7043,14 @@
                         "in": "query",
                         "required": false,
                         "type": "boolean"
+                    },
+                    {
+                        "name": "activityId",
+                        "in": "query",
+                        "description": "activityId",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
                     },
                     {
                         "name": "authorities[0].authority",

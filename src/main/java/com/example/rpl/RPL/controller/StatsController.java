@@ -48,19 +48,20 @@ public class StatsController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) Long activityId,
             @RequestParam(required = false) GroupBy groupBy
     ) {
         SubmissionsStats submissionsStats;
 
         if (groupBy == GroupBy.activity) {
-            submissionsStats = statsService.getSubmissionStatsGroupByActivity(courseId,categoryId,userId,date);
+            submissionsStats = statsService.getSubmissionStatsGroupByActivity(courseId,categoryId,userId, activityId, date);
         } else if (groupBy == GroupBy.user) {
-            submissionsStats = statsService.getSubmissionStatsGroupByUser(courseId,categoryId,userId,date);
+            submissionsStats = statsService.getSubmissionStatsGroupByUser(courseId,categoryId, userId, activityId, date);
         } else if (groupBy == GroupBy.date) {
             submissionsStats = statsService
-                .getStudentSubmissionStatsGroupByDate(courseId, categoryId, userId, date);
+                .getStudentSubmissionStatsGroupByDate(courseId, categoryId, userId, activityId, date);
         } else {
-            submissionsStats = statsService.getSubmissionStatsGroupByActivity(courseId,categoryId,userId,date);
+            submissionsStats = statsService.getSubmissionStatsGroupByActivity(courseId,categoryId,userId, activityId, date);
         }
 
         return new ResponseEntity<>(SubmissionsStatsResponseDTO.fromEntity(submissionsStats), HttpStatus.OK);

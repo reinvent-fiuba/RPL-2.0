@@ -1,5 +1,6 @@
 package com.example.rpl.RPL.service;
 
+import static com.example.rpl.RPL.repository.specification.ActivitySpecifications.courseIdIs;
 import static java.time.ZonedDateTime.now;
 
 import com.example.rpl.RPL.exception.NotFoundException;
@@ -14,8 +15,11 @@ import com.example.rpl.RPL.repository.CourseRepository;
 import com.example.rpl.RPL.repository.FileRepository;
 import java.util.Arrays;
 import java.util.List;
+
+import com.example.rpl.RPL.repository.specification.ActivitySpecifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -154,11 +158,13 @@ public class ActivitiesService {
      * @return a list of Activities Course class
      */
     @Transactional
-    public List<Activity> getAllActivitiesByCourse(Long courseId, Long categoryId) {
-        return categoryId != null ?
-            activityRepository.findActivitiesByCourse_IdAndActivityCategory_Id(courseId, categoryId)
-            :
-                activityRepository.findActivitiesByCourse_Id(courseId);
+    public List<Activity> search(Long courseId, Long categoryId) {
+
+        Specification<Activity> specification = Specification
+                .where(ActivitySpecifications.courseIdIs(courseId))
+                .and(categoryId == null ? null : ActivitySpecifications.categoryIdIs(categoryId));
+
+        return activityRepository.findAll(specification);
     }
 
     public Activity getActivity(Long activityId) {

@@ -67,8 +67,7 @@ class SubmissionControllerFunctionalSpec extends AbstractFunctionalSpec {
 
 
     def setup() {
-
-        Role role = roleRepository.findByName("admin").get();
+        Role role = roleRepository.findByName("admin").get()
 
         user = new User(
                 'some-name',
