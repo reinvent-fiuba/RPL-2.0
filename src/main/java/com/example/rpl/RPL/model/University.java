@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum University {
-    FIUBA ((long) 0, "Facultad de Ingenieria de la UBA", new String[]{"Ingenieria Informatica", "Licenciatura en Sistemas"});
+    FIUBA ((long) 0, "Facultad de Ingeniería de la UBA", new String[]{"Ingeniería en Informática", "Licenciatura en Sistemas", "Ingeniería Civil", "Ingeniería de Alimentos", "Ingeniería Electricista", "Ingeniería Electrónica", "Ingeniería en Agrimensura", "Ingeniería en Petróleo", "Ingeniería Industrial", "Ingeniería Mecánica", "Ingeniería Naval y Mecánica", "Ingeniería Química"});
 
     private final Long id;
     private final String name;
