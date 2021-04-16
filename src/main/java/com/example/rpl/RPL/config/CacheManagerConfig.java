@@ -2,6 +2,7 @@ package com.example.rpl.RPL.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Ticker;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -16,10 +17,10 @@ public class CacheManagerConfig {
 
     @Bean(name = "defaultCacheManager")
     public CacheManager cacheManager(Ticker ticker) {
-//        CaffeineCache logisticCenters = buildCache("logistic-centers", ticker, 1440);
-//        CaffeineCache inventoriesWrapper = buildCache("inventories-wrapper", ticker, 1440);
+        CaffeineCache scoreboard = buildCache("scoreboard", ticker, 5);
+        CaffeineCache submissionsCalendar = buildCache("submissionsCalendar", ticker, 5);
         SimpleCacheManager manager = new SimpleCacheManager();
-//        manager.setCaches(Arrays.asList(logisticCenters, inventoriesWrapper));
+        manager.setCaches(Arrays.asList(scoreboard, submissionsCalendar));
         return manager;
     }
 
