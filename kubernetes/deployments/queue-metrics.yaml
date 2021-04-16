@@ -17,7 +17,7 @@ spec:
         track: stable
     spec:
       nodeSelector:
-        task: core
+        cloud.google.com/gke-preemptible: "true"
       containers:
         - name: prometheus
           image: kbudde/rabbitmq-exporter
