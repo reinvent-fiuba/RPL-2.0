@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Ticker;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCache;
@@ -14,6 +15,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableCaching
 public class CacheManagerConfig {
+
+    @Value("${app.cache.scoreboardTtl}")
+    private Integer scoreboardTtl;
+
+    @Value("${app.cache.submissionsCalendarTtl}")
+    private Integer submissionsCalendarTtl;
 
     @Bean(name = "defaultCacheManager")
     public CacheManager cacheManager(Ticker ticker) {
