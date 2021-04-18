@@ -1,15 +1,10 @@
 package com.example.rpl.RPL.service
 
-
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException
 import com.example.rpl.RPL.exception.NotFoundException
-import com.example.rpl.RPL.model.Activity
-import com.example.rpl.RPL.model.ActivitySubmission
 import com.example.rpl.RPL.model.Course
 import com.example.rpl.RPL.model.CourseUser
-import com.example.rpl.RPL.model.CourseUserScore
 import com.example.rpl.RPL.model.Role
-import com.example.rpl.RPL.model.SubmissionStatus
 import com.example.rpl.RPL.model.User
 import com.example.rpl.RPL.repository.CourseRepository
 import com.example.rpl.RPL.repository.CourseUserRepository
@@ -534,7 +529,7 @@ class CoursesServiceSpec extends Specification {
 
             thrown(NotFoundException)
     }
-
+/*
     void "should get simple scoreboard"() {
         given:
             Long courseId = 1
@@ -652,5 +647,5 @@ class CoursesServiceSpec extends Specification {
             }
 
             scoreboard.size() == numberOfUsers
-    }
+    }*/
 }
