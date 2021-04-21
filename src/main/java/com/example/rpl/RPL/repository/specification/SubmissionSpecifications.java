@@ -2,13 +2,13 @@ package com.example.rpl.RPL.repository.specification;
 
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivitySubmission;
-import org.springframework.data.jpa.domain.Specification;
-
-import javax.persistence.criteria.CriteriaBuilder;
+import com.example.rpl.RPL.model.SubmissionStatus;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import org.springframework.data.jpa.domain.Specification;
 
 public final class SubmissionSpecifications {
 
@@ -28,6 +28,12 @@ public final class SubmissionSpecifications {
         return (root, query, builder) -> builder.equal(
                 root.get("user").<String>get("id"),
                 userId);
+    }
+
+    public static Specification<ActivitySubmission> status(SubmissionStatus status) {
+        return (root, query, builder) -> builder.equal(
+            root.get("status"),
+            status);
     }
 
     public static Specification<ActivitySubmission> activityIdIs(Long activityId) {

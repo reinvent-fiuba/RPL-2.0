@@ -1,5 +1,13 @@
 package com.example.rpl.RPL.service;
 
+import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.activitiesIn;
+import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.activityIdIs;
+import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.categoryIdIs;
+import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.courseIdIs;
+import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.dateCreatedIs;
+import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.status;
+import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.userIdIs;
+
 import com.example.rpl.RPL.controller.dto.UnitTestResultDTO;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.Activity;
@@ -16,8 +24,6 @@ import com.example.rpl.RPL.repository.SubmissionRepository;
 import com.example.rpl.RPL.repository.TestRunRepository;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,8 +34,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.*;
 
 @Slf4j
 @Service
@@ -179,7 +183,7 @@ public class SubmissionService {
     }
 
     List<ActivitySubmission> getAllSubmissionsByActivities(List<Activity> activities,
-        Long userId, LocalDate date) {
+        Long userId, SubmissionStatus status, LocalDate date) {
 
         if (activities != null && activities.size() == 0) {
             return new ArrayList<>();
@@ -188,6 +192,7 @@ public class SubmissionService {
         Specification<ActivitySubmission> specification = Specification
                 .where(activities == null ? null : activitiesIn(activities))
                 .and(userId == null ? null : userIdIs(userId))
+            .and(status == null ? null : status(status))
                 .and(date == null ? null : dateCreatedIs(date));
 
         return submissionRepository.findAll(specification);

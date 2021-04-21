@@ -2,15 +2,23 @@ package com.example.rpl.RPL.service;
 
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException;
 import com.example.rpl.RPL.exception.NotFoundException;
-import com.example.rpl.RPL.model.*;
+import com.example.rpl.RPL.model.Activity;
+import com.example.rpl.RPL.model.ActivityCategory;
+import com.example.rpl.RPL.model.Course;
+import com.example.rpl.RPL.model.CourseUser;
+import com.example.rpl.RPL.model.CourseUserScoreInterface;
+import com.example.rpl.RPL.model.Role;
+import com.example.rpl.RPL.model.User;
 import com.example.rpl.RPL.repository.CourseRepository;
 import com.example.rpl.RPL.repository.CourseUserRepository;
 import com.example.rpl.RPL.repository.RoleRepository;
 import com.example.rpl.RPL.repository.UserRepository;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.javatuples.Pair;
@@ -35,14 +43,14 @@ public class CoursesService {
 
     @Autowired
     public CoursesService(CourseRepository courseRepository,
-                          CourseUserRepository courseUserRepository,
-                          RoleRepository roleRepository,
-                          UserRepository userRepository,
-                          ActivitiesService activitiesService,
-                          SubmissionService submissionService,
-                          IEmailService emailService,
-                          ActivityCategoriesService activityCategoriesService,
-                          TestService testService) {
+        CourseUserRepository courseUserRepository,
+        RoleRepository roleRepository,
+        UserRepository userRepository,
+        ActivitiesService activitiesService,
+        SubmissionService submissionService,
+        IEmailService emailService,
+        ActivityCategoriesService activityCategoriesService,
+        TestService testService) {
         this.courseRepository = courseRepository;
         this.courseUserRepository = courseUserRepository;
         this.roleRepository = roleRepository;
@@ -62,9 +70,10 @@ public class CoursesService {
      * Course class
      */
     @Transactional
-    public Course createCourse(String name, String university, String universityCourseId, String description,
-                               Boolean active, String semester, LocalDate semesterStartDate,
-                               LocalDate semesterEndDate, String imgUri, Long courseAdminId) {
+    public Course createCourse(String name, String university, String universityCourseId,
+        String description,
+        Boolean active, String semester, LocalDate semesterStartDate,
+        LocalDate semesterEndDate, String imgUri, Long courseAdminId) {
         if (courseUserRepository
             .existsByNameAndUniversityCourseIdAndSemesterAndAdmin(name, universityCourseId,
                 semester, courseAdminId)) {
@@ -74,13 +83,15 @@ public class CoursesService {
                 "ERROR_COURSE_EXISTS");
         }
 
-        User user = userRepository.findById(courseAdminId).orElseThrow(() -> new NotFoundException("User not found"));
+        User user = userRepository.findById(courseAdminId)
+            .orElseThrow(() -> new NotFoundException("User not found"));
 
         semesterStartDate.atStartOfDay(ZoneId.systemDefault());
 
-        Course course = new Course(name, university, universityCourseId, description, active, semester,
-                semesterStartDate.atStartOfDay(ZoneId.systemDefault()),
-                semesterEndDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()), imgUri);
+        Course course = new Course(name, university, universityCourseId, description, active,
+            semester,
+            semesterStartDate.atStartOfDay(ZoneId.systemDefault()),
+            semesterEndDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()), imgUri);
 
         Role adminRole = roleRepository.findByName("admin")
             .orElseThrow(() -> new NotFoundException("role_not_found"));
@@ -102,25 +113,26 @@ public class CoursesService {
      * Course class
      */
     @Transactional
-    public Course cloneCourse(Long id, String name, String university, String universityCourseId, String description,
-                               Boolean active, String semester, LocalDate semesterStartDate,
-                               LocalDate semesterEndDate, String imgUri, Long courseAdminId) {
+    public Course cloneCourse(Long id, String name, String university, String universityCourseId,
+        String description,
+        Boolean active, String semester, LocalDate semesterStartDate,
+        LocalDate semesterEndDate, String imgUri, Long courseAdminId) {
 
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Course not found", "course_not_found")
+            () -> new NotFoundException("Course not found", "course_not_found")
         );
 
         Course newCourse = this.createCourse(
-                name,
-                university,
-                universityCourseId,
-                description != null ? description : course.getDescription(),
-                active,
-                semester,
-                semesterStartDate,
-                semesterEndDate,
-                imgUri != null ? imgUri : course.getImgUri(),
-                courseAdminId
+            name,
+            university,
+            universityCourseId,
+            description != null ? description : course.getDescription(),
+            active,
+            semester,
+            semesterStartDate,
+            semesterEndDate,
+            imgUri != null ? imgUri : course.getImgUri(),
+            courseAdminId
         );
 
         HashMap<ActivityCategory, ActivityCategory> toNewActivityCategory = new HashMap<>();
@@ -132,12 +144,13 @@ public class CoursesService {
             ActivityCategory activityCategory = activity.getActivityCategory();
             if (!toNewActivityCategory.containsKey(activityCategory)) {
                 toNewActivityCategory.put(
-                        activityCategory,
-                        activityCategoriesService.cloneActivityCategory(newCourse, activityCategory)
+                    activityCategory,
+                    activityCategoriesService.cloneActivityCategory(newCourse, activityCategory)
                 );
             }
             ActivityCategory newActivityCategory = toNewActivityCategory.get(activityCategory);
-            Activity newActivity = activitiesService.cloneActivity(newCourse, newActivityCategory, activity);
+            Activity newActivity = activitiesService
+                .cloneActivity(newCourse, newActivityCategory, activity);
 
             if (newActivity.getIsIOTested()) {
                 testService.cloneIOTests(
@@ -156,9 +169,10 @@ public class CoursesService {
     }
 
     @Transactional
-    public Course editCourse(Long courseId, String name, String university, String universityCourseId, String description,
-                             Boolean active, String semester, LocalDate semesterStartDate,
-                             LocalDate semesterEndDate, String imgUri) {
+    public Course editCourse(Long courseId, String name, String university,
+        String universityCourseId, String description,
+        Boolean active, String semester, LocalDate semesterStartDate,
+        LocalDate semesterEndDate, String imgUri) {
         Course course = courseRepository.getOne(courseId);
         course.setName(name);
         course.setUniversity(university);
@@ -175,7 +189,7 @@ public class CoursesService {
     @Transactional
     public Course getCourse(Long courseId) {
         return courseRepository.findById(courseId).orElseThrow(
-                () -> new NotFoundException("Course not found", "course_not_found")
+            () -> new NotFoundException("Course not found", "course_not_found")
         );
     }
 
@@ -188,16 +202,17 @@ public class CoursesService {
     public List<Triplet<Course, Boolean, Boolean>> getAllCourses(Long userId) {
         Map<Course, Pair<Boolean, Boolean>> courses = new HashMap<>();
         courseRepository.findAll().forEach(course -> courses.put(course, new Pair<>(false, false)));
-        if (userId != null)
+        if (userId != null) {
             courseUserRepository.findByUser_Id(userId).forEach(courseUser ->
-                    courses.put(courseUser.getCourse(), new Pair<>(true, courseUser.getAccepted()))
+                courses.put(courseUser.getCourse(), new Pair<>(true, courseUser.getAccepted()))
             );
+        }
         return courses.entrySet().stream().map(coursePairEntry ->
-                new Triplet<>(
-                        coursePairEntry.getKey(),
-                        coursePairEntry.getValue().getValue0(),
-                        coursePairEntry.getValue().getValue1()
-                )
+            new Triplet<>(
+                coursePairEntry.getKey(),
+                coursePairEntry.getValue().getValue0(),
+                coursePairEntry.getValue().getValue1()
+            )
         ).collect(Collectors.toList());
     }
 
@@ -277,28 +292,32 @@ public class CoursesService {
     @Transactional
     public CourseUser getStudentByUserId(Long courseId, Long userId) {
         courseRepository.findById(courseId).orElseThrow(
-                () -> new NotFoundException("Course not found",
-                        "course_not_found"));
+            () -> new NotFoundException("Course not found",
+                "course_not_found"));
 
         Optional<Role> role = roleRepository.findByName("student");
 
-        return courseUserRepository.findByCourse_IdAndRole_IdAndUser_Id(courseId, role.get().getId(), userId).orElseThrow(
+        return courseUserRepository
+            .findByCourse_IdAndRole_IdAndUser_Id(courseId, role.get().getId(), userId).orElseThrow(
                 () -> new NotFoundException("User not found",
-                        "user_not_found"));
+                    "user_not_found"));
     }
 
     @Transactional
-    public CourseUser updateCourseUser(Long courseId, Long userId, Boolean accepted, String roleName) {
+    public CourseUser updateCourseUser(Long courseId, Long userId, Boolean accepted,
+        String roleName) {
         // TODO: Update courseUser all at once without using a SELECT at first
-        CourseUser courseUser = courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId).orElseThrow(
-            () -> new NotFoundException("Enrolled User not found in this Course",
+        CourseUser courseUser = courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId)
+            .orElseThrow(
+                () -> new NotFoundException("Enrolled User not found in this Course",
                     "course_user_not_found")
-        );
+            );
 
         if (accepted != null) {
             courseUser.setAccepted(accepted);
             if (accepted) {
-                emailService.sendAcceptedStudentMessage(courseUser.getUser().getEmail(), courseUser);
+                emailService
+                    .sendAcceptedStudentMessage(courseUser.getUser().getEmail(), courseUser);
             }
         }
 
@@ -314,31 +333,25 @@ public class CoursesService {
 
     @Transactional
     public List<String> getPermissions(Long courseId, Long userId) {
-        CourseUser courseUser = courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId).orElseThrow(
+        CourseUser courseUser = courseUserRepository.findByCourse_IdAndUser_Id(courseId, userId)
+            .orElseThrow(
                 () -> new NotFoundException("Enrolled User not found in this Course",
-                        "course_user_not_found")
-        );
+                    "course_user_not_found")
+            );
         return courseUser.getRole().getPermissions();
     }
 
     @Transactional
-    public List<CourseUserScore> getScoreboard(Long courseId) {
-        List<Activity> courseActivities = activitiesService.getAllActivitiesByCourse(courseId);
-        return getAllUsers(courseId, "student").stream().map(courseUser -> {
-                    LongSummaryStatistics userActivityPoints = submissionService
-                            .getAllSubmissionsByActivities(courseActivities, courseUser.getUser().getId(), null)
-                            .stream()
-                            .filter(activitySubmission -> activitySubmission.getStatus() == SubmissionStatus.SUCCESS)
-                            .map(activitySubmission -> activitySubmission.getActivity())
-                            .distinct()
-                            .mapToLong(activity -> activity.getPoints())
-                            .summaryStatistics();
+    public List<CourseUserScoreInterface> getScoreboard(Long courseId) {
 
-                    Long score = userActivityPoints.getSum();
-                    Long activityCount = userActivityPoints.getCount();
+        Optional<Role> role = roleRepository.findByName("student");
+        if (role.isEmpty()) {
+            return List.of();
+        }
 
-                    return new CourseUserScore(courseUser, score, activityCount);
-                }).sorted((score1, score2) -> Long.compare(score2.getScore(), score1.getScore()))
-                .collect(Collectors.toList());
+        return courseUserRepository.getActivityStatsForCourseId(courseId, role.get().getId())
+            .stream()
+            .sorted((score1, score2) -> Long.compare(score2.getScore(), score1.getScore()))
+            .collect(Collectors.toList());
     }
 }

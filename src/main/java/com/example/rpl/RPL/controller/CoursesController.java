@@ -1,24 +1,39 @@
 package com.example.rpl.RPL.controller;
 
-import com.example.rpl.RPL.controller.dto.*;
-import com.example.rpl.RPL.model.*;
+import com.example.rpl.RPL.controller.dto.CourseResponseDTO;
+import com.example.rpl.RPL.controller.dto.CourseUserResponseDTO;
+import com.example.rpl.RPL.controller.dto.CourseUserScoreResponseDTO;
+import com.example.rpl.RPL.controller.dto.CreateCourseRequestDTO;
+import com.example.rpl.RPL.controller.dto.EditCourseRequestDTO;
+import com.example.rpl.RPL.controller.dto.PatchCourseUserRequestDTO;
+import com.example.rpl.RPL.controller.dto.RoleResponseDTO;
+import com.example.rpl.RPL.model.Course;
+import com.example.rpl.RPL.model.CourseUser;
+import com.example.rpl.RPL.model.CourseUserScoreInterface;
 import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.ActivitiesService;
 import com.example.rpl.RPL.service.CoursesService;
-
-import java.util.*;
+import com.example.rpl.RPL.service.SubmissionService;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
-
-import com.example.rpl.RPL.service.SubmissionService;
 import lombok.extern.slf4j.Slf4j;
 import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -149,8 +164,7 @@ public class CoursesController {
     public ResponseEntity<List<CourseUserScoreResponseDTO>> getCourseScoreboard(@CurrentUser UserPrincipal currentUser,
                                                                                 @PathVariable Long courseId) {
 
-
-        List<CourseUserScore> scoreboard = coursesService.getScoreboard(courseId);
+        List<CourseUserScoreInterface> scoreboard = coursesService.getScoreboard(courseId);
 
         return new ResponseEntity<>(
                 scoreboard.stream()
