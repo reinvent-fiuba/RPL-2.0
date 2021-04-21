@@ -45,9 +45,10 @@ public interface CourseUserRepository extends JpaRepository<CourseUser, Long> {
         value =
             "SELECT course_students.name,\n"
                 + "       course_students.surname,\n"
+                + "       course_students.img_uri as imgUri,\n"
                 + "       COALESCE(SUM(stats.points), 0) as score,\n"
                 + "       COUNT(stats.activity_id) as activitiesCount\n"
-                + "FROM (SELECT u.id, u.name, u.surname\n"
+                + "FROM (SELECT u.id, u.name, u.surname, u.img_uri\n"
                 + "      FROM users u\n"
                 + "               LEFT OUTER JOIN course_users ON u.id = course_users.user_id\n"
                 + "      WHERE course_users.course_id = :courseId \n"

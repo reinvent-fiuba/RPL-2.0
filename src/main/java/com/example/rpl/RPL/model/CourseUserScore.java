@@ -7,8 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class CourseUserScore implements CourseUserScoreInterface {
 
-//    CourseUser courseUser;
-
     String name;
 
     String surname;
@@ -18,12 +16,4 @@ public class CourseUserScore implements CourseUserScoreInterface {
     Long score;
 
     Long activitiesCount;
-
-//    public CourseUserScore(CourseUser courseUser, Long score, Long activitiesCount) {
-//    public CourseUserScore(String name, String surname, Long score, Long activitiesCount) {
-//        this.name = name;
-//        this.surname = surname;
-//        this.score = score;
-//        this.activitiesCount = activitiesCount;
-//    }
 }

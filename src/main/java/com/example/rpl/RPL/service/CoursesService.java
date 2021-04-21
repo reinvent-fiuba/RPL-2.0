@@ -353,43 +353,5 @@ public class CoursesService {
             .stream()
             .sorted((score1, score2) -> Long.compare(score2.getScore(), score1.getScore()))
             .collect(Collectors.toList());
-
-//        List<Activity> courseActivities = activitiesService.getAllActivitiesByCourse(courseId);
-//
-//
-//        List<CourseUser> students = getAllUsers(courseId, "student");
-//
-//                    LongSummaryStatistics submissions = submissionService
-//                            .getAllSubmissionsByActivities(courseActivities, null, SubmissionStatus.SUCCESS, null)
-//                            .stream()
-//                            .map(activitySubmission -> activitySubmission.getActivity())
-//                            .distinct()
-//                            .mapToLong(activity -> activity.getPoints())
-//                            .summaryStatistics();
-//
-//                    Long score = userActivityPoints.getSum();
-//                    Long activityCount = userActivityPoints.getCount();
-//
-//                    return new CourseUserScore(courseUser, score, activityCount);
-//                }).sorted((score1, score2) -> Long.compare(score2.getScore(), score1.getScore()))
-//                .collect(Collectors.toList());
-//
-//                List<Activity> courseActivities = activitiesService.getAllActivitiesByCourse(courseId);
-//        return getAllUsers(courseId, "student").stream().map(courseUser -> {
-//                    LongSummaryStatistics userActivityPoints = submissionService
-//                            .getAllSubmissionsByActivities(courseActivities, courseUser.getUser().getId(), null)
-//                            .stream()
-//                            .filter(activitySubmission -> activitySubmission.getStatus() == SubmissionStatus.SUCCESS)
-//                            .map(activitySubmission -> activitySubmission.getActivity())
-//                            .distinct()
-//                            .mapToLong(activity -> activity.getPoints())
-//                            .summaryStatistics();
-//
-//                    Long score = userActivityPoints.getSum();
-//                    Long activityCount = userActivityPoints.getCount();
-//
-//                    return new CourseUserScore(courseUser, score, activityCount);
-//                }).sorted((score1, score2) -> Long.compare(score2.getScore(), score1.getScore()))
-//                .collect(Collectors.toList());
     }
 }

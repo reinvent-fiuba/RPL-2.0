@@ -733,6 +733,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
      ********** GET COURSE SCOREBOARD ********************************************************
      *****************************************************************************************/
 
+//    TODO: figure out a way to test this native mysql query in H2 DB
 //    @Unroll
 //    void "test get course scoreboard"() {
 //        given:
