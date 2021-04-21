@@ -38,8 +38,8 @@ public class StatsService {
         Long userId, Long activityId, LocalDate date) {
 
         List<Activity> activities = activityId != null ?
-                List.of(activitiesService.getActivity(activityId)) :
-                activitiesService.search(courseId, categoryId);
+            List.of(activitiesService.getActivity(activityId)) :
+            activitiesService.search(courseId, categoryId, true);
 
         List<ActivitySubmission> submissions = submissionService
             .getAllSubmissionsByActivities(activities, userId, null, date);
@@ -135,7 +135,7 @@ public class StatsService {
     }
 
     public ActivitiesStat getActivityStatByUser(Long courseId, Long userId) {
-        List<Activity> activities = activitiesService.getAllActivitiesByCourse(courseId);
+        List<Activity> activities = activitiesService.getAllActiveActivitiesByCourse(courseId);
         List<ActivitySubmission> activitySubmissions = submissionService
             .search(courseId, userId, null, null, null);
 
@@ -152,7 +152,8 @@ public class StatsService {
                 notStarted++;
                 pendingPoints += activity.getPoints();
             } else if (submissions.stream().anyMatch(
-                activitySubmission -> activitySubmission.getStatus().toString().equals("SUCCESS"))) {
+                activitySubmission -> activitySubmission.getStatus().toString()
+                    .equals("SUCCESS"))) {
                 solved++;
                 obtainedPoints += activity.getPoints();
             } else {
@@ -169,7 +170,7 @@ public class StatsService {
 
     public SubmissionsStat getSubmissionStatByUser(Long courseId, Long userId) {
         List<ActivitySubmission> activitySubmissions = submissionService
-            .search(courseId, userId, null,null,null);
+            .search(courseId, userId, null, null, null);
 
         return new SubmissionsStat(activitySubmissions);
     }

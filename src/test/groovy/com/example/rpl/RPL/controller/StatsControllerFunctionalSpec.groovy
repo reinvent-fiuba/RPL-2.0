@@ -17,19 +17,31 @@ import static javax.servlet.http.HttpServletResponse.SC_OK
 @ActiveProfiles("test-functional")
 class StatsControllerFunctionalSpec extends AbstractFunctionalSpec {
 
-    @Autowired CourseUserRepository courseUserRepository
-    @Autowired CourseRepository courseRepository
-    @Autowired UserRepository userRepository
-    @Autowired ActivityRepository activityRepository
-    @Autowired ActivityCategoryRepository activityCategoryRepository;
-    @Autowired SubmissionRepository submissionRepository
-    @Autowired FileRepository fileRepository
-    @Autowired RoleRepository roleRepository
+    @Autowired
+    CourseUserRepository courseUserRepository
+    @Autowired
+    CourseRepository courseRepository
+    @Autowired
+    UserRepository userRepository
+    @Autowired
+    ActivityRepository activityRepository
+    @Autowired
+    ActivityCategoryRepository activityCategoryRepository;
+    @Autowired
+    SubmissionRepository submissionRepository
+    @Autowired
+    FileRepository fileRepository
+    @Autowired
+    RoleRepository roleRepository
 
-    @Shared ActivityCategory activityCategory
-    @Shared Activity activity
-    @Shared User student
-    @Shared User admin
+    @Shared
+    ActivityCategory activityCategory
+    @Shared
+    Activity activity
+    @Shared
+    User student
+    @Shared
+    User admin
 
     String username
 
@@ -95,33 +107,33 @@ class StatsControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test get stats group by activity filtering by all fields should retrieve activity stat"() {
         when:
-        def response = get(
-                String.format(
-                        "/api/stats/courses/%s/submissions?groupBy=activity&categoryId=%s&userId=%s&activityId=%s&date=%s",
-                        course.getId(),
-                        activityCategory.getId(),
-                        student.getId(),
-                        activity.getId(),
-                        LocalDate.now().toString()
-                ),
-                username, password
-        )
+            def response = get(
+                    String.format(
+                            "/api/stats/courses/%s/submissions?groupBy=activity&categoryId=%s&userId=%s&activityId=%s&date=%s",
+                            course.getId(),
+                            activityCategory.getId(),
+                            student.getId(),
+                            activity.getId(),
+                            LocalDate.now().toString()
+                    ),
+                    username, password
+            )
 
         then:
-        response.contentType == "application/json"
-        response.statusCode == SC_OK
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
 
-        def result = getJsonResponse(response)
+            def result = getJsonResponse(response)
 
-        def stats = result.submissions_stats[0]
-        def metadata = result.metadata[0]
+            def stats = result.submissions_stats[0]
+            def metadata = result.metadata[0]
 
-        stats.total == 2
-        stats.success == 1
-        stats.build_error == 1
-        stats.total_students == 1
+            stats.total == 2
+            stats.success == 1
+            stats.build_error == 1
+            stats.total_students == 1
 
-        metadata.id == activity.getId().toString()
+            metadata.id == activity.getId().toString()
     }
 
     @Unroll
@@ -152,44 +164,44 @@ class StatsControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test get stats group by activity filtering by different date should not find any submission"() {
         when:
-        def response = get(
-                String.format("/api/stats/courses/%s/submissions?groupBy=activity&date=1995-09-22", course.getId()),
-                username, password
-        )
+            def response = get(
+                    String.format("/api/stats/courses/%s/submissions?groupBy=activity&date=1995-09-22", course.getId()),
+                    username, password
+            )
 
         then:
-        response.contentType == "application/json"
-        response.statusCode == SC_OK
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
 
-        def result = getJsonResponse(response)
+            def result = getJsonResponse(response)
 
-        def stats = result.submissions_stats[0]
-        def metadata = result.metadata[0]
+            def stats = result.submissions_stats[0]
+            def metadata = result.metadata[0]
 
-        stats.total == 0
-        stats.success == 0
-        stats.build_error == 0
-        stats.total_students == 0
+            stats.total == 0
+            stats.success == 0
+            stats.build_error == 0
+            stats.total_students == 0
 
-        metadata.id == activity.getId().toString()
+            metadata.id == activity.getId().toString()
     }
 
     @Unroll
     void "test get stats group by activity filtering by different activity category should not retrieve any activity"() {
         when:
-        def response = get(
-                String.format("/api/stats/courses/%s/submissions?groupBy=activity&categoryId=22", course.getId()),
-                username, password
-        )
+            def response = get(
+                    String.format("/api/stats/courses/%s/submissions?groupBy=activity&categoryId=22", course.getId()),
+                    username, password
+            )
 
         then:
-        response.contentType == "application/json"
-        response.statusCode == SC_OK
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
 
-        def result = getJsonResponse(response)
+            def result = getJsonResponse(response)
 
-        result.submissions_stats.size() == 0
-        result.metadata.size() == 0
+            result.submissions_stats.size() == 0
+            result.metadata.size() == 0
     }
 
     @Unroll
@@ -212,26 +224,26 @@ class StatsControllerFunctionalSpec extends AbstractFunctionalSpec {
     @Unroll
     void "test get stats group by user should retrieve activity stat"() {
         when:
-        def response = get(
-                String.format("/api/stats/courses/%s/submissions?groupBy=user", course.getId()),
-                username, password
-        )
+            def response = get(
+                    String.format("/api/stats/courses/%s/submissions?groupBy=user", course.getId()),
+                    username, password
+            )
 
         then:
-        response.contentType == "application/json"
-        response.statusCode == SC_OK
+            response.contentType == "application/json"
+            response.statusCode == SC_OK
 
-        def result = getJsonResponse(response)
+            def result = getJsonResponse(response)
 
-        def stats = result.submissions_stats[0]
-        def metadata = result.metadata[0]
+            def stats = result.submissions_stats[0]
+            def metadata = result.metadata[0]
 
-        stats.total == 2
-        stats.success == 1
-        stats.build_error == 1
-        stats.total_students == 1
+            stats.total == 2
+            stats.success == 1
+            stats.build_error == 1
+            stats.total_students == 1
 
-        metadata.id == student.getId().toString()
+            metadata.id == student.getId().toString()
     }
 
     @Unroll
@@ -478,5 +490,5 @@ class StatsControllerFunctionalSpec extends AbstractFunctionalSpec {
 
             result.submissions_stats.size() == 0
             result.metadata.size() == 0
-        }
+    }
 }
