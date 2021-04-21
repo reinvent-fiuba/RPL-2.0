@@ -2,10 +2,7 @@ package com.example.rpl.RPL.service
 
 import com.example.rpl.RPL.exception.EntityAlreadyExistsException
 import com.example.rpl.RPL.exception.NotFoundException
-import com.example.rpl.RPL.model.Course
-import com.example.rpl.RPL.model.CourseUser
-import com.example.rpl.RPL.model.Role
-import com.example.rpl.RPL.model.User
+import com.example.rpl.RPL.model.*
 import com.example.rpl.RPL.repository.CourseRepository
 import com.example.rpl.RPL.repository.CourseUserRepository
 import com.example.rpl.RPL.repository.RoleRepository
@@ -529,7 +526,7 @@ class CoursesServiceSpec extends Specification {
 
             thrown(NotFoundException)
     }
-/*
+
     void "should get simple scoreboard"() {
         given:
             Long courseId = 1
@@ -569,10 +566,9 @@ class CoursesServiceSpec extends Specification {
             1 * studentRole.getId() >> 1
             1 * courseUserRepository.getActivityStatsForCourseId(courseId, 1) >> results
 
-
             for (int i = 0; i < 100; i++) {
                 scoreboard[i].getScore() == (100 - i) * 5
                 scoreboard[i].getActivitiesCount() == 100 - i
             }
-    }*/
+    }
 }
