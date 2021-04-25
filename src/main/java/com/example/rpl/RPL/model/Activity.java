@@ -96,7 +96,8 @@ public class Activity {
             activity.getLanguage(),
             activity.getPoints(),
             new RPLFile(
-                String.format("%s_%d_%s.tar.gz", now().toLocalDate().toString(), course.getId(), activity.getName()),
+                String.format("%s_%d_%s.tar.gz", now().toLocalDate().toString(), course.getId(),
+                    activity.getName()),
                 activity.getStartingFiles()
             ),
             activity.getCompilationFlags(),

@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-  "host": "localhost:40367",
+  "host": "localhost:46201",
     "basePath": "/",
     "tags": [
         {
@@ -8257,23 +8257,8 @@
                     "type": "integer",
                     "format": "int64"
                 },
-                "date_created": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer",
-                    "format": "int64"
-                },
                 "img_uri": {
                     "type": "string"
-                },
-                "last_updated": {
-                    "type": "string",
-                    "format": "date-time"
                 },
                 "name": {
                     "type": "string"
@@ -8282,13 +8267,7 @@
                     "type": "integer",
                     "format": "int64"
                 },
-                "student_id": {
-                    "type": "string"
-                },
                 "surname": {
-                    "type": "string"
-                },
-                "username": {
                     "type": "string"
                 }
             },

@@ -11,7 +11,9 @@ import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
+@Profile({"prod"})
 @Configuration
 @EnableCaching
 public class CacheManagerConfig {
@@ -24,8 +26,9 @@ public class CacheManagerConfig {
 
     @Bean(name = "defaultCacheManager")
     public CacheManager cacheManager(Ticker ticker) {
-        CaffeineCache scoreboard = buildCache("scoreboard", ticker, 5);
-        CaffeineCache submissionsCalendar = buildCache("submissionsCalendar", ticker, 5);
+        CaffeineCache scoreboard = buildCache("scoreboard", ticker, scoreboardTtl);
+        CaffeineCache submissionsCalendar = buildCache("submissionsCalendar", ticker,
+            submissionsCalendarTtl);
         SimpleCacheManager manager = new SimpleCacheManager();
         manager.setCaches(Arrays.asList(scoreboard, submissionsCalendar));
         return manager;
