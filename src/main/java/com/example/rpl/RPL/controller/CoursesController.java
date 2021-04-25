@@ -45,29 +45,32 @@ public class CoursesController {
 
     @Autowired
     public CoursesController(
-            CoursesService coursesService,
-            SubmissionService submissionService,
-            ActivitiesService activitiesService) {
+        CoursesService coursesService,
+        SubmissionService submissionService,
+        ActivitiesService activitiesService) {
         this.coursesService = coursesService;
         this.submissionService = submissionService;
         this.activitiesService = activitiesService;
     }
 
     @GetMapping(value = "/api/courses")
-    public ResponseEntity<List<CourseResponseDTO>> getCourses(@CurrentUser UserPrincipal currentUser) {
+    public ResponseEntity<List<CourseResponseDTO>> getCourses(
+        @CurrentUser UserPrincipal currentUser) {
 
-        List<Triplet<Course, Boolean, Boolean>> courses = coursesService.getAllCourses(currentUser.getId());
+        List<Triplet<Course, Boolean, Boolean>> courses = coursesService
+            .getAllCourses(currentUser.getId());
 
         return new ResponseEntity<>(
-                courses.stream()
-                        .map(triplet ->
-                                // If the user is not enrolled and not accepted we don't return user info
-                                (!triplet.getValue1() && !triplet.getValue2()) ?
-                                        CourseResponseDTO.fromEntity(triplet.getValue0()) :
-                                        CourseResponseDTO.fromEntity(triplet.getValue0(), triplet.getValue1(), triplet.getValue2())
-                        )
-                        .collect(Collectors.toList()),
-                HttpStatus.OK);
+            courses.stream()
+                .map(triplet ->
+                    // If the user is not enrolled and not accepted we don't return user info
+                    (!triplet.getValue1() && !triplet.getValue2()) ?
+                        CourseResponseDTO.fromEntity(triplet.getValue0()) :
+                        CourseResponseDTO.fromEntity(triplet.getValue0(), triplet.getValue1(),
+                            triplet.getValue2())
+                )
+                .collect(Collectors.toList()),
+            HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('superadmin')")
@@ -87,17 +90,17 @@ public class CoursesController {
             createCourseRequestDTO.getImgUri(),
             createCourseRequestDTO.getCourseAdminId()
         ) : coursesService.cloneCourse(
-                createCourseRequestDTO.getId(),
-                createCourseRequestDTO.getName(),
-                createCourseRequestDTO.getUniversity(),
-                createCourseRequestDTO.getUniversityCourseId(),
-                createCourseRequestDTO.getDescription(),
-                true,
-                createCourseRequestDTO.getSemester(),
-                createCourseRequestDTO.getSemesterStartDate(),
-                createCourseRequestDTO.getSemesterEndDate(),
-                createCourseRequestDTO.getImgUri(),
-                createCourseRequestDTO.getCourseAdminId()
+            createCourseRequestDTO.getId(),
+            createCourseRequestDTO.getName(),
+            createCourseRequestDTO.getUniversity(),
+            createCourseRequestDTO.getUniversityCourseId(),
+            createCourseRequestDTO.getDescription(),
+            true,
+            createCourseRequestDTO.getSemester(),
+            createCourseRequestDTO.getSemesterStartDate(),
+            createCourseRequestDTO.getSemesterEndDate(),
+            createCourseRequestDTO.getImgUri(),
+            createCourseRequestDTO.getCourseAdminId()
         );
 
         return new ResponseEntity<>(CourseResponseDTO.fromEntity(course), HttpStatus.CREATED);
@@ -106,20 +109,20 @@ public class CoursesController {
     @PreAuthorize("hasAuthority('course_edit')")
     @PutMapping(value = "/api/courses/{courseId}")
     public ResponseEntity<CourseResponseDTO> editCourse(@CurrentUser UserPrincipal currentUser,
-                                                        @RequestBody @Valid EditCourseRequestDTO editCourseRequestDTO,
-                                                        @PathVariable Long courseId) {
+        @RequestBody @Valid EditCourseRequestDTO editCourseRequestDTO,
+        @PathVariable Long courseId) {
 
         Course course = coursesService.editCourse(
-                courseId,
-                editCourseRequestDTO.getName(),
-                editCourseRequestDTO.getUniversity(),
-                editCourseRequestDTO.getUniversityCourseId(),
-                editCourseRequestDTO.getDescription(),
-                true,
-                editCourseRequestDTO.getSemester(),
-                editCourseRequestDTO.getSemesterStartDate(),
-                editCourseRequestDTO.getSemesterEndDate(),
-                editCourseRequestDTO.getImgUri()
+            courseId,
+            editCourseRequestDTO.getName(),
+            editCourseRequestDTO.getUniversity(),
+            editCourseRequestDTO.getUniversityCourseId(),
+            editCourseRequestDTO.getDescription(),
+            true,
+            editCourseRequestDTO.getSemester(),
+            editCourseRequestDTO.getSemesterStartDate(),
+            editCourseRequestDTO.getSemesterEndDate(),
+            editCourseRequestDTO.getImgUri()
         );
 
         return new ResponseEntity<>(CourseResponseDTO.fromEntity(course), HttpStatus.OK);
@@ -127,7 +130,8 @@ public class CoursesController {
 
     @PreAuthorize("hasAuthority('course_view')")
     @GetMapping(value = "/api/courses/{courseId}")
-    public ResponseEntity<CourseResponseDTO> getCourseDetails(@CurrentUser UserPrincipal currentUser,
+    public ResponseEntity<CourseResponseDTO> getCourseDetails(
+        @CurrentUser UserPrincipal currentUser,
         @PathVariable Long courseId) {
 
         Course course = coursesService.getCourse(courseId);
@@ -137,7 +141,7 @@ public class CoursesController {
 
     @GetMapping(value = "/api/courses/{courseId}/permissions")
     public ResponseEntity<List<String>> getPermissions(@CurrentUser UserPrincipal currentUser,
-                                                                      @PathVariable Long courseId) {
+        @PathVariable Long courseId) {
 
         List<String> permissions = coursesService.getPermissions(courseId, currentUser.getId());
 
@@ -146,9 +150,10 @@ public class CoursesController {
 
     @PreAuthorize("hasAuthority('user_view')")
     @GetMapping(value = "/api/courses/{courseId}/users")
-    public ResponseEntity<List<CourseUserResponseDTO>> getCourseUsers(@CurrentUser UserPrincipal currentUser,
-                                                                          @PathVariable Long courseId,
-                                                                          @RequestParam(required = false) String roleName) {
+    public ResponseEntity<List<CourseUserResponseDTO>> getCourseUsers(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId,
+        @RequestParam(required = false) String roleName) {
 
         List<CourseUser> courseUsers = coursesService.getAllUsers(courseId, roleName);
 
@@ -161,43 +166,44 @@ public class CoursesController {
 
     @PreAuthorize("hasAuthority('user_view')")
     @GetMapping(value = "/api/courses/{courseId}/scoreboard")
-    public ResponseEntity<List<CourseUserScoreResponseDTO>> getCourseScoreboard(@CurrentUser UserPrincipal currentUser,
-                                                                                @PathVariable Long courseId) {
+    public ResponseEntity<List<CourseUserScoreResponseDTO>> getCourseScoreboard(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId) {
 
         List<CourseUserScoreInterface> scoreboard = coursesService.getScoreboard(courseId);
 
         return new ResponseEntity<>(
-                scoreboard.stream()
-                    .map(CourseUserScoreResponseDTO::fromEntity)
-                    .collect(Collectors.toList()),
-                HttpStatus.OK);
+            scoreboard.stream()
+                .map(CourseUserScoreResponseDTO::fromEntity)
+                .collect(Collectors.toList()),
+            HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('user_manage')")
     @PatchMapping(value = "/api/courses/{courseId}/users/{userId}")
-    public ResponseEntity<CourseUserResponseDTO> updateCourseUser(@CurrentUser UserPrincipal currentUser,
-                                                                      @PathVariable Long courseId,
-                                                                      @PathVariable Long userId,
-                                                                      @RequestBody @Valid PatchCourseUserRequestDTO patchCourseUserRequestDTO) {
+    public ResponseEntity<CourseUserResponseDTO> updateCourseUser(
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId,
+        @PathVariable Long userId,
+        @RequestBody @Valid PatchCourseUserRequestDTO patchCourseUserRequestDTO) {
 
         CourseUser courseUser = coursesService.updateCourseUser(
-                courseId,
-                userId,
-                patchCourseUserRequestDTO.getAccepted(),
-                patchCourseUserRequestDTO.getRole()
+            courseId,
+            userId,
+            patchCourseUserRequestDTO.getAccepted(),
+            patchCourseUserRequestDTO.getRole()
         );
 
         return new ResponseEntity<>(
-                CourseUserResponseDTO.fromEntity(courseUser),
-                HttpStatus.OK);
+            CourseUserResponseDTO.fromEntity(courseUser),
+            HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('user_manage')")
     @DeleteMapping(value = "/api/courses/{courseId}/users/{userId}")
     public ResponseEntity deleteCourseUser(@CurrentUser UserPrincipal currentUser,
-                                                                  @PathVariable Long courseId,
-                                                                  @PathVariable Long userId) {
-
+        @PathVariable Long courseId,
+        @PathVariable Long userId) {
 
         coursesService.deleteCourseUser(userId, courseId);
 
@@ -206,7 +212,7 @@ public class CoursesController {
 
     @PostMapping(value = "/api/courses/{courseId}/enroll")
     public ResponseEntity<RoleResponseDTO> enrollInCourse(@CurrentUser UserPrincipal currentUser,
-                                                        @PathVariable Long courseId) {
+        @PathVariable Long courseId) {
 
         CourseUser courseUser = coursesService.enrollInCourse(currentUser.getId(), courseId);
 
@@ -217,7 +223,7 @@ public class CoursesController {
 
     @PostMapping(value = "/api/courses/{courseId}/unenroll")
     public ResponseEntity unenrollInCourse(@CurrentUser UserPrincipal currentUser,
-                                                          @PathVariable Long courseId) {
+        @PathVariable Long courseId) {
 
         coursesService.deleteCourseUser(currentUser.getId(), courseId);
 

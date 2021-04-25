@@ -11,7 +11,8 @@ import spock.lang.Unroll
 
 import java.time.LocalDate
 
-import static javax.servlet.http.HttpServletResponse.*
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND
+import static javax.servlet.http.HttpServletResponse.SC_OK
 
 @ActiveProfiles("test-functional")
 class StatsControllerFunctionalSpec extends AbstractFunctionalSpec {
@@ -474,6 +475,8 @@ class StatsControllerFunctionalSpec extends AbstractFunctionalSpec {
             response.statusCode == SC_OK
 
             def result = getJsonResponse(response)
+
+            println result
 
             result.submissions_stats.size() == 0
             result.metadata.size() == 0
