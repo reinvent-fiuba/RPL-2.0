@@ -63,7 +63,7 @@ public class AuthenticationService {
                 String.format("Username '%s' already used", username), "ERROR_USERNAME_USED");
         }
 
-        log.info("[process:create_user][username:{}] Creating new user", username);
+        log.info("[process:create_user][username:{}][email:{}] Creating new user", username, email);
         return userRepository.save(user);
     }
 

@@ -35,7 +35,7 @@ public class StatsController {
 
     @Autowired
     public StatsController(SubmissionService submissionService,
-                           StatsService statsService) {
+        StatsService statsService) {
         this.submissionService = submissionService;
         this.statsService = statsService;
     }
@@ -43,49 +43,58 @@ public class StatsController {
     @PreAuthorize("hasAuthority('activity_manage')")
     @GetMapping(value = "/api/stats/courses/{courseId}/submissions")
     public ResponseEntity<SubmissionsStatsResponseDTO> getSubmissionsStats(
-            @CurrentUser UserPrincipal currentUser,
-            @PathVariable Long courseId,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
-            @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) Long userId,
-            @RequestParam(required = false) Long activityId,
-            @RequestParam(required = false) GroupBy groupBy
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId,
+        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+        @RequestParam(required = false) Long categoryId,
+        @RequestParam(required = false) Long userId,
+        @RequestParam(required = false) Long activityId,
+        @RequestParam(required = false) GroupBy groupBy
     ) {
         SubmissionsStats submissionsStats;
 
         if (groupBy == GroupBy.activity) {
-            submissionsStats = statsService.getSubmissionStatsGroupByActivity(courseId,categoryId,userId, activityId, date);
+            submissionsStats = statsService
+                .getSubmissionStatsGroupByActivity(courseId, categoryId, userId, activityId, date);
         } else if (groupBy == GroupBy.user) {
-            submissionsStats = statsService.getSubmissionStatsGroupByUser(courseId,categoryId, userId, activityId, date);
+            submissionsStats = statsService
+                .getSubmissionStatsGroupByUser(courseId, categoryId, userId, activityId, date);
         } else if (groupBy == GroupBy.date) {
             submissionsStats = statsService
-                .getStudentSubmissionStatsGroupByDate(courseId, categoryId, userId, activityId, date);
+                .getStudentSubmissionStatsGroupByDate(courseId, categoryId, userId, activityId,
+                    date);
         } else {
-            submissionsStats = statsService.getSubmissionStatsGroupByActivity(courseId,categoryId,userId, activityId, date);
+            submissionsStats = statsService
+                .getSubmissionStatsGroupByActivity(courseId, categoryId, userId, activityId, date);
         }
 
-        return new ResponseEntity<>(SubmissionsStatsResponseDTO.fromEntity(submissionsStats), HttpStatus.OK);
+        return new ResponseEntity<>(SubmissionsStatsResponseDTO.fromEntity(submissionsStats),
+            HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('activity_submit')")
     @GetMapping(value = "/api/stats/courses/{courseId}/activities/me")
     public ResponseEntity<ActivitiesStatResponseDTO> getMyActivityStats(
-            @CurrentUser UserPrincipal currentUser,
-            @PathVariable Long courseId
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId
     ) {
-        ActivitiesStat activitiesStat = statsService.getActivityStatByUser(courseId, currentUser.getUser().getId());
+        ActivitiesStat activitiesStat = statsService
+            .getActivityStatByUser(courseId, currentUser.getUser().getId());
 
-        return new ResponseEntity<>(ActivitiesStatResponseDTO.fromEntity(activitiesStat), HttpStatus.OK);
+        return new ResponseEntity<>(ActivitiesStatResponseDTO.fromEntity(activitiesStat),
+            HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('activity_submit')")
     @GetMapping(value = "/api/stats/courses/{courseId}/submissions/me")
     public ResponseEntity<SubmissionsStatResponseDTO> getMySubmissionsStats(
-            @CurrentUser UserPrincipal currentUser,
-            @PathVariable Long courseId
+        @CurrentUser UserPrincipal currentUser,
+        @PathVariable Long courseId
     ) {
-        SubmissionsStat submissionsStat = statsService.getSubmissionStatByUser(courseId, currentUser.getUser().getId());
+        SubmissionsStat submissionsStat = statsService
+            .getSubmissionStatByUser(courseId, currentUser.getUser().getId());
 
-        return new ResponseEntity<>(SubmissionsStatResponseDTO.fromEntity(submissionsStat), HttpStatus.OK);
+        return new ResponseEntity<>(SubmissionsStatResponseDTO.fromEntity(submissionsStat),
+            HttpStatus.OK);
     }
 }

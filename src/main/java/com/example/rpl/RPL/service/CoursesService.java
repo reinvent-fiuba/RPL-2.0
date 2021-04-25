@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -341,17 +342,18 @@ public class CoursesService {
         return courseUser.getRole().getPermissions();
     }
 
+    @Cacheable(value = "scoreboard", cacheManager = "defaultCacheManager")
     @Transactional
     public List<CourseUserScoreInterface> getScoreboard(Long courseId) {
 
         Optional<Role> role = roleRepository.findByName("student");
-        if (role.isEmpty()) {
-            return List.of();
-        }
+            if (role.isEmpty()) {
+                return List.of();
+                }
 
-        return courseUserRepository.getActivityStatsForCourseId(courseId, role.get().getId())
-            .stream()
-            .sorted((score1, score2) -> Long.compare(score2.getScore(), score1.getScore()))
+                return courseUserRepository.getActivityStatsForCourseId(courseId, role.get().getId())
+                .stream()
+        .sorted((score1, score2) -> Long.compare(score2.getScore(), score1.getScore()))
             .collect(Collectors.toList());
     }
 }

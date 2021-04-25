@@ -11,7 +11,8 @@ import spock.lang.Unroll
 
 import java.time.LocalDate
 
-import static javax.servlet.http.HttpServletResponse.*
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND
+import static javax.servlet.http.HttpServletResponse.SC_OK
 
 @ActiveProfiles("test-functional")
 class StatsControllerFunctionalSpec extends AbstractFunctionalSpec {
@@ -447,7 +448,7 @@ class StatsControllerFunctionalSpec extends AbstractFunctionalSpec {
     void "test get stats group by date filtering by different activity category should not retrieve any date"() {
         when:
             def response = get(
-                    String.format("/api/stats/courses/%s/submissions?groupBy=date&categoryId=22", course.getId()),
+                    String.format("/api/stats/courses/%s/submissions?groupBy=date&categoryId=22234", course.getId()),
                     username, password
             )
 
@@ -465,7 +466,7 @@ class StatsControllerFunctionalSpec extends AbstractFunctionalSpec {
     void "test get stats group by date filtering by different activity should not retrieve any date"() {
         when:
             def response = get(
-                    String.format("/api/stats/courses/%s/submissions?groupBy=date&activityId=22", course.getId()),
+                    String.format("/api/stats/courses/%s/submissions?groupBy=date&activityId=223452", course.getId()),
                     username, password
             )
 

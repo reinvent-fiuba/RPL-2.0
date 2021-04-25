@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -65,6 +66,7 @@ public class StatsService {
         return new SubmissionsStats(submissionsStats, activitiesMetadata);
     }
 
+    @Cacheable(value = "submissionsCalendar", cacheManager = "defaultCacheManager")
     public SubmissionsStats getSubmissionStatsGroupByUser(Long courseId, Long categoryId,
         Long userId, Long activityId, LocalDate date) {
 
@@ -100,6 +102,7 @@ public class StatsService {
         return new SubmissionsStats(submissionsStats, usersMetadata);
     }
 
+    @Cacheable(value = "submissionsCalendar", cacheManager = "defaultCacheManager")
     public SubmissionsStats getStudentSubmissionStatsGroupByDate(Long courseId, Long categoryId,
         Long userId, Long activityId, LocalDate date) {
         List<CourseUser> courseUsers = userId != null ?

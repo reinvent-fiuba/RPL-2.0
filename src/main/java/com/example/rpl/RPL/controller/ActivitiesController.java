@@ -118,9 +118,6 @@ public class ActivitiesController {
     public ResponseEntity<List<UserActivityResponseDTO>> getActivities(
         @CurrentUser UserPrincipal currentUser,
         @PathVariable Long courseId) {
-        log.debug("COURSE ID: {}", courseId);
-
-
         List<Activity> activities = currentUser.hasAuthority("activity_manage") ?
                 activitiesService.getAllActivitiesByCourse(courseId) :
                 activitiesService.getAllActiveActivitiesByCourse(courseId);
@@ -144,8 +141,6 @@ public class ActivitiesController {
     public ResponseEntity<ActivityResponseDTO> getActivity(
         @CurrentUser UserPrincipal currentUser,
         @PathVariable Long courseId, @PathVariable Long activityId) {
-        log.debug("COURSE ID: {}", courseId);
-
         Activity activity = activitiesService.getActivity(activityId);
 
         //        GET UNIT TESTS

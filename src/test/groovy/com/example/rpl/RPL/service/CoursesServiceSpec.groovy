@@ -566,7 +566,6 @@ class CoursesServiceSpec extends Specification {
             1 * studentRole.getId() >> 1
             1 * courseUserRepository.getActivityStatsForCourseId(courseId, 1) >> results
 
-
             for (int i = 0; i < 100; i++) {
                 scoreboard[i].getScore() == (100 - i) * 5
                 scoreboard[i].getActivitiesCount() == 100 - i
