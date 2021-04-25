@@ -448,7 +448,7 @@ class StatsControllerFunctionalSpec extends AbstractFunctionalSpec {
     void "test get stats group by date filtering by different activity category should not retrieve any date"() {
         when:
             def response = get(
-                    String.format("/api/stats/courses/%s/submissions?groupBy=date&categoryId=22", course.getId()),
+                    String.format("/api/stats/courses/%s/submissions?groupBy=date&categoryId=22234", course.getId()),
                     username, password
             )
 
@@ -466,7 +466,7 @@ class StatsControllerFunctionalSpec extends AbstractFunctionalSpec {
     void "test get stats group by date filtering by different activity should not retrieve any date"() {
         when:
             def response = get(
-                    String.format("/api/stats/courses/%s/submissions?groupBy=date&activityId=22", course.getId()),
+                    String.format("/api/stats/courses/%s/submissions?groupBy=date&activityId=223452", course.getId()),
                     username, password
             )
 
@@ -475,8 +475,6 @@ class StatsControllerFunctionalSpec extends AbstractFunctionalSpec {
             response.statusCode == SC_OK
 
             def result = getJsonResponse(response)
-
-            println result
 
             result.submissions_stats.size() == 0
             result.metadata.size() == 0
