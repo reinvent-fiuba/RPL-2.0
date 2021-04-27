@@ -16,8 +16,6 @@ spec:
         tier: backend
         track: stable
     spec:
-      nodeSelector:
-        cloud.google.com/gke-preemptible: "true"
       containers:
         - name: prometheus
           image: kbudde/rabbitmq-exporter

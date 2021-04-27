@@ -71,8 +71,6 @@ spec:
         k8s-app: custom-metrics-stackdriver-adapter
         kubernetes.io/cluster-service: "true"
     spec:
-      nodeSelector:
-        task: core
       serviceAccountName: custom-metrics-stackdriver-adapter
       containers:
       - image: gcr.io/google-containers/custom-metrics-stackdriver-adapter:v0.10.2

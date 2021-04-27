@@ -16,8 +16,6 @@ spec:
         tier: backend
         track: stable
     spec:
-      nodeSelector:
-        cloud.google.com/gke-preemptible: "true"
       containers:
       - name: producer
         image: gcr.io/fiuba-rpl-2/rpl-2.0:latest
