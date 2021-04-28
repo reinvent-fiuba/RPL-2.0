@@ -21,16 +21,22 @@ public class CacheManagerConfig {
     @Value("${app.cache.scoreboardTtl}")
     private Integer scoreboardTtl;
 
-    @Value("${app.cache.submissionsCalendarTtl}")
-    private Integer submissionsCalendarTtl;
+    @Value("${app.cache.submissionsCalendarByUserTtl}")
+    private Integer submissionsCalendarByUserTtl;
+
+    @Value("${app.cache.submissionsCalendarByDateTtl}")
+    private Integer submissionsCalendarByDateTtl;
 
     @Bean(name = "defaultCacheManager")
     public CacheManager cacheManager(Ticker ticker) {
         CaffeineCache scoreboard = buildCache("scoreboard", ticker, scoreboardTtl);
-        CaffeineCache submissionsCalendar = buildCache("submissionsCalendar", ticker,
-            submissionsCalendarTtl);
+        CaffeineCache submissionsCalendarByUser = buildCache("submissionsCalendarByUser", ticker,
+            submissionsCalendarByUserTtl);
+        CaffeineCache submissionsCalendarByDate = buildCache("submissionsCalendarByDate", ticker,
+            submissionsCalendarByDateTtl);
         SimpleCacheManager manager = new SimpleCacheManager();
-        manager.setCaches(Arrays.asList(scoreboard, submissionsCalendar));
+        manager.setCaches(
+            Arrays.asList(scoreboard, submissionsCalendarByUser, submissionsCalendarByDate));
         return manager;
     }
 
