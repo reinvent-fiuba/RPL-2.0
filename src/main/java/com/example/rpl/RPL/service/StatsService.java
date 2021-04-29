@@ -66,7 +66,7 @@ public class StatsService {
         return new SubmissionsStats(submissionsStats, activitiesMetadata);
     }
 
-    @Cacheable(value = "submissionsCalendar", cacheManager = "defaultCacheManager")
+    @Cacheable(value = "submissionsCalendarByUser", cacheManager = "defaultCacheManager")
     public SubmissionsStats getSubmissionStatsGroupByUser(Long courseId, Long categoryId,
         Long userId, Long activityId, LocalDate date) {
 
@@ -102,7 +102,7 @@ public class StatsService {
         return new SubmissionsStats(submissionsStats, usersMetadata);
     }
 
-    @Cacheable(value = "submissionsCalendar", cacheManager = "defaultCacheManager")
+    @Cacheable(value = "submissionsCalendarByDate", cacheManager = "defaultCacheManager")
     public SubmissionsStats getStudentSubmissionStatsGroupByDate(Long courseId, Long categoryId,
         Long userId, Long activityId, LocalDate date) {
         List<CourseUser> courseUsers = userId != null ?
