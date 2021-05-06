@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: producer
-        image: gcr.io/fiuba-rpl-2/rpl-2.0:latest
+        image: gcr.io/rpl-alelevininge/rpl-2.0:latest
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "producer,prod"

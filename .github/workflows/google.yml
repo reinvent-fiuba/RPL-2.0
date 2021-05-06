@@ -18,8 +18,8 @@ on:
 
 # Environment variables available to all jobs and steps in this workflow
 env:
-  GKE_PROJECT: ${{ secrets.GKE_MATI_PROJECT }}
-  GKE_EMAIL: ${{ secrets.GKE_MATI_EMAIL }}
+  GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
+  GKE_EMAIL: ${{ secrets.GKE_EMAIL }}
   GITHUB_SHA: ${{ github.sha }}
   GKE_ZONE: us-central1-c
   GKE_CLUSTER: rpl
@@ -60,8 +60,8 @@ jobs:
       # Setup gcloud CLI
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          service_account_email: ${{ secrets.GKE_MATI_EMAIL }}
-          service_account_key: ${{ secrets.GKE_MATI_KEY }}
+          service_account_email: ${{ secrets.GKE_EMAIL }}
+          service_account_key: ${{ secrets.GKE_KEY }}
 
       # Configure docker to use the gcloud command-line tool as a credential helper
       - run: |
