@@ -3,6 +3,7 @@ package com.example.rpl.RPL.repository.specification;
 import com.example.rpl.RPL.model.Activity;
 import com.example.rpl.RPL.model.ActivitySubmission;
 import com.example.rpl.RPL.model.SubmissionStatus;
+import com.example.rpl.RPL.model.User;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -28,6 +29,14 @@ public final class SubmissionSpecifications {
         return (root, query, builder) -> builder.equal(
                 root.get("user").<String>get("id"),
                 userId);
+    }
+
+    public static Specification<ActivitySubmission> userIdsAre(List<User> users) {
+        return (root, query, builder) -> {
+            CriteriaBuilder.In<Object> in = builder.in(root.get("user"));
+            users.forEach(user -> in.value(user));
+            return in;
+        };
     }
 
     public static Specification<ActivitySubmission> status(SubmissionStatus status) {
