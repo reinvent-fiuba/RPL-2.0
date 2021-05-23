@@ -41,8 +41,14 @@ public class StatsService {
             List.of(activitiesService.getActivity(activityId)) :
             activitiesService.search(courseId, categoryId, true);
 
+        List<User> students = null;
+        if (userId == null) {
+            List<CourseUser> courseUsers = coursesService.getAllUsers(courseId, "student");
+            students = courseUsers.stream().map(CourseUser::getUser).collect(
+                Collectors.toList());
+        }
         List<ActivitySubmission> submissions = submissionService
-            .getAllSubmissionsByActivities(activities, userId, null, date);
+            .getAllStudentSubmissionsByActivities(activities, userId, students, null, date);
 
         Map<Activity, List<ActivitySubmission>> submissionsByActivity = submissions.stream()
             .collect(Collectors.groupingBy(ActivitySubmission::getActivity));

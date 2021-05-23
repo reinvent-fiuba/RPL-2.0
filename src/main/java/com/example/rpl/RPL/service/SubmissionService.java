@@ -7,6 +7,7 @@ import static com.example.rpl.RPL.repository.specification.SubmissionSpecificati
 import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.dateCreatedIs;
 import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.status;
 import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.userIdIs;
+import static com.example.rpl.RPL.repository.specification.SubmissionSpecifications.userIdsAre;
 
 import com.example.rpl.RPL.controller.dto.UnitTestResultDTO;
 import com.example.rpl.RPL.exception.NotFoundException;
@@ -182,31 +183,33 @@ public class SubmissionService {
         return submissionRepository.save(activitySubmission);
     }
 
-    List<ActivitySubmission> getAllSubmissionsByActivities(List<Activity> activities,
-        Long userId, SubmissionStatus status, LocalDate date) {
+    List<ActivitySubmission> getAllStudentSubmissionsByActivities(List<Activity> activities,
+        Long userId, List<User> students,
+        SubmissionStatus status, LocalDate date) {
 
-        if (activities != null && activities.size() == 0) {
+        if (activities != null && activities.isEmpty()) {
             return new ArrayList<>();
         }
 
         Specification<ActivitySubmission> specification = Specification
-                .where(activities == null ? null : activitiesIn(activities))
-                .and(userId == null ? null : userIdIs(userId))
+            .where(activities == null ? null : activitiesIn(activities))
+            .and(userId == null ? null : userIdIs(userId))
             .and(status == null ? null : status(status))
-                .and(date == null ? null : dateCreatedIs(date));
+            .and(date == null ? null : dateCreatedIs(date))
+            .and(students == null ? null : userIdsAre(students));
 
         return submissionRepository.findAll(specification);
     }
 
     List<ActivitySubmission> search(Long courseId, Long userId, Long activityId, Long categoryId,
-                                    LocalDate date) {
+        LocalDate date) {
 
         Specification<ActivitySubmission> specification = Specification
-                .where(courseId == null ? null : courseIdIs(courseId))
-                .and(userId == null ? null : userIdIs(userId))
-                .and(date == null ? null : dateCreatedIs(date))
-                .and(activityId == null ? null : activityIdIs(activityId))
-                .and(categoryId == null ? null : categoryIdIs(categoryId));
+            .where(courseId == null ? null : courseIdIs(courseId))
+            .and(userId == null ? null : userIdIs(userId))
+            .and(date == null ? null : dateCreatedIs(date))
+            .and(activityId == null ? null : activityIdIs(activityId))
+            .and(categoryId == null ? null : categoryIdIs(categoryId));
 
         return submissionRepository.findAll(specification);
     }
