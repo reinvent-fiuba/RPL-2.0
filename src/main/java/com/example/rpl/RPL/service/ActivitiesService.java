@@ -1,6 +1,5 @@
 package com.example.rpl.RPL.service;
 
-import static com.example.rpl.RPL.repository.specification.ActivitySpecifications.courseIdIs;
 import static java.time.ZonedDateTime.now;
 
 import com.example.rpl.RPL.exception.NotFoundException;
@@ -13,10 +12,9 @@ import com.example.rpl.RPL.repository.ActivityCategoryRepository;
 import com.example.rpl.RPL.repository.ActivityRepository;
 import com.example.rpl.RPL.repository.CourseRepository;
 import com.example.rpl.RPL.repository.FileRepository;
+import com.example.rpl.RPL.repository.specification.ActivitySpecifications;
 import java.util.Arrays;
 import java.util.List;
-
-import com.example.rpl.RPL.repository.specification.ActivitySpecifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -89,7 +87,8 @@ public class ActivitiesService {
      * @return a new saved Activity
      */
     @Transactional
-    public Activity cloneActivity(Course course, ActivityCategory activityCategory, Activity activity) {
+    public Activity cloneActivity(Course course, ActivityCategory activityCategory,
+        Activity activity) {
 
         Activity newActivity = new Activity(course, activityCategory, activity);
 
@@ -131,13 +130,13 @@ public class ActivitiesService {
     }
 
     /**
-     * Retrieves all activities from a course
+     * Retrieves all non-deleted activities from a course
      *
      * @return a list of Activities Course class
      */
     @Transactional
     public List<Activity> getAllActivitiesByCourse(Long courseId) {
-        return activityRepository.findActivitiesByCourse_Id(courseId);
+        return activityRepository.findActivitiesByCourse_IdAndDeleted(courseId, false);
     }
 
     /**
@@ -147,22 +146,25 @@ public class ActivitiesService {
      */
     @Transactional
     public List<Activity> getAllActiveActivitiesByCourse(Long courseId) {
-        return activityRepository.findActivitiesByCourse_IdAndActiveAndDeleted(courseId, true, false);
+        return activityRepository
+            .findActivitiesByCourse_IdAndActiveAndDeleted(courseId, true, false);
     }
 
 
     /**
-     * Retrieves all activities from a course with a specific category (optional) If cateogoryId is
-     * not present, the function ignores the that filter
+     * Retrieves all non-deleted activities from a course with a specific category (optional) If
+     * cateogoryId is not present, the function ignores the that filter
      *
      * @return a list of Activities Course class
      */
     @Transactional
-    public List<Activity> search(Long courseId, Long categoryId) {
+    public List<Activity> search(Long courseId, Long categoryId, Boolean isActive) {
 
         Specification<Activity> specification = Specification
-                .where(ActivitySpecifications.courseIdIs(courseId))
-                .and(categoryId == null ? null : ActivitySpecifications.categoryIdIs(categoryId));
+            .where(ActivitySpecifications.courseIdIs(courseId))
+            .and(categoryId == null ? null : ActivitySpecifications.categoryIdIs(categoryId))
+            .and(isActive == null ? null : ActivitySpecifications.isActive(isActive))
+            .and(ActivitySpecifications.notDeleted());
 
         return activityRepository.findAll(specification);
     }
@@ -173,11 +175,13 @@ public class ActivitiesService {
                 "activity_not_found"));
     }
 
+    @Transactional
     public Activity updateTestMode(Activity activity, boolean isIOTested) {
         activity.setIsIOTested(isIOTested);
         return activityRepository.save(activity);
     }
 
+    @Transactional
     public Activity deleteActivity(Long activityId) {
         Activity activity = this.getActivity(activityId);
 
