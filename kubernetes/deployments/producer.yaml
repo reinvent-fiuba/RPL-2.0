@@ -23,7 +23,7 @@ spec:
         - name: SPRING_PROFILES_ACTIVE
           value: "producer,prod"
         - name: RPL_URL_FRONTEND
-          value: http://www.rpl.codes
+          value: http://www.myrpl.ar
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
