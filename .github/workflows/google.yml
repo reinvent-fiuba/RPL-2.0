@@ -58,10 +58,9 @@ jobs:
         run: ./gradlew build
 
       # Setup gcloud CLI
-      - uses: google-github-actions/setup-gcloud@v0
+      - uses: google-github-actions/auth@v0
         with:
-          service_account_email: ${{ secrets.GKE_EMAIL }}
-          service_account_key: ${{ secrets.GKE_KEY }}
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
       # Configure docker to use the gcloud command-line tool as a credential helper
       - run: |
