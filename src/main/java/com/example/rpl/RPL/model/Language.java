@@ -7,7 +7,7 @@ public enum Language {
 
     C("c", "std11"),
     PYTHON3("python", "3.7"),
-    GO("go", "1.16"),
+    GO("go", "1.19"),
     JAVA("java", "11");
 
     private final String name;
