@@ -18,7 +18,7 @@ import com.example.rpl.RPL.service.SubmissionService;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;

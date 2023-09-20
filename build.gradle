@@ -1,15 +1,19 @@
 plugins {
-    id 'org.springframework.boot' version '2.2.0.M5'
-    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
-    id 'org.flywaydb.flyway' version '5.1.1'
+    id 'org.springframework.boot' version '3.1.3'
+    id 'io.spring.dependency-management' version '1.1.3'  // Esto se ocupa de que todas las dependencias org.springframework.boot se use la version compatible con la version de springboot definida arriba
+
+    id 'org.flywaydb.flyway' version '9.22.0'
     id 'groovy'
     id 'jacoco'
 }
 
 group = 'com.example.rpl'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+version = '0.0.2-SNAPSHOT'
+
+java {
+  sourceCompatibility = '17'
+}
 
 configurations {
     developmentOnly
@@ -23,12 +27,6 @@ configurations {
 
 repositories {
     mavenCentral()
-    maven { url 'https://repo.spring.io/milestone' }
-	jcenter()
-}
-
-ext {
-    set('springCloudVersion', "Hoxton.M2")
 }
 
 test {
@@ -45,67 +43,108 @@ test {
 }
 
 dependencies {
+    configurations.all {
+	    exclude group: "commons-logging", module: "commons-logging"
+	}
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.flywaydb:flyway-core:5.2.4'
 
-    implementation 'com.github.ben-manes.caffeine:caffeine:2.6.2'
-    implementation 'com.fasterxml.jackson.module:jackson-module-paranamer'
-    implementation 'io.jsonwebtoken:jjwt:0.9.0'
+    // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.22.1'
 
-    compile group: 'org.apache.commons', name: 'commons-compress', version: '1.19'
-    compile group: 'org.javatuples', name: 'javatuples', version: '1.2'
 
-    compileOnly 'org.projectlombok:lombok:1.18.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5
+    implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.2.1'
 
-    testCompileOnly 'org.projectlombok:lombok:1.18.12'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    // https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine
+    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.1.8'
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-paranamer
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-paranamer', version: '2.15.2'
+
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+
+
+    implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.23.0'
+    implementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
+
+    compileOnly 'org.projectlombok:lombok:1.18.28'
+    annotationProcessor 'org.projectlombok:lombok:1.18.28'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.28'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-    runtimeOnly 'com.h2database:h2'
-    runtime 'mysql:mysql-connector-java'
+    // https://mvnrepository.com/artifact/com.h2database/h2
+    runtimeOnly group: 'com.h2database', name: 'h2', version: '2.2.220'
+
+    // runtimeOnly 'mysql:mysql-connector-java'
+    // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
+    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.33'
+
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     implementation 'com.github.tomakehurst:wiremock:2.21.0'
 //    For groovy Spock testing
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
-    testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5'
-    testImplementation 'org.spockframework:spock-spring:1.3-groovy-2.5'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.1.3'
 
+    // https://mvnrepository.com/artifact/org.spockframework/spock-core
+    testImplementation group: 'org.spockframework', name: 'spock-core', version: '2.3-groovy-4.0'
+
+    // https://mvnrepository.com/artifact/org.spockframework/spock-spring
+    testImplementation group: 'org.spockframework', name: 'spock-spring', version: '2.3-groovy-4.0'
 
     testImplementation('io.rest-assured:spring-mock-mvc:4.0.0') {
         exclude group: 'com.sun.xml.bind', module: 'jaxb-osgi'
     }
-    testRuntime 'cglib:cglib-nodep:3.2.6'
+    testRuntimeOnly 'cglib:cglib-nodep:3.2.6'
 
-    compile "io.springfox:springfox-swagger2:2.9.2"
-    compile 'org.springframework.plugin:spring-plugin-core:1.2.0.RELEASE'
+    // implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
+    // https://mvnrepository.com/artifact/org.springframework.plugin/spring-plugin-core
+    implementation group: 'org.springframework.plugin', name: 'spring-plugin-core', version: '3.0.0'
 
 
-    runtime "com.newrelic.agent.java:newrelic-java:5.13.0"
+
+    runtimeOnly "com.newrelic.agent.java:newrelic-java:5.13.0"
+
+    // https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api
+    implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: '3.1.0'
+    // https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api
+    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.0.2'
+
+    // https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api
+    compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0'
+
+
+
+    // implementation group: 'javax.persistence', name: 'jakarta.persistence-api', version: '2.2'
+    // implementation group: 'jakarta.validation', name: 'validation-api', version: '2.0.1.Final'
+    // https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api
+    // compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '3.0.1'
 
 }
 
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2022.0.3"
     }
 }
 
 jacocoTestReport {
     reports {
-        xml.enabled false
-        html.enabled true
+        xml.required = false
+        html.required = true
     }
     afterEvaluate {
         classDirectories.from = files(classDirectories.files.collect {
@@ -125,15 +164,15 @@ jacocoTestReport {
 
 check.dependsOn jacocoTestReport
 
-tasks.register("convertSwaggerJSONtoYAML", Exec) {
-    description = 'Produces a greeting'
-    
-    println("You must have api-spec-converter installed")
-    println("npm install -g api-spec-converter")
-    
+// tasks.register("convertSwaggerJSONtoYAML", Exec) {
+//     description = 'Produces a greeting'
 
-    commandLine 'api-spec-converter', '--from=swagger_2', '--to=swagger_2', '--syntax=yaml', 'swagger.json'
+//     println("You must have api-spec-converter installed")
+//     println("npm install -g api-spec-converter")
 
-    standardOutput = new ByteArrayOutputStream()
-    new File('swagger.yaml').write(standardOutput.toString())
-}
+
+//     commandLine 'api-spec-converter', '--from=swagger_2', '--to=swagger_2', '--syntax=yaml', 'swagger.json'
+
+//     standardOutput = new ByteArrayOutputStream()
+//     new File('swagger.yaml').write(standardOutput.toString())
+// }

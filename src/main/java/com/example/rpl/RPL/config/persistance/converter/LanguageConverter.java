@@ -2,8 +2,8 @@ package com.example.rpl.RPL.config.persistance.converter;
 
 
 import com.example.rpl.RPL.model.Language;
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
 class LanguageConverter implements AttributeConverter<Language, String> {

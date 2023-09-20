@@ -9,7 +9,7 @@ import com.example.rpl.RPL.security.CurrentUser;
 import com.example.rpl.RPL.security.JwtTokenProvider;
 import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.AuthenticationService;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

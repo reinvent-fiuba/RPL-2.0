@@ -1,6 +1,6 @@
 package com.example.rpl.RPL.controller.dto;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 

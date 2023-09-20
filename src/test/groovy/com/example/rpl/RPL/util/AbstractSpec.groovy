@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.PlatformTransactionManager
 import spock.lang.Specification
 
-import javax.persistence.EntityManager
+import jakarta.persistence.EntityManager
 
 abstract class AbstractSpec extends Specification {
 

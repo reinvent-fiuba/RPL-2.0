@@ -3,14 +3,9 @@ package com.example.rpl.RPL.service;
 import com.example.rpl.RPL.exception.NotFoundException;
 import com.example.rpl.RPL.model.*;
 import com.example.rpl.RPL.repository.ActivityCategoryRepository;
-import com.example.rpl.RPL.repository.ActivityRepository;
 import com.example.rpl.RPL.repository.CourseRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

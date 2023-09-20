@@ -3,7 +3,7 @@ package com.example.rpl.RPL.controller.dto;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @AllArgsConstructor
 @Value
