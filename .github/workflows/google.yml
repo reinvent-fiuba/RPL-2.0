@@ -16,6 +16,8 @@ on:
   workflow_dispatch:
   push:
     branches: [ master, test/** ]
+  schedule:
+  - cron: "00 12 1 * *"
 
 # Environment variables available to all jobs and steps in this workflow
 env:
