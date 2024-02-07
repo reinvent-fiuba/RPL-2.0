@@ -83,7 +83,7 @@ spec:
             port: 8080
         resources:
           requests:
-            cpu: 350m
+            cpu: 100m
             memory: 512Mi
           limits:
             memory: 700Mi
