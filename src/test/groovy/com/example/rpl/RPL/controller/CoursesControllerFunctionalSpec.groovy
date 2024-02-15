@@ -487,7 +487,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
         when:
-            def response = post(String.format("/api/courses/%s/enroll", 22), [], [
+            def response = post(String.format("/api/courses/%s/enroll", 20000), [], [
                     "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
             ])
 
@@ -526,7 +526,7 @@ class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {
             def loginResponse = getJsonResponse(post("/api/auth/login", body))
 
         when:
-            def response = post(String.format("/api/courses/%s/unenroll", 22), [], [
+            def response = post(String.format("/api/courses/%s/unenroll", 20000), [], [
                     "Authorization": String.format("%s %s", loginResponse.token_type, loginResponse.access_token)
             ])
 
