@@ -118,7 +118,7 @@ public class TestService {
             } else if (line.contains("start_RUN")) {
                 result = new StringBuilder();
             } else if (line.contains("assignment_main.py") || line.contains("./main") || line
-                .contains("/usr/bin/python3.7")) {
+                .contains("custom_IO_main.pyc")) {
                 continue;
             } else {
                 result.append(line).append("\n");
