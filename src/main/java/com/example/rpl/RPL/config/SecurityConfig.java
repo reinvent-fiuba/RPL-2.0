@@ -63,7 +63,6 @@ public class SecurityConfig {
                 return new JwtAuthenticationFilter(tokenProvider, customUserDetailsService);
         }
 
-        // TODO: descomentar
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                 http
@@ -75,65 +74,82 @@ public class SecurityConfig {
                                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
                                 .authorizeHttpRequests(
                                                 authorizeRequests -> authorizeRequests
-                                                                .requestMatchers( // TODO: sacar esto
-                                                                                AntPathRequestMatcher.antMatcher("/**"))
+                                                                .requestMatchers(AntPathRequestMatcher.antMatcher("/"),
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                "/favicon.ico"),
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                "/**/*.png"),
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                "/**/*.gif"),
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                "/**/*.svg"),
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                "/**/*.jpg"),
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                "/**/*.html"),
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                "/**/*.css"),
+                                                                                AntPathRequestMatcher
+                                                                                                .antMatcher("/**/*.js"))
                                                                 .permitAll()
-                                // .requestMatchers(AntPathRequestMatcher.antMatcher("/"),
-                                // AntPathRequestMatcher.antMatcher("/favicon.ico"),
-                                // AntPathRequestMatcher.antMatcher("/**/*.png"),
-                                // AntPathRequestMatcher.antMatcher("/**/*.gif"),
-                                // AntPathRequestMatcher.antMatcher("/**/*.svg"),
-                                // AntPathRequestMatcher.antMatcher("/**/*.jpg"),
-                                // AntPathRequestMatcher.antMatcher("/**/*.html"),
-                                // AntPathRequestMatcher.antMatcher("/**/*.css"),
-                                // AntPathRequestMatcher.antMatcher("/**/*.js"))
-                                // .permitAll()
-                                // .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/**"))
-                                // .permitAll()
-                                // .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"),
-                                // AntPathRequestMatcher.antMatcher("/v2/api-docs"),
-                                // AntPathRequestMatcher.antMatcher("/api/health"),
-                                // AntPathRequestMatcher.antMatcher("/ping"))
-                                // .permitAll()
-                                // .requestMatchers(
-                                // AntPathRequestMatcher.antMatcher(HttpMethod.GET,
-                                // "/api/polls/**"),
-                                // AntPathRequestMatcher.antMatcher(HttpMethod.GET,
-                                // "/api/users/**"))
-                                // .permitAll()
-                                // .requestMatchers(
-                                // AntPathRequestMatcher.antMatcher(HttpMethod.GET,
-                                // "/api/files/**"),
-                                // AntPathRequestMatcher
-                                // .antMatcher(HttpMethod.GET,
-                                // "/api/getExtractedFile/**"),
-                                // AntPathRequestMatcher.antMatcher(HttpMethod.GET,
-                                // "/api/getFileForStudent/**"),
-                                // AntPathRequestMatcher.antMatcher(HttpMethod.GET,
-                                // "/api/getExtractedFiles/**"),
-                                // AntPathRequestMatcher.antMatcher(HttpMethod.GET,
-                                // "/api/submissions/**"))
-                                // .permitAll()
-                                // .requestMatchers(
-                                // AntPathRequestMatcher.antMatcher(HttpMethod.POST,
-                                // "/api/submissions/**"))
-                                // .permitAll()
-                                // .requestMatchers(
-                                // AntPathRequestMatcher.antMatcher(HttpMethod.PUT,
-                                // "/api/submissions/**"))
-                                // .permitAll()
-                                // .requestMatchers(
-                                // AntPathRequestMatcher.antMatcher(
-                                // HttpMethod.POST,
-                                // "/api/uploadMultipleFiles/**"))
-                                // .permitAll()
-                                // .anyRequest()
-                                // .authenticated()
-                                );
+                                                                .requestMatchers(AntPathRequestMatcher
+                                                                                .antMatcher("/api/auth/**"))
+                                                                .permitAll()
+                                                                .requestMatchers(
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                "/h2-console/**"),
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                "/v2/api-docs"),
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                "/api/health"),
+                                                                                AntPathRequestMatcher
+                                                                                                .antMatcher("/ping"))
+                                                                .permitAll()
+                                                                .requestMatchers(
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                HttpMethod.GET,
+                                                                                                "/api/polls/**"),
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                HttpMethod.GET,
+                                                                                                "/api/users/**"))
+                                                                .permitAll()
+                                                                .requestMatchers(
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                HttpMethod.GET,
+                                                                                                "/api/files/**"),
+                                                                                AntPathRequestMatcher
+                                                                                                .antMatcher(HttpMethod.GET,
+                                                                                                                "/api/getExtractedFile/**"),
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                HttpMethod.GET,
+                                                                                                "/api/getFileForStudent/**"),
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                HttpMethod.GET,
+                                                                                                "/api/getExtractedFiles/**"),
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                HttpMethod.GET,
+                                                                                                "/api/submissions/**"))
+                                                                .permitAll()
+                                                                .requestMatchers(
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                HttpMethod.POST,
+                                                                                                "/api/submissions/**"))
+                                                                .permitAll()
+                                                                .requestMatchers(
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                HttpMethod.PUT,
+                                                                                                "/api/submissions/**"))
+                                                                .permitAll()
+                                                                .requestMatchers(
+                                                                                AntPathRequestMatcher.antMatcher(
+                                                                                                HttpMethod.POST,
+                                                                                                "/api/uploadMultipleFiles/**"))
+                                                                .permitAll()
+                                                                .anyRequest()
+                                                                .authenticated());
 
                 // Add our custom JWT security filter
-                // http.addFilterBefore(jwtAuthenticationFilter(),
-                // UsernamePasswordAuthenticationFilter.class);
+                http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
                 return http.build();
         }
 
@@ -160,14 +176,15 @@ public class SecurityConfig {
                         // Don't log passwords
                         @Override
                         protected boolean shouldLog(HttpServletRequest request) {
-                                return !request.getRequestURI().contains("login") && !request.getRequestURI()
-                                                .contains("Password") && !request.getRequestURI().contains("signup")
+                                return true;
+                                // return !request.getRequestURI().contains("login") && !request.getRequestURI()
+                                // .contains("Password") && !request.getRequestURI().contains("signup")
                                 // && !request.getRequestURI().contains("health") TODO: descomentar
-                                                &&
-                                                !(request.getRequestURI()
-                                                                .matches("/api/submissions/.*/result")
-                                                                && request.getMethod().equals("GET"))
-                                                && logRequests;
+                                // &&
+                                // !(request.getRequestURI()
+                                // .matches("/api/submissions/.*/result")
+                                // && request.getMethod().equals("GET"))
+                                // && logRequests;
                         }
                 };
 

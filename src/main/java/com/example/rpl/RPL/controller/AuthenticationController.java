@@ -34,9 +34,9 @@ public class AuthenticationController {
 
     @Autowired
     public AuthenticationController(
-        AuthenticationService authenticationService,
-        AuthenticationManager authenticationManager,
-        JwtTokenProvider tokenProvider) {
+            AuthenticationService authenticationService,
+            AuthenticationManager authenticationManager,
+            JwtTokenProvider tokenProvider) {
         this.authenticationService = authenticationService;
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
@@ -44,20 +44,19 @@ public class AuthenticationController {
 
     @PostMapping(value = "/api/auth/signup")
     public ResponseEntity<UserResponseDTO> registerUser(
-        @RequestBody @Valid final CreateUserRequestDTO createUserRequestDTO) {
+            @RequestBody @Valid final CreateUserRequestDTO createUserRequestDTO) {
 
         User user = authenticationService
-            .createUser(createUserRequestDTO.getName(), createUserRequestDTO.getSurname(),
-                createUserRequestDTO.getStudentId(), createUserRequestDTO.getUsername(),
-                createUserRequestDTO.getEmail(),
-                createUserRequestDTO.getPassword(), createUserRequestDTO.getUniversity(),
-                createUserRequestDTO.getDegree());
+                .createUser(createUserRequestDTO.getName(), createUserRequestDTO.getSurname(),
+                        createUserRequestDTO.getStudentId(), createUserRequestDTO.getUsername(),
+                        createUserRequestDTO.getEmail(),
+                        createUserRequestDTO.getPassword(), createUserRequestDTO.getUniversity(),
+                        createUserRequestDTO.getDegree());
 
         authenticationService.sendValidateEmailToken(user);
 
         return new ResponseEntity<>(UserResponseDTO.fromEntity(user), HttpStatus.CREATED);
     }
-
 
     /**
      * If authentication fails, throws BadCredentialsException.
@@ -66,13 +65,13 @@ public class AuthenticationController {
      */
     @PostMapping("/api/auth/login")
     public ResponseEntity<JwtResponseDTO> authenticateUser(
-        @Valid @RequestBody LoginRequestDTO loginRequestDto) {
+            @RequestBody LoginRequestDTO loginRequestDto) {
+        log.info("Authenticating user with username {} and password {}", loginRequestDto.getUsernameOrEmail(),
+                loginRequestDto.getPassword());
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                loginRequestDto.getUsernameOrEmail(),
-                loginRequestDto.getPassword()
-            )
-        );
+                new UsernamePasswordAuthenticationToken(
+                        loginRequestDto.getUsernameOrEmail(),
+                        loginRequestDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -98,7 +97,7 @@ public class AuthenticationController {
     @PatchMapping("/api/auth/profile")
     public ResponseEntity<UserResponseDTO> updateUser(
             @CurrentUser UserPrincipal currentUser,
-            @RequestBody(required=false) EditUserRequestDTO editUserRequestDTO) {
+            @RequestBody(required = false) EditUserRequestDTO editUserRequestDTO) {
 
         User user = authenticationService.updateUser(
                 currentUser.getId(),
@@ -108,8 +107,7 @@ public class AuthenticationController {
                 editUserRequestDTO.getEmail(),
                 editUserRequestDTO.getUniversity(),
                 editUserRequestDTO.getDegree(),
-                editUserRequestDTO.getImgUri()
-        );
+                editUserRequestDTO.getImgUri());
 
         return new ResponseEntity<>(UserResponseDTO.fromEntity(user), HttpStatus.OK);
     }
@@ -119,7 +117,7 @@ public class AuthenticationController {
      */
     @PostMapping("/api/auth/forgotPassword")
     public ResponseEntity<ForgotPasswordRequestDTO> forgotPassword(
-        @Valid @RequestBody final ForgotPasswordRequestDTO resetPasswordDTO) {
+            @Valid @RequestBody final ForgotPasswordRequestDTO resetPasswordDTO) {
 
         authenticationService.sendResetPasswordToken(resetPasswordDTO.getEmail());
 
@@ -131,10 +129,10 @@ public class AuthenticationController {
      */
     @PostMapping("/api/auth/resetPassword")
     public ResponseEntity<UserResponseDTO> resetPassword(
-        @Valid @RequestBody final ResetPasswordRequestDTO resetPasswordDTO) {
+            @Valid @RequestBody final ResetPasswordRequestDTO resetPasswordDTO) {
 
         ValidationToken token = authenticationService
-            .validateToken(resetPasswordDTO.getPasswordToken());
+                .validateToken(resetPasswordDTO.getPasswordToken());
 
         User user = authenticationService.resetPassword(token, resetPasswordDTO.getNewPassword());
 
@@ -146,10 +144,10 @@ public class AuthenticationController {
      */
     @PostMapping("/api/auth/validateEmail")
     public ResponseEntity<UserResponseDTO> validateEmail(
-        @Valid @RequestBody final ValidateEmailRequestDTO validateEmailDTO) {
+            @Valid @RequestBody final ValidateEmailRequestDTO validateEmailDTO) {
 
         ValidationToken token = authenticationService
-            .validateToken(validateEmailDTO.getValidateEmailToken());
+                .validateToken(validateEmailDTO.getValidateEmailToken());
 
         User user = authenticationService.validateEmail(token.getUser());
 
@@ -161,10 +159,10 @@ public class AuthenticationController {
      */
     @PostMapping("/api/auth/resendValidationEmail")
     public ResponseEntity<UserResponseDTO> resendValidationEmail(
-        @Valid @RequestBody final ResendValidationEmailRequestDTO resendValidationEmailRequestDTO) {
+            @Valid @RequestBody final ResendValidationEmailRequestDTO resendValidationEmailRequestDTO) {
 
         User user = authenticationService
-            .getUserByUsernameOrEmail(resendValidationEmailRequestDTO.getUsernameOrEmail());
+                .getUserByUsernameOrEmail(resendValidationEmailRequestDTO.getUsernameOrEmail());
 
         authenticationService.sendValidateEmailToken(user);
 
@@ -181,8 +179,9 @@ public class AuthenticationController {
 
     @GetMapping("/api/auth/universities")
     public ResponseEntity<List<UniversityResponseDTO>> getUniversities() {
-        return new ResponseEntity<>(Arrays.stream(University.values()).
-                map(university -> UniversityResponseDTO.fromEntity(university))
-                .collect(Collectors.toList()), HttpStatus.OK);
+        return new ResponseEntity<>(
+                Arrays.stream(University.values()).map(university -> UniversityResponseDTO.fromEntity(university))
+                        .collect(Collectors.toList()),
+                HttpStatus.OK);
     }
 }
