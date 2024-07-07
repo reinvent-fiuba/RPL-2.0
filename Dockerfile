@@ -1,5 +1,5 @@
 # Use the official Gradle image to build the project
-FROM gradle:7.6.0-jdk17 as build
+FROM gradle:8.2.1-jdk17 AS build
 
 # Set the working directory in the container
 WORKDIR /home/gradle/project
@@ -26,6 +26,10 @@ WORKDIR /app
 
 # Copy the built JAR file from the build stage
 COPY --from=build /home/gradle/project/build/libs/*.jar app.jar
+
+# Set environment variables with default values
+ENV SPRING_PROFILES_ACTIVE=default
+ENV QUEUE_SERVICE_HOST=localhost
 
 # Expose the port the app runs on
 EXPOSE 8080

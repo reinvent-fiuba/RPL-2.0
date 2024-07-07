@@ -31,6 +31,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.lang.NonNull;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
@@ -103,20 +104,20 @@ public class BeanConfiguration {
 
         RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory);
         restTemplate.getMessageConverters().stream()
-                .filter(m -> m instanceof StringHttpMessageConverter)
+                .filter(StringHttpMessageConverter.class::isInstance)
                 .findFirst()
                 .ifPresent(messageConverter -> ((StringHttpMessageConverter) messageConverter).setDefaultCharset(
                         StandardCharsets.UTF_8));
 
         restTemplate.getMessageConverters().stream()
-                .filter(m -> m instanceof MappingJackson2HttpMessageConverter)
+                .filter(MappingJackson2HttpMessageConverter.class::isInstance)
                 .findFirst()
                 .ifPresent(messageConverter -> ((MappingJackson2HttpMessageConverter) messageConverter)
                         .setObjectMapper(objectMapper));
 
         restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
             @Override
-            protected boolean hasError(HttpStatusCode statusCode) {
+            protected boolean hasError(@NonNull HttpStatusCode statusCode) {
                 return !statusCode.is2xxSuccessful();
             }
         });

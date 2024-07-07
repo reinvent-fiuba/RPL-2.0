@@ -5,6 +5,7 @@ bin/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**
 !**/src/test/**
+kubernetes/mysql/**
 
 ### STS ###
 .apt_generated
@@ -21,6 +22,7 @@ bin/
 *.iml
 *.ipr
 out/
+.run/**
 
 ### NetBeans ###
 /nbproject/private/

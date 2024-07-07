@@ -1,10 +1,10 @@
 package com.example.rpl.RPL.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -39,7 +39,6 @@ public class SecurityConfig {
         @Value("${rpl.logging.requests}")
         private boolean logRequests;
 
-        @Autowired
         public SecurityConfig(
                         CustomUserDetailsService customUserDetailsService,
                         JwtAuthenticationEntryPoint unauthorizedHandler,
@@ -175,7 +174,7 @@ public class SecurityConfig {
                 CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter() {
                         // Don't log passwords
                         @Override
-                        protected boolean shouldLog(HttpServletRequest request) {
+                        protected boolean shouldLog(@NonNull HttpServletRequest request) {
                                 return true;
                                 // return !request.getRequestURI().contains("login") && !request.getRequestURI()
                                 // .contains("Password") && !request.getRequestURI().contains("signup")
