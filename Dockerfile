@@ -28,7 +28,7 @@ WORKDIR /app
 COPY --from=build /home/gradle/project/build/libs/*.jar app.jar
 
 # Set environment variables with default values
-ENV SPRING_PROFILES_ACTIVE=default
+ENV SPRING_PROFILES_ACTIVE=local,producer,development
 ENV QUEUE_SERVICE_HOST=localhost
 
 # Expose the port the app runs on

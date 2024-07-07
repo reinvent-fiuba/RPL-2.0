@@ -24,32 +24,30 @@ public class JwtTokenProvider {
     @Value("${app.jwtExpirationInMs}")
     private int jwtExpirationInMs;
 
-    public String generateToken(Authentication authentication) {
+    public String generateToken(Authentication authentication) throws io.jsonwebtoken.security.WeakKeyException {
+
+        String secretKey = jwtSecret;
+
+        if (secretKey.length() < 256 / 8) {
+            throw new io.jsonwebtoken.security.WeakKeyException("Can't use 'jwtSecret' shorteer than 256 bits");
+        } else if (secretKey.length() >= (256 / 8) && secretKey.length() < (512 / 8)) {
+            secretKey = secretKey + secretKey;
+        }
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
-        Key signingKey = new SecretKeySpec(jwtSecret.getBytes(),
-                SignatureAlgorithm.HS512.getJcaName());
+        Key signingKey = new SecretKeySpec(secretKey.getBytes(), SignatureAlgorithm.HS512.getJcaName());
 
-        return Jwts.builder()
-                .setSubject(Long.toString(userPrincipal.getId()))
-                .setIssuedAt(new Date())
-                .setExpiration(expiryDate)
-                .signWith(signingKey)
-                .compact();
+        return Jwts.builder().setSubject(Long.toString(userPrincipal.getId())).setIssuedAt(new Date())
+                .setExpiration(expiryDate).signWith(signingKey).compact();
     }
 
     public Long getUserIdFromJWT(String token) {
-        Key signingKey = new SecretKeySpec(jwtSecret.getBytes(),
-                SignatureAlgorithm.HS512.getJcaName());
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(signingKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        Key signingKey = new SecretKeySpec(jwtSecret.getBytes(), SignatureAlgorithm.HS512.getJcaName());
+        Claims claims = Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token).getBody();
 
         return Long.parseLong(claims.getSubject());
     }
