@@ -9,7 +9,7 @@ import com.example.rpl.RPL.security.UserPrincipal;
 import com.example.rpl.RPL.service.ActivityCategoriesService;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,13 +22,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
 @RestController
 public class ActivityCategoriesController {
 
     private final ActivityCategoriesService activityCategoriesService;
 
-    @Autowired
     public ActivityCategoriesController(
         ActivityCategoriesService activityCategoriesService) {
         this.activityCategoriesService = activityCategoriesService;

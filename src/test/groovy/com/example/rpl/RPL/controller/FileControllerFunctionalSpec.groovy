@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles
 import spock.lang.Shared
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.SC_OK
+import static jakarta.servlet.http.HttpServletResponse.SC_OK
 
 @ActiveProfiles("test-functional")
 class FileControllerFunctionalSpec extends AbstractFunctionalSpec {
@@ -53,5 +53,3 @@ class FileControllerFunctionalSpec extends AbstractFunctionalSpec {
     }
 
 }
-
-

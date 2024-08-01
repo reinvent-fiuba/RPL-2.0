@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles
 import spock.lang.Shared
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.*
+import static jakarta.servlet.http.HttpServletResponse.*
 
 @ActiveProfiles("test-functional")
 class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
@@ -287,5 +287,3 @@ class AuthenticationControllerFunctionalSpec extends AbstractFunctionalSpec {
             ]
     }
 }
-
-
