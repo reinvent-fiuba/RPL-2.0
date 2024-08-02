@@ -110,7 +110,7 @@ dependencies {
     testImplementation('io.rest-assured:spring-mock-mvc:4.0.0') {
         exclude group: 'com.sun.xml.bind', module: 'jaxb-osgi'
     }
-    testRuntimeOnly 'cglib:cglib-nodep:3.2.6'
+    testRuntimeOnly 'cglib:cglib-nodep:3.3.0'
 
     // implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
     // https://mvnrepository.com/artifact/org.springframework.plugin/spring-plugin-core
