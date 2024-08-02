@@ -96,7 +96,7 @@ dependencies {
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
-    implementation 'com.github.tomakehurst:wiremock:2.21.0'
+    implementation 'com.github.tomakehurst:wiremock:3.0.1'
 //    For groovy Spock testing
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.1.3'
