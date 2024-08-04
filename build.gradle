@@ -107,7 +107,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.spockframework/spock-spring
     testImplementation group: 'org.spockframework', name: 'spock-spring', version: '2.3-groovy-4.0'
 
-    testImplementation('io.rest-assured:spring-mock-mvc:4.0.0') {
+    testImplementation('io.rest-assured:spring-mock-mvc:5.5.0') {
         exclude group: 'com.sun.xml.bind', module: 'jaxb-osgi'
     }
     testRuntimeOnly 'cglib:cglib-nodep:3.3.0'
