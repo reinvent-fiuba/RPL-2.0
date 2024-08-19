@@ -2,10 +2,10 @@ package com.example.rpl.RPL.controller.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Value;
+import lombok.Data;
 
+@Data
 @AllArgsConstructor
-@Value
 public class ResendValidationEmailRequestDTO {
 
     @NotNull
