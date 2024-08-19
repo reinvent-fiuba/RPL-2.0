@@ -144,7 +144,7 @@ public class AuthenticationController {
      */
     @PostMapping("/api/auth/validateEmail")
     public ResponseEntity<UserResponseDTO> validateEmail(
-            @RequestBody final ValidateEmailRequestDTO validateEmailDTO) {
+            @RequestBody ValidateEmailRequestDTO validateEmailDTO) {
 
         ValidationToken token = authenticationService
                 .validateToken(validateEmailDTO.getValidateEmailToken());
