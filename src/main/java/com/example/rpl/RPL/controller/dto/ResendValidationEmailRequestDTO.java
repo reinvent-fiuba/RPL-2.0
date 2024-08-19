@@ -1,18 +1,13 @@
 package com.example.rpl.RPL.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Value;
 
 @Value
+@AllArgsConstructor
 public class ResendValidationEmailRequestDTO {
 
     @NotNull
     private String usernameOrEmail;
-
-    @JsonCreator
-    public ResendValidationEmailRequestDTO(@JsonProperty("usernameOrEmail") String usernameOrEmail) {
-        this.usernameOrEmail = usernameOrEmail;
-    }
 }
