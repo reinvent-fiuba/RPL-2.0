@@ -117,7 +117,7 @@ public class AuthenticationController {
      */
     @PostMapping("/api/auth/forgotPassword")
     public ResponseEntity<ForgotPasswordRequestDTO> forgotPassword(
-            @Valid @RequestBody final ForgotPasswordRequestDTO resetPasswordDTO) {
+            @RequestBody final ForgotPasswordRequestDTO resetPasswordDTO) {
 
         authenticationService.sendResetPasswordToken(resetPasswordDTO.getEmail());
 
@@ -129,7 +129,7 @@ public class AuthenticationController {
      */
     @PostMapping("/api/auth/resetPassword")
     public ResponseEntity<UserResponseDTO> resetPassword(
-            @Valid @RequestBody final ResetPasswordRequestDTO resetPasswordDTO) {
+            @RequestBody final ResetPasswordRequestDTO resetPasswordDTO) {
 
         ValidationToken token = authenticationService
                 .validateToken(resetPasswordDTO.getPasswordToken());
@@ -144,7 +144,7 @@ public class AuthenticationController {
      */
     @PostMapping("/api/auth/validateEmail")
     public ResponseEntity<UserResponseDTO> validateEmail(
-            @Valid @RequestBody final ValidateEmailRequestDTO validateEmailDTO) {
+            @RequestBody final ValidateEmailRequestDTO validateEmailDTO) {
 
         ValidationToken token = authenticationService
                 .validateToken(validateEmailDTO.getValidateEmailToken());
@@ -159,7 +159,7 @@ public class AuthenticationController {
      */
     @PostMapping("/api/auth/resendValidationEmail")
     public ResponseEntity<UserResponseDTO> resendValidationEmail(
-            @Valid @RequestBody final ResendValidationEmailRequestDTO resendValidationEmailRequestDTO) {
+            @RequestBody final ResendValidationEmailRequestDTO resendValidationEmailRequestDTO) {
 
         User user = authenticationService
                 .getUserByUsernameOrEmail(resendValidationEmailRequestDTO.getUsernameOrEmail());
