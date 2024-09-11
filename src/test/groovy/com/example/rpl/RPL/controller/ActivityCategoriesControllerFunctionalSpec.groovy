@@ -11,8 +11,8 @@ import spock.lang.Unroll
 
 import java.time.ZonedDateTime
 
-import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN
-import static jakarta.servlet.http.HttpServletResponse.SC_OK
+import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN
+import static javax.servlet.http.HttpServletResponse.SC_OK
 
 @ActiveProfiles("test-functional")
 class ActivityCategoriesControllerFunctionalSpec extends AbstractFunctionalSpec {
@@ -179,3 +179,5 @@ class ActivityCategoriesControllerFunctionalSpec extends AbstractFunctionalSpec 
             result.message == 'Forbidden'
     }
 }
+
+

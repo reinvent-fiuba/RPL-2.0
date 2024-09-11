@@ -4,7 +4,7 @@ import com.example.rpl.RPL.util.AbstractFunctionalSpec
 import groovy.json.JsonOutput
 import org.springframework.test.context.ActiveProfiles
 
-import static jakarta.servlet.http.HttpServletResponse.SC_OK
+import static javax.servlet.http.HttpServletResponse.SC_OK
 
 @ActiveProfiles("test-functional")
 class SwaggerConfigSpec extends AbstractFunctionalSpec {

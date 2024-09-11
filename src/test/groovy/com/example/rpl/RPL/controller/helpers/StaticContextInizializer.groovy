@@ -16,7 +16,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 
-import jakarta.annotation.PostConstruct
+import javax.annotation.PostConstruct
 
 @Component
 class StaticContextInizializer {

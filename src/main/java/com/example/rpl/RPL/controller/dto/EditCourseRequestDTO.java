@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @AllArgsConstructor

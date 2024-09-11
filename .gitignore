@@ -1,11 +1,9 @@
 HELP.md
 .gradle
 build/
-bin/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**
 !**/src/test/**
-kubernetes/mysql/**
 
 ### STS ###
 .apt_generated
@@ -22,7 +20,6 @@ kubernetes/mysql/**
 *.iml
 *.ipr
 out/
-.run/**
 
 ### NetBeans ###
 /nbproject/private/
@@ -66,4 +63,3 @@ hs_err_pid*
 /newrelic/logs/newrelic_agent.log
 !/newrelic/*.jar
 
-**.DS_Store

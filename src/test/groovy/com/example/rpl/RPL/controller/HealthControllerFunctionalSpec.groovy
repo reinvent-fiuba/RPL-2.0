@@ -4,7 +4,7 @@ package com.example.rpl.RPL.controller
 import com.example.rpl.RPL.util.AbstractFunctionalSpec
 import org.springframework.test.context.ActiveProfiles
 
-import static jakarta.servlet.http.HttpServletResponse.SC_OK
+import static javax.servlet.http.HttpServletResponse.SC_OK
 
 @ActiveProfiles("test-functional")
 class HealthControllerFunctionalSpec extends AbstractFunctionalSpec {
@@ -18,3 +18,5 @@ class HealthControllerFunctionalSpec extends AbstractFunctionalSpec {
             response.body.asString() == "pong"
     }
 }
+
+

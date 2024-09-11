@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
-import jakarta.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.jpa.domain.Specification;
 
 public final class SubmissionSpecifications {
