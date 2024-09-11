@@ -37,7 +37,7 @@ public class CoursesService {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final ActivitiesService activitiesService;
-    // private final SubmissionService submissionService;
+    private final SubmissionService submissionService;
     private final IEmailService emailService;
     private final ActivityCategoriesService activityCategoriesService;
     private final TestService testService;
@@ -48,7 +48,7 @@ public class CoursesService {
         RoleRepository roleRepository,
         UserRepository userRepository,
         ActivitiesService activitiesService,
-        // SubmissionService submissionService,
+        SubmissionService submissionService,
         IEmailService emailService,
         ActivityCategoriesService activityCategoriesService,
         TestService testService) {
@@ -57,7 +57,7 @@ public class CoursesService {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.activitiesService = activitiesService;
-        // this.submissionService = submissionService;
+        this.submissionService = submissionService;
         this.emailService = emailService;
         this.activityCategoriesService = activityCategoriesService;
         this.testService = testService;
@@ -258,11 +258,11 @@ public class CoursesService {
     @Transactional
     public void deleteCourseUser(Long userId, Long courseId) {
         // TODO: Review if this checks are needed
-        courseRepository.findById(courseId).orElseThrow(
+        Course course = courseRepository.findById(courseId).orElseThrow(
             () -> new NotFoundException("Course not found",
                 "course_not_found"));
 
-        userRepository.findById(userId).orElseThrow(
+        User user = userRepository.findById(userId).orElseThrow(
             () -> new NotFoundException("User not found",
                 "user_not_found"));
 

@@ -23,7 +23,7 @@ import com.example.rpl.RPL.service.SubmissionService;
 import com.example.rpl.RPL.service.TestService;
 import java.util.List;
 import java.util.stream.Collectors;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

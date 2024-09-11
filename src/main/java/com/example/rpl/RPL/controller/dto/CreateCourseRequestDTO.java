@@ -1,6 +1,6 @@
 package com.example.rpl.RPL.controller.dto;
 
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.springframework.format.annotation.DateTimeFormat;

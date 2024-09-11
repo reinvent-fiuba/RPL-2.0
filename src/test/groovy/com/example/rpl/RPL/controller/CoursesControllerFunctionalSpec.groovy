@@ -11,7 +11,7 @@ import spock.lang.Unroll
 
 import java.time.ZonedDateTime
 
-import static jakarta.servlet.http.HttpServletResponse.*
+import static javax.servlet.http.HttpServletResponse.*
 
 @ActiveProfiles("test-functional")
 class CoursesControllerFunctionalSpec extends AbstractFunctionalSpec {

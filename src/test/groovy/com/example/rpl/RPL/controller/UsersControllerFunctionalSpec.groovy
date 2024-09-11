@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.ActiveProfiles
 import spock.lang.Unroll
 
-import static jakarta.servlet.http.HttpServletResponse.*
+import static javax.servlet.http.HttpServletResponse.*
 
 @ActiveProfiles("test-functional")
 class UsersControllerFunctionalSpec extends AbstractFunctionalSpec {
@@ -171,3 +171,5 @@ class UsersControllerFunctionalSpec extends AbstractFunctionalSpec {
     }
 
 }
+
+

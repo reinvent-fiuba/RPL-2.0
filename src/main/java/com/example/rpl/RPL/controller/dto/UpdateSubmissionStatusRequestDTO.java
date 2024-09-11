@@ -1,28 +1,12 @@
 package com.example.rpl.RPL.controller.dto;
 
 import com.example.rpl.RPL.model.SubmissionStatus;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Value;
 
+@AllArgsConstructor
+@Value
 public class UpdateSubmissionStatusRequestDTO {
-    private SubmissionStatus status;
 
-    // Default constructor
-    public UpdateSubmissionStatusRequestDTO() {
-    }
-
-    // Constructor with @JsonCreator and @JsonProperty
-    @JsonCreator
-    public UpdateSubmissionStatusRequestDTO(@JsonProperty("status") SubmissionStatus status) {
-        this.status = status;
-    }
-
-    // Getter and setter
-    public SubmissionStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(SubmissionStatus status) {
-        this.status = status;
-    }
+    private final SubmissionStatus status;
 }
