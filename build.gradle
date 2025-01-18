@@ -32,6 +32,7 @@ ext {
 }
 
 test {
+    useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed" //, "standardOut", "standardError"
 
@@ -54,6 +55,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.flywaydb:flyway-core:5.2.4'
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+    implementation 'org.codehaus.groovy:groovy:3.0.0'
 
     implementation 'com.github.ben-manes.caffeine:caffeine:2.6.2'
     implementation 'com.fasterxml.jackson.module:jackson-module-paranamer'
@@ -70,7 +73,7 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     runtimeOnly 'com.h2database:h2'
-    runtime 'mysql:mysql-connector-java'
+    runtime 'mysql:mysql-connector-java:8.0.33'
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
@@ -79,8 +82,8 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5'
-    testImplementation 'org.spockframework:spock-spring:1.3-groovy-2.5'
+    testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
+    testImplementation 'org.spockframework:spock-spring:2.0-groovy-3.0'
 
 
     testImplementation('io.rest-assured:spring-mock-mvc:4.0.0') {
