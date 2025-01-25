@@ -15,7 +15,7 @@
             "url": "http://example.com/support"
         }
     },
-    "host": "localhost:36609",
+  "host": "localhost:41087",
     "basePath": "/",
     "tags": [
         {
@@ -9109,7 +9109,6 @@
                     "enum": [
                         "C",
                         "PYTHON3",
-                        "GO",
                         "JAVA"
                     ]
                 },

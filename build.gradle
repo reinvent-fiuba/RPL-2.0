@@ -73,7 +73,7 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     runtimeOnly 'com.h2database:h2'
-    runtime 'mysql:mysql-connector-java:8.0.33'
+    runtime 'com.mysql:mysql-connector-j:8.1.0'
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
