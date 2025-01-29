@@ -41,8 +41,7 @@ spec:
         - name: MYSQL_SERVICE_HOST
           valueFrom:
             secretKeyRef:
-              # name: db-host
-              name: db-host-upgraded
+              name: db-host
               key: host
         - name: MYSQL_SERVICE_PORT
           value: "3306"
