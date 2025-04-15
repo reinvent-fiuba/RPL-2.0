@@ -86,7 +86,7 @@ dependencies {
     testImplementation 'org.spockframework:spock-spring:2.0-groovy-3.0'
 
 
-    testImplementation('io.rest-assured:spring-mock-mvc:4.0.0') {
+    testImplementation('io.rest-assured:spring-mock-mvc:5.5.0') {
         exclude group: 'com.sun.xml.bind', module: 'jaxb-osgi'
     }
     testRuntime 'cglib:cglib-nodep:3.2.6'
