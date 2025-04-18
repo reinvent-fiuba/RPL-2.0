@@ -77,7 +77,7 @@ dependencies {
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
-    implementation 'com.github.tomakehurst:wiremock:2.21.0'
+    implementation 'com.github.tomakehurst:wiremock:3.0.1'
 //    For groovy Spock testing
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
